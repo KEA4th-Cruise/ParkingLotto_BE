@@ -5,7 +5,6 @@ import com.Cruise.ParkingLotto.domain.enums.AccountType;
 import com.Cruise.ParkingLotto.domain.enums.EnrollmentStatus;
 import com.Cruise.ParkingLotto.domain.enums.WorkType;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import java.time.LocalDate;
 import java.util.List;
