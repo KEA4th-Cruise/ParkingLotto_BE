@@ -53,6 +53,12 @@ public class Draw extends BaseEntity {
     @Column(nullable = false)
     private Long totalSlots;
 
+    @Column(nullable = false)
+    private String year;
+
+    @Column(nullable = false)
+    private String quarter;
+
     @OneToMany(mappedBy = "draw", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Applicant> applicantList;
 
