@@ -23,7 +23,7 @@ public class ParkingSpace extends BaseEntity {
     private String address;
 
     @Column(nullable = false)
-    private Long Slots;
+    private Long slots;
 
     @Column(nullable = false)
     private Long remainSlots;
