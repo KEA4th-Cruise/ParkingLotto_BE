@@ -53,6 +53,18 @@ public class Member extends BaseEntity {
 
     private LocalDate deleteDate;
 
+    @Column(nullable = false)
+    private Long trafficCommuteTime;
+
+    @Column(nullable = false)
+    private Long carCommuteTime;
+
+    @Column(nullable = false)
+    private Double distance;
+
+    @Column(nullable = false)
+    private Long recentLossCount;
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CertificateDocs> certificateDocsList;
 }
