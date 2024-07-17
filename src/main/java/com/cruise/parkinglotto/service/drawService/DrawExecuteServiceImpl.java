@@ -21,12 +21,20 @@ public class DrawExecuteServiceImpl implements DrawExecuteService {
 
     @Override
     public void updateSeedNum(Long drawId) {
-        List<Applicant> applicants = applicantRepository.findByDrawId(drawId);
+        try {
+            List<Applicant> applicants = applicantRepository.findByDrawId(drawId);
 
-        String seed = applicants.stream()
-                .map(Applicant::getUserSeed)
-                .collect(Collectors.joining());
-        drawRepository.updateSeedNum(drawId, seed);
-
+            if (applicants == null || applicants.isEmpty()) {
+                throw new IllegalArgumentException("해당 회차에 신청자가 없습니다. 해당 회차 ID : " + drawId);
+            }
+            String seed = applicants.stream()
+                    .map(Applicant::getUserSeed)
+                    .collect(Collectors.joining());
+            drawRepository.updateSeedNum(drawId, seed);
+        } catch (IllegalArgumentException e) {
+            System.err.println("Error : " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("An error occurred while retrieving applicants for draw ID: " + drawId);
+        }
     }
 }
