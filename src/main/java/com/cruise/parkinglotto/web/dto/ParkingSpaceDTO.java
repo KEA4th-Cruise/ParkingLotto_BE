@@ -3,13 +3,13 @@ package com.cruise.parkinglotto.web.dto;
 import lombok.Builder;
 import lombok.Getter;
 
-public class ParkingSpaceDto {
+public class ParkingSpaceDTO {
     @Getter
-    public static class ParkingSpaceImgResponseDto {
+    public static class ParkingSpaceImgResponseDTO {
         private String floorPlanImageUrl;
 
         @Builder
-        public ParkingSpaceImgResponseDto(String floorPlanImageUrl) {
+        public ParkingSpaceImgResponseDTO(String floorPlanImageUrl) {
             this.floorPlanImageUrl = floorPlanImageUrl;
         }
 

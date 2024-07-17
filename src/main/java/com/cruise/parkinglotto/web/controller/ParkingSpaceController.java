@@ -1,7 +1,7 @@
 package com.cruise.parkinglotto.web.controller;
 
 import com.cruise.parkinglotto.service.ParkingSpaceService;
-import com.cruise.parkinglotto.web.dto.ParkingSpaceDto.*;
+import com.cruise.parkinglotto.web.dto.ParkingSpaceDTO.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,7 +16,7 @@ public class ParkingSpaceController {
     private final ParkingSpaceService parkingSpaceService;
 
     @GetMapping("/myspace/{memberId}")
-    public ParkingSpaceImgResponseDto getParkingSpaceImg(@PathVariable Long memberId) {
+    public ParkingSpaceImgResponseDTO getParkingSpaceImg(@PathVariable Long memberId) {
         return parkingSpaceService.findParkingSpaceImg(memberId);
     }
 
