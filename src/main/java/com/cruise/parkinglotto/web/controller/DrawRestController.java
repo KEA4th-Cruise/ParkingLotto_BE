@@ -14,10 +14,4 @@ import org.springframework.web.bind.annotation.*;
 public class DrawRestController {
     private final DrawExecuteService drawExecuteService;
 
-//    @PostMapping("/execute/{drawId}")
-//    public ApiResponse<DrawResponseDto> startDraw(@PathVariable Long drawId) {
-//        drawExecuteService.updateSeedNum(drawId);
-//        return ApiResponse.onSuccess(HttpStatus.OK, DrawConverter.toDrawReultlistDto(winnerList));
-//    }
-
 }

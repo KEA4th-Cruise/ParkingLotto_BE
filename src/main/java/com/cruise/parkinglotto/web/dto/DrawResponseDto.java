@@ -13,7 +13,7 @@ public class DrawResponseDto {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetWinnerPersonDto {
+    public static class GetWinnerMemberDto {
         private Long drawId;
         private String name_ko;
         private String account_id;
@@ -27,6 +27,6 @@ public class DrawResponseDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class GetDrawResultPersonListDto{
-        private List<GetWinnerPersonDto> drawResultDtoList;
+        private List<GetWinnerMemberDto> drawResultDtoList;
     }
 }
