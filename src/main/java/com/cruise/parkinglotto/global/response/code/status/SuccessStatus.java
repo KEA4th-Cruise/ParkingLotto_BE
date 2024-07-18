@@ -16,6 +16,9 @@ public enum SuccessStatus implements BaseCode {
 
     // [예시]
     MEMBER_FOUND(HttpStatus.OK,"MEMBER2001", "회원을 조회했습니다."),
+
+    // 주차공간 관련 응답
+    PARKING_SPACE_INFO_FOUND(HttpStatus.OK,"PARKINGSPACEINFO200","주차 공간 정보를 조회했습니다"),
     ;
 
 

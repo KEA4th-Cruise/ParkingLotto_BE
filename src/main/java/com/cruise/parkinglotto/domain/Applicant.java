@@ -68,7 +68,7 @@ public class Applicant extends BaseEntity {
     private Draw draw;
 
     public void cancelWinningStatus() {
-        this.winningStatus = WinningStatus.CANCEL;
+        this.winningStatus = WinningStatus.CANCELED;
     }
 
 }

@@ -1,5 +1,6 @@
 package com.cruise.parkinglotto.service;
 
+import com.cruise.parkinglotto.convert.ParkingSpaceConverter;
 import com.cruise.parkinglotto.domain.ParkingSpace;
 import com.cruise.parkinglotto.repository.ApplicantRepository;
 import com.cruise.parkinglotto.repository.ParkingSpaceRepository;
@@ -23,9 +24,9 @@ public class ParkingSpaceService {
 
         Long applicantId = applicantRepository.findByMember(memberId);
         Long parkingSpaceId = applicantRepository.findParkingSpaceId(applicantId);
-        log.info(parkingSpaceId+"");
         Optional<ParkingSpace> findParkingSpace = parkingSpaceRepository.findById(parkingSpaceId);
-        return new ParkingSpaceImgResponseDTO(findParkingSpace.get().getFloorPlanImageUrl());
+
+        return ParkingSpaceConverter.toParkingSpaceDTO(findParkingSpace.get());
     }
 
 }

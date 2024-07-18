@@ -1,5 +1,7 @@
 package com.cruise.parkinglotto.web.controller;
 
+import com.cruise.parkinglotto.global.response.ApiResponse;
+import com.cruise.parkinglotto.global.response.code.status.SuccessStatus;
 import com.cruise.parkinglotto.service.ParkingSpaceService;
 import com.cruise.parkinglotto.web.dto.ParkingSpaceDTO.*;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +18,9 @@ public class ParkingSpaceController {
     private final ParkingSpaceService parkingSpaceService;
 
     @GetMapping("/myspace/{memberId}")
-    public ParkingSpaceImgResponseDTO getParkingSpaceImg(@PathVariable Long memberId) {
-        return parkingSpaceService.findParkingSpaceImg(memberId);
+    public ApiResponse<ParkingSpaceImgResponseDTO> getParkingSpaceImg(@PathVariable Long memberId) {
+
+        return ApiResponse.onSuccess(SuccessStatus.PARKING_SPACE_INFO_FOUND,parkingSpaceService.findParkingSpaceImg(memberId));
     }
 
 }
