@@ -22,6 +22,12 @@ public enum ErrorStatus implements BaseErrorCode {
     // 게시글 관련 응답
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "POST4001", "게시글이 존재하지 않습니다."),
 
+    //신청자 관련 응답
+    APPLICANT_NOT_FOUND(HttpStatus.NOT_FOUND, "APPLICANT4001", "신청자가 존재하지 않습니다"),
+
+    //추첨 관련 응답
+    DRAW_NOT_FOUND(HttpStatus.NOT_FOUND, "DRAW4001", "추첨이 존재하지 않습니다"),
+
     ;
 
 
