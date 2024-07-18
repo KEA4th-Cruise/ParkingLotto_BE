@@ -25,4 +25,9 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
     @Transactional
     @Query("UPDATE Applicant a SET a.reserveNum = :reserveNum WHERE a.id = :id")
     void updateReserveNum(@Param("id") Long id, @Param("reserveNum") int reserveNum);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Applicant a SET a.weightedTotalScore = :weight WHERE a.id = :applicantId")
+    void updateWeightedTotalScore(@Param("applicantId") Long id, @Param("weight") double weight);
 }

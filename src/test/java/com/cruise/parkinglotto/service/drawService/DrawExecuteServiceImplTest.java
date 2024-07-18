@@ -4,6 +4,7 @@ import com.cruise.parkinglotto.domain.Applicant;
 import com.cruise.parkinglotto.domain.Draw;
 import com.cruise.parkinglotto.domain.Member;
 import com.cruise.parkinglotto.domain.ParkingSpace;
+import com.cruise.parkinglotto.domain.enums.WorkType;
 import com.cruise.parkinglotto.repository.ApplicantRepository;
 import com.cruise.parkinglotto.repository.DrawRepository;
 import com.cruise.parkinglotto.repository.MemberRepository;
@@ -11,9 +12,12 @@ import com.cruise.parkinglotto.repository.ParkingSpaceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import java.util.*;
 
@@ -197,5 +201,45 @@ class DrawExecuteServiceImplTest {
         randTest = new Random(Double.doubleToLongBits(secondTestRandomNumber));
         double thirdTestRandomNumber = randTest.nextDouble();
         assertEquals(thirdTestRandomNumber, thirdRandomNumber, 0.0000001);
+    }
+
+    @DisplayName("가중치 계산 확인")
+    @Test
+    void calculateWeight() {
+        //given
+        Member member = Member.builder()
+                .id(1L)
+                .workType(WorkType.TYPE1)
+                .recentLossCount(3L)
+                .build();
+
+        Applicant applicant = Applicant.builder()
+                .id(1L)
+                .member(member)
+                .trafficCommuteTime(45L)
+                .carCommuteTime(30L)
+                .distance(15.0)
+                .build();
+
+        // 가중치 예상값 계산
+        double expectedWeight = 25 // workType "TYPE1"
+                + (10 + 9 * (1 - Math.exp(-0.2 * 45))) // trafficCommuteTime 45
+                + (5 * (1 - Math.exp(-0.05 * 30))) // carCommuteTime 30
+                + (5 * (1 - Math.exp(-0.05 * Math.abs(45 - 30)))) // commuteTimeDiff
+                + (20 * (1 - Math.exp(-0.02 * 15))) // distance
+                + (10 * (1 - Math.exp(-0.3 * 3))); // recentLossCount
+
+        //when
+        drawExecuteService.calculateWeight(applicant);
+
+        // ArgumentCaptor를 사용하여 updateWeightedTotalScore 메서드 호출 시 전달된 인수를 캡처합니다.
+        ArgumentCaptor<Long> idCaptor = ArgumentCaptor.forClass(Long.class);
+        ArgumentCaptor<Double> weightCaptor = ArgumentCaptor.forClass(Double.class);
+
+        verify(applicantRepository).updateWeightedTotalScore(idCaptor.capture(), weightCaptor.capture());
+
+        //then
+        assertEquals(applicant.getId(), idCaptor.getValue());
+        assertEquals(expectedWeight, weightCaptor.getValue());
     }
 }
