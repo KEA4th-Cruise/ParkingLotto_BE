@@ -16,8 +16,10 @@ public enum SuccessStatus implements BaseCode {
 
     // [예시]
     MEMBER_FOUND(HttpStatus.OK,"MEMBER2001", "회원을 조회했습니다."),
-    ;
 
+    CANCEL_SUCCESS(HttpStatus.OK,"CANCEL200","당첨 취소를 완료했습니다"),
+
+    ;
 
 
 

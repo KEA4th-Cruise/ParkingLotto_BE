@@ -1,8 +1,12 @@
 package com.cruise.parkinglotto.web.controller;
 
-import com.cruise.parkinglotto.service.ApplicantService;
+import com.cruise.parkinglotto.global.response.ApiResponse;
+import com.cruise.parkinglotto.global.response.code.status.SuccessStatus;
+import com.cruise.parkinglotto.service.applicantService.ApplicantServiceImpl;
+import com.cruise.parkinglotto.web.dto.ApplicantResponseDTO.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,9 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/apply")
 public class ApplicantController {
 
-    private final ApplicantService applicantService;
+    private final ApplicantServiceImpl applicantService;
     @PostMapping("/cancel/{memberId}")
-    public void cancelApply(@PathVariable Long memberId) {
-        applicantService.giveUpMyWinning(memberId);
+    public ApiResponse<WinnerCancelResponseDTO> cancelApply(@PathVariable Long memberId) {
+
+       return ApiResponse.onSuccess(SuccessStatus.CANCEL_SUCCESS,applicantService.giveUpMyWinning(memberId));
+
     }
 }
