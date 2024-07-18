@@ -33,7 +33,7 @@ public class AmazonConfig {
     private String bucket;
 
     @Value("${cloud.aws.s3.path.parking-space-image}")
-    private String dailyImagePath;
+    private String parkingSpaceImagePath;
 
     @Value("${cloud.aws.s3.url}")
     private String s3Url;
