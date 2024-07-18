@@ -2,7 +2,7 @@ package com.cruise.parkinglotto.web.controller;
 
 import com.cruise.parkinglotto.global.response.ApiResponse;
 import com.cruise.parkinglotto.global.response.code.status.SuccessStatus;
-import com.cruise.parkinglotto.service.ParkingSpaceService;
+import com.cruise.parkinglotto.service.parkingSpaceService.ParkingSpaceServiceImpl;
 import com.cruise.parkinglotto.web.dto.ParkingSpaceDTO.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ParkingSpaceController {
 
-    private final ParkingSpaceService parkingSpaceService;
+    private final ParkingSpaceServiceImpl parkingSpaceService;
 
     @GetMapping("/myspace/{memberId}")
     public ApiResponse<ParkingSpaceImgResponseDTO> getParkingSpaceImg(@PathVariable Long memberId) {

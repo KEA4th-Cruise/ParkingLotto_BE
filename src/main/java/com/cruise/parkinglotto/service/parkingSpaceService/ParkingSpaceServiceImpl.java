@@ -1,4 +1,4 @@
-package com.cruise.parkinglotto.service;
+package com.cruise.parkinglotto.service.parkingSpaceService;
 
 import com.cruise.parkinglotto.convert.ParkingSpaceConverter;
 import com.cruise.parkinglotto.domain.ParkingSpace;
@@ -15,7 +15,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class ParkingSpaceService {
+public class ParkingSpaceServiceImpl implements ParkingSpaceService{
 
     private final ParkingSpaceRepository parkingSpaceRepository;
     private final ApplicantRepository applicantRepository;
