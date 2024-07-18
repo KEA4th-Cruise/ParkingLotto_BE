@@ -28,6 +28,9 @@ public enum ErrorStatus implements BaseErrorCode {
     //추첨 관련 응답
     DRAW_NOT_FOUND(HttpStatus.NOT_FOUND, "DRAW4001", "추첨이 존재하지 않습니다"),
 
+    //사용자 관련 응답
+    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER4001", "사용자가 존재하지 않습니다"),
+
     ;
 
 
