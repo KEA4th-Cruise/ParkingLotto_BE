@@ -4,8 +4,8 @@ package com.cruise.parkinglotto.web.controller;
 import com.cruise.parkinglotto.global.response.ApiResponse;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
 import com.cruise.parkinglotto.service.DrawCommandService;
-import com.cruise.parkinglotto.web.dto.drawDto.DrawRequestDto;
-import com.cruise.parkinglotto.web.dto.drawDto.DrawResponseDto;
+import com.cruise.parkinglotto.web.dto.drawDTO.DrawRequestDTO;
+import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +21,11 @@ public class InquiryApplyRestController {
     private final DrawCommandService drawCommandService;
 
     @GetMapping("/GetCurrentDrawInfo")
-    public ApiResponse<DrawResponseDto.GetCurrentDrawInfo> getHistory(HttpServletRequest httpServletRequest,
-                                                                      @Valid @RequestBody DrawRequestDto.GetCurrentDrawInfo reqeust) {
+    public ApiResponse<DrawResponseDTO.GetCurrentDrawInfo> getHistory(HttpServletRequest httpServletRequest,
+                                                                      @Valid @RequestBody DrawRequestDTO.GetCurrentDrawInfo reqeust) {
 
         try {
-            DrawResponseDto.GetCurrentDrawInfo getCurrentDrawInfoDto = drawCommandService.getCurrentDrawInfo(httpServletRequest, reqeust);
+            DrawResponseDTO.GetCurrentDrawInfo getCurrentDrawInfoDto = drawCommandService.getCurrentDrawInfo(httpServletRequest, reqeust);
             return ApiResponse.onSuccess(SuccessStatus._OK, getCurrentDrawInfoDto);
         } catch (RuntimeException e) {
             return ApiResponse.onFailure(ErrorStatus._BAD_REQUEST.getCode(), e.getMessage(), null);

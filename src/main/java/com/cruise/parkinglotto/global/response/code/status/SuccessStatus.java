@@ -16,6 +16,7 @@ public enum SuccessStatus implements BaseCode {
 
     // [예시]
     MEMBER_FOUND(HttpStatus.OK,"MEMBER2001", "회원을 조회했습니다."),
+    DRAW_INFO_FOUND(HttpStatus.OK,"DRAW2002", "추첨 정보를 조회했습니다."),
     ;
 
 

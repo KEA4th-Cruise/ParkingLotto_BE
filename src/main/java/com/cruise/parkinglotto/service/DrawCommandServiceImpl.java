@@ -4,8 +4,8 @@ import com.cruise.parkinglotto.domain.Draw;
 import com.cruise.parkinglotto.domain.ParkingSpace;
 import com.cruise.parkinglotto.repository.DrawRepository;
 import com.cruise.parkinglotto.repository.ParkingSpaceRepository;
-import com.cruise.parkinglotto.web.dto.drawDto.DrawRequestDto;
-import com.cruise.parkinglotto.web.dto.drawDto.DrawResponseDto;
+import com.cruise.parkinglotto.web.dto.drawDTO.DrawRequestDTO;
+import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -21,14 +21,14 @@ public class DrawCommandServiceImpl implements DrawCommandService{
 
     @Override
     @Transactional(readOnly = true)
-    public DrawResponseDto.GetCurrentDrawInfo getCurrentDrawInfo(HttpServletRequest httpServletRequest, DrawRequestDto.GetCurrentDrawInfo getCurrentDrawInfo){
+    public DrawResponseDTO.GetCurrentDrawInfo getCurrentDrawInfo(HttpServletRequest httpServletRequest, DrawRequestDTO.GetCurrentDrawInfo getCurrentDrawInfo){
         Optional<Draw> drawOptional = drawRepository.findById(getCurrentDrawInfo.getDrawId());
         Draw draw = drawOptional.orElseThrow(() -> new RuntimeException("DrawId Not Found: " + getCurrentDrawInfo.getDrawId()));
 
         Optional<ParkingSpace> parkingSpaceOptional = parkingSpaceRepository.findByIdAndDraw_Id(getCurrentDrawInfo.getParkingId(), draw.getId());
         ParkingSpace parkingSpace = parkingSpaceOptional.orElseThrow(() -> new RuntimeException("DrawId: "+ getCurrentDrawInfo.getDrawId()+" does not have ParkingSpaceId: " + getCurrentDrawInfo.getParkingId()));
 
-        return DrawResponseDto.GetCurrentDrawInfo.builder()
+        return DrawResponseDTO.GetCurrentDrawInfo.builder()
                 .drawStartAt(draw.getDrawStartAt())
                 .drawEndAt(draw.getDrawEndAt())
                 .usageStartAt(draw.getUsageStartAt())

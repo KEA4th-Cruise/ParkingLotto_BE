@@ -1,4 +1,4 @@
-package com.cruise.parkinglotto.web.dto.drawDto;
+package com.cruise.parkinglotto.web.dto.drawDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-public class DrawResponseDto {
+public class DrawResponseDTO {
 
     @Getter
     @Builder

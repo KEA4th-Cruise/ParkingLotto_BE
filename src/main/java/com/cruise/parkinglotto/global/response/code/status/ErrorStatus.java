@@ -21,7 +21,8 @@ public enum ErrorStatus implements BaseErrorCode {
     // [예시]
     // 게시글 관련 응답
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "POST4001", "게시글이 존재하지 않습니다."),
-
+    DRAW_NOT_FOUND(HttpStatus.NOT_FOUND, "DRAW4002", "추첨이 존재하지 않습니다."),
+    PARKING_SPACE_NOT_FOUND(HttpStatus.NOT_FOUND, "PARKING4001", "해당 추첨에 요청한 주차공간이 존재하지 않습니다."),
     ;
 
 
