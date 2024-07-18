@@ -37,7 +37,11 @@ public class DrawExecuteServiceImpl implements DrawExecuteService {
     }
 
     @Override
-    public void assignRandomNumber(List<Applicant> applicants, String seed) {
+    public void assignRandomNumber(Long drawId, String seed) {
+        List<Applicant> applicants = applicantRepository.findByDrawId(drawId);
+        if (applicants == null || applicants.isEmpty()) {
+            throw new IllegalArgumentException("해당 회차에 신청자가 없습니다. 해당 회차 ID : " + drawId);
+        }
         //해당 회차 시드로 생성된 첫 난수를 맨 처음 멤버에게 부여
         Random rand = new Random(seed.hashCode());
         double randomNumber = rand.nextDouble();

@@ -59,22 +59,25 @@ class DrawExecuteServiceImplTest {
     @DisplayName("난수 생성 테스트")
     @Test
     public void testAssignRandomNumber() throws Exception {
-        String seed = "testSeed123";
+        Long drawId = 1L;
+        String seed = "testSeed";
         Applicant applicant1 = Applicant.builder().id(1L).userSeed("seed1").build();
         Applicant applicant2 = Applicant.builder().id(2L).userSeed("seed2").build();
         Applicant applicant3 = Applicant.builder().id(3L).userSeed("seed3").build();
 
         List<Applicant> applicants = Arrays.asList(applicant1, applicant2, applicant3);
 
+        when(applicantRepository.findByDrawId(drawId)).thenReturn(applicants);
+
         // Mock the assignRandomNumber method
         doNothing().when(applicantRepository).assignRandomNumber(anyLong(), anyDouble());
 
-        drawExecuteService.assignRandomNumber(applicants, seed);
+        drawExecuteService.assignRandomNumber(drawId, seed);
 
         // Verify and compare the actual random numbers
         Random rand = new Random(seed.hashCode());
         double firstRandomNumber = rand.nextDouble();
-        System.out.println("신청자 1 ID : " + applicant1.getId() + ", 난수 : " + firstRandomNumber);
+        System.out.println("Applicant 1 ID: " + applicant1.getId() + ", Random Number: " + firstRandomNumber);
         verify(applicantRepository).assignRandomNumber(applicant1.getId(), firstRandomNumber);
 
         rand = new Random(Double.doubleToLongBits(firstRandomNumber));
@@ -87,17 +90,17 @@ class DrawExecuteServiceImplTest {
         System.out.println("Applicant 3 ID: " + applicant3.getId() + ", Random Number: " + thirdRandomNumber);
         verify(applicantRepository).assignRandomNumber(applicant3.getId(), thirdRandomNumber);
 
-        // Verify that the generated numbers match
+        // Verify that the generated numbers match the expected sequence
         Random randTest = new Random(seed.hashCode());
         double firstTestRandomNumber = randTest.nextDouble();
-        assertEquals(firstTestRandomNumber, firstRandomNumber, "First random number does not match");
+        assertEquals(firstTestRandomNumber, firstRandomNumber, 0.0000001);
 
         randTest = new Random(Double.doubleToLongBits(firstTestRandomNumber));
         double secondTestRandomNumber = randTest.nextDouble();
-        assertEquals(secondTestRandomNumber, secondRandomNumber, "Second random number does not match");
+        assertEquals(secondTestRandomNumber, secondRandomNumber, 0.0000001);
 
         randTest = new Random(Double.doubleToLongBits(secondTestRandomNumber));
         double thirdTestRandomNumber = randTest.nextDouble();
-        assertEquals(thirdTestRandomNumber, thirdRandomNumber, "Third random number does not match");
+        assertEquals(thirdTestRandomNumber, thirdRandomNumber, 0.0000001);
     }
 }
