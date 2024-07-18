@@ -15,5 +15,7 @@ public interface ApplicantRepository extends JpaRepository<Applicant,Long> {
 
    @Query("select a.parkingSpaceId from Applicant a where a.id =:applicantId")
    Long findParkingSpaceId(@Param("applicantId") Long applicantId);
+  
+   List<Applicant> findByDrawId(Long drawId);
 
 }
