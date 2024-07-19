@@ -3,7 +3,7 @@ package com.cruise.parkinglotto.web.controller;
 import com.cruise.parkinglotto.global.response.ApiResponse;
 import com.cruise.parkinglotto.global.response.code.status.SuccessStatus;
 import com.cruise.parkinglotto.service.drawService.DrawService;
-import com.cruise.parkinglotto.web.dto.DrawResponseDto;
+import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawRequestDTO;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;

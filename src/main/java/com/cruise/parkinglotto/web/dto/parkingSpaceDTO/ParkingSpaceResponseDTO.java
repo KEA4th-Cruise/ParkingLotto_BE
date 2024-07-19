@@ -23,7 +23,7 @@ public class ParkingSpaceResponseDTO {
     public static class GetNameAndUrlParkingSpaceResultDTO {
         String name;
         String floorPlanImageUrl;
-
+    }
     @Getter
     @Builder
     @AllArgsConstructor
