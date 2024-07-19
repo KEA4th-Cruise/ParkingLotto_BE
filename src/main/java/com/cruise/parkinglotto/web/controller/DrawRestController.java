@@ -2,7 +2,6 @@ package com.cruise.parkinglotto.web.controller;
 
 import com.cruise.parkinglotto.global.response.ApiResponse;
 import com.cruise.parkinglotto.global.response.code.status.SuccessStatus;
-import com.cruise.parkinglotto.service.drawService.DrawExecuteService;
 import com.cruise.parkinglotto.service.drawService.DrawService;
 import com.cruise.parkinglotto.web.dto.DrawResponseDto;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawRequestDTO;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/draw")
 @RequiredArgsConstructor
 public class DrawRestController {
-    private final DrawExecuteService drawExecuteService;
     private final DrawService drawService;
 
     @GetMapping("/get-current-draw-info")
