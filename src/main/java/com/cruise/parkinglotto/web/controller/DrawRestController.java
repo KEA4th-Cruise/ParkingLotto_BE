@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/draw")
+@RequestMapping("/api/draw")
 @RequiredArgsConstructor
 public class DrawRestController {
     private final DrawService drawService;

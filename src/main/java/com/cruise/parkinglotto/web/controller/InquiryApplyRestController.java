@@ -14,7 +14,7 @@ import com.cruise.parkinglotto.global.response.code.status.SuccessStatus;
 
 @Slf4j
 @RestController
-@RequestMapping("/inquiryApply")
+@RequestMapping("/api/inquiry-apply")
 @RequiredArgsConstructor
 public class InquiryApplyRestController {
     private final DrawService drawService;
