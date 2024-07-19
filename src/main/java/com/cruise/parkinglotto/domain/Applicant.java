@@ -66,4 +66,9 @@ public class Applicant extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "draw_id")
     private Draw draw;
+
+    public void cancelWinningStatus() {
+        this.winningStatus = WinningStatus.CANCELED;
+    }
+
 }
