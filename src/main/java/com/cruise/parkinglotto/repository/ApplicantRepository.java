@@ -7,14 +7,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.OptionalLong;
 
 public interface ApplicantRepository extends JpaRepository<Applicant,Long> {
 
    @Query("select a.id from Applicant a where a.member.id = :memberId")
-   Long findByMember(@Param("memberId") Long memberId);
+   Optional<Long> findByMember(@Param("memberId") Long memberId);
 
    @Query("select a.parkingSpaceId from Applicant a where a.id =:applicantId")
-   Long findParkingSpaceId(@Param("applicantId") Long applicantId);
+   Optional<Long> findParkingSpaceId(@Param("applicantId") Long applicantId);
   
    List<Applicant> findByDrawId(Long drawId);
 

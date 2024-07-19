@@ -1,9 +1,9 @@
 package com.cruise.parkinglotto.service.parkingSpaceService;
 
-import com.cruise.parkinglotto.web.dto.ParkingSpaceDTO;
+import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
 
 public interface ParkingSpaceService {
 
-    public ParkingSpaceDTO.ParkingSpaceInfoResponseDTO findParkingSpaceImg(Long memberId);
+     ParkingSpaceResponseDTO.ParkingSpaceInfoResponseDTO findParkingSpaceInfo(Long memberId);
 
 }

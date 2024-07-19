@@ -1,12 +1,12 @@
 package com.cruise.parkinglotto.convert;
 
 import com.cruise.parkinglotto.domain.ParkingSpace;
-import com.cruise.parkinglotto.web.dto.ParkingSpaceDTO;
+import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
 
 public class ParkingSpaceConverter {
-    public static ParkingSpaceDTO.ParkingSpaceInfoResponseDTO toParkingSpaceDTO(ParkingSpace parkingSpace) {
+    public static ParkingSpaceResponseDTO.ParkingSpaceInfoResponseDTO toParkingSpaceInfoDTO(ParkingSpace parkingSpace) {
 
-        return ParkingSpaceDTO.ParkingSpaceInfoResponseDTO.builder( )
+        return ParkingSpaceResponseDTO.ParkingSpaceInfoResponseDTO.builder( )
                 .address(parkingSpace.getAddress())
                 .floorPlanImageUrl(parkingSpace.getFloorPlanImageUrl( ))
                 .name(parkingSpace.getName( ))

@@ -1,12 +1,11 @@
-package com.cruise.parkinglotto.web.dto;
+package com.cruise.parkinglotto.web.dto.parkingSpaceDTO;
 
 import lombok.Builder;
 import lombok.Getter;
-
 import java.time.LocalDateTime;
 
 
-public class ParkingSpaceDTO {
+public class ParkingSpaceResponseDTO {
     @Getter
     public static class ParkingSpaceInfoResponseDTO {
         private String floorPlanImageUrl;
