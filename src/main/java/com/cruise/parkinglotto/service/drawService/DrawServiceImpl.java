@@ -247,8 +247,8 @@ public class DrawServiceImpl implements DrawService {
 
     @Override
     @Transactional(readOnly = true)
-    public DrawResponseDTO.GetCurrentDrawInfoDTO getCurrentDrawInfo(HttpServletRequest httpServletRequest, DrawRequestDTO.GetCurrentDrawInfoDTO getCurrentDrawInfo) {
-        Draw draw = drawRepository.findById(getCurrentDrawInfo.getDrawId())
+    public DrawResponseDTO.GetCurrentDrawInfoDTO getCurrentDrawInfo(HttpServletRequest httpServletRequest, Long drawId) {
+        Draw draw = drawRepository.findById(drawId)
                 .orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
 
         List<ParkingSpace> parkingSpace = parkingSpaceRepository.findByDrawId(draw.getId());
