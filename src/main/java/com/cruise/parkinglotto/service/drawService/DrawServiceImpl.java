@@ -259,6 +259,10 @@ public class DrawServiceImpl implements DrawService {
                 .map(ParkingSpace::getFloorPlanImageUrl)
                 .toList();
 
-        return toGetCurrentDrawInfo(draw, floorPlanImageUrls);
+        List<String> name = parkingSpace.stream()
+                .map(ParkingSpace::getName)
+                .toList();
+
+        return toGetCurrentDrawInfo(draw, floorPlanImageUrls, name);
     }
 }

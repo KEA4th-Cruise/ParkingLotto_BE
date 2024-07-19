@@ -20,6 +20,7 @@ public class DrawResponseDTO {
         private LocalDateTime usageStartAt;
         private LocalDateTime usageEndAt;
         private String mapImageUrl;
+        private List<String> name;
         private List<String> floorPlanImageUrl;
     }
 }
