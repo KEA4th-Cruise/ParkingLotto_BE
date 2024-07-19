@@ -24,4 +24,11 @@ public class ParkingSpaceRestController {
         ParkingSpace parkingSpace = parkingSpaceService.addParkingSpace(drawId, floorPlanImage, addParkingSpaceDTO);
         return ApiResponse.onSuccess(SuccessStatus.PARKING_SPACE_ADDED, ParkingSpaceConverter.toAddParkingSpaceResultDTO(parkingSpace));
     }
+
+    @GetMapping("/myspace/{memberId}")
+    public ApiResponse<ParkingSpaceResponseDTO.ParkingSpaceInfoResponseDTO> getParkingSpaceInfo(@PathVariable("memberId") Long memberId) {
+
+        return ApiResponse.onSuccess(SuccessStatus.PARKING_SPACE_INFO_FOUND,parkingSpaceService.findParkingSpaceInfo(memberId));
+    }
+
 }
