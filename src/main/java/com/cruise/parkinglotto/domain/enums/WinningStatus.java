@@ -4,5 +4,5 @@ public enum WinningStatus {
     PENDING,    //  대기
     WINNER,     //  당첨
     RESERVE,     //  예비
-    CANCELED,    // 취소
+    CANCELED    // 취소
 }
