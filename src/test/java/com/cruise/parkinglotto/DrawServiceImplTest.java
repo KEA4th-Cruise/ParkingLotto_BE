@@ -54,6 +54,7 @@ public class DrawServiceImplTest {
                 .build();
 
         Draw draw2 = Draw.builder()
+                .id(14L)
                 .type(DrawType.PRIORITY)
                 .title("DrawClassTest2")
                 .drawStartAt(LocalDateTime.of(2026, 8, 19, 5, 16))
@@ -85,14 +86,10 @@ public class DrawServiceImplTest {
         Draw savedDraw2 = drawRepository.save(draw2);
         ParkingSpace saveParkingSpace=parkingSpaceRepository.save(parkingSpace);
 
-        DrawRequestDTO.GetCurrentDrawInfoDTO request = DrawRequestDTO.GetCurrentDrawInfoDTO.builder()
-                .drawId(savedDraw.getId())
-                .parkingId(saveParkingSpace.getId())
-                .build();
 
 
         HttpServletRequest httpServletRequest = null;
-        DrawResponseDTO.GetCurrentDrawInfoDTO getCurrentDrawInfoDto = drawService.getCurrentDrawInfo(httpServletRequest, request);
+        DrawResponseDTO.GetCurrentDrawInfoDTO getCurrentDrawInfoDto = drawService.getCurrentDrawInfo(httpServletRequest, draw.getId());
 
         assertEquals(getCurrentDrawInfoDto.getMapImageUrl(), draw.getMapImageUrl());
     }
