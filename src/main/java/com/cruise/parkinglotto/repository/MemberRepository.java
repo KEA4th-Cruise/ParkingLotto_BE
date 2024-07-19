@@ -12,4 +12,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Transactional
     @Query("UPDATE Member m SET m.recentLossCount = 0 WHERE m.id = :memberId")
     void resetRecentLossCount(@Param("memberId") Long memberId);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Member m SET m.recentLossCount = m.recentLossCount + 1 WHERE m.id = :memberId")
+    void increaseRecentLossCount(@Param("memberId") Long memberId);
 }

@@ -16,15 +16,13 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-class DrawExecuteServiceImplTest {
+class DrawServiceImplTest {
 
     @Mock
     private ApplicantRepository applicantRepository;
@@ -39,7 +37,7 @@ class DrawExecuteServiceImplTest {
     private MemberRepository memberRepository;
 
     @InjectMocks
-    private DrawExecuteServiceImpl drawExecuteService;
+    private DrawServiceImpl drawExecuteService;
 
     @BeforeEach
     void setUp() {
@@ -242,4 +240,42 @@ class DrawExecuteServiceImplTest {
         assertEquals(applicant.getId(), idCaptor.getValue());
         assertEquals(expectedWeight, weightCaptor.getValue());
     }
+
+    @DisplayName("예비번호 부여 로직 확인")
+    @Test
+    void assignWaitlistNumbers() {
+        //given
+        List<Applicant> applicants = new ArrayList<>();
+        Member member1 = Member.builder().id(1L).build();
+        Member member2 = Member.builder().id(2L).build();
+        Member member3 = Member.builder().id(3L).build();
+
+        applicants.add(Applicant.builder().id(1L).member(member1).reserveNum(0L).build()); // 당첨자
+        applicants.add(Applicant.builder().id(2L).member(member2).reserveNum(1L).build()); // 당첨자 아님
+        applicants.add(Applicant.builder().id(3L).member(member3).reserveNum(1L).build()); // 당첨자 아님
+
+        //when
+        drawExecuteService.assignWaitListNumbers(applicants);
+
+        // ArgumentCaptor를 사용하여 updateReserveNum 메서드 호출 시 전달된 인수를 캡처합니다.
+        ArgumentCaptor<Long> idCaptor = ArgumentCaptor.forClass(Long.class);
+        ArgumentCaptor<Integer> reserveNumCaptor = ArgumentCaptor.forClass(Integer.class);
+
+        verify(applicantRepository, times(2)).updateReserveNum(idCaptor.capture(), reserveNumCaptor.capture());
+
+        //then
+        List<Long> capturedIds = idCaptor.getAllValues();
+        List<Integer> capturedReserveNums = reserveNumCaptor.getAllValues();
+
+        assertEquals(2, capturedIds.size());
+        assertEquals(2, capturedReserveNums.size());
+
+        // 예비번호가 1부터 순차적으로 부여되었는지 확인합니다.
+        assertEquals(applicants.get(1).getId(), capturedIds.get(0));
+        assertEquals(1, capturedReserveNums.get(0));
+
+        assertEquals(applicants.get(2).getId(), capturedIds.get(1));
+        assertEquals(2, capturedReserveNums.get(1));
+    }
+
 }
