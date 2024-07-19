@@ -1,9 +1,11 @@
 package com.cruise.parkinglotto.web.dto.drawDTO;
 
+import com.cruise.parkinglotto.domain.Draw;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO.GetNameAndIdWhichFromIsParkingResponseDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,7 +22,6 @@ public class DrawResponseDTO {
         private LocalDateTime usageStartAt;
         private LocalDateTime usageEndAt;
         private String mapImageUrl;
-        private List<String> name;
-        private List<String> floorPlanImageUrl;
+        private List<GetNameAndIdWhichFromIsParkingResponseDTO> getNameAndIdWhichFromIsParkingResponseDTO;
     }
 }

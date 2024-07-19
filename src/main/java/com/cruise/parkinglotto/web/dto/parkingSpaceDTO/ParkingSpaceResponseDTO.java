@@ -14,4 +14,13 @@ public class ParkingSpaceResponseDTO {
         private String floorPlanImageUrl;
         private String address;
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetNameAndIdWhichFromIsParkingResponseDTO {
+        String name;
+        String floorPlanImageUrl;
+    }
 }

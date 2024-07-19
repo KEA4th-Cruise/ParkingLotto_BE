@@ -6,6 +6,7 @@ import com.cruise.parkinglotto.service.drawService.DrawService;
 import com.cruise.parkinglotto.web.dto.DrawResponseDto;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawRequestDTO;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class DrawRestController {
     private final DrawService drawService;
 
+    @Operation(summary = "해당 회차 현재 신청 현황 조회 API", description = "drawId에 유효한 Id를 넣으면 해당 추첨에 관한 정보를 반환합니다.")
     @GetMapping("/get-current-draw-info")
     public ApiResponse<DrawResponseDTO.GetCurrentDrawInfoDTO> getCurrentDrawInfo(HttpServletRequest httpServletRequest,
                                                                          @Valid @RequestBody DrawRequestDTO.GetCurrentDrawInfoDTO request) {
