@@ -10,7 +10,6 @@ import com.cruise.parkinglotto.repository.ApplicantRepository;
 import com.cruise.parkinglotto.repository.DrawRepository;
 import com.cruise.parkinglotto.repository.MemberRepository;
 import com.cruise.parkinglotto.repository.ParkingSpaceRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +18,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class DrawExecuteServiceImpl implements DrawExecuteService {
+public class DrawServiceImpl implements DrawService {
 
     private final ApplicantRepository applicantRepository;
     private final DrawRepository drawRepository;
@@ -58,6 +57,8 @@ public class DrawExecuteServiceImpl implements DrawExecuteService {
         List<Applicant> selectedWinners = selectWinners(drawId, applicants, new Random(seed.hashCode()));
         //당첨자들에게 자리 부여하기
         assignZones(drawId, selectedWinners);
+        //낙첨자들에게 예비번호 부여하기
+        assignWaitListNumbers(applicants);
     }
 
     @Override
@@ -89,19 +90,19 @@ public class DrawExecuteServiceImpl implements DrawExecuteService {
             throw new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND);
         }
         //해당 회차 시드로 생성된 첫 난수를 맨 처음 멤버에게 부여
-        Random rand = new Random(seed.hashCode());
-        double randomNumber = rand.nextDouble();
+        Random random = new Random(seed.hashCode());
+        double randomNumber = random.nextDouble();
         applicantRepository.assignRandomNumber(applicants.get(0).getId(), randomNumber);
         //해당 난수를 시드로 하여 모든 신청자들에게 난수 부여
         for (int i = 1; i < applicants.size(); i++) {
-            rand = new Random(Double.doubleToLongBits(randomNumber));
-            randomNumber = rand.nextDouble();
+            random = new Random(Double.doubleToLongBits(randomNumber));
+            randomNumber = random.nextDouble();
             applicantRepository.assignRandomNumber(applicants.get(i).getId(), randomNumber);
         }
     }
 
     @Override
-    public List<Applicant> selectWinners(Long drawId, List<Applicant> applicants, Random rand) {
+    public List<Applicant> selectWinners(Long drawId, List<Applicant> applicants, Random random) {
         List<ParkingSpace> parkingSpaces = parkingSpaceRepository.findByDrawId(drawId);
         Long totalSlots = parkingSpaces.stream().mapToLong(ParkingSpace::getSlots).sum();
 
@@ -110,7 +111,7 @@ public class DrawExecuteServiceImpl implements DrawExecuteService {
 
         List<Applicant> selectedWinners = new ArrayList<>();
         for (int i = 0; i < totalSlots && !applicants.isEmpty(); i++) {
-            Applicant winner = weightedRandomSelection(applicants, rand);
+            Applicant winner = weightedRandomSelection(applicants, random);
             if (winner != null) {
                 /**
                  * 1. 예비번호를 0으로 바꿔서 당첨 표시
@@ -207,14 +208,25 @@ public class DrawExecuteServiceImpl implements DrawExecuteService {
         applicantRepository.updateWeightedTotalScore(applicant.getId(), weight);
         }
 
+    //예비번호 부여 로직 및 예비번호를 받는 즉시 연속 낙첨 횟수 증가
+    @Override
+    public void assignWaitListNumbers(List<Applicant> applicants) {
+        int waitListNumber = 1;
+        for (Applicant applicant : applicants) {
+            if (applicant.getReserveNum() != 0) {
+                applicantRepository.updateReserveNum(applicant.getId(), waitListNumber++);
+                memberRepository.increaseRecentLossCount(applicant.getMember().getId());
+            }
+        }
+    }
 
     //가중치랜덤알고리즘 로직
-    public static Applicant weightedRandomSelection(List<Applicant> applicants, Random rand) {
+    public static Applicant weightedRandomSelection(List<Applicant> applicants, Random random) {
         double totalWeight = applicants.stream().mapToDouble(Applicant::getWeightedTotalScore).sum();
         if (totalWeight <= 0) {
             return null;
         }
-        double randomIndex = rand.nextDouble(totalWeight);
+        double randomIndex = random.nextDouble(totalWeight);
         int currentWeightSum = 0;
 
         for (Applicant applicant : applicants) {
