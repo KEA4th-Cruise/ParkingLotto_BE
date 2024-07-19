@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class DrawResponseDTO {
 
@@ -19,6 +20,6 @@ public class DrawResponseDTO {
         private LocalDateTime usageStartAt;
         private LocalDateTime usageEndAt;
         private String mapImageUrl;
-        private String floorPlanImageUrl;
+        private List<String> floorPlanImageUrl;
     }
 }

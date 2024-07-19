@@ -1,5 +1,6 @@
 package com.cruise.parkinglotto.web.dto.drawDTO;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +13,7 @@ public class DrawRequestDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class GetCurrentDrawInfoDTO{
+        @NotNull
         private long drawId;
-        private long parkingId;
     }
 }
