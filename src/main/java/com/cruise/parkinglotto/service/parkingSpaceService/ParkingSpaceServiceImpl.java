@@ -12,8 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -30,7 +28,7 @@ public class ParkingSpaceServiceImpl implements ParkingSpaceService {
         Long parkingSpaceId = applicantRepository.findParkingSpaceId(applicantId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.PARKING_SPACE_NOT_FOUND));
         ParkingSpace findParkingSpace = parkingSpaceRepository.findById(parkingSpaceId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.PARKING_SPACE_NOT_FOUND));
 
-        return ParkingSpaceConverter.toParkingSpaceInfoDTO(findParkingSpace);
+        return ParkingSpaceConverter.toParkingSpaceInfoResponseDTO(findParkingSpace);
     }
 
 

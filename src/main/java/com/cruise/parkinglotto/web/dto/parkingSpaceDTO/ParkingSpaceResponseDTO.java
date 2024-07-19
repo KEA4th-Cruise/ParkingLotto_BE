@@ -15,6 +15,7 @@ public class ParkingSpaceResponseDTO {
     @NoArgsConstructor
     public static class ParkingSpaceInfoResponseDTO {
         private String floorPlanImageUrl;
+        private String mapImageUrl;
         private String name;
         private String address;
         private String title;
