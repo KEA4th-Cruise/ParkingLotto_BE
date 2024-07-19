@@ -1,4 +1,3 @@
-
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -14,3 +13,17 @@ spring:
         show_sql: true
         use_sql_comments: true
         dialect: org.hibernate.dialect.MySQLDialect
+cloud:
+  aws:
+    s3:
+      url: ${AWS_S3_URL}
+      bucket: ${AWS_S3_BUCKET_NAME}
+      path:
+        parking-space-image: ${PARKING_SPACE_IMAGE}
+    region:
+      static: ${AWS_REGION}
+    stack:
+      auto: false
+    credentials:
+      accessKey: ${AWS_S3_ACCESS_KEY}
+      secretKey: ${AWS_S3_SECRET_KEY}

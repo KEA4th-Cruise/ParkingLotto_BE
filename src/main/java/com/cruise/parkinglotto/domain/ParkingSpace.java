@@ -3,6 +3,7 @@ package com.cruise.parkinglotto.domain;
 import com.cruise.parkinglotto.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
@@ -33,7 +34,14 @@ public class ParkingSpace extends BaseEntity {
 
     private Long applicantCount;
 
+    @ColumnDefault("false")
+    private Boolean confirmed;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "draw_id")
     private Draw draw;
+
+    public void updateConfirmed(boolean confirmed) {
+        this.confirmed = confirmed;
+    }
 }
