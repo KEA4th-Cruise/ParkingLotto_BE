@@ -4,6 +4,7 @@ import com.cruise.parkinglotto.domain.Applicant;
 import com.cruise.parkinglotto.domain.Draw;
 import com.cruise.parkinglotto.domain.Member;
 import com.cruise.parkinglotto.domain.ParkingSpace;
+import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import com.cruise.parkinglotto.domain.enums.WorkType;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
@@ -123,9 +124,11 @@ public class DrawServiceImpl implements DrawService {
                 /**
                  * 1. 예비번호를 0으로 바꿔서 당첨 표시
                  * 2. Member테이블에서 해당 사용자의 연속낙첨횟수 0으로 바꾸기
+                 * 3. WinningStatus 변경
                  */
                 selectedWinners.add(winner);
-                applicantRepository.updateReserveNum(winner.getMember().getId(), 0);
+                applicantRepository.updateReserveNum(winner.getId(), 0);
+                applicantRepository.updateWinningStatus(winner.getId(), WinningStatus.WINNER);
                 memberRepository.resetRecentLossCount(winner.getMember().getId());
             }
         }
@@ -223,6 +226,7 @@ public class DrawServiceImpl implements DrawService {
             if (applicant.getReserveNum() != 0) {
                 applicantRepository.updateReserveNum(applicant.getId(), waitListNumber++);
                 memberRepository.increaseRecentLossCount(applicant.getMember().getId());
+                applicantRepository.updateWinningStatus(applicant.getId(), WinningStatus.RESERVE);
             }
         }
     }
