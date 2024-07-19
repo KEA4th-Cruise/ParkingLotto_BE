@@ -16,15 +16,13 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-class DrawExecuteServiceImplTest {
+class DrawServiceImplTest {
 
     @Mock
     private ApplicantRepository applicantRepository;
@@ -39,7 +37,7 @@ class DrawExecuteServiceImplTest {
     private MemberRepository memberRepository;
 
     @InjectMocks
-    private DrawExecuteServiceImpl drawExecuteService;
+    private DrawServiceImpl drawExecuteService;
 
     @BeforeEach
     void setUp() {
