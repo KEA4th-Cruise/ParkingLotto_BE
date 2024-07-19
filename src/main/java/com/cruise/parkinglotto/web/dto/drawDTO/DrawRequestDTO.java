@@ -11,7 +11,7 @@ public class DrawRequestDTO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetCurrentDrawInfo{
+    public static class GetCurrentDrawInfoDTO{
         private long drawId;
         private long parkingId;
     }

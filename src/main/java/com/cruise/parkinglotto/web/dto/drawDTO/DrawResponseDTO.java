@@ -13,7 +13,7 @@ public class DrawResponseDTO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetCurrentDrawInfo{
+    public static class GetCurrentDrawInfoDTO{
         private LocalDateTime drawStartAt;
         private LocalDateTime drawEndAt;
         private LocalDateTime usageStartAt;

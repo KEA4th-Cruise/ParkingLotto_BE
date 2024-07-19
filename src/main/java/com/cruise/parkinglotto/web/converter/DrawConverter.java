@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 public class DrawConverter {
-    public static DrawResponseDTO.GetCurrentDrawInfo toGetCurrentDrawInfo(Draw draw, ParkingSpace parkingSpace) {
-        return DrawResponseDTO.GetCurrentDrawInfo.builder()
+    public static DrawResponseDTO.GetCurrentDrawInfoDTO toGetCurrentDrawInfo(Draw draw, ParkingSpace parkingSpace) {
+        return DrawResponseDTO.GetCurrentDrawInfoDTO.builder()
                 .drawStartAt(draw.getDrawStartAt())
                 .drawEndAt(draw.getDrawEndAt())
                 .usageStartAt(draw.getUsageStartAt())

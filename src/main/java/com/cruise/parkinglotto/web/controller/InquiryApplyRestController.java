@@ -2,8 +2,7 @@ package com.cruise.parkinglotto.web.controller;
 
 
 import com.cruise.parkinglotto.global.response.ApiResponse;
-import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
-import com.cruise.parkinglotto.service.DrawCommandService;
+import com.cruise.parkinglotto.service.DrawService;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawRequestDTO;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,16 +14,16 @@ import com.cruise.parkinglotto.global.response.code.status.SuccessStatus;
 
 @Slf4j
 @RestController
-@RequestMapping("/InquiryApply")
+@RequestMapping("/inquiryApply")
 @RequiredArgsConstructor
 public class InquiryApplyRestController {
-    private final DrawCommandService drawCommandService;
+    private final DrawService drawService;
 
-    @GetMapping("/GetCurrentDrawInfo")
-    public ApiResponse<DrawResponseDTO.GetCurrentDrawInfo> getHistory(HttpServletRequest httpServletRequest,
-                                                                      @Valid @RequestBody DrawRequestDTO.GetCurrentDrawInfo reqeust) {
+    @GetMapping("/getCurrentDrawInfo")
+    public ApiResponse<DrawResponseDTO.GetCurrentDrawInfoDTO> getHistory(HttpServletRequest httpServletRequest,
+                                                                      @Valid @RequestBody DrawRequestDTO.GetCurrentDrawInfoDTO request) {
 
-        DrawResponseDTO.GetCurrentDrawInfo getCurrentDrawInfoDto = drawCommandService.getCurrentDrawInfo(httpServletRequest, reqeust);
+        DrawResponseDTO.GetCurrentDrawInfoDTO getCurrentDrawInfoDto = drawService.getCurrentDrawInfo(httpServletRequest, request);
 
         return ApiResponse.onSuccess(SuccessStatus._OK, getCurrentDrawInfoDto);
 

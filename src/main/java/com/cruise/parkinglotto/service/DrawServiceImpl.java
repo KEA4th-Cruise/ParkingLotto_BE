@@ -19,7 +19,7 @@ import static com.cruise.parkinglotto.web.converter.DrawConverter.toGetCurrentDr
 
 @Service
 @RequiredArgsConstructor
-public class DrawCommandServiceImpl implements DrawCommandService{
+public class DrawServiceImpl implements DrawService {
     private final DrawRepository drawRepository;
     private final ParkingSpaceRepository parkingSpaceRepository;
 
@@ -27,11 +27,11 @@ public class DrawCommandServiceImpl implements DrawCommandService{
 
     @Override
     @Transactional(readOnly = true)
-    public DrawResponseDTO.GetCurrentDrawInfo getCurrentDrawInfo(HttpServletRequest httpServletRequest, DrawRequestDTO.GetCurrentDrawInfo getCurrentDrawInfo) {
+    public DrawResponseDTO.GetCurrentDrawInfoDTO getCurrentDrawInfo(HttpServletRequest httpServletRequest, DrawRequestDTO.GetCurrentDrawInfoDTO getCurrentDrawInfo) {
         Optional<Draw> drawOptional = drawRepository.findById(getCurrentDrawInfo.getDrawId());
         Draw draw = drawOptional.orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
 
-        Optional<ParkingSpace> parkingSpaceOptional = parkingSpaceRepository.findByIdAndDraw_Id(getCurrentDrawInfo.getParkingId(), draw.getId());
+        Optional<ParkingSpace> parkingSpaceOptional = parkingSpaceRepository.findByIdAndDrawId(getCurrentDrawInfo.getParkingId(), draw.getId());
         ParkingSpace parkingSpace = parkingSpaceOptional.orElseThrow(() -> new ExceptionHandler(ErrorStatus.PARKING_SPACE_NOT_FOUND));
 
         return toGetCurrentDrawInfo(draw, parkingSpace);

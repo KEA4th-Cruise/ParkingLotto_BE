@@ -6,31 +6,23 @@ import com.cruise.parkinglotto.domain.enums.DrawStatus;
 import com.cruise.parkinglotto.domain.enums.DrawType;
 import com.cruise.parkinglotto.repository.DrawRepository;
 import com.cruise.parkinglotto.repository.ParkingSpaceRepository;
-import com.cruise.parkinglotto.service.DrawCommandService;
-import com.cruise.parkinglotto.service.DrawCommandServiceImpl;
+import com.cruise.parkinglotto.service.DrawService;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawRequestDTO;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class DrawCommandServiceImplTest {
+public class DrawServiceImplTest {
 
     @Autowired
     DrawRepository drawRepository;
@@ -39,7 +31,7 @@ public class DrawCommandServiceImplTest {
     ParkingSpaceRepository parkingSpaceRepository;
 
     @Autowired
-    DrawCommandService drawCommandService;
+    DrawService drawService;
 
     @Test
     @DisplayName("DrawService")
@@ -93,14 +85,14 @@ public class DrawCommandServiceImplTest {
         Draw savedDraw2 = drawRepository.save(draw2);
         ParkingSpace saveParkingSpace=parkingSpaceRepository.save(parkingSpace);
 
-        DrawRequestDTO.GetCurrentDrawInfo request = DrawRequestDTO.GetCurrentDrawInfo.builder()
+        DrawRequestDTO.GetCurrentDrawInfoDTO request = DrawRequestDTO.GetCurrentDrawInfoDTO.builder()
                 .drawId(savedDraw.getId())
                 .parkingId(saveParkingSpace.getId())
                 .build();
 
 
         HttpServletRequest httpServletRequest = null;
-        DrawResponseDTO.GetCurrentDrawInfo getCurrentDrawInfoDto = drawCommandService.getCurrentDrawInfo(httpServletRequest, request);
+        DrawResponseDTO.GetCurrentDrawInfoDTO getCurrentDrawInfoDto = drawService.getCurrentDrawInfo(httpServletRequest, request);
 
         assertEquals(getCurrentDrawInfoDto.getMapImageUrl(), draw.getMapImageUrl());
     }
