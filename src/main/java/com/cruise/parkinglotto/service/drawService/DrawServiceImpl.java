@@ -252,17 +252,7 @@ public class DrawServiceImpl implements DrawService {
                 .orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
 
         List<ParkingSpace> parkingSpace = parkingSpaceRepository.findByDrawId(draw.getId());
-        if (parkingSpace == null) {
-            throw new ExceptionHandler(ErrorStatus.PARKING_SPACE_NOT_FOUND);
-        }
-        List<String> floorPlanImageUrls = parkingSpace.stream()
-                .map(ParkingSpace::getFloorPlanImageUrl)
-                .toList();
 
-        List<String> name = parkingSpace.stream()
-                .map(ParkingSpace::getName)
-                .toList();
-
-        return toGetCurrentDrawInfo(draw, floorPlanImageUrls, name);
+        return toGetCurrentDrawInfo(draw, parkingSpace);
     }
 }

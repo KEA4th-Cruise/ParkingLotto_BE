@@ -14,6 +14,6 @@ public class DrawRequestDTO {
     @AllArgsConstructor
     public static class GetCurrentDrawInfoDTO{
         @NotNull
-        private long drawId;
+        private Long drawId;
     }
 }
