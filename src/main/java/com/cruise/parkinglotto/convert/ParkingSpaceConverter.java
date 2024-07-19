@@ -9,7 +9,9 @@ public class ParkingSpaceConverter {
         return ParkingSpaceDTO.ParkingSpaceImgResponseDTO.builder( )
                 .address(parkingSpace.getAddress())
                 .floorPlanImageUrl(parkingSpace.getFloorPlanImageUrl( ))
-                .name(parkingSpace.getName( )).build( );
-
+                .name(parkingSpace.getName( ))
+                .title(parkingSpace.getDraw().getTitle())
+                .startAt(parkingSpace.getDraw().getUsageStartAt())
+                .endAt(parkingSpace.getDraw().getUsageEndAt()).build( );
     }
 }

@@ -26,7 +26,9 @@ public class ParkingSpaceServiceImpl implements ParkingSpaceService{
         Long parkingSpaceId = applicantRepository.findParkingSpaceId(applicantId);
         Optional<ParkingSpace> findParkingSpace = parkingSpaceRepository.findById(parkingSpaceId);
 
+
         return ParkingSpaceConverter.toParkingSpaceDTO(findParkingSpace.get());
     }
+
 
 }
