@@ -13,9 +13,6 @@ import java.util.stream.Collectors;
 public class ParkingSpaceConverter {
 
     public static List<ParkingSpaceResponseDTO.GetNameAndIdWhichFromIsParkingResponseDTO> toGetNameAndIdWhichFromIsParkingResponse(List<ParkingSpace> parkingSpaces) {
-        if (parkingSpaces == null || parkingSpaces.isEmpty()) {
-            throw new ExceptionHandler(ErrorStatus.PARKING_SPACE_NOT_FOUND);
-        }
 
         return parkingSpaces.stream()
                 .map(parkingSpace -> ParkingSpaceResponseDTO.GetNameAndIdWhichFromIsParkingResponseDTO.builder()

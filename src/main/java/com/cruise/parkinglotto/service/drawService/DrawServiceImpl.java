@@ -253,6 +253,10 @@ public class DrawServiceImpl implements DrawService {
 
         List<ParkingSpace> parkingSpace = parkingSpaceRepository.findByDrawId(draw.getId());
 
+        if (parkingSpace == null || parkingSpace.isEmpty()) {
+            throw new ExceptionHandler(ErrorStatus.PARKING_SPACE_NOT_FOUND);
+        }
+
         return toGetCurrentDrawInfo(draw, parkingSpace);
     }
 }
