@@ -1,10 +1,10 @@
 package com.cruise.parkinglotto.web.controller;
 
-import com.cruise.parkinglotto.converter.ParkingSpaceConverter;
 import com.cruise.parkinglotto.domain.ParkingSpace;
 import com.cruise.parkinglotto.global.response.ApiResponse;
 import com.cruise.parkinglotto.global.response.code.status.SuccessStatus;
 import com.cruise.parkinglotto.service.parkingSpaceService.ParkingSpaceService;
+import com.cruise.parkinglotto.web.converter.ParkingSpaceConverter;
 import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceRequestDTO;
 import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
 import lombok.RequiredArgsConstructor;
