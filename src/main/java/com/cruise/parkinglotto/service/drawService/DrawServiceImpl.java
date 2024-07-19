@@ -216,7 +216,7 @@ public class DrawServiceImpl implements DrawService {
         }
         // 가중치 점수를 Applicant 객체에 설정
         applicantRepository.updateWeightedTotalScore(applicant.getId(), weight);
-        }
+    }
 
     //예비번호 부여 로직 및 예비번호를 받는 즉시 연속 낙첨 횟수 증가
     @Override
@@ -251,12 +251,15 @@ public class DrawServiceImpl implements DrawService {
 
     @Override
     @Transactional(readOnly = true)
-    public DrawResponseDTO.GetCurrentDrawInfoDTO getCurrentDrawInfo(HttpServletRequest httpServletRequest, DrawRequestDTO.GetCurrentDrawInfoDTO getCurrentDrawInfo) {
-        Optional<Draw> drawOptional = drawRepository.findById(getCurrentDrawInfo.getDrawId());
-        Draw draw = drawOptional.orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
+    public DrawResponseDTO.GetCurrentDrawInfoDTO getCurrentDrawInfo(HttpServletRequest httpServletRequest, Long drawId) {
+        Draw draw = drawRepository.findById(drawId)
+                .orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
 
-        Optional<ParkingSpace> parkingSpaceOptional = parkingSpaceRepository.findByIdAndDrawId(getCurrentDrawInfo.getParkingId(), draw.getId());
-        ParkingSpace parkingSpace = parkingSpaceOptional.orElseThrow(() -> new ExceptionHandler(ErrorStatus.PARKING_SPACE_NOT_FOUND));
+        List<ParkingSpace> parkingSpace = parkingSpaceRepository.findByDrawId(draw.getId());
+
+        if (parkingSpace == null || parkingSpace.isEmpty()) {
+            throw new ExceptionHandler(ErrorStatus.PARKING_SPACE_NOT_FOUND);
+        }
 
         return toGetCurrentDrawInfo(draw, parkingSpace);
     }

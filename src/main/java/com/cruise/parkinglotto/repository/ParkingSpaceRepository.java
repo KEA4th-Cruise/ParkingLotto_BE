@@ -11,7 +11,6 @@ import java.util.Optional;
 import java.util.List;
 
 public interface ParkingSpaceRepository extends JpaRepository<ParkingSpace, Long> {
-    Optional<ParkingSpace> findByIdAndDrawId(long id, long drawId);
     List<ParkingSpace> findByDrawId(Long drawId);
   
     @Modifying

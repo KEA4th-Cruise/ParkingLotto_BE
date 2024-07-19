@@ -4,7 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO.GetNameAndUrlParkingSpaceResultDTO;
+
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class DrawResponseDTO {
 
@@ -18,7 +21,7 @@ public class DrawResponseDTO {
         private LocalDateTime usageStartAt;
         private LocalDateTime usageEndAt;
         private String mapImageUrl;
-        private String floorPlanImageUrl;
+        private List<GetNameAndUrlParkingSpaceResultDTO> getNameAndUrlParkingSpaceResultDTO;
     }
 
     @Getter

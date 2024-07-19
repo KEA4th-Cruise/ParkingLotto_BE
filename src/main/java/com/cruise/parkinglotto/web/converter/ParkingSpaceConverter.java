@@ -1,14 +1,26 @@
 package com.cruise.parkinglotto.web.converter;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import com.cruise.parkinglotto.domain.Draw;
 import com.cruise.parkinglotto.domain.ParkingSpace;
 import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceRequestDTO;
 import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class ParkingSpaceConverter {
-    public static ParkingSpace toParkingSpace(ParkingSpaceRequestDTO.AddParkingSpaceDTO addParkingSpaceDto,
-                                              String floorPlanImageUrl,
-                                              Draw draw) {
+
+    public static List<ParkingSpaceResponseDTO.GetNameAndUrlParkingSpaceResultDTO> toGetNameAndUrlParkingResponse(List<ParkingSpace> parkingSpaces) {
+        return parkingSpaces.stream()
+                .map(parkingSpace -> ParkingSpaceResponseDTO.GetNameAndUrlParkingSpaceResultDTO.builder()
+                        .name(parkingSpace.getName())
+                        .floorPlanImageUrl(parkingSpace.getFloorPlanImageUrl())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    public static ParkingSpace toParkingSpace(ParkingSpaceRequestDTO.AddParkingSpaceDTO addParkingSpaceDto, String floorPlanImageUrl, Draw draw) {
         return ParkingSpace.builder()
                 .address(addParkingSpaceDto.getAddress())
                 .name(addParkingSpaceDto.getName())
@@ -30,7 +42,6 @@ public class ParkingSpaceConverter {
     }
 
     public static ParkingSpaceResponseDTO.ParkingSpaceInfoResponseDTO toParkingSpaceInfoResponseDTO(ParkingSpace parkingSpace) {
-
         return ParkingSpaceResponseDTO.ParkingSpaceInfoResponseDTO.builder()
                 .address(parkingSpace.getAddress())
                 .floorPlanImageUrl(parkingSpace.getFloorPlanImageUrl())
