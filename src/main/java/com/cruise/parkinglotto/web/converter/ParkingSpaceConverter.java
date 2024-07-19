@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 public class ParkingSpaceConverter {
 
-    public static List<ParkingSpaceResponseDTO.GetNameAndUrlParkingSpaceResultDTO> toGetNameAndIdWhichFromIsParkingResponse(List<ParkingSpace> parkingSpaces) {
+    public static List<ParkingSpaceResponseDTO.GetNameAndUrlParkingSpaceResultDTO> toGetNameAndUrlParkingResponse(List<ParkingSpace> parkingSpaces) {
 
         return parkingSpaces.stream()
                 .map(parkingSpace -> ParkingSpaceResponseDTO.GetNameAndUrlParkingSpaceResultDTO.builder()
