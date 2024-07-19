@@ -19,7 +19,7 @@ cloud:
       url: ${AWS_S3_URL}
       bucket: ${AWS_S3_BUCKET_NAME}
       path:
-        parking-space-image: parking-space-image
+        parking-space-image: ${PARKING_SPACE_IMAGE}
     region:
       static: ${AWS_REGION}
     stack:
