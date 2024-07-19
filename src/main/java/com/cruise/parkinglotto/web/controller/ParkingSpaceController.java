@@ -18,7 +18,7 @@ public class ParkingSpaceController {
     private final ParkingSpaceServiceImpl parkingSpaceService;
 
     @GetMapping("/myspace/{memberId}")
-    public ApiResponse<ParkingSpaceImgResponseDTO> getParkingSpaceImg(@PathVariable Long memberId) {
+    public ApiResponse<ParkingSpaceInfoResponseDTO> getParkingSpaceImg(@PathVariable Long memberId) {
 
         return ApiResponse.onSuccess(SuccessStatus.PARKING_SPACE_INFO_FOUND,parkingSpaceService.findParkingSpaceImg(memberId));
     }

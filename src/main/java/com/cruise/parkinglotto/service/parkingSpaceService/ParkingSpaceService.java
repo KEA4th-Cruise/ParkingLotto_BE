@@ -4,6 +4,6 @@ import com.cruise.parkinglotto.web.dto.ParkingSpaceDTO;
 
 public interface ParkingSpaceService {
 
-    public ParkingSpaceDTO.ParkingSpaceImgResponseDTO findParkingSpaceImg(Long memberId);
+    public ParkingSpaceDTO.ParkingSpaceInfoResponseDTO findParkingSpaceImg(Long memberId);
 
 }

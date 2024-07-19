@@ -20,7 +20,7 @@ public class ParkingSpaceServiceImpl implements ParkingSpaceService{
     private final ParkingSpaceRepository parkingSpaceRepository;
     private final ApplicantRepository applicantRepository;
 
-    public ParkingSpaceImgResponseDTO findParkingSpaceImg(Long memberId) {
+    public ParkingSpaceInfoResponseDTO findParkingSpaceImg(Long memberId) {
 
         Long applicantId = applicantRepository.findByMember(memberId);
         Long parkingSpaceId = applicantRepository.findParkingSpaceId(applicantId);

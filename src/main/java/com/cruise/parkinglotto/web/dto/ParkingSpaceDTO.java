@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 public class ParkingSpaceDTO {
     @Getter
-    public static class ParkingSpaceImgResponseDTO {
+    public static class ParkingSpaceInfoResponseDTO {
         private String floorPlanImageUrl;
         private String name;
         private String address;
@@ -17,7 +17,7 @@ public class ParkingSpaceDTO {
         private LocalDateTime endAt;
 
         @Builder
-        public ParkingSpaceImgResponseDTO(String floorPlanImageUrl, String name, String address, String title, LocalDateTime startAt, LocalDateTime endAt) {
+        public ParkingSpaceInfoResponseDTO(String floorPlanImageUrl, String name, String address, String title, LocalDateTime startAt, LocalDateTime endAt) {
             this.floorPlanImageUrl = floorPlanImageUrl;
             this.name = name;
             this.address = address;

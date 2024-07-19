@@ -4,9 +4,9 @@ import com.cruise.parkinglotto.domain.ParkingSpace;
 import com.cruise.parkinglotto.web.dto.ParkingSpaceDTO;
 
 public class ParkingSpaceConverter {
-    public static ParkingSpaceDTO.ParkingSpaceImgResponseDTO toParkingSpaceDTO(ParkingSpace parkingSpace) {
+    public static ParkingSpaceDTO.ParkingSpaceInfoResponseDTO toParkingSpaceDTO(ParkingSpace parkingSpace) {
 
-        return ParkingSpaceDTO.ParkingSpaceImgResponseDTO.builder( )
+        return ParkingSpaceDTO.ParkingSpaceInfoResponseDTO.builder( )
                 .address(parkingSpace.getAddress())
                 .floorPlanImageUrl(parkingSpace.getFloorPlanImageUrl( ))
                 .name(parkingSpace.getName( ))
