@@ -15,17 +15,17 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
 
     @Modifying
     @Query("UPDATE Applicant a SET a.randomNumber = :randomNumber WHERE a.id = :applicantId")
-    void assignRandomNumber(@Param("applicantId") Long id, @Param("randomNumber") double randomNumber);
+    void assignRandomNumber(@Param("applicantId") Long applicantId, @Param("randomNumber") double randomNumber);
 
     @Modifying
     @Transactional
-    @Query("UPDATE Applicant a SET a.parkingSpaceId = :parkingSpaceId WHERE a.id = :id")
-    void updateParkingSpaceId(@Param("id") Long id, @Param("parkingSpaceId") Long parkingSpaceId);
+    @Query("UPDATE Applicant a SET a.parkingSpaceId = :parkingSpaceId WHERE a.id = :winnerId")
+    void updateParkingSpaceId(@Param("winnerId") Long winnerId, @Param("parkingSpaceId") Long parkingSpaceId);
 
     @Modifying
     @Transactional
-    @Query("UPDATE Applicant a SET a.reserveNum = :reserveNum WHERE a.id = :id")
-    void updateReserveNum(@Param("id") Long id, @Param("reserveNum") int reserveNum);
+    @Query("UPDATE Applicant a SET a.reserveNum = :reserveNum WHERE a.id = :applicantId")
+    void updateReserveNum(@Param("applicantId") Long applicantId, @Param("reserveNum") int reserveNum);
 
     @Modifying
     @Transactional
@@ -34,6 +34,6 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
 
     @Modifying
     @Transactional
-    @Query("UPDATE Applicant a SET a.winningStatus = :winningStatus WHERE a.id = :id")
-    void updateWinningStatus(@Param("id") Long id, @Param("winningStatus") WinningStatus winningStatus);
+    @Query("UPDATE Applicant a SET a.winningStatus = :winningStatus WHERE a.id = :winnerId")
+    void updateWinningStatus(@Param("winnerId") Long winnerId, @Param("winningStatus") WinningStatus winningStatus);
 }
