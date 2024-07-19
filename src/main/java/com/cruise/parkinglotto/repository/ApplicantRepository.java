@@ -1,6 +1,7 @@
 package com.cruise.parkinglotto.repository;
 
 import com.cruise.parkinglotto.domain.Applicant;
+import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -30,4 +31,9 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
     @Transactional
     @Query("UPDATE Applicant a SET a.weightedTotalScore = :weight WHERE a.id = :applicantId")
     void updateWeightedTotalScore(@Param("applicantId") Long id, @Param("weight") double weight);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Applicant a SET a.winningStatus = :winningStatus WHERE a.id = :id")
+    void updateWinningStatus(@Param("id") Long id, @Param("winningStatus") WinningStatus winningStatus);
 }
