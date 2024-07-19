@@ -7,12 +7,10 @@ import jakarta.annotation.PostConstruct;
 import jakarta.persistence.*;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 
 @Component
@@ -43,7 +41,7 @@ public class InitDb {
             em.persist(draw);
             Member member = createMember("최준범", "cjb", "111", "developer", "example1@example.com", AccountType.USER, EnrollmentStatus.ENROLLED, "1234", "Seoul", WorkType.TYPE1, "hello", 50L, 30L, 30.00, 0L);
             em.persist(member);
-            Applicant applicant = createApplicant(50.0, WinningStatus.WINNER, 1L, 0L, 100L, "100", "150", 1L, 2L, 30.00, WorkType.TYPE1, 50L, 30L, 0L, member, draw);
+            Applicant applicant = createApplicant(50.0, WinningStatus.WINNER, 1L, 0L, 100L, "100", 150.0, 1L, 2L, 30.00, WorkType.TYPE1, 50L, 30L, 0L, member, draw);
             em.persist(applicant);
             ParkingSpace parkingSpace = createParkingSpace("A", "seoul", 100L, 50L, "space A", 40L, draw);
             em.persist(parkingSpace);
@@ -58,14 +56,14 @@ public class InitDb {
             em.persist(draw);
             Member member = createMember("준범최", "cjbbb", "112", "marketer", "example2@example.com", AccountType.USER, EnrollmentStatus.ENROLLED, "1236", "Busan", WorkType.TYPE2, "nice", 200L, 160L, 300.00, 0L);
             em.persist(member);
-            Applicant applicant = createApplicant(50.0, WinningStatus.WINNER, 2L, 0L, 100L, "100", "150", 1L, 2L, 300.00, WorkType.TYPE2, 200L, 160L, 0L, member, draw);
+            Applicant applicant = createApplicant(50.0, WinningStatus.WINNER, 2L, 0L, 100L, "100", 150.0, 1L, 2L, 300.00, WorkType.TYPE2, 200L, 160L, 0L, member, draw);
             em.persist(applicant);
             ParkingSpace parkingSpace = createParkingSpace("B", "seoul", 100L, 50L, "space B", 40L, draw);
             em.persist(parkingSpace);
 
         }
 
-        private Applicant createApplicant(Double weightedTotalScore, WinningStatus winningStatus, Long parkingSpaceId, Long reserveNum, Long userSeedIndex, String userSeed, String randomNumber, Long firstChoice, Long secondChoice, Double distance, WorkType workType, Long trafficCommuteTime, Long carCommuteTime, Long recentLossCount, Member member, Draw draw) {
+        private Applicant createApplicant(Double weightedTotalScore, WinningStatus winningStatus, Long parkingSpaceId, Long reserveNum, Long userSeedIndex, String userSeed, Double randomNumber, Long firstChoice, Long secondChoice, Double distance, WorkType workType, Long trafficCommuteTime, Long carCommuteTime, Long recentLossCount, Member member, Draw draw) {
 
             return Applicant.builder( )
                     .weightedTotalScore(weightedTotalScore)
