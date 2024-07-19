@@ -35,7 +35,7 @@ public class Applicant extends BaseEntity {
     @Column(nullable = false)
     private String userSeed;
 
-    private String randomNumber;
+    private Double randomNumber;
 
     @Column(nullable = false)
     private Long firstChoice;
