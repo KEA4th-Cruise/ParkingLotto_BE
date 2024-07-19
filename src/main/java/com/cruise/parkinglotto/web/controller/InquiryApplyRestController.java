@@ -2,7 +2,7 @@ package com.cruise.parkinglotto.web.controller;
 
 
 import com.cruise.parkinglotto.global.response.ApiResponse;
-import com.cruise.parkinglotto.service.DrawService;
+import com.cruise.parkinglotto.service.drawService.DrawService;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawRequestDTO;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;

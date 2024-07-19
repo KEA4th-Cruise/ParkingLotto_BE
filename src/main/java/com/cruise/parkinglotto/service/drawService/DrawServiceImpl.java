@@ -1,6 +1,7 @@
 package com.cruise.parkinglotto.service.drawService;
 
 import com.cruise.parkinglotto.domain.Applicant;
+import com.cruise.parkinglotto.domain.Draw;
 import com.cruise.parkinglotto.domain.Member;
 import com.cruise.parkinglotto.domain.ParkingSpace;
 import com.cruise.parkinglotto.domain.enums.WorkType;
@@ -10,11 +11,17 @@ import com.cruise.parkinglotto.repository.ApplicantRepository;
 import com.cruise.parkinglotto.repository.DrawRepository;
 import com.cruise.parkinglotto.repository.MemberRepository;
 import com.cruise.parkinglotto.repository.ParkingSpaceRepository;
+import com.cruise.parkinglotto.web.dto.drawDTO.DrawRequestDTO;
+import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.cruise.parkinglotto.web.converter.DrawConverter.toGetCurrentDrawInfo;
 
 @Service
 @RequiredArgsConstructor
@@ -236,5 +243,17 @@ public class DrawServiceImpl implements DrawService {
             }
         }
         return null; // 만약 적합한 응모자가 없을 경우 null 반환
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public DrawResponseDTO.GetCurrentDrawInfoDTO getCurrentDrawInfo(HttpServletRequest httpServletRequest, DrawRequestDTO.GetCurrentDrawInfoDTO getCurrentDrawInfo) {
+        Optional<Draw> drawOptional = drawRepository.findById(getCurrentDrawInfo.getDrawId());
+        Draw draw = drawOptional.orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
+
+        Optional<ParkingSpace> parkingSpaceOptional = parkingSpaceRepository.findByIdAndDrawId(getCurrentDrawInfo.getParkingId(), draw.getId());
+        ParkingSpace parkingSpace = parkingSpaceOptional.orElseThrow(() -> new ExceptionHandler(ErrorStatus.PARKING_SPACE_NOT_FOUND));
+
+        return toGetCurrentDrawInfo(draw, parkingSpace);
     }
 }
