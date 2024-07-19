@@ -23,4 +23,6 @@ public interface DrawExecuteService {
     void assignZones(Long drawId, List<Applicant> selectedWinners);
 
     void calculateWeight(Applicant applicant);
+
+    void assignWaitListNumbers(List<Applicant> applicants);
 }

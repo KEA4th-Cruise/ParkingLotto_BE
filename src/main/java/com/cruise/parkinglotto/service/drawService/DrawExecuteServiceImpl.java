@@ -58,6 +58,8 @@ public class DrawExecuteServiceImpl implements DrawExecuteService {
         List<Applicant> selectedWinners = selectWinners(drawId, applicants, new Random(seed.hashCode()));
         //당첨자들에게 자리 부여하기
         assignZones(drawId, selectedWinners);
+        //낙첨자들에게 예비번호 부여하기
+        assignWaitListNumbers(applicants);
     }
 
     @Override
@@ -207,6 +209,17 @@ public class DrawExecuteServiceImpl implements DrawExecuteService {
         applicantRepository.updateWeightedTotalScore(applicant.getId(), weight);
         }
 
+    //예비번호 부여 로직 및 예비번호를 받는 즉시 연속 낙첨 횟수 증가
+    @Override
+    public void assignWaitListNumbers(List<Applicant> applicants) {
+        int waitListNumber = 1;
+        for (Applicant applicant : applicants) {
+            if (applicant.getReserveNum() != 0) {
+                applicantRepository.updateReserveNum(applicant.getId(), waitListNumber++);
+                memberRepository.increaseRecentLossCount(applicant.getMember().getId());
+            }
+        }
+    }
 
     //가중치랜덤알고리즘 로직
     public static Applicant weightedRandomSelection(List<Applicant> applicants, Random rand) {
