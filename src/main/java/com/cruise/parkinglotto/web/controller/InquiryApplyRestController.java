@@ -24,11 +24,9 @@ public class InquiryApplyRestController {
     public ApiResponse<DrawResponseDTO.GetCurrentDrawInfo> getHistory(HttpServletRequest httpServletRequest,
                                                                       @Valid @RequestBody DrawRequestDTO.GetCurrentDrawInfo reqeust) {
 
-        try {
-            DrawResponseDTO.GetCurrentDrawInfo getCurrentDrawInfoDto = drawCommandService.getCurrentDrawInfo(httpServletRequest, reqeust);
-            return ApiResponse.onSuccess(SuccessStatus._OK, getCurrentDrawInfoDto);
-        } catch (RuntimeException e) {
-            return ApiResponse.onFailure(ErrorStatus._BAD_REQUEST.getCode(), e.getMessage(), null);
-        }
+        DrawResponseDTO.GetCurrentDrawInfo getCurrentDrawInfoDto = drawCommandService.getCurrentDrawInfo(httpServletRequest, reqeust);
+
+        return ApiResponse.onSuccess(SuccessStatus._OK, getCurrentDrawInfoDto);
+
     }
 }

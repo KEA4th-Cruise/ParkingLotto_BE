@@ -27,7 +27,7 @@ public class DrawCommandServiceImpl implements DrawCommandService{
 
     @Override
     @Transactional(readOnly = true)
-    public DrawResponseDTO.GetCurrentDrawInfo getCurrentDrawInfo(HttpServletRequest httpServletRequest, DrawRequestDTO.GetCurrentDrawInfo getCurrentDrawInfo){
+    public DrawResponseDTO.GetCurrentDrawInfo getCurrentDrawInfo(HttpServletRequest httpServletRequest, DrawRequestDTO.GetCurrentDrawInfo getCurrentDrawInfo) {
         Optional<Draw> drawOptional = drawRepository.findById(getCurrentDrawInfo.getDrawId());
         Draw draw = drawOptional.orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
 
