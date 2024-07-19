@@ -1,5 +1,6 @@
-package com.cruise.parkinglotto.web.dto;
+package com.cruise.parkinglotto.web.dto.applicantDTO;
 
+import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,6 +19,8 @@ public class ApplicantResponseDTO {
         private LocalDateTime canceledAt;
         private String applicantName;
         private String employeeNo;
+        private WinningStatus winningStatus;
+        private Long parkingSpaceId;
 
     }
 

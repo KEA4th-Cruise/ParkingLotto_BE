@@ -1,13 +1,6 @@
 package com.cruise.parkinglotto.service.drawService;
 
-import com.cruise.parkinglotto.domain.Applicant;
-import com.cruise.parkinglotto.repository.ApplicantRepository;
-import com.cruise.parkinglotto.web.dto.DrawResponseDto;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 
 @Service

@@ -1,4 +1,4 @@
-package com.cruise.parkinglotto.web.dto;
+package com.cruise.parkinglotto.web.dto.drawDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
