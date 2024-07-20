@@ -35,6 +35,9 @@ public class AmazonConfig {
     @Value("${cloud.aws.s3.path.parking-space-image}")
     private String parkingSpaceImagePath;
 
+    @Value("${cloud.aws.s3.path.map-image}")
+    private String mapImagePath;
+
     @Value("${cloud.aws.s3.url}")
     private String s3Url;
 
