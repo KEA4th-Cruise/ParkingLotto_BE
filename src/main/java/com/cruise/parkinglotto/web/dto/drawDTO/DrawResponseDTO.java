@@ -37,5 +37,14 @@ public class DrawResponseDTO {
         private Double weighted_total_score;
     }
 
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class CreateDrawResultDTO {
+        private Long drawId;
+        private String title;
+        private LocalDateTime createdAt;
+    }
 }
 

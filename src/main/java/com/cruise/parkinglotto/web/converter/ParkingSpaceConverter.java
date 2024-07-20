@@ -51,4 +51,5 @@ public class ParkingSpaceConverter {
                 .mapImageUrl(parkingSpace.getDraw().getMapImageUrl())
                 .endAt(parkingSpace.getDraw().getUsageEndAt()).build();
     }
+
 }
