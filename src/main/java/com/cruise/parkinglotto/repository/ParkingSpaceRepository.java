@@ -17,4 +17,5 @@ public interface ParkingSpaceRepository extends JpaRepository<ParkingSpace, Long
     @Query("UPDATE ParkingSpace p SET p.remainSlots = p.remainSlots - 1 WHERE p.id = :id AND p.remainSlots > 0")
     void decrementRemainSlots(@Param("id") Long id);
 
+    List<ParkingSpace> findByConfirmed(boolean confirmed);
 }

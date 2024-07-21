@@ -4,8 +4,11 @@ import com.cruise.parkinglotto.domain.Applicant;
 import com.cruise.parkinglotto.domain.Draw;
 import com.cruise.parkinglotto.domain.Member;
 import com.cruise.parkinglotto.domain.ParkingSpace;
+import com.cruise.parkinglotto.domain.enums.DrawType;
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import com.cruise.parkinglotto.domain.enums.WorkType;
+import com.cruise.parkinglotto.global.aws.AmazonConfig;
+import com.cruise.parkinglotto.global.aws.AmazonS3Manager;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
 import com.cruise.parkinglotto.repository.ApplicantRepository;
@@ -17,15 +20,21 @@ import com.cruise.parkinglotto.web.dto.drawDTO.DrawRequestDTO;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.cruise.parkinglotto.web.converter.DrawConverter.toGetCurrentDrawInfo;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class DrawServiceImpl implements DrawService {
@@ -34,6 +43,9 @@ public class DrawServiceImpl implements DrawService {
     private final DrawRepository drawRepository;
     private final ParkingSpaceRepository parkingSpaceRepository;
     private final MemberRepository memberRepository;
+    private final AmazonS3Manager amazonS3Manager;
+    private final AmazonConfig amazonConfig;
+
 
     //계산용 변수
     private static final int WORK_TYPE1_SCORE = 25;
@@ -314,5 +326,54 @@ public class DrawServiceImpl implements DrawService {
         }
 
         return toGetCurrentDrawInfo(draw, parkingSpace);
+    }
+
+    @Override
+    @Transactional
+    public Draw createDraw(MultipartFile mapImage, DrawRequestDTO.CreateDrawRequestDTO createDrawRequestDTO) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String startAt = createDrawRequestDTO.getUsageStartAt().format(formatter);
+        String year = startAt.substring(0, 4);
+        String quarter = String.valueOf((Long.parseLong(startAt.substring(5, 7)) - 1) / 3 + 1);
+        String drawType = (createDrawRequestDTO.getType() == DrawType.GENERAL) ? "일반추첨" : "우대신청";
+        String title = year + "년도 " + quarter + "분기 " + drawType;
+        String mapImageUrl = amazonS3Manager.uploadFileToDirectory(amazonConfig.getMapImagePath(), title.replace(" ", "_"), mapImage);
+        Draw draw = DrawConverter.toDraw(createDrawRequestDTO, title, mapImageUrl, year, quarter);
+        return drawRepository.save(draw);
+    }
+
+    @Override
+    @Transactional
+    public DrawResponseDTO.ConfirmDrawCreationResultDTO confirmDrawCreation(Long drawId) {
+        Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
+        List<ParkingSpace> parkingSpaceList = parkingSpaceRepository.findByDrawId(drawId);
+        if (parkingSpaceList == null || parkingSpaceList.isEmpty()) {
+            throw new ExceptionHandler(ErrorStatus.PARKING_SPACE_NOT_FOUND);
+        }
+        parkingSpaceList.forEach(parkingSpace -> parkingSpace.updateConfirmed(true));
+        Long totalSlots = parkingSpaceList.stream()
+                .mapToLong(ParkingSpace::getSlots)
+                .sum();
+        draw.updateConfirmed(true, totalSlots);
+        deleteUnconfirmedDrawsAndParkingSpaces();
+
+        return DrawConverter.toConfirmDrawCreationResultDTO(draw, parkingSpaceList);
+    }
+
+    @Async
+    @Override
+    public void deleteUnconfirmedDrawsAndParkingSpaces() {
+        List<ParkingSpace> unconfirmedParkingSpaceList = parkingSpaceRepository.findByConfirmed(false);
+        unconfirmedParkingSpaceList.forEach(parkingSpace -> {
+            amazonS3Manager.deleteFileFromUrl(parkingSpace.getFloorPlanImageUrl());
+        });
+        parkingSpaceRepository.deleteAll(unconfirmedParkingSpaceList);
+
+        List<Draw> unconfirmedDrawList = drawRepository.findByConfirmed(false);
+        unconfirmedDrawList.forEach(draw -> {
+          amazonS3Manager.deleteFileFromUrl(draw.getMapImageUrl());
+        });
+
+        drawRepository.deleteAll(unconfirmedDrawList);
     }
 }

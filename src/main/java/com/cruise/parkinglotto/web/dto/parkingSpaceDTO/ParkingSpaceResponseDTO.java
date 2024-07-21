@@ -3,6 +3,7 @@ package com.cruise.parkinglotto.web.dto.parkingSpaceDTO;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class ParkingSpaceResponseDTO {
     @Getter
@@ -36,5 +37,23 @@ public class ParkingSpaceResponseDTO {
         private String title;
         private LocalDateTime startAt;
         private LocalDateTime endAt;
+    }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ParkingSpacePreviewDTO{
+        private String name;
+        private String address;
+        private Long slots;
+    }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ParkingSpacePreviewListDTO{
+        private List<ParkingSpacePreviewDTO> parkingSpacePreviewDTOList;
     }
 }

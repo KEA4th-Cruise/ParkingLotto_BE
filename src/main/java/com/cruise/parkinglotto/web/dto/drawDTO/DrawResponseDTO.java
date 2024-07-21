@@ -2,6 +2,7 @@ package com.cruise.parkinglotto.web.dto.drawDTO;
 
 import com.cruise.parkinglotto.domain.enums.DrawType;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
+import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -41,5 +42,25 @@ public class DrawResponseDTO {
         private List<ApplicantResponseDTO.ApplicantResultDTO> applicants;
     }
 
-}
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class CreateDrawResultDTO {
+        private Long drawId;
+        private String title;
+        private LocalDateTime createdAt;
+    }
 
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ConfirmDrawCreationResultDTO{
+        private Long drawId;
+        private String title;
+        LocalDateTime usageStartAt;
+        LocalDateTime usageEndAt;
+        ParkingSpaceResponseDTO.ParkingSpacePreviewListDTO parkingSpacePreviewListDTO;
+    }
+}

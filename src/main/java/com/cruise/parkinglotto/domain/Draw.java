@@ -5,6 +5,7 @@ import com.cruise.parkinglotto.domain.enums.DrawStatus;
 import com.cruise.parkinglotto.domain.enums.DrawType;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -59,6 +60,9 @@ public class Draw extends BaseEntity {
     @Column(nullable = false)
     private String quarter;
 
+    @ColumnDefault("false")
+    private Boolean confirmed;
+
     @OneToMany(mappedBy = "draw", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Applicant> applicantList;
 
@@ -70,4 +74,9 @@ public class Draw extends BaseEntity {
 
     @OneToMany(mappedBy = "draw", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ParkingSpace> parkingSpaceList;
+
+    public void updateConfirmed(Boolean confirmed, Long totalSlots) {
+        this.confirmed = confirmed;
+        this.totalSlots = totalSlots;
+    }
 }
