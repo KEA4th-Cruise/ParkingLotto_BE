@@ -1,5 +1,7 @@
 package com.cruise.parkinglotto.web.dto.drawDTO;
 
+import com.cruise.parkinglotto.domain.enums.DrawType;
+import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,13 +31,15 @@ public class DrawResponseDTO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetWinnerMemberDto {
+    public static class DrawResultResponseDTO {
         private Long drawId;
-        private String name_ko;
-        private String account_id;
-        private String depth_path_name;
-        private Long reserve_num;
-        private Double weighted_total_score;
+        private String drawType;
+        private String title;
+        private String seedNum;
+        private Long totalSlots;
+        private String year;
+        private String quarter;
+        private List<ApplicantResponseDTO.ApplicantResultDTO> applicants;
     }
 
     @Getter
@@ -60,4 +64,3 @@ public class DrawResponseDTO {
         ParkingSpaceResponseDTO.ParkingSpacePreviewListDTO parkingSpacePreviewListDTO;
     }
 }
-

@@ -25,13 +25,16 @@ public interface DrawService {
     void calculateWeight(Applicant applicant);
 
     void assignWaitListNumbers(List<Applicant> applicants);
+  
+    void deleteUnconfirmedDrawsAndParkingSpaces();
 
     List<Applicant> weightedRandomSelectionAll(List<Applicant> applicants, Random random);
 
     DrawResponseDTO.GetCurrentDrawInfoDTO getCurrentDrawInfo(HttpServletRequest httpServletRequest, Long drawId);
 
+    DrawResponseDTO.DrawResultResponseDTO getDrawResult(HttpServletRequest httpServletRequest, Long drawId);
+  
     Draw createDraw(MultipartFile mapImage, DrawRequestDTO.CreateDrawRequestDTO createDrawRequestDTO);
 
     DrawResponseDTO.ConfirmDrawCreationResultDTO confirmDrawCreation(Long drawId);
-    void deleteUnconfirmedDrawsAndParkingSpaces();
 }
