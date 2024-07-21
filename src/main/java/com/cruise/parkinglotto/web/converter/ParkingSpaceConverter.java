@@ -51,4 +51,21 @@ public class ParkingSpaceConverter {
                 .mapImageUrl(parkingSpace.getDraw().getMapImageUrl())
                 .endAt(parkingSpace.getDraw().getUsageEndAt()).build();
     }
+
+    public static ParkingSpaceResponseDTO.ParkingSpacePreviewDTO toParkingSpacePreviewDTO(ParkingSpace parkingSpace) {
+        return ParkingSpaceResponseDTO.ParkingSpacePreviewDTO.builder()
+                .name(parkingSpace.getName())
+                .address(parkingSpace.getAddress())
+                .slots(parkingSpace.getSlots())
+                .build();
+    }
+
+    public static ParkingSpaceResponseDTO.ParkingSpacePreviewListDTO toParkingSpacePreviewListDTO(List<ParkingSpace> parkingSpaceList) {
+        List<ParkingSpaceResponseDTO.ParkingSpacePreviewDTO> parkingSpacePreviewDTOList = parkingSpaceList.stream()
+                .map(ParkingSpaceConverter::toParkingSpacePreviewDTO).toList();
+        return ParkingSpaceResponseDTO.ParkingSpacePreviewListDTO.builder()
+                .parkingSpacePreviewDTOList(parkingSpacePreviewDTOList)
+                .build();
+    }
+
 }

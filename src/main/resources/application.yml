@@ -21,6 +21,7 @@ cloud:
       bucket: ${AWS_S3_BUCKET_NAME}
       path:
         parking-space-image: ${PARKING_SPACE_IMAGE}
+        map-image: ${MAP_IMAGE}
     region:
       static: ${AWS_REGION}
     stack:
