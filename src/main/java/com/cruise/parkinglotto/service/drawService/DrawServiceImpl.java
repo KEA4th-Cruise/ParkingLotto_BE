@@ -46,7 +46,6 @@ public class DrawServiceImpl implements DrawService {
 
     @Override
     public void executeDraw(Long drawId) {
-
         //해당 회차 시드 생성
         updateSeedNum(drawId);
         //시드 번호 가져오기
@@ -61,12 +60,10 @@ public class DrawServiceImpl implements DrawService {
         for (Applicant applicant : applicants) {
             calculateWeight(applicant);
         }
-        //당첨자 뽑기
-        List<Applicant> selectedWinners = selectWinners(drawId, applicants, new Random(seed.hashCode()));
-        //당첨자들에게 자리 부여하기
-        assignZones(drawId, selectedWinners);
-        //낙첨자들에게 예비번호 부여하기
-        assignWaitListNumbers(applicants);
+        //순서 매기기
+        List<Applicant> orderedApplicants = weightedRandomSelectionAll(applicants, new Random(seed.hashCode()));
+        //당첨자 및 예비번호 부여
+        handleDrawResults(drawId, orderedApplicants);
     }
 
     @Override
@@ -110,35 +107,45 @@ public class DrawServiceImpl implements DrawService {
     }
 
     @Override
-    public List<Applicant> selectWinners(Long drawId, List<Applicant> applicants, Random random) {
+    public void handleDrawResults(Long drawId, List<Applicant> orderedApplicants) {
         List<ParkingSpace> parkingSpaces = parkingSpaceRepository.findByDrawId(drawId);
-        Long totalSlots = parkingSpaces.stream().mapToLong(ParkingSpace::getSlots).sum();
+        long totalSlots = parkingSpaces.stream().mapToLong(ParkingSpace::getSlots).sum();
 
-        //난수를 기준으로 응모자를 정렬
-        applicants.sort(Comparator.comparingDouble(Applicant::getRandomNumber));
-
+        //당첨자 리스트
         List<Applicant> selectedWinners = new ArrayList<>();
-        for (int i = 0; i < totalSlots && !applicants.isEmpty(); i++) {
-            Applicant winner = weightedRandomSelection(applicants, random);
-            if (winner != null) {
-                /**
-                 * 1. 예비번호를 0으로 바꿔서 당첨 표시
-                 * 2. Member테이블에서 해당 사용자의 연속낙첨횟수 0으로 바꾸기
-                 * 3. WinningStatus 변경
-                 */
-                selectedWinners.add(winner);
-                applicantRepository.updateReserveNum(winner.getId(), 0);
-                applicantRepository.updateWinningStatus(winner.getId(), WinningStatus.WINNER);
-                memberRepository.resetRecentLossCount(winner.getMember().getId());
+        //낙첨자 리스트
+        List<Applicant> reserveApplicants = new ArrayList<>();
+
+        for (int i = 0; i < orderedApplicants.size(); i++) {
+            Applicant applicant = orderedApplicants.get(i);
+            if (i < totalSlots) {
+                // 당첨 처리
+                selectedWinners.add(applicant);
+                applicantRepository.updateReserveNum(applicant.getId(), 0);
+                applicantRepository.updateWinningStatus(applicant.getId(), WinningStatus.WINNER);
+                memberRepository.resetRecentLossCount(applicant.getMember().getId());
+            } else {
+                // 예비자 처리
+                reserveApplicants.add(applicant);
+                applicantRepository.updateWinningStatus(applicant.getId(), WinningStatus.RESERVE);
+                memberRepository.increaseRecentLossCount(applicant.getMember().getId());
             }
         }
-        return selectedWinners;
-    }
 
+        // 당첨자들에게 자리 부여하기
+        assignZones(drawId, selectedWinners);
+        // 예비자들에게 예비번호 부여하기
+        assignWaitListNumbers(reserveApplicants);
+    }
 
     @Override
     public void assignZones(Long drawId, List<Applicant> selectedWinners) {
         List<ParkingSpace> parkingSpaces = parkingSpaceRepository.findByDrawId(drawId);
+
+        if (parkingSpaces == null || parkingSpaces.isEmpty()) {
+            throw new ExceptionHandler(ErrorStatus.PARKING_SPACE_NOT_FOUND);
+        }
+
         Map<Long, Long> zoneCapacityMap = parkingSpaces.stream()
                 .collect(Collectors.toMap(ParkingSpace::getId, ParkingSpace::getSlots));
 
@@ -226,14 +233,16 @@ public class DrawServiceImpl implements DrawService {
             if (applicant.getReserveNum() != 0) {
                 applicantRepository.updateReserveNum(applicant.getId(), waitListNumber++);
                 memberRepository.increaseRecentLossCount(applicant.getMember().getId());
-                applicantRepository.updateWinningStatus(applicant.getId(), WinningStatus.RESERVE);
             }
         }
     }
 
     //가중치랜덤알고리즘 로직
-    public static Applicant weightedRandomSelection(List<Applicant> applicants, Random random) {
-        double totalWeight = applicants.stream().mapToDouble(Applicant::getWeightedTotalScore).sum();
+    public static Applicant weightedRandomSelection(List<Applicant> applicants, Random random, Set<Long> selectedApplicantIds) {
+        double totalWeight = applicants.stream()
+                .filter(applicant -> !selectedApplicantIds.contains(applicant.getId()))
+                .mapToDouble(Applicant::getWeightedTotalScore)
+                .sum();
         if (totalWeight <= 0) {
             return null;
         }
@@ -247,6 +256,23 @@ public class DrawServiceImpl implements DrawService {
             }
         }
         return null; // 만약 적합한 응모자가 없을 경우 null 반환
+    }
+
+    @Override
+    public List<Applicant> weightedRandomSelectionAll(List<Applicant> applicants, Random random) {
+        List<Applicant> orderedApplicants = new ArrayList<>();
+        Set<Long> selectedApplicantIds = new HashSet<>();
+        List<Applicant> availableApplicants = new ArrayList<>(applicants);
+
+        while (!availableApplicants.isEmpty()) {
+            Applicant applicant = weightedRandomSelection(availableApplicants, random, selectedApplicantIds);
+            if (applicant != null) {
+                orderedApplicants.add(applicant);
+                selectedApplicantIds.add(applicant.getId());
+                availableApplicants.remove(applicant);
+            }
+        }
+        return orderedApplicants;
     }
 
     @Override

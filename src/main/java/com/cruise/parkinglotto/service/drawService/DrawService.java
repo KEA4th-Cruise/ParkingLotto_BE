@@ -15,14 +15,16 @@ public interface DrawService {
     void updateSeedNum(Long drawId);
     //신청자들의 난수 생성 및 할당
     void assignRandomNumber(Long drawId, String seed);
-    //당첨자 뽑기
-    List<Applicant> selectWinners(Long drawId, List<Applicant> applicants, Random random);
+
+    void handleDrawResults(Long drawId, List<Applicant> orderedApplicants);
 
     void assignZones(Long drawId, List<Applicant> selectedWinners);
 
     void calculateWeight(Applicant applicant);
 
     void assignWaitListNumbers(List<Applicant> applicants);
+
+    List<Applicant> weightedRandomSelectionAll(List<Applicant> applicants, Random random);
 
     DrawResponseDTO.GetCurrentDrawInfoDTO getCurrentDrawInfo(HttpServletRequest httpServletRequest, DrawRequestDTO.GetCurrentDrawInfoDTO getCurrentDrawInfo);
 
