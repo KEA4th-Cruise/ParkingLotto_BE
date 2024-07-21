@@ -25,6 +25,13 @@ public class AmazonS3Manager {
     private final AmazonS3 amazonS3;
     private final AmazonConfig amazonConfig;
 
+    /**
+     *
+     * @param directoryPath: S3 버킷에 만들어둔 디렉토리명을 의미합니다. application.yml에 환경변수로 설정 후, AmazonConfig에 선언해주시면 됩니다.
+     * @param keyName: 저장할 객체의 이름을 의미합니다. 저장하고 싶은 문자열로 넣어주시면 됩니다.
+     * @param file: 업로드할 피일 객체
+     * @return
+     */
     public String uploadFileToDirectory(String directoryPath, String keyName, MultipartFile file) {
         String fullKeyName = directoryPath + "/" + keyName;
         ObjectMetadata metadata = new ObjectMetadata();
@@ -61,6 +68,12 @@ public class AmazonS3Manager {
         }
     }
 
+    /**
+     *
+     * @param fileUrl: 데이테베이스에 저장된 파일 객체의 end point 입니다.
+     *               https://{bucketName}.s3.{region}.amazonaws.com/{directory}/{fileName}
+     *               위 구조로 되어있는데, file name이 한글이면 utf-8로 인코딩되어 url이 만들어지기 때문에 디코딩 과정이 필요하여 넣었습니다.  
+     */
     public void deleteFileFromUrl(String fileUrl) {
         try {
             URL url = new URL(fileUrl);
