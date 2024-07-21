@@ -16,6 +16,7 @@ public enum SuccessStatus implements BaseCode {
 
     // [예시]
     MEMBER_FOUND(HttpStatus.OK,"MEMBER2001", "회원을 조회했습니다."),
+
     DRAW_INFO_FOUND(HttpStatus.OK,"DRAW2002", "추첨 정보를 조회했습니다."),
 
     //  주차 구역 관련
@@ -24,9 +25,9 @@ public enum SuccessStatus implements BaseCode {
     //  추첨 관련
     DRAW_EXECUTE_RESULT(HttpStatus.OK, "DRAWRESULT2001", "추첨결과가 정상적으로 저장되었습니다.")
 
+    // 주차공간 관련 응답
+    PARKING_SPACE_INFO_FOUND(HttpStatus.OK,"PARKINGSPACEINFO200","주차 공간 정보를 조회했습니다"),
     ;
-
-
 
 
 
