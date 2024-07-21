@@ -15,3 +15,4 @@ public interface DrawRepository extends JpaRepository<Draw, Long> {
     @Query("UPDATE Draw d SET d.seedNum = :seedNum WHERE d.id = :drawId")
     void updateSeedNum(@Param("drawId") Long drawId, @Param("seedNum") String seedNum);
 }
+

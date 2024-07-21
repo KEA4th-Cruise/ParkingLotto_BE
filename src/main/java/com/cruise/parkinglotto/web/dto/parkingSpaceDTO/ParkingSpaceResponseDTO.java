@@ -2,8 +2,9 @@ package com.cruise.parkinglotto.web.dto.parkingSpaceDTO;
 
 import lombok.*;
 
-public class ParkingSpaceResponseDTO {
+import java.time.LocalDateTime;
 
+public class ParkingSpaceResponseDTO {
     @Getter
     @Builder
     @AllArgsConstructor
@@ -13,5 +14,27 @@ public class ParkingSpaceResponseDTO {
         private Long slots;
         private String floorPlanImageUrl;
         private String address;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetNameAndUrlParkingSpaceResultDTO {
+        String name;
+        String floorPlanImageUrl;
+    }
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ParkingSpaceInfoResponseDTO {
+        private String floorPlanImageUrl;
+        private String mapImageUrl;
+        private String name;
+        private String address;
+        private String title;
+        private LocalDateTime startAt;
+        private LocalDateTime endAt;
     }
 }

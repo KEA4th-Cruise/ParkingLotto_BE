@@ -9,8 +9,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
+
+    @Query("select a.id from Applicant a where a.member.id = :memberId")
+    Optional<Long> findByMember(@Param("memberId") Long memberId);
+
+    @Query("select a.parkingSpaceId from Applicant a where a.id =:applicantId")
+    Optional<Long> findParkingSpaceId(@Param("applicantId") Long applicantId);
+
     List<Applicant> findByDrawId(Long drawId);
 
     @Modifying
@@ -32,4 +40,5 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
     @Modifying
     @Query("UPDATE Applicant a SET a.winningStatus = :winningStatus WHERE a.id = :winnerId")
     void updateWinningStatus(@Param("winnerId") Long winnerId, @Param("winningStatus") WinningStatus winningStatus);
+
 }

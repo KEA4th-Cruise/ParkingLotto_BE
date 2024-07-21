@@ -26,6 +26,6 @@ public interface DrawService {
 
     List<Applicant> weightedRandomSelectionAll(List<Applicant> applicants, Random random);
 
-    DrawResponseDTO.GetCurrentDrawInfoDTO getCurrentDrawInfo(HttpServletRequest httpServletRequest, DrawRequestDTO.GetCurrentDrawInfoDTO getCurrentDrawInfo);
+    DrawResponseDTO.GetCurrentDrawInfoDTO getCurrentDrawInfo(HttpServletRequest httpServletRequest, Long drawId);
 
 }
