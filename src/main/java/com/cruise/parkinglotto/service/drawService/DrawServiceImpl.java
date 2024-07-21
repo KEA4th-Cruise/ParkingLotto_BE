@@ -21,10 +21,12 @@ import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -335,7 +337,25 @@ public class DrawServiceImpl implements DrawService {
                 .mapToLong(ParkingSpace::getSlots)
                 .sum();
         draw.updateConfirmed(true, totalSlots);
+        deleteUnconfirmedDrawsAndParkingSpaces();
 
         return DrawConverter.toConfirmDrawCreationResultDTO(draw, parkingSpaceList);
+    }
+
+    @Async
+    @Override
+    public void deleteUnconfirmedDrawsAndParkingSpaces() {
+        List<ParkingSpace> unconfirmedParkingSpaceList = parkingSpaceRepository.findByConfirmed(false);
+        unconfirmedParkingSpaceList.forEach(parkingSpace -> {
+            amazonS3Manager.deleteFileFromUrl(parkingSpace.getFloorPlanImageUrl());
+        });
+        parkingSpaceRepository.deleteAll(unconfirmedParkingSpaceList);
+
+        List<Draw> unconfirmedDrawList = drawRepository.findByConfirmed(false);
+        unconfirmedDrawList.forEach(draw -> {
+          amazonS3Manager.deleteFileFromUrl(draw.getMapImageUrl());
+        });
+
+        drawRepository.deleteAll(unconfirmedDrawList);
     }
 }

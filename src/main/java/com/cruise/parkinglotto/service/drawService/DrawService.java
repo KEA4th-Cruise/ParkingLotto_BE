@@ -33,4 +33,5 @@ public interface DrawService {
     Draw createDraw(MultipartFile mapImage, DrawRequestDTO.CreateDrawRequestDTO createDrawRequestDTO);
 
     DrawResponseDTO.ConfirmDrawCreationResultDTO confirmDrawCreation(Long drawId);
+    void deleteUnconfirmedDrawsAndParkingSpaces();
 }
