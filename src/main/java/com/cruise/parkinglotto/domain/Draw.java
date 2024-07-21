@@ -74,4 +74,9 @@ public class Draw extends BaseEntity {
 
     @OneToMany(mappedBy = "draw", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ParkingSpace> parkingSpaceList;
+
+    public void updateConfirmed(Boolean confirmed, Long totalSlots) {
+        this.confirmed = confirmed;
+        this.totalSlots = totalSlots;
+    }
 }

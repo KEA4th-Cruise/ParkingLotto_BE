@@ -53,4 +53,14 @@ public class DrawConverter {
                 .build();
     }
 
+    public static DrawResponseDTO.ConfirmDrawCreationResultDTO toConfirmDrawCreationResultDTO(Draw draw, List<ParkingSpace> parkingSpaceList) {
+        return DrawResponseDTO.ConfirmDrawCreationResultDTO.builder()
+                .drawId(draw.getId())
+                .title(draw.getTitle())
+                .usageStartAt(draw.getUsageStartAt())
+                .usageEndAt(draw.getUsageEndAt())
+                .parkingSpacePreviewListDTO(ParkingSpaceConverter.toParkingSpacePreviewListDTO(parkingSpaceList))
+                .build();
+    }
+
 }

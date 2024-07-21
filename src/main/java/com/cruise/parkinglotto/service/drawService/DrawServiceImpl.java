@@ -309,6 +309,7 @@ public class DrawServiceImpl implements DrawService {
     }
 
     @Override
+    @Transactional
     public Draw createDraw(MultipartFile mapImage, DrawRequestDTO.CreateDrawRequestDTO createDrawRequestDTO) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String startAt = createDrawRequestDTO.getUsageStartAt().format(formatter);
@@ -319,5 +320,22 @@ public class DrawServiceImpl implements DrawService {
         String mapImageUrl = amazonS3Manager.uploadFileToDirectory(amazonConfig.getMapImagePath(), title.replace(" ", "_"), mapImage);
         Draw draw = DrawConverter.toDraw(createDrawRequestDTO, title, mapImageUrl, year, quarter);
         return drawRepository.save(draw);
+    }
+
+    @Override
+    @Transactional
+    public DrawResponseDTO.ConfirmDrawCreationResultDTO confirmDrawCreation(Long drawId) {
+        Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
+        List<ParkingSpace> parkingSpaceList = parkingSpaceRepository.findByDrawId(drawId);
+        if (parkingSpaceList == null || parkingSpaceList.isEmpty()) {
+            throw new ExceptionHandler(ErrorStatus.PARKING_SPACE_NOT_FOUND);
+        }
+        parkingSpaceList.forEach(parkingSpace -> parkingSpace.updateConfirmed(true));
+        Long totalSlots = parkingSpaceList.stream()
+                .mapToLong(ParkingSpace::getSlots)
+                .sum();
+        draw.updateConfirmed(true, totalSlots);
+
+        return DrawConverter.toConfirmDrawCreationResultDTO(draw, parkingSpaceList);
     }
 }

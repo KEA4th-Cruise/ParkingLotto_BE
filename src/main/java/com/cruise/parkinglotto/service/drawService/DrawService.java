@@ -31,4 +31,6 @@ public interface DrawService {
     DrawResponseDTO.GetCurrentDrawInfoDTO getCurrentDrawInfo(HttpServletRequest httpServletRequest, Long drawId);
 
     Draw createDraw(MultipartFile mapImage, DrawRequestDTO.CreateDrawRequestDTO createDrawRequestDTO);
+
+    DrawResponseDTO.ConfirmDrawCreationResultDTO confirmDrawCreation(Long drawId);
 }
