@@ -21,6 +21,9 @@ public enum SuccessStatus implements BaseCode {
     //  주차 구역 관련
     PARKING_SPACE_ADDED(HttpStatus.OK, "PARKINGSPACE2001", "해당 회차에 주차구역이 추가되었습니다."),
 
+    //  추첨 관련
+    DRAW_EXECUTE_RESULT(HttpStatus.OK, "DRAWRESULT2001", "추첨결과가 정상적으로 저장되었습니다.")
+
     ;
 
 

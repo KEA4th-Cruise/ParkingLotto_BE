@@ -14,6 +14,7 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
     List<Applicant> findByDrawId(Long drawId);
 
     @Modifying
+    @Transactional
     @Query("UPDATE Applicant a SET a.randomNumber = :randomNumber WHERE a.id = :applicantId")
     void assignRandomNumber(@Param("applicantId") Long applicantId, @Param("randomNumber") double randomNumber);
 
