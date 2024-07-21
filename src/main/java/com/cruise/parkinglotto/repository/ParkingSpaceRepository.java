@@ -16,7 +16,6 @@ public interface ParkingSpaceRepository extends JpaRepository<ParkingSpace, Long
     List<ParkingSpace> findByDrawId(Long drawId);
   
     @Modifying
-    @Transactional
     @Query("UPDATE ParkingSpace p SET p.remainSlots = p.remainSlots - 1 WHERE p.id = :id AND p.remainSlots > 0")
     void decrementRemainSlots(@Param("id") Long id);
 }
