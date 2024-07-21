@@ -12,6 +12,7 @@ import com.cruise.parkinglotto.repository.ApplicantRepository;
 import com.cruise.parkinglotto.repository.DrawRepository;
 import com.cruise.parkinglotto.repository.MemberRepository;
 import com.cruise.parkinglotto.repository.ParkingSpaceRepository;
+import com.cruise.parkinglotto.web.converter.DrawConverter;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawRequestDTO;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.cruise.parkinglotto.web.converter.DrawConverter.toGetCurrentDrawInfo;
 
@@ -280,6 +282,23 @@ public class DrawServiceImpl implements DrawService {
             }
         }
         return orderedApplicants;
+    }
+
+    @Override
+    public DrawResponseDTO.DrawResultResponseDTO getDrawResult(HttpServletRequest httpServletRequest, Long drawId) {
+        Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
+        List<Applicant> applicants = applicantRepository.findByDrawId(drawId);
+
+        List<Long> parkingSpaceIds = applicants.stream()
+                .flatMap(applicant -> Stream.of(applicant.getParkingSpaceId(), applicant.getFirstChoice(), applicant.getSecondChoice()))
+                .filter(Objects::nonNull)
+                .distinct()
+                .collect(Collectors.toList());
+
+        Map<Long, String> parkingSpaceNames = parkingSpaceRepository.findAllById(parkingSpaceIds).stream()
+                .collect(Collectors.toMap(ParkingSpace::getId, ParkingSpace::getName));
+
+        return DrawConverter.toDrawResultResponseDTO(draw, applicants, parkingSpaceNames);
     }
 
     @Override
