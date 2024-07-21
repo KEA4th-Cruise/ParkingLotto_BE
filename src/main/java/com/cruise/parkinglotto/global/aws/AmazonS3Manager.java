@@ -1,7 +1,9 @@
 package com.cruise.parkinglotto.global.aws;
 
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +12,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLDecoder;
 
 @Slf4j
 @Component
@@ -54,4 +60,24 @@ public class AmazonS3Manager {
             throw new IOException("Error deleting file from S3", e);
         }
     }
+
+    public void deleteFileFromUrl(String fileUrl) {
+        try {
+            URL url = new URL(fileUrl);
+            String bucketName = amazonConfig.getBucket();
+            String encodedKeyName = url.getPath().substring(1);
+            String keyName = URLDecoder.decode(encodedKeyName, "UTF-8");
+            amazonS3.deleteObject(new DeleteObjectRequest(bucketName, keyName));
+            log.info("File deleted successfully: {}", keyName);
+        } catch (MalformedURLException e) {
+            log.error("MalformedURLException: Invalid URL provided. {}", e.getMessage());
+        } catch (UnsupportedEncodingException e) {
+            log.error("UnsupportedEncodingException: Failed to decode URL. {}", e.getMessage());
+        } catch (AmazonServiceException e) {
+            log.error("AmazonServiceException: Failed to delete file from S3. {}", e.getErrorMessage());
+        } catch (SdkClientException e) {
+            log.error("SdkClientException: Failed to delete file from S3. {}", e.getMessage());
+        }
+    }
+
 }
