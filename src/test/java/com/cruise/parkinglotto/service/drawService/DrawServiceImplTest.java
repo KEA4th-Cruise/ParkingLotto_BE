@@ -37,7 +37,7 @@ class DrawServiceImplTest {
     private MemberRepository memberRepository;
 
     @InjectMocks
-    private DrawServiceImpl drawExecuteService;
+    private DrawServiceImpl drawService;
 
     @BeforeEach
     void setUp() {
@@ -100,7 +100,7 @@ class DrawServiceImplTest {
             return null;
         }).when(applicantRepository).updateParkingSpaceId(anyLong(), anyLong());
 
-        drawExecuteService.executeDraw(drawId);
+        drawService.executeDraw(drawId);
 
         verify(drawRepository, atLeastOnce()).findById(drawId);
         verify(applicantRepository, atLeastOnce()).findByDrawId(drawId);
@@ -146,7 +146,7 @@ class DrawServiceImplTest {
 
         //when
         when(applicantRepository.findByDrawId(drawId)).thenReturn(applicants);
-        drawExecuteService.updateSeedNum(drawId);
+        drawService.updateSeedNum(drawId);
         String expectedSeed = "seed1seed2";
 
         //then
@@ -169,7 +169,7 @@ class DrawServiceImplTest {
         // Mock the assignRandomNumber method
         doNothing().when(applicantRepository).assignRandomNumber(anyLong(), anyDouble());
 
-        drawExecuteService.assignRandomNumber(drawId, seed);
+        drawService.assignRandomNumber(drawId, seed);
 
         // Verify and compare the actual random numbers
         Random rand = new Random(seed.hashCode());
@@ -228,7 +228,7 @@ class DrawServiceImplTest {
                 + (10 * (1 - Math.exp(-0.3 * 3))); // recentLossCount
 
         //when
-        drawExecuteService.calculateWeight(applicant);
+        drawService.calculateWeight(applicant);
 
         // ArgumentCaptor를 사용하여 updateWeightedTotalScore 메서드 호출 시 전달된 인수를 캡처합니다.
         ArgumentCaptor<Long> idCaptor = ArgumentCaptor.forClass(Long.class);
@@ -243,7 +243,7 @@ class DrawServiceImplTest {
 
     @DisplayName("예비번호 부여 로직 확인")
     @Test
-    void assignWaitlistNumbers() {
+    void assignWaitListNumbers() {
         //given
         List<Applicant> applicants = new ArrayList<>();
         Member member1 = Member.builder().id(1L).build();
@@ -255,7 +255,7 @@ class DrawServiceImplTest {
         applicants.add(Applicant.builder().id(3L).member(member3).reserveNum(1L).build()); // 당첨자 아님
 
         //when
-        drawExecuteService.assignWaitListNumbers(applicants);
+        drawService.assignWaitListNumbers(applicants);
 
         // ArgumentCaptor를 사용하여 updateReserveNum 메서드 호출 시 전달된 인수를 캡처합니다.
         ArgumentCaptor<Long> idCaptor = ArgumentCaptor.forClass(Long.class);

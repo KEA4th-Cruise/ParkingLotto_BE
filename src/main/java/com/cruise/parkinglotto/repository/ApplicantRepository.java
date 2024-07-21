@@ -26,22 +26,18 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
     void assignRandomNumber(@Param("applicantId") Long applicantId, @Param("randomNumber") double randomNumber);
 
     @Modifying
-    @Transactional
     @Query("UPDATE Applicant a SET a.parkingSpaceId = :parkingSpaceId WHERE a.id = :winnerId")
     void updateParkingSpaceId(@Param("winnerId") Long winnerId, @Param("parkingSpaceId") Long parkingSpaceId);
 
     @Modifying
-    @Transactional
     @Query("UPDATE Applicant a SET a.reserveNum = :reserveNum WHERE a.id = :applicantId")
     void updateReserveNum(@Param("applicantId") Long applicantId, @Param("reserveNum") int reserveNum);
 
     @Modifying
-    @Transactional
     @Query("UPDATE Applicant a SET a.weightedTotalScore = :weight WHERE a.id = :applicantId")
     void updateWeightedTotalScore(@Param("applicantId") Long id, @Param("weight") double weight);
 
     @Modifying
-    @Transactional
     @Query("UPDATE Applicant a SET a.winningStatus = :winningStatus WHERE a.id = :winnerId")
     void updateWinningStatus(@Param("winnerId") Long winnerId, @Param("winningStatus") WinningStatus winningStatus);
 
