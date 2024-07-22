@@ -9,7 +9,7 @@ public class ParkingSpaceRequestDTO {
     public static class AddParkingSpaceDTO {
         private String address;
         private String name;
-        private Long slots;
+        private Integer slots;
     }
 
 }

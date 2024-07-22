@@ -174,7 +174,7 @@ public class DrawServiceImpl implements DrawService {
             throw new ExceptionHandler(ErrorStatus.PARKING_SPACE_NOT_FOUND);
         }
 
-        Map<Long, Long> zoneCapacityMap = parkingSpaces.stream()
+        Map<Long, Integer> zoneCapacityMap = parkingSpaces.stream()
                 .collect(Collectors.toMap(ParkingSpace::getId, ParkingSpace::getSlots));
 
         Map<Long, List<Applicant>> zoneAssignments = new HashMap<>();
@@ -360,8 +360,8 @@ public class DrawServiceImpl implements DrawService {
             throw new ExceptionHandler(ErrorStatus.PARKING_SPACE_NOT_FOUND);
         }
         parkingSpaceList.forEach(parkingSpace -> parkingSpace.updateConfirmed(true));
-        Long totalSlots = parkingSpaceList.stream()
-                .mapToLong(ParkingSpace::getSlots)
+        Integer totalSlots = parkingSpaceList.stream()
+                .mapToInt(ParkingSpace::getSlots)
                 .sum();
         draw.updateConfirmed(true, totalSlots);
         deleteUnconfirmedDrawsAndParkingSpaces();

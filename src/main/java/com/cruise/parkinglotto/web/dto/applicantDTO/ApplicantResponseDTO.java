@@ -11,7 +11,7 @@ public class ApplicantResponseDTO {
         private Double weightedTotalScore;
         private WinningStatus winningStatus;
         private String parkingSpaceName;
-        private Long reserveNum;
+        private Integer reserveNum;
         private Long userSeedIndex;
         private String userSeed;
         private String firstChoice;
