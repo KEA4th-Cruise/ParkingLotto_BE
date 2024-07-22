@@ -70,7 +70,7 @@ public class DrawConverter {
                 .year(year)
                 .quarter(quarter)
                 .status(DrawStatus.PENDING)
-                .totalSlots(0L)
+                .totalSlots(0)
                 .confirmed(false)
                 .build();
     }

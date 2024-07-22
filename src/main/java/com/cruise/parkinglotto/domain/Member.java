@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
+@Table(name = "tb_members")
 @Getter
 @Builder
 @AllArgsConstructor
@@ -21,19 +22,19 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 18)
     private String nameKo;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
     private String accountId;
 
-    @Column(nullable = false)
+    @Column(nullable = false,  length = 10)
     private String employeeNo;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 15)
     private String deptPathName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String email;
 
     @Column(nullable = false)
@@ -44,8 +45,10 @@ public class Member extends BaseEntity {
     @Enumerated(value = EnumType.STRING)
     private EnrollmentStatus enrollmentStatus;
 
+    @Column(length = 8)
     private String carNum;
 
+    @Column(length = 50)
     private String address;
 
     @Enumerated(value = EnumType.STRING)
@@ -54,16 +57,16 @@ public class Member extends BaseEntity {
     private LocalDate deleteDate;
 
     @Column(nullable = false)
-    private Long trafficCommuteTime;
+    private Integer trafficCommuteTime;
 
     @Column(nullable = false)
-    private Long carCommuteTime;
+    private Integer carCommuteTime;
 
     @Column(nullable = false)
     private Double distance;
 
     @Column(nullable = false)
-    private Long recentLossCount;
+    private Integer recentLossCount;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CertificateDocs> certificateDocsList;

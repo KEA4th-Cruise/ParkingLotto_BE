@@ -36,7 +36,7 @@ public class DrawResponseDTO {
         private String drawType;
         private String title;
         private String seedNum;
-        private Long totalSlots;
+        private Integer totalSlots;
         private String year;
         private String quarter;
         private List<ApplicantResponseDTO.ApplicantResultDTO> applicants;

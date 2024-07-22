@@ -12,7 +12,7 @@ public class ParkingSpaceResponseDTO {
     @NoArgsConstructor
     public static class AddParkingSpaceResultDTO {
         private String name;
-        private Long slots;
+        private Integer slots;
         private String floorPlanImageUrl;
         private String address;
     }
@@ -46,7 +46,7 @@ public class ParkingSpaceResponseDTO {
     public static class ParkingSpacePreviewDTO{
         private String name;
         private String address;
-        private Long slots;
+        private Integer slots;
     }
 
     @Getter

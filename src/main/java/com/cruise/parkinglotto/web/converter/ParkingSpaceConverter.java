@@ -20,14 +20,14 @@ public class ParkingSpaceConverter {
                 .collect(Collectors.toList());
     }
 
-    public static ParkingSpace toParkingSpace(ParkingSpaceRequestDTO.AddParkingSpaceDTO addParkingSpaceDto, String floorPlanImageUrl, Draw draw) {
+    public static ParkingSpace toParkingSpace(ParkingSpaceRequestDTO.AddParkingSpaceDTO addParkingSpaceDTO, String floorPlanImageUrl, Draw draw) {
         return ParkingSpace.builder()
-                .address(addParkingSpaceDto.getAddress())
-                .name(addParkingSpaceDto.getName())
-                .slots(addParkingSpaceDto.getSlots())
-                .remainSlots(addParkingSpaceDto.getSlots())
+                .address(addParkingSpaceDTO.getAddress())
+                .name(addParkingSpaceDTO.getName())
+                .slots(addParkingSpaceDTO.getSlots())
+                .remainSlots(addParkingSpaceDTO.getSlots())
                 .floorPlanImageUrl(floorPlanImageUrl)
-                .applicantCount(0L)
+                .applicantCount(0)
                 .confirmed(false)
                 .draw(draw).build();
     }
