@@ -31,12 +31,12 @@ public class Applicant extends BaseEntity {
     private Integer reserveNum;    //  추첨대기 ( -1 ) / 당첨 ( 0 ) / 예비 ( 1 ~ )
 
     @Column(nullable = false)
-    private Long userSeedIndex;
+    private Integer userSeedIndex;
 
     @Column(columnDefinition = "CHAR(1)", nullable = false)
     private String userSeed;
 
-    private Integer randomNumber;
+    private Double randomNumber;
 
     @Column(nullable = false)
     private Long firstChoice;

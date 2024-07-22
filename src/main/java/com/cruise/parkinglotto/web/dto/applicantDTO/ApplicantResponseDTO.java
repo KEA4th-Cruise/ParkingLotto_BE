@@ -12,7 +12,7 @@ public class ApplicantResponseDTO {
         private WinningStatus winningStatus;
         private String parkingSpaceName;
         private Integer reserveNum;
-        private Long userSeedIndex;
+        private Integer userSeedIndex;
         private String userSeed;
         private String firstChoice;
         private String secondChoice;
