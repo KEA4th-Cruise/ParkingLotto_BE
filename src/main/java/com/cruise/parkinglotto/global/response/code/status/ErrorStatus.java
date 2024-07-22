@@ -34,7 +34,7 @@ public enum ErrorStatus implements BaseErrorCode {
     // 추첨 관련 응답
     DRAW_NOT_FOUND(HttpStatus.NOT_FOUND, "DRAW4001", "추첨이 존재하지 않습니다."),
     DRAW_NOT_READY(HttpStatus.NOT_FOUND, "DRAW4002", "아직 신청이 종료되지 않은 추첨입니다."),
-    DRAW_ALREADY_EXECUTED(HttpStatus.NOT_FOUND, "DRAW4001", "이미 종료된 추첨입니다. 한 번 진행된 추첨은 다시 진행 될 수 없습니다."),
+    DRAW_ALREADY_EXECUTED(HttpStatus.NOT_FOUND, "DRAW4003", "이미 종료된 추첨입니다. 한 번 진행된 추첨은 다시 진행 될 수 없습니다."),
 
 
     ;
