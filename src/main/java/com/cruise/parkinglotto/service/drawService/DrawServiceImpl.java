@@ -4,6 +4,7 @@ import com.cruise.parkinglotto.domain.Applicant;
 import com.cruise.parkinglotto.domain.Draw;
 import com.cruise.parkinglotto.domain.Member;
 import com.cruise.parkinglotto.domain.ParkingSpace;
+import com.cruise.parkinglotto.domain.enums.DrawStatus;
 import com.cruise.parkinglotto.domain.enums.DrawType;
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import com.cruise.parkinglotto.domain.enums.WorkType;
@@ -61,12 +62,18 @@ public class DrawServiceImpl implements DrawService {
     @Override
     @Transactional
     public void executeDraw(Long drawId) {
+        Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
+
+        if (draw.getStatus() == DrawStatus.COMPLETED) {
+            throw new ExceptionHandler(ErrorStatus.DRAW_ALREADY_EXECUTED);
+        }
+        if (draw.getStatus() != DrawStatus.CLOSED) {
+            throw new ExceptionHandler(ErrorStatus.DRAW_NOT_READY);
+        }
         //해당 회차 시드 생성
         updateSeedNum(drawId);
         //시드 번호 가져오기
-        String seed = drawRepository.findById(drawId).orElseThrow(() ->
-                        new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND))
-                .getSeedNum();
+        String seed = draw.getSeedNum();
         //신청자들에게 난수 부여
         assignRandomNumber(drawId, seed);
         //신청자 목록 가져오기
@@ -79,6 +86,8 @@ public class DrawServiceImpl implements DrawService {
         List<Applicant> orderedApplicants = weightedRandomSelectionAll(applicants, new Random(seed.hashCode()));
         //당첨자 및 예비번호 부여
         handleDrawResults(drawId, orderedApplicants);
+        //추첨 상태를 종료로 변경
+        drawRepository.updateStatus(drawId, DrawStatus.COMPLETED);
     }
 
     @Override
