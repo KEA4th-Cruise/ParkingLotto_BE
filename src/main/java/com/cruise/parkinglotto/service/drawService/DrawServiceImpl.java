@@ -60,7 +60,6 @@ public class DrawServiceImpl implements DrawService {
     private static final int RECENT_LOSS_COUNT_EXTRA_SCORE = 5;
 
     @Override
-    @Transactional
     public void executeDraw(Long drawId) {
         Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
 
@@ -91,7 +90,6 @@ public class DrawServiceImpl implements DrawService {
     }
 
     @Override
-    @Transactional
     public void updateSeedNum(Long drawId) {
         try {
             //추첨에 대한 예외처리
@@ -114,7 +112,6 @@ public class DrawServiceImpl implements DrawService {
     }
 
     @Override
-    @Transactional
     public void assignRandomNumber(Long drawId, String seed) {
         List<Applicant> applicants = applicantRepository.findByDrawId(drawId);
         if (applicants == null || applicants.isEmpty()) {
@@ -133,11 +130,9 @@ public class DrawServiceImpl implements DrawService {
     }
 
     @Override
-    @Transactional
     public void handleDrawResults(Long drawId, List<Applicant> orderedApplicants) {
         List<ParkingSpace> parkingSpaces = parkingSpaceRepository.findByDrawId(drawId);
         long totalSlots = parkingSpaces.stream().mapToLong(ParkingSpace::getSlots).sum();
-
         //당첨자 리스트
         List<Applicant> selectedWinners = new ArrayList<>();
         //낙첨자 리스트
@@ -155,10 +150,8 @@ public class DrawServiceImpl implements DrawService {
                 // 예비자 처리
                 reserveApplicants.add(applicant);
                 applicantRepository.updateWinningStatus(applicant.getId(), WinningStatus.RESERVE);
-                memberRepository.increaseRecentLossCount(applicant.getMember().getId());
             }
         }
-
         // 당첨자들에게 자리 부여하기
         assignZones(drawId, selectedWinners);
         // 예비자들에게 예비번호 부여하기
@@ -166,7 +159,6 @@ public class DrawServiceImpl implements DrawService {
     }
 
     @Override
-    @Transactional
     public void assignZones(Long drawId, List<Applicant> selectedWinners) {
         List<ParkingSpace> parkingSpaces = parkingSpaceRepository.findByDrawId(drawId);
 
@@ -209,7 +201,6 @@ public class DrawServiceImpl implements DrawService {
     }
 
     @Override
-    @Transactional
     public void calculateWeight(Applicant applicant) {
         double weight = 0;
 
@@ -255,7 +246,6 @@ public class DrawServiceImpl implements DrawService {
 
     //예비번호 부여 로직 및 예비번호를 받는 즉시 연속 낙첨 횟수 증가
     @Override
-    @Transactional
     public void assignWaitListNumbers(List<Applicant> applicants) {
         int waitListNumber = 1;
         for (Applicant applicant : applicants) {
