@@ -211,13 +211,12 @@ public class DrawServiceImpl implements DrawService {
     @Override
     @Transactional
     public void calculateWeight(Applicant applicant) {
-        Member member = applicant.getMember();
         double weight = 0;
 
         // 근무타입에 따른 점수 부여
-        if (WorkType.TYPE1.equals(member.getWorkType())) {
+        if (WorkType.TYPE1.equals(applicant.getWorkType())) {
             weight += WORK_TYPE1_SCORE;
-        } else if (WorkType.TYPE2.equals(member.getWorkType())) {
+        } else if (WorkType.TYPE2.equals(applicant.getWorkType())) {
             weight += WORK_TYPE2_SCORE;
         }
 
@@ -243,7 +242,7 @@ public class DrawServiceImpl implements DrawService {
         weight += DISTANCE_MAX_SCORE * (1 - Math.exp(-0.02 * distance));
 
         // 연속낙첨횟수에 따른 점수 부여
-        long recentLossCount = member.getRecentLossCount();
+        long recentLossCount = applicant.getRecentLossCount();
         if (recentLossCount < 4) {
             weight += RECENT_LOSS_COUNT_BASE_SCORE * (1 - Math.exp(-0.3 * recentLossCount));
         } else {
