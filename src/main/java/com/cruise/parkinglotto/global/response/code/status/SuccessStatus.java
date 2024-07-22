@@ -27,6 +27,9 @@ public enum SuccessStatus implements BaseCode {
     PARKING_SPACE_ADDED(HttpStatus.OK, "PARKINGSPACE2001", "해당 회차에 주차구역이 추가되었습니다."),
     PARKING_SPACE_INFO_FOUND(HttpStatus.OK,"PARKINGSPACE2002","주차 공간 정보를 조회했습니다"),
 
+
+    //  신청자 관련
+    APPLICANT_LIST_FOUND(HttpStatus.OK,"APPLICANT2001", "신청자 목록을 조회하였습니다.")
     ;
 
 

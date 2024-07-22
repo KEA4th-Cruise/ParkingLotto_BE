@@ -1,7 +1,10 @@
 package com.cruise.parkinglotto.repository;
 
 import com.cruise.parkinglotto.domain.Applicant;
+import com.cruise.parkinglotto.domain.Member;
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -45,5 +48,7 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
     @Transactional
     @Query("UPDATE Applicant a SET a.winningStatus = :winningStatus WHERE a.id = :winnerId")
     void updateWinningStatus(@Param("winnerId") Long winnerId, @Param("winningStatus") WinningStatus winningStatus);
+
+    Page<Applicant> findByDrawId(PageRequest pageRequest, Long drawId);
 
 }
