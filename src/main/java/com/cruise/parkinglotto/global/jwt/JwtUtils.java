@@ -44,7 +44,7 @@ public class JwtUtils {
 
         // Access Token 생성
         Long now = new Date().getTime();
-        Date accessTokenExpiresIn = new Date(now + 86400000L * 1); // 1일
+        Date accessTokenExpiresIn = new Date(now + 86400000); // 1일
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
                 .setAudience("domain.com") // 해당 부분은 도메인이 나온 후에 제대로 작성

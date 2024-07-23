@@ -6,6 +6,7 @@ import com.cruise.parkinglotto.global.jwt.JwtToken;
 import com.cruise.parkinglotto.global.jwt.JwtUtils;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
 import com.cruise.parkinglotto.repository.MemberRepository;
+import com.cruise.parkinglotto.service.redisService.RedisService;
 import com.cruise.parkinglotto.web.dto.memberDTO.MemberRequestDTO;
 import com.cruise.parkinglotto.web.dto.memberDTO.MemberResponseDTO;
 import jakarta.transaction.Transactional;
@@ -16,6 +17,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -24,6 +27,7 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final JwtUtils jwtUtils;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final RedisService redisService;
 
     /**
      * 로그인 로직
@@ -46,8 +50,10 @@ public class MemberServiceImpl implements MemberService {
         // 토큰 생성
         JwtToken jwtToken = jwtUtils.generateToken(authentication);
 
-        // 7일간 refresh token을 redis에 저장 + 블랙리스트 등록(블랙리스트 등록은 토큰이 삭제될 때 등록되야 할듯)
+        // 7일간 refresh token을 redis에 저장
+        redisService.setValues(loginRequestDTO.getAccountId(), jwtToken.getRefreshToken(), Duration.ofDays(7));
 
+        // 블랙리스트 등록(블랙리스트 등록은 토큰이 삭제될 때 등록되야 할듯)
 
         // 등록이 된 사용자인지 아닌지 여부 넘겨줌
         return MemberResponseDTO.LoginResponseDTO.builder()
