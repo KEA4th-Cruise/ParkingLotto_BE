@@ -19,6 +19,26 @@ public enum SuccessStatus implements BaseCode {
 
     ;
 
+    // [예시]
+    MEMBER_FOUND(HttpStatus.OK,"MEMBER2001", "회원을 조회했습니다."),
+
+    // 추첨 관련
+    DRAW_INFO_FOUND(HttpStatus.OK,"DRAW2001", "추첨 정보를 조회했습니다."),
+    DRAW_EXECUTE_RESULT(HttpStatus.OK, "DRAW2002", "추첨결과가 정상적으로 저장되었습니다."),
+    DRAW_INFO_SAVED(HttpStatus.OK, "DRAW2003", "추첨 생성 정보가 저장되었습니다."),
+    DRAW_CREATION_CONFIRMED(HttpStatus.OK, "DRAW2004", "추첨 생성이 완료되었습니다."),
+
+    //  주차 구역 관련
+    PARKING_SPACE_ADDED(HttpStatus.OK, "PARKINGSPACE2001", "해당 회차에 주차구역이 추가되었습니다."),
+    PARKING_SPACE_INFO_FOUND(HttpStatus.OK,"PARKINGSPACE2002","주차 공간 정보를 조회했습니다"),
+
+
+    //  신청자 관련
+    APPLICANT_LIST_FOUND(HttpStatus.OK,"APPLICANT2001", "신청자 목록을 조회하였습니다.")
+    ;
+
+
+
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;

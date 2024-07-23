@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
+@Table(name ="tb_weight_section_statistics" )
 @Getter
 @Builder
 @AllArgsConstructor
@@ -21,10 +22,10 @@ public class WeightSectionStatistics extends BaseEntity {
     private WeightSection section;
 
     @Column(nullable = false)
-    private Long applicantsCount;
+    private Integer applicantsCount;
 
     @Column(nullable = false)
-    private Long winnerCount;
+    private Integer winnerCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "draw_id")

@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
+@Table(name = "tb_applicants")
 @Getter
 @Builder
 @AllArgsConstructor
@@ -27,15 +28,15 @@ public class Applicant extends BaseEntity {
     private Long parkingSpaceId;
 
     @Column(nullable = false)
-    private Long reserveNum;    //  추첨대기 ( -1 ) / 당첨 ( 0 ) / 예비 ( 1 ~ )
+    private Integer reserveNum;    //  추첨대기 ( -1 ) / 당첨 ( 0 ) / 예비 ( 1 ~ )
 
     @Column(nullable = false)
-    private Long userSeedIndex;
+    private Integer userSeedIndex;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "CHAR(1)", nullable = false)
     private String userSeed;
 
-    private String randomNumber;
+    private Double randomNumber;
 
     @Column(nullable = false)
     private Long firstChoice;
@@ -51,13 +52,13 @@ public class Applicant extends BaseEntity {
     private WorkType workType;
 
     @Column(nullable = false)
-    private Long trafficCommuteTime;
+    private Integer trafficCommuteTime;
 
     @Column(nullable = false)
-    private Long carCommuteTime;
+    private Integer carCommuteTime;
 
     @Column(nullable = false)
-    private Long recentLossCount;
+    private Integer recentLossCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -66,4 +67,9 @@ public class Applicant extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "draw_id")
     private Draw draw;
+
+    public void cancelWinningStatus() {
+        this.winningStatus = WinningStatus.CANCELED;
+    }
+
 }

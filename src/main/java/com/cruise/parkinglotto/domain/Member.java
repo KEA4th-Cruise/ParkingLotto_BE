@@ -3,7 +3,6 @@ package com.cruise.parkinglotto.domain;
 import com.cruise.parkinglotto.domain.common.BaseEntity;
 import com.cruise.parkinglotto.domain.enums.AccountType;
 import com.cruise.parkinglotto.domain.enums.EnrollmentStatus;
-import com.cruise.parkinglotto.domain.enums.WorkType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
+@Table(name = "tb_members")
 @Getter
 @Builder
 @AllArgsConstructor
@@ -28,19 +28,19 @@ public class Member extends BaseEntity implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 18)
     private String nameKo;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
     private String accountId;
 
-    @Column(nullable = false)
+    @Column(nullable = false,  length = 10)
     private String employeeNo;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 15)
     private String deptPathName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String email;
 
     @Column(nullable = false)
@@ -51,26 +51,10 @@ public class Member extends BaseEntity implements UserDetails {
     @Enumerated(value = EnumType.STRING)
     private EnrollmentStatus enrollmentStatus = EnrollmentStatus.PENDING; // Default value 설정
 
+    @Column(length = 8)
     private String carNum;
 
-    private String address;
-
-    @Enumerated(value = EnumType.STRING)
-    private WorkType workType;
-
-    private LocalDate deleteDate;
-
-    @Column(nullable = false)
-    private Long trafficCommuteTime;
-
-    @Column(nullable = false)
-    private Long carCommuteTime;
-
-    @Column(nullable = false)
-    private Double distance;
-
-    @Column(nullable = false)
-    private Long recentLossCount;
+    private LocalDate deleteAt;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CertificateDocs> certificateDocsList;
@@ -113,4 +97,6 @@ public class Member extends BaseEntity implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
+    private WeightDetails weightDetails;
 }
