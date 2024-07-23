@@ -22,6 +22,9 @@ public enum ErrorStatus implements BaseErrorCode {
     // 게시글 관련 응답
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "POST4001", "게시글이 존재하지 않습니다."),
 
+    // Member 관련 응답
+    MEMBER_LOGIN_FAILED(HttpStatus.BAD_REQUEST,"MEMBER4001","비밀번호가 일치하지 않습니다."),
+
     ;
 
 

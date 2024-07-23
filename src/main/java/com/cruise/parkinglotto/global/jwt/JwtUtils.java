@@ -25,12 +25,10 @@ import java.util.stream.Collectors;
 @Component
 public class JwtUtils {
 
-    @Value("${jwt.secret}")
-    private String secretKey;
     private final Key key;
 
     // application.yml에서 secret 값 가져와서 key에 저장
-    public JwtUtils() {
+    public JwtUtils(@Value("${jwt.secret}") String secretKey) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
@@ -42,12 +40,10 @@ public class JwtUtils {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
-        log.info("authentification = {}", authentication);
-
         log.info("authentication.getName() = {}", authentication.getName());
 
         // Access Token 생성
-        long now = new Date().getTime();
+        Long now = new Date().getTime();
         Date accessTokenExpiresIn = new Date(now + 86400000L * 1); // 1일
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())

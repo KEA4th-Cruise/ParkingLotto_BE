@@ -44,8 +44,12 @@ public class Member extends BaseEntity implements UserDetails {
     private String email;
 
     @Column(nullable = false)
+    private String password;
+
+    @Builder.Default
+    @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
-    private EnrollmentStatus enrollmentStatus;
+    private EnrollmentStatus enrollmentStatus = EnrollmentStatus.PENDING; // Default value 설정
 
     private String carNum;
 
@@ -82,31 +86,31 @@ public class Member extends BaseEntity implements UserDetails {
 
     @Override
     public String getPassword() {
-        return "";
+        return this.password;
     }
 
     @Override
     public String getUsername() {
-        return "";
+        return this.accountId;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }
