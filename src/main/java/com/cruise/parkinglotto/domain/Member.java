@@ -5,8 +5,15 @@ import com.cruise.parkinglotto.domain.enums.AccountType;
 import com.cruise.parkinglotto.domain.enums.EnrollmentStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "tb_members")
@@ -14,7 +21,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member extends BaseEntity {
+public class Member extends BaseEntity implements UserDetails {
 
     @Id
     @Column(name = "member_id")
@@ -37,12 +44,12 @@ public class Member extends BaseEntity {
     private String email;
 
     @Column(nullable = false)
-    @Enumerated(value = EnumType.STRING)
-    private AccountType accountType;
+    private String password;
 
+    @Builder.Default
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
-    private EnrollmentStatus enrollmentStatus;
+    private EnrollmentStatus enrollmentStatus = EnrollmentStatus.PENDING; // Default value 설정
 
     @Column(length = 8)
     private String carNum;
@@ -52,6 +59,44 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CertificateDocs> certificateDocsList;
 
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private AccountType accountType;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singletonList(new SimpleGrantedAuthority(accountType.name()));
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.accountId;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
     @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
     private WeightDetails weightDetails;
 }

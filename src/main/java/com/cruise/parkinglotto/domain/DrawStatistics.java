@@ -17,7 +17,6 @@ public class DrawStatistics extends BaseEntity {
     @Column(name = "draw_statistics_id")
     private Long id;
 
-
     @Column(nullable = false)
     private Double competitionRate;
 

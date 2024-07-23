@@ -14,6 +14,11 @@ public enum SuccessStatus implements BaseCode {
     // 일반적인 응답
     _OK(HttpStatus.OK, "COMMON200", "성공입니다."),
 
+    // Auth 관련 응답
+    MEMBER_LOGIN_SUCCESS(HttpStatus.OK,"MEMBER2001", "로그인 성공"),
+
+    ;
+
     // [예시]
     MEMBER_FOUND(HttpStatus.OK,"MEMBER2001", "회원을 조회했습니다."),
 
