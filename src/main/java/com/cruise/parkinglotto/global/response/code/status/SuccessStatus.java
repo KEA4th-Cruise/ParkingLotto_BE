@@ -32,7 +32,8 @@ public enum SuccessStatus implements BaseCode {
 
 
     //  신청자 관련
-    APPLICANT_LIST_FOUND(HttpStatus.OK,"APPLICANT2001", "신청자 목록을 조회하였습니다.")
+    APPLICANT_LIST_FOUND(HttpStatus.OK,"APPLICANT2001", "신청자 목록을 조회하였습니다."),
+    CANCEL_SUCCESS(HttpStatus.OK,"CANCEL200","당첨 취소를 완료했습니다"),
     ;
 
 

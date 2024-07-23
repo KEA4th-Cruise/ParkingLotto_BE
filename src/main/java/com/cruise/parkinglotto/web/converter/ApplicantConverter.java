@@ -5,6 +5,7 @@ import com.cruise.parkinglotto.domain.Member;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import org.springframework.data.domain.Page;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class ApplicantConverter {
@@ -31,5 +32,15 @@ public class ApplicantConverter {
                 .totalPage(applicantPage.getTotalPages())
                 .listSize(applicantPage.getSize())
                 .build();
+    }
+
+    public static ApplicantResponseDTO.WinnerCancelResponseDTO toWinnerCancelResponseDTO(Applicant applicant) {
+
+        return ApplicantResponseDTO.WinnerCancelResponseDTO.builder( )
+                .applicantName(applicant.getMember( ).getNameKo( ))
+                .canceledAt(LocalDateTime.now( ))
+                .parkingSpaceId(applicant.getParkingSpaceId( ))
+                .winningStatus(applicant.getWinningStatus( ))
+                .employeeNo(applicant.getMember( ).getEmployeeNo( )).build( );
     }
 }

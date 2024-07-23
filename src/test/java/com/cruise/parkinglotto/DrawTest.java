@@ -27,7 +27,7 @@ public class DrawTest {
                 .description("DrawDescription")
                 .mapImageUrl("https://gcu-sw.agit.io")
                 .status(DrawStatus.OPEN)
-                .totalSlots(52L)
+                .totalSlots(52)
                 .year("2024")
                 .quarter("IDK")
                 .build();

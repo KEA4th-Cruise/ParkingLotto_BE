@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface ApplicantService {
     Page<Applicant > getApplicantList(Integer page, Long drawId);
+
+    public ApplicantResponseDTO.WinnerCancelResponseDTO giveUpMyWinning(Long memberId);
 }

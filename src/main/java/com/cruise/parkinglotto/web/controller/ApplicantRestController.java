@@ -27,4 +27,11 @@ public class ApplicantRestController {
         Page<Applicant> applicantList = applicantService.getApplicantList(page - 1, drawId);
         return ApiResponse.onSuccess(SuccessStatus.APPLICANT_LIST_FOUND, ApplicantConverter.toGetApplicantListResultDTO(applicantList));
     }
+
+    @PostMapping("/cancel/{member-id}")
+    public ApiResponse<ApplicantResponseDTO.WinnerCancelResponseDTO> cancelApply(@PathVariable("member-id") Long memberId) {
+
+        return ApiResponse.onSuccess(SuccessStatus.CANCEL_SUCCESS, applicantService.giveUpMyWinning(memberId));
+
+    }
 }

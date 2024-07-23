@@ -37,7 +37,7 @@ public class DrawRepositoryTest {
                 .description("DrawDescription")
                 .mapImageUrl("https://gcu-sw.agit.io")
                 .status(DrawStatus.OPEN)
-                .totalSlots(52L)
+                .totalSlots(52)
                 .year("2024")
                 .quarter("IDK")
                 .build();
@@ -53,7 +53,7 @@ public class DrawRepositoryTest {
                 .description("DrawDescription2")
                 .mapImageUrl("https://gcu-sw.agit.io")
                 .status(DrawStatus.PENDING)
-                .totalSlots(53L)
+                .totalSlots(53)
                 .year("2026")
                 .quarter("IDK2")
                 .build();

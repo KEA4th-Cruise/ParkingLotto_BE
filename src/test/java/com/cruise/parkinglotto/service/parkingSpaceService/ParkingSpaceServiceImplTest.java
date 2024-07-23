@@ -60,7 +60,7 @@ class ParkingSpaceServiceImplTest {
         multipartFile = mock(MultipartFile.class);
         addParkingSpaceDTO = ParkingSpaceRequestDTO.AddParkingSpaceDTO.builder()
                 .name("Test Parking Space")
-                .slots(10L)
+                .slots(10)
                 .build();
 
         when(drawRepository.findById(1L)).thenReturn(Optional.of(draw));

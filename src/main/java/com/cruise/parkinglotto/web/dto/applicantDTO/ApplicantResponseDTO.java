@@ -4,6 +4,7 @@ import com.amazonaws.services.ec2.model.HistoryRecord;
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class ApplicantResponseDTO {
@@ -43,5 +44,19 @@ public class ApplicantResponseDTO {
         Long totalElements;
         Boolean isFirst;
         Boolean isLast;
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class WinnerCancelResponseDTO {
+
+        private LocalDateTime canceledAt;
+        private String applicantName;
+        private String employeeNo;
+        private WinningStatus winningStatus;
+        private Long parkingSpaceId;
+
     }
 }
