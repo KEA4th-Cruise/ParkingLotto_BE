@@ -1,4 +1,4 @@
-package com.cruise.parkinglotto.global.webConfig;
+package com.cruise.parkinglotto.global.config.webConfig;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
