@@ -27,7 +27,8 @@ public class SecurityConfig {
                 .sessionManagement(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         // 해당 부분은 다른 API가 개발되면 그때 구현하겠습니다.
-                        /** .requestMatchers("/", "/member-service/v3/api-docs/**", "/member-service/swagger-ui/**", "/member-service/swagger-resources/**").permitAll()
+                        .requestMatchers("/", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll()
+                        /**
                         .requestMatchers("/member-service/send-mail-certification").permitAll() // 로그인 API, 로그아웃 API 들어가야 한다.
                         .anyRequest().authenticated()
                          */
