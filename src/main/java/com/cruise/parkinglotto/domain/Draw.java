@@ -5,11 +5,13 @@ import com.cruise.parkinglotto.domain.enums.DrawStatus;
 import com.cruise.parkinglotto.domain.enums.DrawType;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
+@Table(name = "tb_draws")
 @Getter
 @Builder
 @AllArgsConstructor
@@ -24,7 +26,7 @@ public class Draw extends BaseEntity {
     @Enumerated(value = EnumType.STRING)
     private DrawType type;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
     private String title;
 
     @Column(nullable = false)
@@ -39,11 +41,13 @@ public class Draw extends BaseEntity {
     @Column(nullable = false)
     private LocalDateTime usageEndAt;
 
+    @Column(columnDefinition = "TEXT")
     private String seedNum;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     private String mapImageUrl;
 
     @Column(nullable = false)
@@ -51,13 +55,16 @@ public class Draw extends BaseEntity {
     private DrawStatus status;
 
     @Column(nullable = false)
-    private Long totalSlots;
+    private Integer totalSlots;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "CHAR(4)", nullable = false)
     private String year;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "CHAR(1)", nullable = false)
     private String quarter;
+
+    @ColumnDefault("false")
+    private Boolean confirmed;
 
     @OneToMany(mappedBy = "draw", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Applicant> applicantList;
@@ -70,4 +77,9 @@ public class Draw extends BaseEntity {
 
     @OneToMany(mappedBy = "draw", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ParkingSpace> parkingSpaceList;
+
+    public void updateConfirmed(Boolean confirmed, Integer totalSlots) {
+        this.confirmed = confirmed;
+        this.totalSlots = totalSlots;
+    }
 }

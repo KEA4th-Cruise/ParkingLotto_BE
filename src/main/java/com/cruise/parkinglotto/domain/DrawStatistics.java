@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
+@Table(name = "tb_draw_statistics")
 @Getter
 @Builder
 @AllArgsConstructor
@@ -16,7 +17,6 @@ public class DrawStatistics extends BaseEntity {
     @Column(name = "draw_statistics_id")
     private Long id;
 
-
     @Column(nullable = false)
     private Double competitionRate;
 
@@ -24,7 +24,7 @@ public class DrawStatistics extends BaseEntity {
     private Double applicantsWeightAvg;
 
     @Column(nullable = false)
-    private Long totalApplicants;
+    private Integer totalApplicants;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "draw_id")

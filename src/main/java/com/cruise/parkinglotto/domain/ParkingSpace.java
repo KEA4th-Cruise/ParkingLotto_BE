@@ -3,8 +3,10 @@ package com.cruise.parkinglotto.domain;
 import com.cruise.parkinglotto.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
+@Table(name = "tb_parking_spaces")
 @Getter
 @Builder
 @AllArgsConstructor
@@ -16,24 +18,31 @@ public class ParkingSpace extends BaseEntity {
     @Column(name = "parking_space_id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 30)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String address;
 
     @Column(nullable = false)
-    private Long slots;
+    private Integer slots;
 
     @Column(nullable = false)
-    private Long remainSlots;
+    private Integer remainSlots;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     private String floorPlanImageUrl;
 
-    private Long applicantCount;
+    private Integer applicantCount;
+
+    @ColumnDefault("false")
+    private Boolean confirmed;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "draw_id")
     private Draw draw;
+
+    public void updateConfirmed(boolean confirmed) {
+        this.confirmed = confirmed;
+    }
 }
