@@ -53,5 +53,5 @@ public class Member extends BaseEntity {
     private List<CertificateDocs> certificateDocsList;
 
     @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
-    private MemberDetail memberDetail;
+    private WeightDetails weightDetails;
 }

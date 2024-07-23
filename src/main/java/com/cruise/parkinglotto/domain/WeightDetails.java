@@ -7,14 +7,14 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "tb_member_details")
+@Table(name = "tb_weight_details")
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MemberDetail extends BaseEntity {
+public class WeightDetails extends BaseEntity {
     @Id
-    @Column(name = "member_details_id")
+    @Column(name = "weight_details_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
