@@ -12,10 +12,7 @@ import com.cruise.parkinglotto.global.aws.AmazonConfig;
 import com.cruise.parkinglotto.global.aws.AmazonS3Manager;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
-import com.cruise.parkinglotto.repository.ApplicantRepository;
-import com.cruise.parkinglotto.repository.DrawRepository;
-import com.cruise.parkinglotto.repository.MemberRepository;
-import com.cruise.parkinglotto.repository.ParkingSpaceRepository;
+import com.cruise.parkinglotto.repository.*;
 import com.cruise.parkinglotto.web.converter.DrawConverter;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawRequestDTO;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
@@ -46,6 +43,7 @@ public class DrawServiceImpl implements DrawService {
     private final MemberRepository memberRepository;
     private final AmazonS3Manager amazonS3Manager;
     private final AmazonConfig amazonConfig;
+    private final MemberDetailRepository memberDetailRepository;
 
 
     //계산용 변수
@@ -145,7 +143,7 @@ public class DrawServiceImpl implements DrawService {
                 selectedWinners.add(applicant);
                 applicantRepository.updateReserveNum(applicant.getId(), 0);
                 applicantRepository.updateWinningStatus(applicant.getId(), WinningStatus.WINNER);
-                memberRepository.resetRecentLossCount(applicant.getMember().getId());
+                memberDetailRepository.resetRecentLossCount(applicant.getMember().getId());
             } else {
                 // 예비자 처리
                 reserveApplicants.add(applicant);
@@ -251,7 +249,7 @@ public class DrawServiceImpl implements DrawService {
         for (Applicant applicant : applicants) {
             if (applicant.getReserveNum() != 0) {
                 applicantRepository.updateReserveNum(applicant.getId(), waitListNumber++);
-                memberRepository.increaseRecentLossCount(applicant.getMember().getId());
+                memberDetailRepository.increaseRecentLossCount(applicant.getMember().getId());
             }
         }
     }
