@@ -1,7 +1,9 @@
 package com.cruise.parkinglotto.web.controller;
 
 import com.cruise.parkinglotto.domain.Applicant;
+import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
 import com.cruise.parkinglotto.global.response.ApiResponse;
+import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
 import com.cruise.parkinglotto.global.response.code.status.SuccessStatus;
 import com.cruise.parkinglotto.service.applicantService.ApplicantService;
 import com.cruise.parkinglotto.web.converter.ApplicantConverter;
@@ -22,7 +24,6 @@ public class ApplicantRestController {
     @GetMapping("/list/{drawId}")
     public ApiResponse<ApplicantResponseDTO.GetApplicantListResultDTO> getApplicantList(@PathVariable Long drawId,
                                                                                         @RequestParam(name = "page") Integer page) {
-
         Page<Applicant> applicantList = applicantService.getApplicantList(page - 1, drawId);
         return ApiResponse.onSuccess(SuccessStatus.APPLICANT_LIST_FOUND, ApplicantConverter.toGetApplicantListResultDTO(applicantList));
     }

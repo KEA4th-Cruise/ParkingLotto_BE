@@ -24,9 +24,6 @@ public class ApplicantServiceImpl implements ApplicantService {
     public Page<Applicant> getApplicantList(Integer page, Long drawId) {
         drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
         Page<Applicant> applicantList = applicantRepository.findByDrawId(PageRequest.of(page, 5), drawId);
-        if (applicantList == null || applicantList.isEmpty()) {
-            throw new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND);
-        }
         return applicantList;
     }
 }
