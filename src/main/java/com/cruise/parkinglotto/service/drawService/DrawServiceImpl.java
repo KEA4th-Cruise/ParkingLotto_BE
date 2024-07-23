@@ -134,13 +134,14 @@ public class DrawServiceImpl implements DrawService {
         List<Applicant> reserveApplicants = new ArrayList<>();
 
         for (int i = 0; i < orderedApplicants.size(); i++) {
+            System.out.println("orderedApplicants = " + orderedApplicants.size());
             Applicant applicant = orderedApplicants.get(i);
             if (i < totalSlots) {
                 // 당첨 처리
                 selectedWinners.add(applicant);
                 applicantRepository.updateReserveNum(applicant.getId(), 0);
                 applicantRepository.updateWinningStatus(applicant.getId(), WinningStatus.WINNER);
-                weightDetailsRepository.resetRecentLossCount(applicant.getMember().getId());
+                weightDetailsRepository.resetRecentLossCount(applicant.getMember());
             } else {
                 // 예비자 처리
                 reserveApplicants.add(applicant);
@@ -246,7 +247,7 @@ public class DrawServiceImpl implements DrawService {
         for (Applicant applicant : applicants) {
             if (applicant.getReserveNum() != 0) {
                 applicantRepository.updateReserveNum(applicant.getId(), waitListNumber++);
-                weightDetailsRepository.increaseRecentLossCount(applicant.getMember().getId());
+                weightDetailsRepository.increaseRecentLossCount(applicant.getMember());
             }
         }
     }
