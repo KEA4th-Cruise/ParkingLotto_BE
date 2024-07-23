@@ -2,7 +2,6 @@ package com.cruise.parkinglotto.service.drawService;
 
 import com.cruise.parkinglotto.domain.Applicant;
 import com.cruise.parkinglotto.domain.Draw;
-import com.cruise.parkinglotto.domain.Member;
 import com.cruise.parkinglotto.domain.ParkingSpace;
 import com.cruise.parkinglotto.domain.enums.DrawStatus;
 import com.cruise.parkinglotto.domain.enums.DrawType;
@@ -12,10 +11,7 @@ import com.cruise.parkinglotto.global.aws.AmazonConfig;
 import com.cruise.parkinglotto.global.aws.AmazonS3Manager;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
-import com.cruise.parkinglotto.repository.ApplicantRepository;
-import com.cruise.parkinglotto.repository.DrawRepository;
-import com.cruise.parkinglotto.repository.MemberRepository;
-import com.cruise.parkinglotto.repository.ParkingSpaceRepository;
+import com.cruise.parkinglotto.repository.*;
 import com.cruise.parkinglotto.web.converter.DrawConverter;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawRequestDTO;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
@@ -27,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -43,9 +38,9 @@ public class DrawServiceImpl implements DrawService {
     private final ApplicantRepository applicantRepository;
     private final DrawRepository drawRepository;
     private final ParkingSpaceRepository parkingSpaceRepository;
-    private final MemberRepository memberRepository;
     private final AmazonS3Manager amazonS3Manager;
     private final AmazonConfig amazonConfig;
+    private final WeightDetailsRepository weightDetailsRepository;
 
 
     //계산용 변수
@@ -145,7 +140,7 @@ public class DrawServiceImpl implements DrawService {
                 selectedWinners.add(applicant);
                 applicantRepository.updateReserveNum(applicant.getId(), 0);
                 applicantRepository.updateWinningStatus(applicant.getId(), WinningStatus.WINNER);
-                memberRepository.resetRecentLossCount(applicant.getMember().getId());
+                weightDetailsRepository.resetRecentLossCount(applicant.getMember().getId());
             } else {
                 // 예비자 처리
                 reserveApplicants.add(applicant);
@@ -251,7 +246,7 @@ public class DrawServiceImpl implements DrawService {
         for (Applicant applicant : applicants) {
             if (applicant.getReserveNum() != 0) {
                 applicantRepository.updateReserveNum(applicant.getId(), waitListNumber++);
-                memberRepository.increaseRecentLossCount(applicant.getMember().getId());
+                weightDetailsRepository.increaseRecentLossCount(applicant.getMember().getId());
             }
         }
     }

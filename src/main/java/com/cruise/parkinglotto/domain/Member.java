@@ -3,7 +3,6 @@ package com.cruise.parkinglotto.domain;
 import com.cruise.parkinglotto.domain.common.BaseEntity;
 import com.cruise.parkinglotto.domain.enums.AccountType;
 import com.cruise.parkinglotto.domain.enums.EnrollmentStatus;
-import com.cruise.parkinglotto.domain.enums.WorkType;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
@@ -48,26 +47,11 @@ public class Member extends BaseEntity {
     @Column(length = 8)
     private String carNum;
 
-    @Column(length = 50)
-    private String address;
-
-    @Enumerated(value = EnumType.STRING)
-    private WorkType workType;
-
-    private LocalDate deleteDate;
-
-    @Column(nullable = false)
-    private Integer trafficCommuteTime;
-
-    @Column(nullable = false)
-    private Integer carCommuteTime;
-
-    @Column(nullable = false)
-    private Double distance;
-
-    @Column(nullable = false)
-    private Integer recentLossCount;
+    private LocalDate deleteAt;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CertificateDocs> certificateDocsList;
+
+    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
+    private WeightDetails weightDetails;
 }
