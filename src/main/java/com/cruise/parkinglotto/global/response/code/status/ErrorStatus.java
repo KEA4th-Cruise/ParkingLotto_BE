@@ -13,17 +13,14 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 가장 일반적인 응답
     _INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "COMMON500", "서버 에러, 관리자에게 문의 바랍니다."),
-    _BAD_REQUEST(HttpStatus.BAD_REQUEST,"COMMON400","잘못된 요청입니다."),
-    _UNAUTHORIZED(HttpStatus.UNAUTHORIZED,"COMMON401","인증이 필요합니다."),
+    _BAD_REQUEST(HttpStatus.BAD_REQUEST, "COMMON400", "잘못된 요청입니다."),
+    _UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "COMMON401", "인증이 필요합니다."),
     _FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "금지된 요청입니다."),
     _EMPTY_FIELD(HttpStatus.NO_CONTENT, "COMMON404", "입력 값이 누락되었습니다."),
 
-    // [예시]
-    // 게시글 관련 응답
-    POST_NOT_FOUND(HttpStatus.NOT_FOUND, "POST4001", "게시글이 존재하지 않습니다."),
-
     // Member 관련 응답
-    MEMBER_LOGIN_FAILED(HttpStatus.BAD_REQUEST,"MEMBER4001","비밀번호가 일치하지 않습니다."),
+    MEMBER_LOGIN_FAILED(HttpStatus.BAD_REQUEST, "MEMBER4001", "비밀번호가 일치하지 않습니다."),
+
     //신청자 관련 응답
     APPLICANT_NOT_FOUND(HttpStatus.NOT_FOUND, "APPLICANT4001", "신청자가 존재하지 않습니다"),
 
@@ -31,7 +28,8 @@ public enum ErrorStatus implements BaseErrorCode {
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER4001", "사용자가 존재하지 않습니다"),
 
     // 주차 공간 관련 응답
-    PARKING_SPACE_NOT_FOUND(HttpStatus.NOT_FOUND,"PARKINGSPACE4001","주차 공간이 존재하지 않습니다"),
+    PARKING_SPACE_NOT_FOUND(HttpStatus.NOT_FOUND, "PARKINGSPACE4001", "주차 공간이 존재하지 않습니다"),
+    NO_REMAIN_SLOTS(HttpStatus.BAD_REQUEST, "PARKINGSPACE4002", "남은 주차공간이 없습니다."),
 
     // 추첨 관련 응답
     DRAW_NOT_FOUND(HttpStatus.NOT_FOUND, "DRAW4001", "추첨이 존재하지 않습니다."),
@@ -40,7 +38,6 @@ public enum ErrorStatus implements BaseErrorCode {
 
 
     ;
-
 
 
     private final HttpStatus httpStatus;
