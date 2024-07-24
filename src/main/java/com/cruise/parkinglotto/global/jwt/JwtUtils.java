@@ -139,7 +139,6 @@ public class JwtUtils {
 
     // httpServletRequest에서 멤버의 accountId를 뽑는 메서드
     public String getAccountIdFromRequest(HttpServletRequest httpServletRequest) {
-
         String token = resolveToken(httpServletRequest);
         Authentication authentication = getAuthentication(token);
         return authentication.getName();

@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDateTime;
 
 public class MemberResponseDTO {
 
@@ -16,5 +19,13 @@ public class MemberResponseDTO {
     public static class LoginResponseDTO {
         private JwtToken jwtToken;
         private EnrollmentStatus enrollmentStatus;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class LogoutResponseDTO {
+        private LocalDateTime logoutAt;
     }
 }

@@ -11,6 +11,6 @@ public interface MemberService {
     MemberResponseDTO.LoginResponseDTO login(MemberRequestDTO.LoginRequestDTO loginRequestDTO);
 
     // 로그아웃 로직
-    void logout(String accountId);
+    MemberResponseDTO.LogoutResponseDTO logout(MemberRequestDTO.LogoutRequestDTO logoutRequestDTO);
 
 }
