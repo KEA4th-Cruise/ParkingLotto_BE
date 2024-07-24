@@ -53,9 +53,9 @@ public class ObjectStorageService {
             String bucketName = urlParts[5];
             String directory = urlParts[6];
             String encodedObjectKey = urlParts[7];
-            log.info("bucketName: "+bucketName);
-            log.info("directory: "+directory);
-            log.info("encodedObjectKey: "+encodedObjectKey);
+            log.info("bucketName: " + bucketName);
+            log.info("directory: " + directory);
+            log.info("encodedObjectKey: " + encodedObjectKey);
 
             String objectKey = URLDecoder.decode(encodedObjectKey, "UTF-8");
             DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
