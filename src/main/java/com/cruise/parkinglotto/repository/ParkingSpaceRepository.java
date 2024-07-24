@@ -19,4 +19,6 @@ public interface ParkingSpaceRepository extends JpaRepository<ParkingSpace, Long
     void decrementRemainSlots(@Param("id") Long id);
 
     List<ParkingSpace> findByConfirmed(boolean confirmed);
+
+    Optional<ParkingSpace> findParkingSpaceByDrawId(Long drawId);
 }

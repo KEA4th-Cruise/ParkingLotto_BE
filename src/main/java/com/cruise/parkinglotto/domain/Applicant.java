@@ -18,7 +18,6 @@ public class Applicant extends BaseEntity {
     @Column(name = "applicant_id")
     private Long id;
 
-    @Column(nullable = false)
     private Double weightedTotalScore;
 
     @Column(nullable = false)
@@ -30,34 +29,26 @@ public class Applicant extends BaseEntity {
     @Column(nullable = false)
     private Integer reserveNum;    //  추첨대기 ( -1 ) / 당첨 ( 0 ) / 예비 ( 1 ~ )
 
-    @Column(nullable = false)
     private Integer userSeedIndex;
 
-    @Column(columnDefinition = "CHAR(1)", nullable = false)
+    @Column(columnDefinition = "CHAR(1)")
     private String userSeed;
 
     private Double randomNumber;
 
-    @Column(nullable = false)
     private Long firstChoice;
 
-    @Column(nullable = false)
     private Long secondChoice;
 
-    @Column(nullable = false)
     private Double distance;
 
-    @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private WorkType workType;
 
-    @Column(nullable = false)
     private Integer trafficCommuteTime;
 
-    @Column(nullable = false)
     private Integer carCommuteTime;
 
-    @Column(nullable = false)
     private Integer recentLossCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -72,4 +63,9 @@ public class Applicant extends BaseEntity {
         this.winningStatus = WinningStatus.CANCELED;
     }
 
+    public void approveParkingSpaceToPriority(Long parkingSpaceId, WinningStatus winningStatus, Integer reserveNum) {
+        this.parkingSpaceId = parkingSpaceId;
+        this.winningStatus = winningStatus;
+        this.reserveNum = reserveNum;
+    }
 }
