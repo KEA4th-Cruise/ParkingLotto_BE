@@ -47,12 +47,9 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberResponseDTO.LoginResponseDTO login(MemberRequestDTO.LoginRequestDTO loginRequestDTO) {
 
-        log.info("Attempting to find member by accountId: {}", loginRequestDTO.getAccountId());
-        Member member = memberRepository.findByAccountId(loginRequestDTO.getAccountId())
-                .orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_LOGIN_FAILED));
-        log.info("Found member: {}", member);
+        Member member = getMemberByAccountId(loginRequestDTO.getAccountId());
 
-        // Here we validate the password
+        // 비밀번호 일치 검증
         if (!passwordEncoder.matches(loginRequestDTO.getPassword(), member.getPassword())) {
             throw new ExceptionHandler(ErrorStatus.MEMBER_PASSWORD_NOT_MATCHED);
         }
@@ -93,6 +90,11 @@ public class MemberServiceImpl implements MemberService {
         return MemberResponseDTO.LogoutResponseDTO.builder()
                 .logoutAt(LocalDateTime.now())
                 .build();
+    }
+
+    public Member getMemberByAccountId(String accountId) {
+        return memberRepository.findByAccountId(accountId)
+                .orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
     }
 
 }
