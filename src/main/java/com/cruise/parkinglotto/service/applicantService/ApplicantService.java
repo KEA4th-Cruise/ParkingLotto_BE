@@ -5,7 +5,7 @@ import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import org.springframework.data.domain.Page;
 
 public interface ApplicantService {
-    Page<Applicant > getApplicantList(Integer page, Long drawId);
+    Page<Applicant> getApplicantList(Integer page, Long drawId);
 
-    ApplicantResponseDTO.ApprovePriorityResultDTO approvePriority( Long drawId,Long applicantId);
+    ApplicantResponseDTO.ApprovePriorityResultDTO approvePriority(Long drawId, Long applicantId);
 }

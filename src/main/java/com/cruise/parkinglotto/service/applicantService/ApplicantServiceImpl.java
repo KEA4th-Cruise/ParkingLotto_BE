@@ -35,7 +35,7 @@ public class ApplicantServiceImpl implements ApplicantService {
 
     @Override
     @Transactional
-    public ApplicantResponseDTO.ApprovePriorityResultDTO approvePriority(Long drawId,Long applicantId) {
+    public ApplicantResponseDTO.ApprovePriorityResultDTO approvePriority(Long drawId, Long applicantId) {
         Applicant applicant = applicantRepository.findById(applicantId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND));
         ParkingSpace parkingSpace = parkingSpaceRepository.findParkingSpaceByDrawId(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.PARKING_SPACE_NOT_FOUND));
         parkingSpace.decrementSlots();

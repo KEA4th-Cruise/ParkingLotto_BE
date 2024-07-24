@@ -19,6 +19,7 @@ public class ApplicantResponseDTO {
         private String secondChoice;
         private String userName;
     }
+
     @Getter
     @Builder
     @NoArgsConstructor

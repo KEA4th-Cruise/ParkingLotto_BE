@@ -29,7 +29,7 @@ public class ApplicantRestController {
 
     @PatchMapping("/priority-approval")
     public ApiResponse<ApplicantResponseDTO.ApprovePriorityResultDTO> approvePriority(@RequestParam(name = "drawId") Long drawId,
-                                                                                     @RequestParam(name = "applicantId") Long applicantId) {
+                                                                                      @RequestParam(name = "applicantId") Long applicantId) {
         ApplicantResponseDTO.ApprovePriorityResultDTO approvePriorityResultDTO = applicantService.approvePriority(drawId, applicantId);
         return ApiResponse.onSuccess(SuccessStatus.APPLICANT_PRIORITY_APPROVED, approvePriorityResultDTO);
     }
