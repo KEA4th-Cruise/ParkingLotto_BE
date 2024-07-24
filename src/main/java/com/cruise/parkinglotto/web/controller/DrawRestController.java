@@ -1,6 +1,7 @@
 package com.cruise.parkinglotto.web.controller;
 
 import com.cruise.parkinglotto.domain.Draw;
+import com.cruise.parkinglotto.global.jwt.JwtUtils;
 import com.cruise.parkinglotto.global.response.ApiResponse;
 import com.cruise.parkinglotto.global.response.code.status.SuccessStatus;
 import com.cruise.parkinglotto.service.drawService.DrawService;
