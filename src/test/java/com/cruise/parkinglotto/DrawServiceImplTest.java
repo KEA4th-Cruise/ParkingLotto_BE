@@ -48,7 +48,7 @@ public class DrawServiceImplTest {
                 .description("DrawDescription")
                 .mapImageUrl("https://gcu-sw.agit.io")
                 .status(DrawStatus.OPEN)
-                .totalSlots(52L)
+                .totalSlots(52)
                 .year("2024")
                 .quarter("IDK")
                 .build();
@@ -65,7 +65,7 @@ public class DrawServiceImplTest {
                 .description("DrawDescription2")
                 .mapImageUrl("https://gcu-sw.agit.io")
                 .status(DrawStatus.PENDING)
-                .totalSlots(53L)
+                .totalSlots(53)
                 .year("2026")
                 .quarter("IDK2")
                 .build();
@@ -73,10 +73,10 @@ public class DrawServiceImplTest {
         ParkingSpace parkingSpace = ParkingSpace.builder()
                 .name("test")
                 .address("testAddress")
-                .slots(34L)
-                .remainSlots(35L)
+                .slots(34)
+                .remainSlots(35)
                 .floorPlanImageUrl("https://gcu-sw.agit.io1")
-                .applicantCount(36L)
+                .applicantCount(36)
                 .draw(draw)
                 .build();
 

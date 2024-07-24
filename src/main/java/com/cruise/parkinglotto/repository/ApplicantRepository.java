@@ -16,8 +16,10 @@ import java.util.Optional;
 
 public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
 
-    @Query("select a.id from Applicant a where a.member.id = :memberId")
-    Optional<Long> findByMember(@Param("memberId") Long memberId);
+    Optional<Long> findIdByMemberId(Long memberId);
+
+    @Query("select a.id from Applicant a where a.member.id = :memberId and a.draw.id = :drawId ")
+    Optional<Long> findApplicantWithId(@Param("memberId") Long memberId,@Param("drawId") Long drawId);
 
     @Query("select a.parkingSpaceId from Applicant a where a.id =:applicantId")
     Optional<Long> findParkingSpaceId(@Param("applicantId") Long applicantId);

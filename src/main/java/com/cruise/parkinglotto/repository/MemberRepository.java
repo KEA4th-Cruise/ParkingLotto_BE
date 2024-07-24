@@ -14,4 +14,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Query("SELECT m.enrollmentStatus FROM Member m WHERE m.id = :memberId")
     EnrollmentStatus findEnrollmentStatusById(@Param("memberId") Long memberId);
+
+    @Query("select m.id from Member m where m.accountId = :accountId")
+    Optional<Long> findIdByAccountId(@Param("accountId") String accountId);
 }

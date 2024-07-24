@@ -71,7 +71,6 @@ public class Applicant extends BaseEntity {
     public void cancelWinningStatus() {
         this.winningStatus = WinningStatus.CANCELED;
         this.parkingSpaceId = null;
-
     }
 
 }

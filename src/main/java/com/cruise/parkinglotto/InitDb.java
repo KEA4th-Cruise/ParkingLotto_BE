@@ -7,7 +7,10 @@
 //import jakarta.persistence.*;
 //
 //import lombok.RequiredArgsConstructor;
+
 //import org.springframework.cglib.core.Local;
+
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //import org.springframework.stereotype.Component;
 //import org.springframework.transaction.annotation.Transactional;
 //
@@ -35,17 +38,22 @@
 //    static class InitService {
 //
 //        private final EntityManager em;
+//        private final BCryptPasswordEncoder bCryptPasswordEncoder;
+//
 //
 //        public void dbInit1() {
 //
 //            LocalDateTime drawStartAt = LocalDateTime.now( );
 //            Draw draw = createDraw(DrawType.GENERAL, "2024년도 1회차 주차추첨", drawStartAt, drawStartAt, drawStartAt, drawStartAt, "100", "추첨", "mapImageUrl", DrawStatus.OPEN, 100L, "2024", "1분기", null);
+
 //            em.persist(draw);
-//            Member member = createMember("최준범", "cjb", "111", "developer", "example1@example.com", AccountType.USER, EnrollmentStatus.ENROLLED, "1234", "Seoul", WorkType.TYPE1, "hello", 50L, 30L, 30.00, 0L);
+//            Member member = createMember("최준범", "cjb", "111", "developer", "example1@example.com", AccountType.USER, EnrollmentStatus.ENROLLED, "1234", "Seoul", WorkType.TYPE1, "hello", 50, 30, 30.00, 0,bCryptPasswordEncoder.encode("11111"));
 //            em.persist(member);
+
 //            Applicant applicant = createApplicant(50.0, WinningStatus.WINNER, 1L, 0L, 100L, "100", "150", 1L, 2L, 30.00, WorkType.TYPE1, 50L, 30L, 0L, member, draw);
+
 //            em.persist(applicant);
-//            ParkingSpace parkingSpace = createParkingSpace("A", "seoul", 100L, 50L, "space A", 40L, draw);
+//            ParkingSpace parkingSpace = createParkingSpace("A", "seoul", 100, 50, "space A", 40, draw);
 //            em.persist(parkingSpace);
 //
 //        }
@@ -53,18 +61,22 @@
 //
 //        public void dbInit2() {
 //
+
 //            LocalDateTime drawStartAt = LocalDateTime.now( );
 //            Draw draw = createDraw(DrawType.GENERAL, "2024년도 1회차 주차추첨", drawStartAt, drawStartAt, drawStartAt, drawStartAt, "100", "추첨", "mapImageUrl", DrawStatus.OPEN, 100L, "2024", "1분기", null);
+
 //            em.persist(draw);
-//            Member member = createMember("준범최", "cjbbb", "112", "marketer", "example2@example.com", AccountType.USER, EnrollmentStatus.ENROLLED, "1236", "Busan", WorkType.TYPE2, "nice", 200L, 160L, 300.00, 0L);
+//            Member member = createMember("준범최", "cjbbb", "112", "marketer", "example2@example.com", AccountType.USER, EnrollmentStatus.ENROLLED, "1236", "Busan", WorkType.TYPE2, "nice", 200, 160, 300.00, 0,bCryptPasswordEncoder.encode("11112"));
 //            em.persist(member);
 //            Applicant applicant = createApplicant(50.0, WinningStatus.WINNER, 2L, 0L, 100L, "100", "150", 1L, 2L, 300.00, WorkType.TYPE2, 200L, 160L, 0L, member, draw);
+
 //            em.persist(applicant);
-//            ParkingSpace parkingSpace = createParkingSpace("B", "seoul", 100L, 50L, "space B", 40L, draw);
+//            ParkingSpace parkingSpace = createParkingSpace("B", "seoul", 100, 50, "space B", 40, draw);
 //            em.persist(parkingSpace);
 //
 //        }
 //
+
 //        private Applicant createApplicant(Double weightedTotalScore, WinningStatus winningStatus, Long parkingSpaceId, Long reserveNum, Long userSeedIndex, String userSeed, String randomNumber, Long firstChoice, Long secondChoice, Double distance, WorkType workType, Long trafficCommuteTime, Long carCommuteTime, Long recentLossCount, Member member, Draw draw) {
 //
 //            return Applicant.builder( )
@@ -87,7 +99,7 @@
 //
 //        }
 //
-//        private Member createMember(String nameKo, String accountId, String employeeNo, String deptPathName, String email, AccountType accountType, EnrollmentStatus enrollmentStatus, String carNum, String address, WorkType workType, String nickName, Long trafficCommuteTime, Long carCommuteTime, Double distance, Long recentLossCount) {
+//        private Member createMember(String nameKo, String accountId, String employeeNo, String deptPathName, String email, AccountType accountType, EnrollmentStatus enrollmentStatus, String carNum, String address, WorkType workType, String nickName, Integer trafficCommuteTime, Integer carCommuteTime, Double distance, Integer recentLossCount, String password) {
 //            return Member.builder( )
 //                    .nameKo(nameKo)
 //                    .accountId(accountId)
@@ -97,17 +109,12 @@
 //                    .accountType(accountType)
 //                    .enrollmentStatus(enrollmentStatus)
 //                    .carNum(carNum)
-//                    .address(address)
-//                    .workType(workType)
-//                    .trafficCommuteTime(trafficCommuteTime)
-//                    .carCommuteTime(carCommuteTime)
-//                    .distance(distance)
-//                    .recentLossCount(recentLossCount)
+//                    .password(password)
 //                    .build( );
 //
 //        }
 //
-//        private ParkingSpace createParkingSpace(String name, String address, Long slots, Long remainSlots, String floorPlanImageUrl, Long applicantCount, Draw draw) {
+//        private ParkingSpace createParkingSpace(String name, String address, Integer slots, Integer remainSlots, String floorPlanImageUrl, Integer applicantCount, Draw draw) {
 //
 //            return ParkingSpace.builder( )
 //                    .name(name)
@@ -121,7 +128,7 @@
 //
 //        }
 //
-//        private Draw createDraw(DrawType type, String title, LocalDateTime drawStartAt, LocalDateTime drawEndAt, LocalDateTime usageStartAt, LocalDateTime usageEndAt, String seedNum, String description, String mapImageUrl, DrawStatus status, Long totalSlots, String year, String quarter, DrawStatistics drawStatistics) {
+//        private Draw createDraw(DrawType type, String title, LocalDateTime drawStartAt, LocalDateTime drawEndAt, LocalDateTime usageStartAt, LocalDateTime usageEndAt, String seedNum, String description, String mapImageUrl, DrawStatus status, Integer totalSlots, String year, String quarter, DrawStatistics drawStatistics) {
 //
 //            return Draw.builder( )
 //                    .type(type)

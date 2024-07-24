@@ -11,8 +11,9 @@ import java.util.List;
 
 @Service
 public interface ApplicantService {
+    
+    Page<Applicant > getApplicantList(Integer page, Long drawId);
 
-    public WinnerCancelResponseDTO giveUpMyWinning(Long memberId);
-    Page<Applicant> getApplicantList(Integer page, Long drawId);
+    public ApplicantResponseDTO.WinnerCancelResponseDTO giveUpMyWinning(Long memberId,Long drawId);
 
 }

@@ -7,6 +7,7 @@ import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import java.time.LocalDateTime;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class ApplicantResponseDTO {
@@ -63,5 +64,4 @@ public class ApplicantResponseDTO {
         private Long parkingSpaceId;
 
     }
-
 }
