@@ -51,7 +51,7 @@ class ApplicantServiceImplTest {
 
 //        when(memberRepository.save(member)).thenReturn(member);
 //        when(applicantRepository.save(applicant)).thenReturn(applicant);
-        when(applicantRepository.findByMember(1L)).thenReturn(Optional.of(applicant.getId()));
+//        when(applicantRepository.findByMember(1L)).thenReturn(Optional.of(applicant.getId()));
         when(applicantRepository.findById(1L)).thenReturn(Optional.of(applicant));
     }
 
@@ -60,12 +60,13 @@ class ApplicantServiceImplTest {
     public void testWinningCancel() {
         // Given
         Long memberId = 1L;
+        Long drawId = 1L;
 
         // When
-        applicantService.giveUpMyWinning(memberId);
+        applicantService.giveUpMyWinning(memberId,drawId);
 
         // Then
-        verify(applicantRepository, times(1)).findByMember(memberId);
+//        verify(applicantRepository, times(1)).findByMember(memberId);
         verify(applicantRepository, times(1)).findById(1L);
 //        verify(applicantRepository, times(1)).save(applicant);
 

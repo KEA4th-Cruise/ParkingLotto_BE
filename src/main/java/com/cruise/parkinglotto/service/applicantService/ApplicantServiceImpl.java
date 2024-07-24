@@ -31,8 +31,8 @@ public class ApplicantServiceImpl implements ApplicantService {
     }
 
     @Override
-    public ApplicantResponseDTO.WinnerCancelResponseDTO giveUpMyWinning(Long memberId) {
-        Long applicantId = applicantRepository.findByMember(memberId).orElseThrow(()->new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND));
+    public ApplicantResponseDTO.WinnerCancelResponseDTO giveUpMyWinning(Long memberId,Long drawId) {
+        Long applicantId = applicantRepository.findApplicantWithId(memberId,drawId).orElseThrow(()->new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND));
         Applicant findApplicant = applicantRepository.findById(applicantId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND));
         WinningStatus winningStatus = findApplicant.getWinningStatus( );
 
