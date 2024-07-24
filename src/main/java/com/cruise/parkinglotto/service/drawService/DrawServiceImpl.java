@@ -38,8 +38,6 @@ public class DrawServiceImpl implements DrawService {
     private final ApplicantRepository applicantRepository;
     private final DrawRepository drawRepository;
     private final ParkingSpaceRepository parkingSpaceRepository;
-//    private final AmazonS3Manager amazonS3Manager;
-//    private final AmazonConfig amazonConfig;
     private final WeightDetailsRepository weightDetailsRepository;
     private final ObjectStorageService objectStorageService;
     private final ObjectStorageConfig objectStorageConfig;
