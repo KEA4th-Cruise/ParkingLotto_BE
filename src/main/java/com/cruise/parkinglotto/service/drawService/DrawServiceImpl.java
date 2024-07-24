@@ -7,9 +7,9 @@ import com.cruise.parkinglotto.domain.enums.DrawStatus;
 import com.cruise.parkinglotto.domain.enums.DrawType;
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import com.cruise.parkinglotto.domain.enums.WorkType;
-import com.cruise.parkinglotto.global.aws.AmazonConfig;
-import com.cruise.parkinglotto.global.aws.AmazonS3Manager;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
+import com.cruise.parkinglotto.global.kc.ObjectStorageConfig;
+import com.cruise.parkinglotto.global.kc.ObjectStorageService;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
 import com.cruise.parkinglotto.repository.*;
 import com.cruise.parkinglotto.web.converter.DrawConverter;
@@ -38,9 +38,11 @@ public class DrawServiceImpl implements DrawService {
     private final ApplicantRepository applicantRepository;
     private final DrawRepository drawRepository;
     private final ParkingSpaceRepository parkingSpaceRepository;
-    private final AmazonS3Manager amazonS3Manager;
-    private final AmazonConfig amazonConfig;
+//    private final AmazonS3Manager amazonS3Manager;
+//    private final AmazonConfig amazonConfig;
     private final WeightDetailsRepository weightDetailsRepository;
+    private final ObjectStorageService objectStorageService;
+    private final ObjectStorageConfig objectStorageConfig;
 
 
     //계산용 변수
@@ -331,7 +333,7 @@ public class DrawServiceImpl implements DrawService {
         String quarter = String.valueOf((Long.parseLong(startAt.substring(5, 7)) - 1) / 3 + 1);
         String drawType = (createDrawRequestDTO.getType() == DrawType.GENERAL) ? "일반추첨" : "우대신청";
         String title = year + "년도 " + quarter + "분기 " + drawType;
-        String mapImageUrl = amazonS3Manager.uploadFileToDirectory(amazonConfig.getMapImagePath(), title.replace(" ", "_"), mapImage);
+        String mapImageUrl = objectStorageService.uploadObject(objectStorageConfig.getMapImagePath(), title.replace(" ", "_"), mapImage);
         Draw draw = DrawConverter.toDraw(createDrawRequestDTO, title, mapImageUrl, year, quarter);
         return drawRepository.save(draw);
     }
@@ -359,13 +361,14 @@ public class DrawServiceImpl implements DrawService {
     public void deleteUnconfirmedDrawsAndParkingSpaces() {
         List<ParkingSpace> unconfirmedParkingSpaceList = parkingSpaceRepository.findByConfirmed(false);
         unconfirmedParkingSpaceList.forEach(parkingSpace -> {
-            amazonS3Manager.deleteFileFromUrl(parkingSpace.getFloorPlanImageUrl());
+            objectStorageService.deleteObject(parkingSpace.getFloorPlanImageUrl());
         });
         parkingSpaceRepository.deleteAll(unconfirmedParkingSpaceList);
 
         List<Draw> unconfirmedDrawList = drawRepository.findByConfirmed(false);
         unconfirmedDrawList.forEach(draw -> {
-          amazonS3Manager.deleteFileFromUrl(draw.getMapImageUrl());
+            objectStorageService.deleteObject(draw.getMapImageUrl());
+
         });
 
         drawRepository.deleteAll(unconfirmedDrawList);

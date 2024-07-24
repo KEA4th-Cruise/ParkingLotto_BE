@@ -2,9 +2,9 @@ package com.cruise.parkinglotto.service.parkingSpaceService;
 
 import com.cruise.parkinglotto.domain.Draw;
 import com.cruise.parkinglotto.domain.ParkingSpace;
-import com.cruise.parkinglotto.global.aws.AmazonConfig;
-import com.cruise.parkinglotto.global.aws.AmazonS3Manager;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
+import com.cruise.parkinglotto.global.kc.ObjectStorageConfig;
+import com.cruise.parkinglotto.global.kc.ObjectStorageService;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
 import com.cruise.parkinglotto.repository.ApplicantRepository;
 import com.cruise.parkinglotto.repository.DrawRepository;
@@ -23,9 +23,9 @@ public class ParkingSpaceServiceImpl implements ParkingSpaceService {
 
     private final ParkingSpaceRepository parkingSpaceRepository;
     private final DrawRepository drawRepository;
-    private final AmazonS3Manager amazonS3Manager;
-    private final AmazonConfig amazonConfig;
     private final ApplicantRepository applicantRepository;
+    private final ObjectStorageConfig objectStorageConfig;
+    private final ObjectStorageService objectStorageService;
 
     @Override
     @Transactional
@@ -33,8 +33,7 @@ public class ParkingSpaceServiceImpl implements ParkingSpaceService {
         Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
         String drawTitle = draw.getTitle().replace(" ", "_");
         String parkingSpaceName = addParkingSpaceDTO.getName().replace(" ", "_");
-        String floorPlanImageUrl = amazonS3Manager.uploadFileToDirectory(
-                amazonConfig.getParkingSpaceImagePath(),
+        String floorPlanImageUrl = objectStorageService.uploadObject(objectStorageConfig.getParkingSpaceImagePath(),
                 drawTitle + "_" + parkingSpaceName,
                 floorPlanImage);
         ParkingSpace parkingSpace = ParkingSpaceConverter.toParkingSpace(addParkingSpaceDTO, floorPlanImageUrl, draw);
