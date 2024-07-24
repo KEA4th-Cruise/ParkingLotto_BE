@@ -1,7 +1,6 @@
 package com.cruise.parkinglotto.web.dto.applicantDTO;
 
 
-
 import com.amazonaws.services.ec2.model.HistoryRecord;
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import java.time.LocalDateTime;
@@ -26,6 +25,7 @@ public class ApplicantResponseDTO {
         private String secondChoice;
         private String userName;
     }
+
     @Getter
     @Builder
     @NoArgsConstructor
@@ -51,6 +51,7 @@ public class ApplicantResponseDTO {
         Boolean isLast;
     }
 
+
     @Builder
     @Getter
     @AllArgsConstructor
@@ -62,6 +63,15 @@ public class ApplicantResponseDTO {
         private String employeeNo;
         private WinningStatus winningStatus;
         private Long parkingSpaceId;
+        
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ApprovePriorityResultDTO {
+        private Long parkingSpaceId;
+        private String parkingSpaceName;
+        private Integer remainSlots;
 
     }
 }

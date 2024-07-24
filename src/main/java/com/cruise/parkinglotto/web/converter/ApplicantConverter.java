@@ -2,6 +2,7 @@ package com.cruise.parkinglotto.web.converter;
 
 import com.cruise.parkinglotto.domain.Applicant;
 import com.cruise.parkinglotto.domain.Member;
+import com.cruise.parkinglotto.domain.ParkingSpace;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import org.springframework.data.domain.Page;
 
@@ -21,7 +22,7 @@ public class ApplicantConverter {
                 .build();
     }
 
-    public static ApplicantResponseDTO.GetApplicantListResultDTO toGetApplicantListResultDTO(Page<Applicant> applicantPage){
+    public static ApplicantResponseDTO.GetApplicantListResultDTO toGetApplicantListResultDTO(Page<Applicant> applicantPage) {
         List<ApplicantResponseDTO.GetApplicantResultDTO> getApplicantResultDTOList = applicantPage.stream()
                 .map(ApplicantConverter::toGetApplicantResultDTO).toList();
         return ApplicantResponseDTO.GetApplicantListResultDTO.builder()
@@ -33,7 +34,7 @@ public class ApplicantConverter {
                 .listSize(applicantPage.getSize())
                 .build();
     }
-
+    
     public static ApplicantResponseDTO.WinnerCancelResponseDTO toWinnerCancelResponseDTO(Applicant applicant) {
 
         return ApplicantResponseDTO.WinnerCancelResponseDTO.builder( )
@@ -42,5 +43,14 @@ public class ApplicantConverter {
                 .parkingSpaceId(applicant.getParkingSpaceId( ))
                 .winningStatus(applicant.getWinningStatus( ))
                 .employeeNo(applicant.getMember( ).getEmployeeNo( )).build( );
+
+    public static ApplicantResponseDTO.ApprovePriorityResultDTO toApprovePriorityResultDTO(ParkingSpace parkingSpace) {
+        return ApplicantResponseDTO.ApprovePriorityResultDTO.builder()
+                .parkingSpaceId(parkingSpace.getId())
+                .parkingSpaceName(parkingSpace.getName())
+                .remainSlots(parkingSpace.getRemainSlots())
+                .build();
     }
+
+
 }

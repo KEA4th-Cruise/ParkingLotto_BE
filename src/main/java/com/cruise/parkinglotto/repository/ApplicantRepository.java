@@ -60,4 +60,5 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
 
     Page<Applicant> findByDrawId(PageRequest pageRequest, Long drawId);
 
+    Optional<Applicant> findById(Long applicantId);
 }
