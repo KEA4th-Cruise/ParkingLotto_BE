@@ -62,4 +62,10 @@ public class Applicant extends BaseEntity {
     public void cancelWinningStatus() {
         this.winningStatus = WinningStatus.CANCELED;
     }
+
+    public void approveParkingSpaceToPriority(Long parkingSpaceId, WinningStatus winningStatus, Integer reserveNum) {
+        this.parkingSpaceId = parkingSpaceId;
+        this.winningStatus = winningStatus;
+        this.reserveNum = reserveNum;
+    }
 }

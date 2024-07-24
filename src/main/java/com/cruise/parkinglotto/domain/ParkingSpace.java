@@ -1,6 +1,8 @@
 package com.cruise.parkinglotto.domain;
 
 import com.cruise.parkinglotto.domain.common.BaseEntity;
+import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
+import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -44,5 +46,13 @@ public class ParkingSpace extends BaseEntity {
 
     public void updateConfirmed(boolean confirmed) {
         this.confirmed = confirmed;
+    }
+
+    public void decrementSlots() {
+        if (this.remainSlots > 0) {
+            this.remainSlots--;
+        } else {
+            throw new ExceptionHandler(ErrorStatus.NO_REMAIN_SLOTS);
+        }
     }
 }

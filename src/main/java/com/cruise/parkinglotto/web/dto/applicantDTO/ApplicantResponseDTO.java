@@ -1,6 +1,5 @@
 package com.cruise.parkinglotto.web.dto.applicantDTO;
 
-import com.amazonaws.services.ec2.model.HistoryRecord;
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import lombok.*;
 
@@ -43,5 +42,15 @@ public class ApplicantResponseDTO {
         Long totalElements;
         Boolean isFirst;
         Boolean isLast;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ApprovePriorityResultDTO {
+        private Long parkingSpaceId;
+        private String parkingSpaceName;
+        private Integer remainSlots;
     }
 }
