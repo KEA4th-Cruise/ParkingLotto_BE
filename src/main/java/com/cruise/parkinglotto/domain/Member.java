@@ -47,7 +47,7 @@ public class Member extends BaseEntity implements UserDetails {
     private String password;
 
     @Enumerated(value = EnumType.STRING)
-    private EnrollmentStatus enrollmentStatus; // Default value 설정
+    private EnrollmentStatus enrollmentStatus;
 
     @Column(length = 8)
     private String carNum;
