@@ -32,9 +32,11 @@ cloud:
       path:
         parking-space-image: ${PARKING_SPACE_IMAGE}
         map-image: ${MAP_IMAGE}
+
       region:
         static: ${KC_REGION}
       credentials:
         accessKey: ${KC_S3_ACCESS_KEY}
         secretKey: ${KC_S3_SECRET_ACCESS_KEY}
       project-id: ${KC_PROJECT_ID}
+

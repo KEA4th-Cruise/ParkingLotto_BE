@@ -46,10 +46,8 @@ public class Member extends BaseEntity implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @Builder.Default
-    @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
-    private EnrollmentStatus enrollmentStatus = EnrollmentStatus.PENDING; // Default value 설정
+    private EnrollmentStatus enrollmentStatus;
 
     @Column(length = 8)
     private String carNum;

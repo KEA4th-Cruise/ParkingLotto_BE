@@ -18,15 +18,15 @@ public enum ErrorStatus implements BaseErrorCode {
     _FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "금지된 요청입니다."),
     _EMPTY_FIELD(HttpStatus.NO_CONTENT, "COMMON404", "입력 값이 누락되었습니다."),
 
-    // Member 관련 응답
-    MEMBER_LOGIN_FAILED(HttpStatus.BAD_REQUEST,"MEMBER4001","해당 아이디로 존재하는 계정이 없습니다."),
-    MEMBER_PASSWORD_NOT_MATCHED(HttpStatus.BAD_REQUEST,"MEMBER4002","비밀번호가 일치하지 않습니다."),
+    // 멤버 관련 응답
+    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER4001", "사용자가 존재하지 않습니다"),
+    MEMBER_PASSWORD_NOT_MATCHED(HttpStatus.BAD_REQUEST, "MEMBER4002", "비밀번호가 일치하지 않습니다."),
+
+    // 등록 관련 응답
+    REGISTER_REQUEST_FAILED(HttpStatus.BAD_REQUEST, "REGISTER4001", "등록 요청에 실패했습니다."),
 
     //신청자 관련 응답
     APPLICANT_NOT_FOUND(HttpStatus.NOT_FOUND, "APPLICANT4001", "신청자가 존재하지 않습니다"),
-
-    //사용자 관련 응답
-    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER4001", "사용자가 존재하지 않습니다"),
 
     // 주차 공간 관련 응답
     PARKING_SPACE_NOT_FOUND(HttpStatus.NOT_FOUND, "PARKINGSPACE4001", "주차 공간이 존재하지 않습니다"),
