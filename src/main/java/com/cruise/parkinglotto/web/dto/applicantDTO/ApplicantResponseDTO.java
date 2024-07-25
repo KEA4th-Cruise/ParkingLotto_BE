@@ -11,7 +11,7 @@ import java.util.List;
 
 public class ApplicantResponseDTO {
     
-}
+
     @Builder
     @Data
     public static class ApplicantResultDTO {
@@ -63,6 +63,7 @@ public class ApplicantResponseDTO {
         private String employeeNo;
         private WinningStatus winningStatus;
         private Long parkingSpaceId;
+    }
         
     @Getter
     @Builder
