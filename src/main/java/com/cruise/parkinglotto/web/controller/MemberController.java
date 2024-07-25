@@ -21,7 +21,7 @@ public class MemberController {
     public ApiResponse<MemberResponseDTO.LoginResponseDTO> login(@RequestBody MemberRequestDTO.LoginRequestDTO loginRequestDTO) {
         return ApiResponse.onSuccess(SuccessStatus.MEMBER_LOGIN_SUCCESS, memberService.login(loginRequestDTO));
     }
-
+  
     @Operation(summary = "로그아웃 API", description = "accountId, accessToken, refreshToken을 logoutRequestDTO에 담아 요청을 보내면 로그아웃 시간을 반환합니다.")
     @PostMapping("/logout")
     public ApiResponse<MemberResponseDTO.LogoutResponseDTO> logout(@RequestBody MemberRequestDTO.LogoutRequestDTO logoutRequestDTO) {
