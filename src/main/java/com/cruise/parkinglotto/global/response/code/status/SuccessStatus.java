@@ -18,6 +18,9 @@ public enum SuccessStatus implements BaseCode {
     MEMBER_LOGIN_SUCCESS(HttpStatus.OK, "MEMBER2001", "로그인 성공"),
     MEMBER_LOGOUT_SUCCESS(HttpStatus.OK, "MEMBER2002", "로그아웃 성공"),
 
+    // 등록 관련 응답
+    REGISTER_REQUEST_SUCCESS(HttpStatus.OK, "REGISTER2001", "등록 요청 성공"),
+
     // 추첨 관련
     DRAW_INFO_FOUND(HttpStatus.OK, "DRAW2001", "추첨 정보를 조회했습니다."),
     DRAW_EXECUTE_RESULT(HttpStatus.OK, "DRAW2002", "추첨결과가 정상적으로 저장되었습니다."),

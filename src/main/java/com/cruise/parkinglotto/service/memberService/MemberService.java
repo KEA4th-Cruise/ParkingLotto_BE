@@ -16,6 +16,4 @@ public interface MemberService {
     // 로그아웃
     MemberResponseDTO.LogoutResponseDTO logout(MemberRequestDTO.LogoutRequestDTO logoutRequestDTO);
 
-    // 사용자가 등록 요청하는 메서드
-
 }

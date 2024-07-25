@@ -92,6 +92,7 @@ public class MemberServiceImpl implements MemberService {
                 .build();
     }
 
+    @Override
     public Member getMemberByAccountId(String accountId) {
         return memberRepository.findByAccountId(accountId)
                 .orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
