@@ -51,7 +51,8 @@ public class ApplicantRestController {
         String name = authentication.getName( );
         Long memberId = memberService.getMemberIdByAccountId(name);
 
-        return ApiResponse.onSuccess(SuccessStatus.CANCEL_SUCCESS, applicantService.giveUpMyWinning(memberId,drawId));
+        return ApiResponse.onSuccess(SuccessStatus.CANCEL_SUCCESS, applicantService.giveUpMyWinning(memberId, drawId));
+    }
 
 
 

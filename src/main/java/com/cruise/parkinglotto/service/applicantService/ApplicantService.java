@@ -1,7 +1,7 @@
 package com.cruise.parkinglotto.service.applicantService;
 
 
-import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO.*;
+import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import org.springframework.stereotype.Service;
 import com.cruise.parkinglotto.domain.Applicant;
 

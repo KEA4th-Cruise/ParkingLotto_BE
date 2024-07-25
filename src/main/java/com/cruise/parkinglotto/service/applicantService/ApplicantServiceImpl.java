@@ -1,37 +1,24 @@
 package com.cruise.parkinglotto.service.applicantService;
 
 
-import com.cruise.convert.ApplicantConverter;
 import com.cruise.parkinglotto.domain.Applicant;
 
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
 import com.cruise.parkinglotto.repository.ApplicantRepository;
-import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO.*;
+import com.cruise.parkinglotto.web.converter.ApplicantConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
-import com.cruise.parkinglotto.domain.Applicant;
-
 import com.cruise.parkinglotto.domain.ParkingSpace;
-import com.cruise.parkinglotto.domain.enums.WinningStatus;
-import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
-import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
-import com.cruise.parkinglotto.repository.ApplicantRepository;
 import com.cruise.parkinglotto.repository.DrawRepository;
-
+import com.cruise.parkinglotto.web.converter.ApplicantConverter;
 import com.cruise.parkinglotto.repository.ParkingSpaceRepository;
 
-import com.cruise.parkinglotto.web.converter.ApplicantConverter;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 
 @Service

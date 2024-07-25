@@ -43,6 +43,7 @@ public class ApplicantConverter {
                 .parkingSpaceId(applicant.getParkingSpaceId( ))
                 .winningStatus(applicant.getWinningStatus( ))
                 .employeeNo(applicant.getMember( ).getEmployeeNo( )).build( );
+    }
 
     public static ApplicantResponseDTO.ApprovePriorityResultDTO toApprovePriorityResultDTO(ParkingSpace parkingSpace) {
         return ApplicantResponseDTO.ApprovePriorityResultDTO.builder()
