@@ -95,7 +95,7 @@ public class ApplicantServiceImpl implements ApplicantService {
         Integer trafficCommuteTime;
         Integer carCommuteTime;
         Double distance;
-        if(applyDrawRequestDTO.getAddress() != null && applyDrawRequestDTO.getCarCommuteTime() != null && applyDrawRequestDTO.getTrafficCommuteTime() != null && applyDrawRequestDTO.getDistance()!=null ){
+        if(applyDrawRequestDTO.getAddress() != null && applyDrawRequestDTO.getCarCommuteTime() != null && applyDrawRequestDTO.getTrafficCommuteTime() != null && applyDrawRequestDTO.getDistance() != null ){
             address = applyDrawRequestDTO.getAddress();
             carCommuteTime = applyDrawRequestDTO.getCarCommuteTime();
             trafficCommuteTime = applyDrawRequestDTO.getTrafficCommuteTime();
@@ -107,7 +107,7 @@ public class ApplicantServiceImpl implements ApplicantService {
             }
             WeightDetails weightDetails=weightDetailsOptional.get();
 
-            if(weightDetails.getAddress() != null && weightDetails.getCarCommuteTime() != null && weightDetails.getTrafficCommuteTime() != null && weightDetails.getDistance()!=null){
+            if(weightDetails.getAddress() != null && weightDetails.getCarCommuteTime() != null && weightDetails.getTrafficCommuteTime() != null && weightDetails.getDistance() != null){
                 carCommuteTime = weightDetails.getCarCommuteTime();
                 trafficCommuteTime = weightDetails.getTrafficCommuteTime();
                 distance = weightDetails.getDistance();
@@ -134,7 +134,7 @@ public class ApplicantServiceImpl implements ApplicantService {
         }
 
         //Handling userSeed when drawtype is general
-        if(applyDrawRequestDTO.getUserSeed() == null && applyDrawRequestDTO.getDrawType()== DrawType.GENERAL){
+        if(applyDrawRequestDTO.getUserSeed() == null && applyDrawRequestDTO.getDrawType() == DrawType.GENERAL){
             throw new ExceptionHandler(ErrorStatus.WEIGHTDETAILS_USER_SEED_NOT_FOUND);
         }
         String userSeed = applyDrawRequestDTO.getUserSeed();
@@ -155,12 +155,12 @@ public class ApplicantServiceImpl implements ApplicantService {
 
         WinningStatus winningStatus = WinningStatus.PENDING;
 
-        if(applyDrawRequestDTO.getDrawType()==DrawType.PRIORITY){
+        if(applyDrawRequestDTO.getDrawType() == DrawType.PRIORITY){
             Applicant applicant=ApplicantConverter.makeInitialPriorityApplicantObject(member,draw, winningStatus, distance, workType, trafficCommuteTime, carCommuteTime, recentLossCount);
             applicantRepository.save(applicant);
         }else{
             Applicant applicant=ApplicantConverter.makeInitialApplicantObject(member,draw, winningStatus, userSeed, applyDrawRequestDTO.getFirstChoice(), applyDrawRequestDTO.getSecondChoice(), distance, workType, trafficCommuteTime, carCommuteTime, recentLossCount);
-            Applicant toGetApplicantId =applicantRepository.save(applicant);
+            Applicant toGetApplicantId = applicantRepository.save(applicant);
 
             //userseedIndex 배정
             Integer maxUserSeedIndex = applicantRepository.findMaxUserSeedIndexByDraw(draw);
