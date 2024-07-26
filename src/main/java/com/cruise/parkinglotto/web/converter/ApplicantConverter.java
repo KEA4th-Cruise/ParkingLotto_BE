@@ -1,8 +1,11 @@
 package com.cruise.parkinglotto.web.converter;
 
 import com.cruise.parkinglotto.domain.Applicant;
+import com.cruise.parkinglotto.domain.Draw;
 import com.cruise.parkinglotto.domain.Member;
 import com.cruise.parkinglotto.domain.ParkingSpace;
+import com.cruise.parkinglotto.domain.enums.WinningStatus;
+import com.cruise.parkinglotto.domain.enums.WorkType;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import org.springframework.data.domain.Page;
 
@@ -42,4 +45,34 @@ public class ApplicantConverter {
                 .build();
     }
 
+    public static Applicant makeInitialApplicantObject(Member member, Draw draw, WinningStatus winningStatus, String userSeed, Long firstChoice, Long secondChoice, Double distance, WorkType workType, Integer trafficCommuteTime, Integer carCommuteTime, Integer recentLossCount) {
+        return Applicant.builder()
+                .member(member)
+                .draw(draw)
+                .winningStatus(winningStatus)
+                .reserveNum(-1)
+                .userSeed(userSeed)
+                .firstChoice(firstChoice)
+                .secondChoice(secondChoice)
+                .distance(distance)
+                .workType(workType)
+                .trafficCommuteTime(trafficCommuteTime)
+                .carCommuteTime(carCommuteTime)
+                .recentLossCount(recentLossCount)
+                .build();
+    }
+
+    public static Applicant makeInitialPriorityApplicantObject(Member member, Draw draw, WinningStatus winningStatus, Double distance, WorkType workType, Integer trafficCommuteTime, Integer carCommuteTime, Integer recentLossCount) {
+        return Applicant.builder()
+                .member(member)
+                .draw(draw)
+                .winningStatus(winningStatus)
+                .reserveNum(-1)
+                .distance(distance)
+                .workType(workType)
+                .trafficCommuteTime(trafficCommuteTime)
+                .carCommuteTime(carCommuteTime)
+                .recentLossCount(recentLossCount)
+                .build();
+    }
 }

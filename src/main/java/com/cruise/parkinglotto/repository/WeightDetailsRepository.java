@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.Optional;
 
 public interface WeightDetailsRepository extends JpaRepository<WeightDetails, Long> {
     @Modifying
@@ -18,4 +19,11 @@ public interface WeightDetailsRepository extends JpaRepository<WeightDetails, Lo
     @Transactional
     @Query("UPDATE WeightDetails m SET m.recentLossCount = m.recentLossCount + 1 WHERE m.member = :member")
     void increaseRecentLossCount(@Param("member") Member member);
+
+    Optional<WeightDetails> findByMemberId(long memberId);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE WeightDetails w SET w.address = :address WHERE w.member = :member")
+    void updateAddress(@Param("member") Member member, @Param("address") String address);
 }

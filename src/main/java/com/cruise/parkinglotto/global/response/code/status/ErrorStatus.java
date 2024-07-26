@@ -24,6 +24,12 @@ public enum ErrorStatus implements BaseErrorCode {
 
     //신청자 관련 응답
     APPLICANT_NOT_FOUND(HttpStatus.NOT_FOUND, "APPLICANT4001", "신청자가 존재하지 않습니다"),
+    APPLICANT_CAR_NUM_NOT_FOUND(HttpStatus.NOT_FOUND, "APPLICANT4002", "신청자의 차량번호 정보가 존재하지 않습니다"),
+    APPLICANT_CERT_DOCUMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "APPLICANT4003", "신청자의 서류 정보가 존재하지 않습니다"),
+    APPLICANT_ADDRESS_NOT_FOUND(HttpStatus.NOT_FOUND, "APPLICANT4003", "신청자의 거주지 주소가 존재하지 않습니다"),
+    APPLICANT_WORK_TYPE_NOT_FOUND(HttpStatus.NOT_FOUND, "APPLICANT4003", "신청자의 근무 정보가 존재하지 않습니다"),
+    APPLICANT_SEED_NOT_FOUND(HttpStatus.NOT_FOUND, "APPLICANT4003", "신청자의 랜덤 시드가 존재하지 않습니다"),
+
 
     //사용자 관련 응답
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER4001", "사용자가 존재하지 않습니다"),
@@ -36,8 +42,15 @@ public enum ErrorStatus implements BaseErrorCode {
     DRAW_NOT_FOUND(HttpStatus.NOT_FOUND, "DRAW4001", "추첨이 존재하지 않습니다."),
     DRAW_NOT_READY(HttpStatus.NOT_FOUND, "DRAW4002", "아직 신청이 종료되지 않은 추첨입니다."),
     DRAW_ALREADY_EXECUTED(HttpStatus.NOT_FOUND, "DRAW4003", "이미 종료된 추첨입니다. 한 번 진행된 추첨은 다시 진행 될 수 없습니다."),
+    DRAW_NOT_IN_APPLY_PERIOD(HttpStatus.BAD_REQUEST, "DRAW4004", "추첨 기간이 아닙니다."),
 
 
+    //사용자 가중치 관련
+    WEIGHTDETAILS_NOT_FOUND(HttpStatus.NOT_FOUND, "WEIGHTDETAILS4001", "해당 사용자의 가중치 정보가 없습니다."),
+    WEIGHTDETAILS_ADDRESS_NOT_FOUND(HttpStatus.NOT_FOUND, "WEIGHTDETAILS4002", "해당 사용자의 주소 정보가 없습니다."),
+    WEIGHTDETAILS_WORKTYPE_NOT_FOUND(HttpStatus.NOT_FOUND, "WEIGHTDETAILS4003", "해당 사용자의 근무 정보가 없습니다."),
+    WEIGHTDETAILS_USER_SEED_NOT_FOUND(HttpStatus.NOT_FOUND, "WEIGHTDETAILS4004", "입력된 시드가 없습니다."),
+    WEIGHTDETAILS_CHOICE_NOT_FOUND(HttpStatus.NOT_FOUND, "WEIGHTDETAILS4005", "입력된 주차 선택지가 없습니다."),
     ;
 
 
