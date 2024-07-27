@@ -133,7 +133,7 @@ public class ApplicantServiceImpl implements ApplicantService {
             }
         }
 
-        //Handling userSeed when drawtype is general
+        //Handling userSeed when drawType is general
         if(applyDrawRequestDTO.getUserSeed() == null && applyDrawRequestDTO.getDrawType() == DrawType.GENERAL){
             throw new ExceptionHandler(ErrorStatus.WEIGHTDETAILS_USER_SEED_NOT_FOUND);
         }
@@ -156,13 +156,13 @@ public class ApplicantServiceImpl implements ApplicantService {
         WinningStatus winningStatus = WinningStatus.PENDING;
 
         if(applyDrawRequestDTO.getDrawType() == DrawType.PRIORITY){
-            Applicant applicant=ApplicantConverter.makeInitialPriorityApplicantObject(member,draw, winningStatus, distance, workType, trafficCommuteTime, carCommuteTime, recentLossCount);
+            Applicant applicant = ApplicantConverter.makeInitialPriorityApplicantObject(member,draw, winningStatus, distance, workType, trafficCommuteTime, carCommuteTime, recentLossCount);
             applicantRepository.save(applicant);
         }else{
-            Applicant applicant=ApplicantConverter.makeInitialApplicantObject(member,draw, winningStatus, userSeed, applyDrawRequestDTO.getFirstChoice(), applyDrawRequestDTO.getSecondChoice(), distance, workType, trafficCommuteTime, carCommuteTime, recentLossCount);
+            Applicant applicant = ApplicantConverter.makeInitialApplicantObject(member,draw, winningStatus, userSeed, applyDrawRequestDTO.getFirstChoice(), applyDrawRequestDTO.getSecondChoice(), distance, workType, trafficCommuteTime, carCommuteTime, recentLossCount);
             Applicant toGetApplicantId = applicantRepository.save(applicant);
 
-            //userseedIndex 배정
+            //userSeedIndex 배정
             Integer maxUserSeedIndex = applicantRepository.findMaxUserSeedIndexByDraw(draw);
             Integer newUserSeedIndex = maxUserSeedIndex + 1;
             applicantRepository.updateUserSeedIndex(toGetApplicantId.getId(), newUserSeedIndex);
