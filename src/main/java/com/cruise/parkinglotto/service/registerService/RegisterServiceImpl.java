@@ -35,14 +35,7 @@ public class RegisterServiceImpl implements RegisterService {
     @Transactional(readOnly = true)
     public RegisterResponseDTO.MemberInfoResponseDTO getMemberInfo(String accountId) {
         Member member = memberService.getMemberByAccountId(accountId);
-        return RegisterResponseDTO.MemberInfoResponseDTO.builder()
-                .nameKo(member.getNameKo())
-                .employeeNo(member.getEmployeeNo())
-                .deptPathName(member.getDeptPathName())
-                .accountId(member.getAccountId())
-                .email(member.getEmail())
-                .carNum(member.getCarNum())
-                .build();
+        return RegisterConverter.toMemberInfoResponseDTO(member);
     }
 
     @Override

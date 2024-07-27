@@ -22,6 +22,7 @@ public interface RegisterService {
 
     /**
      * enrollmentStatus로 사용자 리스트를 가져오는 메서드
+     * enrollmentStatus에 따라 리턴하는 사용자 리스트가 바뀐다.
      */
     List<RegisterResponseDTO.MembersResponseDTO> getMembersByEnrollmentStatus(EnrollmentStatus enrollmentStatus);
 }

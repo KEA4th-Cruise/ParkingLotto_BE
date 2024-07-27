@@ -7,6 +7,7 @@ import com.cruise.parkinglotto.global.jwt.JwtUtils;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
 import com.cruise.parkinglotto.repository.MemberRepository;
 import com.cruise.parkinglotto.service.redisService.RedisService;
+import com.cruise.parkinglotto.web.converter.MemberConverter;
 import com.cruise.parkinglotto.web.dto.memberDTO.MemberRequestDTO;
 import com.cruise.parkinglotto.web.dto.memberDTO.MemberResponseDTO;
 import jakarta.annotation.PostConstruct;
@@ -68,10 +69,7 @@ public class MemberServiceImpl implements MemberService {
         redisService.setValues(loginRequestDTO.getAccountId(), jwtToken.getRefreshToken(), Duration.ofDays(7));
 
         // 등록이 된 사용자인지 아닌지 여부 넘겨줌
-        return MemberResponseDTO.LoginResponseDTO.builder()
-                .jwtToken(jwtToken)
-                .enrollmentStatus(member.getEnrollmentStatus())
-                .build();
+        return MemberConverter.toLoginResponseDTO(member, jwtToken);
         }
 
     /**
@@ -89,9 +87,7 @@ public class MemberServiceImpl implements MemberService {
         redisService.setBlackList(logoutRequestDTO.getAccessToken(), logoutRequestDTO.getAccessToken());
         redisService.setBlackList(logoutRequestDTO.getRefreshToken(), logoutRequestDTO.getRefreshToken());
 
-        return MemberResponseDTO.LogoutResponseDTO.builder()
-                .logoutAt(LocalDateTime.now())
-                .build();
+        return MemberConverter.toLogoutResponseDTO();
     }
 
     @Override

@@ -8,6 +8,17 @@ import java.util.stream.Collectors;
 
 public class RegisterConverter {
 
+    public static RegisterResponseDTO.MemberInfoResponseDTO toMemberInfoResponseDTO(Member member) {
+        return RegisterResponseDTO.MemberInfoResponseDTO.builder()
+                .nameKo(member.getNameKo())
+                .employeeNo(member.getEmployeeNo())
+                .deptPathName(member.getDeptPathName())
+                .accountId(member.getAccountId())
+                .email(member.getEmail())
+                .carNum(member.getCarNum())
+                .build();
+    }
+
     public static RegisterResponseDTO.MembersResponseDTO toMembersResponseDTO(Member member) {
         return RegisterResponseDTO.MembersResponseDTO.builder()
                 .accountId(member.getAccountId())
