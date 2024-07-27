@@ -80,7 +80,7 @@ public class ApplicantServiceImpl implements ApplicantService {
             throw new ExceptionHandler(ErrorStatus.APPLICANT_CAR_NUM_NOT_FOUND); }
 
         //Handling CertFile
-        if(!applyDrawRequestDTO.getGetCertFileUrlAndNameDTO().isEmpty()){
+        if(applyDrawRequestDTO.getGetCertFileUrlAndNameDTO()!=null){
             List<CertificateDocsRequestDTO.CertifiCateFileDTO> certFileDTOList = applyDrawRequestDTO.getGetCertFileUrlAndNameDTO();
             List<CertificateDocs> certificateDocsList=toCertificateDocs(certFileDTOList, member);
             certificateDocsRepository.saveAll(certificateDocsList);
@@ -134,10 +134,17 @@ public class ApplicantServiceImpl implements ApplicantService {
         }
 
         //Handling userSeed when drawType is general
-        if(applyDrawRequestDTO.getUserSeed() == null && applyDrawRequestDTO.getDrawType() == DrawType.GENERAL){
-            throw new ExceptionHandler(ErrorStatus.WEIGHTDETAILS_USER_SEED_NOT_FOUND);
+        String userSeed = null;
+        if(applyDrawRequestDTO.getDrawType() == DrawType.GENERAL){
+            if(applyDrawRequestDTO.getUserSeed() == null){
+                throw new ExceptionHandler(ErrorStatus.WEIGHTDETAILS_USER_SEED_NOT_FOUND);
+            }else{
+                userSeed = applyDrawRequestDTO.getUserSeed();
+                if(userSeed.length()>1){
+                    throw new ExceptionHandler(ErrorStatus.WEIGHTDETAILS_TOO_LONG_USER_SEED);
+                }
+            }
         }
-        String userSeed = applyDrawRequestDTO.getUserSeed();
 
         //recentLossCount
         Integer recentLossCount;
