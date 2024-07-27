@@ -45,7 +45,7 @@ public class ApplicantRestController {
                                                                                 @RequestBody @Valid ApplicantRequestDTO.ApplyDrawRequestDTO applyDrawRequestDTO) {
         String accountId = jwtUtils.getAccountIdFromRequest(httpServletRequest);
         applicantService.drawApply(applyDrawRequestDTO, accountId);
-        return ApiResponse.onSuccess(SuccessStatus.APPLICANT_PRIORITY_APPROVED, null);
+        return ApiResponse.onSuccess(SuccessStatus.APPLICANT_SUCCESS, null);
     }
 
 }
