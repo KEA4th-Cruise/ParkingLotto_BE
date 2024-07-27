@@ -27,6 +27,7 @@ public class DrawRestController {
     @PostMapping("/execution/{drawId}")
     public ApiResponse<Void> executeDraw(@PathVariable("drawId") Long drawId) {
         drawService.executeDraw(drawId);
+
         return ApiResponse.onSuccess(SuccessStatus.DRAW_EXECUTE_RESULT, null);
     }
 
