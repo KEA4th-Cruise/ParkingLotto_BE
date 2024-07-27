@@ -10,7 +10,6 @@ import com.cruise.parkinglotto.service.redisService.RedisService;
 import com.cruise.parkinglotto.web.dto.memberDTO.MemberRequestDTO;
 import com.cruise.parkinglotto.web.dto.memberDTO.MemberResponseDTO;
 import jakarta.annotation.PostConstruct;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +17,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -45,14 +45,12 @@ public class MemberServiceImpl implements MemberService {
      * 로그인 실패 시 에러 발생
      */
     @Override
+    @Transactional(readOnly = true)
     public MemberResponseDTO.LoginResponseDTO login(MemberRequestDTO.LoginRequestDTO loginRequestDTO) {
 
-        log.info("Attempting to find member by accountId: {}", loginRequestDTO.getAccountId());
-        Member member = memberRepository.findByAccountId(loginRequestDTO.getAccountId())
-                .orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_LOGIN_FAILED));
-        log.info("Found member: {}", member);
+        Member member = getMemberByAccountId(loginRequestDTO.getAccountId());
 
-        // Here we validate the password
+        // 비밀번호 일치 검증
         if (!passwordEncoder.matches(loginRequestDTO.getPassword(), member.getPassword())) {
             throw new ExceptionHandler(ErrorStatus.MEMBER_PASSWORD_NOT_MATCHED);
         }
@@ -93,6 +91,13 @@ public class MemberServiceImpl implements MemberService {
         return MemberResponseDTO.LogoutResponseDTO.builder()
                 .logoutAt(LocalDateTime.now())
                 .build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Member getMemberByAccountId(String accountId) {
+        return memberRepository.findByAccountId(accountId)
+                .orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
     }
 
 }
