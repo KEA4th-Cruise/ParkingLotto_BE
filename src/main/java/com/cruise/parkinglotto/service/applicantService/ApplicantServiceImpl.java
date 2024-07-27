@@ -86,7 +86,7 @@ public class ApplicantServiceImpl implements ApplicantService {
             throw new ExceptionHandler(ErrorStatus.APPLICANT_CAR_NUM_NOT_FOUND); }
 
         //Handling CertFile
-        if(applyDrawRequestDTO.getGetCertFileUrlAndNameDTO()!=null){
+        if(applyDrawRequestDTO.getGetCertFileUrlAndNameDTO() != null){
             List<CertificateDocsRequestDTO.CertifiCateFileDTO> certFileDTOList = applyDrawRequestDTO.getGetCertFileUrlAndNameDTO();
             List<CertificateDocs> certificateDocsList=toCertificateDocs(certFileDTOList, member);
             certificateDocsRepository.saveAll(certificateDocsList);
