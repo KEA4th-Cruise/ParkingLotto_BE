@@ -1,7 +1,10 @@
 package com.cruise.parkinglotto.service.registerService;
 
 import com.cruise.parkinglotto.domain.Member;
+import com.cruise.parkinglotto.domain.enums.EnrollmentStatus;
 import com.cruise.parkinglotto.web.dto.registerDTO.RegisterResponseDTO;
+
+import java.util.List;
 
 public interface RegisterService {
 
@@ -16,4 +19,9 @@ public interface RegisterService {
      * 관리자가 등록 관리 페이지에서 사용자의 세부 정보를 조회하는 메서드
      */
     RegisterResponseDTO.MemberInfoResponseDTO getMemberInfo(String accountId);
+
+    /**
+     * enrollmentStatus로 사용자 리스트를 가져오는 메서드
+     */
+    List<RegisterResponseDTO.MembersResponseDTO> getMembersByEnrollmentStatus(EnrollmentStatus enrollmentStatus);
 }

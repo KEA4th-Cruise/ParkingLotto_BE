@@ -79,6 +79,7 @@ public class MemberServiceImpl implements MemberService {
      * 로그아웃 성공 시 redis에서 refresh token 삭제
      */
     @Override
+    @Transactional(readOnly = true)
     public MemberResponseDTO.LogoutResponseDTO logout(MemberRequestDTO.LogoutRequestDTO logoutRequestDTO) {
 
         // redis에서 refresh token 삭제

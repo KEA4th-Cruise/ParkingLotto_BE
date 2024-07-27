@@ -19,4 +19,15 @@ public class RegisterResponseDTO {
         private String email;
         private String carNum;
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MembersResponseDTO {
+        private String nameKo;
+        private String employeeNo;
+        private String deptPathName;
+        private String accountId;
+    }
 }
