@@ -40,8 +40,12 @@ public class RegisterServiceImpl implements RegisterService {
 
     @Override
     public List<RegisterResponseDTO.MembersResponseDTO> getMembersByEnrollmentStatus(EnrollmentStatus enrollmentStatus) {
-        List<Member> members = memberRepository.findByEnrollmentStatus(enrollmentStatus);
-        return RegisterConverter.toMembersResponseDTOList(members);
+        if (enrollmentStatus == EnrollmentStatus.PENDING || enrollmentStatus == EnrollmentStatus.ENROLLED) {
+            List<Member> members = memberRepository.findByEnrollmentStatus(enrollmentStatus);
+            return RegisterConverter.toMembersResponseDTOList(members);
+        } else {
+            throw new ExceptionHandler(ErrorStatus.REGISTER_MEMBERS_NOT_FOUND);
+        }
     }
 
 }
