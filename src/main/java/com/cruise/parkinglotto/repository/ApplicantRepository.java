@@ -64,5 +64,7 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
     @Query("UPDATE Applicant a SET a.userSeedIndex = :userSeedIndex WHERE a.id = :applicantId")
     void updateUserSeedIndex(@Param("applicantId") Long applicantId, @Param("userSeedIndex") Integer userSeedIndex);
 
+    Optional<Applicant> findByDrawIdAndMemberId(Long drawId, Long memberId);
+
 
 }

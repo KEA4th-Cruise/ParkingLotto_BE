@@ -29,6 +29,7 @@ public enum ErrorStatus implements BaseErrorCode {
     APPLICANT_ADDRESS_NOT_FOUND(HttpStatus.NOT_FOUND, "APPLICANT4004", "신청자의 거주지 주소가 존재하지 않습니다"),
     APPLICANT_WORK_TYPE_NOT_FOUND(HttpStatus.NOT_FOUND, "APPLICANT4005", "신청자의 근무 정보가 존재하지 않습니다"),
     APPLICANT_SEED_NOT_FOUND(HttpStatus.NOT_FOUND, "APPLICANT4006", "신청자의 랜덤 시드가 존재하지 않습니다"),
+    APPLICANT_DUPLICATED_APPLY(HttpStatus.BAD_REQUEST, "APPLICANT4007", "중복된 신청입니다"),
 
     //사용자 관련 응답
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER4001", "사용자가 존재하지 않습니다"),

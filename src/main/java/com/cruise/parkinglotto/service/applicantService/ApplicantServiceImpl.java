@@ -68,6 +68,12 @@ public class ApplicantServiceImpl implements ApplicantService {
 
         Member member = memberOptional.get();
 
+        //Handle Duplicated Applicant
+        Optional<Applicant> applicantOptional=applicantRepository.findByDrawIdAndMemberId(draw.getId(), member.getId());
+        if(applicantOptional.isPresent()){
+            throw new ExceptionHandler(ErrorStatus.APPLICANT_DUPLICATED_APPLY);
+        }
+
         Optional<WeightDetails>weightDetailsOptional=weightDetailsRepository.findByMemberId(member.getId());
 
         //Handling carNum
