@@ -18,8 +18,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
+
 import static com.cruise.parkinglotto.web.converter.CertificateDocsConverter.toCertificateDocs;
 
 @Service
@@ -54,41 +56,41 @@ public class ApplicantServiceImpl implements ApplicantService {
 
     @Override
     @Transactional
-    public void drawApply(ApplicantRequestDTO.ApplyDrawRequestDTO applyDrawRequestDTO, String accountId){
+    public void drawApply(ApplicantRequestDTO.ApplyDrawRequestDTO applyDrawRequestDTO, String accountId) {
         Draw draw = drawRepository.findById(applyDrawRequestDTO.getDrawId()).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
 
-        if(draw.getStatus() != DrawStatus.OPEN){
+        if (draw.getStatus() != DrawStatus.OPEN) {
             throw new ExceptionHandler(ErrorStatus.DRAW_NOT_IN_APPLY_PERIOD);
         }
 
-        Optional<Member> memberOptional = memberRepository.findByAccountId(accountId);
-        if (memberOptional.isEmpty()) {
+        Optional<Member> memberLoginOptional = memberRepository.findByAccountId(accountId);
+        if (memberLoginOptional.isEmpty()) {
             throw new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND);
         }
 
-        Member member = memberOptional.get();
+        Member member = memberLoginOptional.get();
 
         //Handle Duplicated Applicant
-        Optional<Applicant> applicantOptional=applicantRepository.findByDrawIdAndMemberId(draw.getId(), member.getId());
-        if(applicantOptional.isPresent()){
+        Optional<Applicant> applicantOptional = applicantRepository.findByDrawIdAndMemberId(draw.getId(), member.getId());
+        if (applicantOptional.isPresent()) {
             throw new ExceptionHandler(ErrorStatus.APPLICANT_DUPLICATED_APPLY);
         }
 
-        Optional<WeightDetails>weightDetailsOptional=weightDetailsRepository.findByMemberId(member.getId());
+        Optional<WeightDetails> weightDetailsOptional = weightDetailsRepository.findByMemberId(member.getId());
 
         //Handling carNum
         String carNum;
         if (applyDrawRequestDTO.getCarNum() != null) {
             carNum = applyDrawRequestDTO.getCarNum();
             memberRepository.updateCarNum(member.getId(), carNum);
+        } else if (member.getCarNum() == null) {
+            throw new ExceptionHandler(ErrorStatus.APPLICANT_CAR_NUM_NOT_FOUND);
         }
-        else if (member.getCarNum() == null) {
-            throw new ExceptionHandler(ErrorStatus.APPLICANT_CAR_NUM_NOT_FOUND); }
 
         //Handling CertFile
-        if(applyDrawRequestDTO.getGetCertFileUrlAndNameDTO() != null){
+        if (applyDrawRequestDTO.getGetCertFileUrlAndNameDTO() != null) {
             List<CertificateDocsRequestDTO.CertifiCateFileDTO> certFileDTOList = applyDrawRequestDTO.getGetCertFileUrlAndNameDTO();
-            List<CertificateDocs> certificateDocsList=toCertificateDocs(certFileDTOList, member);
+            List<CertificateDocs> certificateDocsList = toCertificateDocs(certFileDTOList, member);
             certificateDocsRepository.saveAll(certificateDocsList);
         }
         List<CertificateDocs> certificateDocsList = certificateDocsRepository.findByMemberId(member.getId());
@@ -101,52 +103,52 @@ public class ApplicantServiceImpl implements ApplicantService {
         Integer trafficCommuteTime;
         Integer carCommuteTime;
         Double distance;
-        if(applyDrawRequestDTO.getAddress() != null && applyDrawRequestDTO.getCarCommuteTime() != null && applyDrawRequestDTO.getTrafficCommuteTime() != null && applyDrawRequestDTO.getDistance() != null ){
+        if (applyDrawRequestDTO.getAddress() != null && applyDrawRequestDTO.getCarCommuteTime() != null && applyDrawRequestDTO.getTrafficCommuteTime() != null && applyDrawRequestDTO.getDistance() != null) {
             address = applyDrawRequestDTO.getAddress();
             carCommuteTime = applyDrawRequestDTO.getCarCommuteTime();
             trafficCommuteTime = applyDrawRequestDTO.getTrafficCommuteTime();
             distance = applyDrawRequestDTO.getDistance();
             weightDetailsRepository.updateAddress(member, address);
-        } else{
+        } else {
             if (weightDetailsOptional.isEmpty()) {
                 throw new ExceptionHandler(ErrorStatus.WEIGHTDETAILS_NOT_FOUND);
             }
-            WeightDetails weightDetails=weightDetailsOptional.get();
+            WeightDetails weightDetails = weightDetailsOptional.get();
 
-            if(weightDetails.getAddress() != null && weightDetails.getCarCommuteTime() != null && weightDetails.getTrafficCommuteTime() != null && weightDetails.getDistance() != null){
+            if (weightDetails.getAddress() != null && weightDetails.getCarCommuteTime() != null && weightDetails.getTrafficCommuteTime() != null && weightDetails.getDistance() != null) {
                 carCommuteTime = weightDetails.getCarCommuteTime();
                 trafficCommuteTime = weightDetails.getTrafficCommuteTime();
                 distance = weightDetails.getDistance();
-            }else{
+            } else {
                 throw new ExceptionHandler(ErrorStatus.WEIGHTDETAILS_ADDRESS_NOT_FOUND);
             }
         }
 
         //Handling workType
         WorkType workType;
-        if(applyDrawRequestDTO.getWorkType() != null){
+        if (applyDrawRequestDTO.getWorkType() != null) {
             workType = applyDrawRequestDTO.getWorkType();
-        }else{
+        } else {
             if (weightDetailsOptional.isEmpty()) {
                 throw new ExceptionHandler(ErrorStatus.WEIGHTDETAILS_NOT_FOUND);
             }
-            WeightDetails weightDetails=weightDetailsOptional.get();
+            WeightDetails weightDetails = weightDetailsOptional.get();
 
-            if(weightDetails.getWorkType() != null){
+            if (weightDetails.getWorkType() != null) {
                 workType = weightDetails.getWorkType();
-            }else{
+            } else {
                 throw new ExceptionHandler(ErrorStatus.WEIGHTDETAILS_WORKTYPE_NOT_FOUND);
             }
         }
 
         //Handling userSeed when drawType is general
         String userSeed = null;
-        if(applyDrawRequestDTO.getDrawType() == DrawType.GENERAL){
-            if(applyDrawRequestDTO.getUserSeed() == null){
+        if (applyDrawRequestDTO.getDrawType() == DrawType.GENERAL) {
+            if (applyDrawRequestDTO.getUserSeed() == null) {
                 throw new ExceptionHandler(ErrorStatus.WEIGHTDETAILS_USER_SEED_NOT_FOUND);
-            }else{
+            } else {
                 userSeed = applyDrawRequestDTO.getUserSeed();
-                if(userSeed.length() > 1){
+                if (userSeed.length() > 1) {
                     throw new ExceptionHandler(ErrorStatus.WEIGHTDETAILS_TOO_LONG_USER_SEED);
                 }
             }
@@ -154,25 +156,25 @@ public class ApplicantServiceImpl implements ApplicantService {
 
         //recentLossCount
         Integer recentLossCount;
-        if(weightDetailsOptional.isEmpty()){
+        if (weightDetailsOptional.isEmpty()) {
             recentLossCount = 0;
-        }else{
-            WeightDetails weightDetails=weightDetailsOptional.get();
+        } else {
+            WeightDetails weightDetails = weightDetailsOptional.get();
             recentLossCount = weightDetails.getRecentLossCount();
         }
 
         //Choice
-        if(applyDrawRequestDTO.getFirstChoice() == null && applyDrawRequestDTO.getSecondChoice() == null && applyDrawRequestDTO.getDrawType() == DrawType.GENERAL){
+        if (applyDrawRequestDTO.getFirstChoice() == null && applyDrawRequestDTO.getSecondChoice() == null && applyDrawRequestDTO.getDrawType() == DrawType.GENERAL) {
             throw new ExceptionHandler(ErrorStatus.APPLICANT_WORK_TYPE_NOT_FOUND);
         }
 
         WinningStatus winningStatus = WinningStatus.PENDING;
 
-        if(applyDrawRequestDTO.getDrawType() == DrawType.PRIORITY){
-            Applicant applicant = ApplicantConverter.makeInitialPriorityApplicantObject(member,draw, winningStatus, distance, workType, trafficCommuteTime, carCommuteTime, recentLossCount);
+        if (applyDrawRequestDTO.getDrawType() == DrawType.PRIORITY) {
+            Applicant applicant = ApplicantConverter.makeInitialPriorityApplicantObject(member, draw, winningStatus, distance, workType, trafficCommuteTime, carCommuteTime, recentLossCount);
             applicantRepository.save(applicant);
-        }else{
-            Applicant applicant = ApplicantConverter.makeInitialApplicantObject(member,draw, winningStatus, userSeed, applyDrawRequestDTO.getFirstChoice(), applyDrawRequestDTO.getSecondChoice(), distance, workType, trafficCommuteTime, carCommuteTime, recentLossCount);
+        } else {
+            Applicant applicant = ApplicantConverter.makeInitialApplicantObject(member, draw, winningStatus, userSeed, applyDrawRequestDTO.getFirstChoice(), applyDrawRequestDTO.getSecondChoice(), distance, workType, trafficCommuteTime, carCommuteTime, recentLossCount);
             Applicant toGetApplicantId = applicantRepository.save(applicant);
 
             //userSeedIndex 배정
