@@ -140,7 +140,7 @@ public class ApplicantServiceImpl implements ApplicantService {
                 throw new ExceptionHandler(ErrorStatus.WEIGHTDETAILS_USER_SEED_NOT_FOUND);
             }else{
                 userSeed = applyDrawRequestDTO.getUserSeed();
-                if(userSeed.length()>1){
+                if(userSeed.length() > 1){
                     throw new ExceptionHandler(ErrorStatus.WEIGHTDETAILS_TOO_LONG_USER_SEED);
                 }
             }
