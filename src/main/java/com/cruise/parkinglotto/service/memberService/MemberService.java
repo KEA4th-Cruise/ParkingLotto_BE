@@ -13,4 +13,6 @@ public interface MemberService {
     // 로그아웃 로직
     void logout(String accountId);
 
+    Long getMemberIdByAccountId(String accountId);
+
 }

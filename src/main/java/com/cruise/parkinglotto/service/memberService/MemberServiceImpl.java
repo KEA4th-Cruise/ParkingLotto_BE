@@ -41,26 +41,26 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public MemberResponseDTO.LoginResponseDTO login(MemberRequestDTO.LoginRequestDTO loginRequestDTO) {
-        Member member = memberRepository.findByAccountId(loginRequestDTO.getAccountId()).orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_LOGIN_FAILED));
+        Member member = memberRepository.findByAccountId(loginRequestDTO.getAccountId( )).orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_LOGIN_FAILED));
 
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRequestDTO.getAccountId(), loginRequestDTO.getPassword());
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRequestDTO.getAccountId( ), loginRequestDTO.getPassword( ));
 
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        Authentication authentication = authenticationManagerBuilder.getObject( ).authenticate(authenticationToken);
 
         // 토큰 생성
         JwtToken jwtToken = jwtUtils.generateToken(authentication);
 
         // 7일간 refresh token을 redis에 저장
-        redisService.setValues(loginRequestDTO.getAccountId(), jwtToken.getRefreshToken(), Duration.ofDays(7));
+        redisService.setValues(loginRequestDTO.getAccountId( ), jwtToken.getRefreshToken( ), Duration.ofDays(7));
 
         // 블랙리스트 등록(블랙리스트 등록은 토큰이 삭제될 때 등록되야 할듯)
 
         // 등록이 된 사용자인지 아닌지 여부 넘겨줌
-        return MemberResponseDTO.LoginResponseDTO.builder()
+        return MemberResponseDTO.LoginResponseDTO.builder( )
                 .jwtToken(jwtToken)
-                .enrollmentStatus(member.getEnrollmentStatus())
-                .build();
-        }
+                .enrollmentStatus(member.getEnrollmentStatus( ))
+                .build( );
+    }
 
     /**
      * 로그아웃 로직
@@ -69,6 +69,11 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void logout(String accountId) {
 
+    }
+
+    @Override
+    public Long getMemberIdByAccountId(String accountId) {
+        return memberRepository.findIdByAccountId(accountId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
     }
 
 }
