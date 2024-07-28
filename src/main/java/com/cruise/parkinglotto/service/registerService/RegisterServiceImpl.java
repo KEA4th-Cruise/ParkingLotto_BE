@@ -32,6 +32,16 @@ public class RegisterServiceImpl implements RegisterService {
     }
 
     @Override
+    @Transactional
+    public Object refuseRegister(Member member) {
+        int updatedCount = memberRepository.updateEnrollmentStatusToNull(member.getAccountId());
+        if (updatedCount == 0) { // 등록 거절을 했지만 null로 바뀌지 않은 경우
+            throw new ExceptionHandler(ErrorStatus.REGISTER_REFUSE_FAILED);
+        }
+        return null;
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public RegisterResponseDTO.MemberInfoResponseDTO getMemberInfo(String accountId) {
         Member member = memberService.getMemberByAccountId(accountId);
