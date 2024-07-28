@@ -36,7 +36,7 @@ public class RegisterServiceImpl implements RegisterService {
     public Object approveRegister(Member member) {
         int updatedCount = memberRepository.updateEnrollmentStatusToEnrolled(member.getAccountId());
         if (updatedCount == 0) { // 관리자가 승인을 했는데 ENROLLED로 바뀌지 않은 경우
-            throw new ExceptionHandler(ErrorStatus.REGISTER_REQUEST_FAILED);
+            throw new ExceptionHandler(ErrorStatus.REGISTER_APPROVE_FAILED);
         }
         return null;
     }
