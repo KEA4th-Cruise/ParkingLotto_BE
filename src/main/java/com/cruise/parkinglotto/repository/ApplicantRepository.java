@@ -13,24 +13,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalLong;
 
 public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
 
     Optional<Long> findIdByMemberId(Long memberId);
 
     @Query("select a.id from Applicant a where a.member.id = :memberId and a.draw.id = :drawId ")
-    Optional<Long> findApplicantWithId(@Param("memberId") Long memberId,@Param("drawId") Long drawId);
+    Optional<Long> findApplicantById(@Param("memberId") Long memberId,@Param("drawId") Long drawId);
 
-    @Query("select a.parkingSpaceId from Applicant a where a.id =:applicantId")
-    Optional<Long> findParkingSpaceId(@Param("applicantId") Long applicantId);
 
     List<Applicant> findByDrawId(Long drawId);
 
     @Query("select a.id from Applicant a where a.member.id = :memberId")
-    Long findByMember(@Param("memberId") Long memberId);
+    Long findByMemberId(@Param("memberId") Long memberId);
 
     @Query("select a.parkingSpaceId from Applicant a where a.id =:applicantId")
-    Long findParkingSpaceId(@Param("applicantId") Long applicantId);
+    Optional<Long> findParkingSpaceId(@Param("applicantId") Long applicantId);
   
     @Modifying
     @Transactional
@@ -51,7 +50,7 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
     @Modifying
     @Transactional
     @Query("UPDATE Applicant a SET a.weightedTotalScore = :weight WHERE a.id = :applicantId")
-    void updateWeightedTotalScore(@Param("applicantId") Long id, @Param("weight") double weight);
+    void updateWeightedTotalScore(@Param("applicantId") Long id, @Param("weight") Double weight);
 
     @Modifying
     @Transactional

@@ -42,7 +42,7 @@ public class InitDb {
             Member member = createMember("최준범", "cjb", "111", "developer", "example1@example.com", AccountType.USER, EnrollmentStatus.ENROLLED, "1234", "Seoul", WorkType.TYPE1, "hello", 50, 30, 30.00, 0, bCryptPasswordEncoder.encode("11111"));
             em.persist(member);
 
-            Applicant applicant = createApplicant(50.0, WinningStatus.WINNER, 1L, 0, 100, "100", 150.00, 1L, 2L, 30.00, WorkType.TYPE1, 50, 30, 0, member, draw);
+            Applicant applicant = createApplicant(50.0, WinningStatus.WINNER, 1L, 0, 100, "A", 150.00, 1L, 2L, 30.00, WorkType.TYPE1, 50, 30, 0, member, draw);
 
             em.persist(applicant);
             ParkingSpace parkingSpace = createParkingSpace("A", "seoul", 100, 50, "space A", 40, draw);
@@ -60,7 +60,7 @@ public class InitDb {
             em.persist(draw);
             Member member = createMember("준범최", "cjbbb", "112", "marketer", "example2@example.com", AccountType.USER, EnrollmentStatus.ENROLLED, "1236", "Busan", WorkType.TYPE2, "nice", 200, 160, 300.00, 0, bCryptPasswordEncoder.encode("11112"));
             em.persist(member);
-            Applicant applicant = createApplicant(50.0, WinningStatus.WINNER, 2L, 0, 100, "100", 150.00, 1L, 2L, 300.00, WorkType.TYPE2, 200, 160, 0, member, draw);
+            Applicant applicant = createApplicant(50.0, WinningStatus.WINNER, 2L, 0, 100, "B", 150.00, 1L, 2L, 300.00, WorkType.TYPE2, 200, 160, 0, member, draw);
 
             em.persist(applicant);
             ParkingSpace parkingSpace = createParkingSpace("B", "seoul", 100, 50, "space B", 40, draw);
