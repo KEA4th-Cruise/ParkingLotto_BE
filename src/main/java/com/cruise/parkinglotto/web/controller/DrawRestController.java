@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class DrawRestController {
     private final DrawService drawService;
+    private final HttpServletRequest httpServletRequest;
 
     //추첨 실행 후 결과 저장하는 API
     @PostMapping("/execution/{drawId}")
@@ -31,7 +32,7 @@ public class DrawRestController {
     }
 
     //회차의 추첨 결과의 명단을 조회하는 API
-    @GetMapping("/result-member-list/{drawId}")
+    @GetMapping("/result-members/{drawId}")
     public ApiResponse<DrawResponseDTO.DrawResultResponseDTO> getDrawResult(HttpServletRequest httpServletRequest, @PathVariable Long drawId) {
 
         DrawResponseDTO.DrawResultResponseDTO drawResultResponseDTO = drawService.getDrawResult(httpServletRequest, drawId);
@@ -61,5 +62,12 @@ public class DrawRestController {
     public ApiResponse<DrawResponseDTO.ConfirmDrawCreationResultDTO> confirmDrawCreation(@PathVariable Long drawId) {
         DrawResponseDTO.ConfirmDrawCreationResultDTO drawCreationResultDTO = drawService.confirmDrawCreation(drawId);
         return ApiResponse.onSuccess(SuccessStatus.DRAW_CREATION_CONFIRMED, drawCreationResultDTO);
+    }
+
+    //기존 정보로 가중치 계산을 하는 API
+    @GetMapping("/weight-calculate/{memberId}")
+    public ApiResponse<DrawResponseDTO.CalculateMemberWeightDTO> calculateMemberWeight(@PathVariable Long memberId) {
+        DrawResponseDTO.CalculateMemberWeightDTO calculateMemberWeightDTO = drawService.calculateMemberWeight(httpServletRequest);
+        return ApiResponse.onSuccess(SuccessStatus.CALCUALTE_MEMBER_WEIGHT_COMPLETED, calculateMemberWeightDTO);
     }
 }
