@@ -1,7 +1,6 @@
 package com.cruise.parkinglotto.web.converter;
 
 import com.cruise.parkinglotto.domain.enums.WorkType;
-import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
 import com.cruise.parkinglotto.web.dto.weightDetailDTO.WeightDetailResponseDTO;
 
 public class WeightDetailConverter {
@@ -15,5 +14,11 @@ public class WeightDetailConverter {
                 address(address).
                 difference(difference).
                 build();
+    }
+
+    public static WeightDetailResponseDTO.CalculateWeightResponseDTO toCalculateWeightResponseDTO(double result) {
+        return WeightDetailResponseDTO.CalculateWeightResponseDTO.builder()
+                .calculateResult(result)
+                .build();
     }
 }

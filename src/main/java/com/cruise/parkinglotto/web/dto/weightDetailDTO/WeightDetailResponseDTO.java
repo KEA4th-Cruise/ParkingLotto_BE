@@ -12,12 +12,20 @@ public class WeightDetailResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class GetMemberWeightDTO {
-        private int carCommuteTime;
-        private int trafficCommuteTime;
-        private double distance;
-        private int recentLossCount;
+        private Integer carCommuteTime;
+        private Integer trafficCommuteTime;
+        private Double distance;
+        private Integer recentLossCount;
         private String address;
-        private int difference;
+        private Integer difference;
         private WorkType workType;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class CalculateWeightResponseDTO {
+        private Double calculateResult;
     }
 }
