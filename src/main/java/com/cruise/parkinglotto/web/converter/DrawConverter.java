@@ -3,6 +3,7 @@ package com.cruise.parkinglotto.web.converter;
 import com.cruise.parkinglotto.domain.Applicant;
 import com.cruise.parkinglotto.domain.Draw;
 import com.cruise.parkinglotto.domain.ParkingSpace;
+import com.cruise.parkinglotto.domain.enums.WorkType;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import com.cruise.parkinglotto.domain.enums.DrawStatus;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawRequestDTO;
@@ -28,7 +29,7 @@ public class DrawConverter {
                 .mapImageUrl(draw.getMapImageUrl())
                 .getNameAndUrlParkingSpaceResultDTO(dto)
                 .build();
-        }
+    }
 
     public static DrawResponseDTO.DrawResultResponseDTO toDrawResultResponseDTO(Draw draw, List<Applicant> applicants, Map<Long, String> parkingSpaceNames) {
         List<ApplicantResponseDTO.ApplicantResultDTO> applicantInfoDTOList = applicants.stream()
@@ -92,11 +93,4 @@ public class DrawConverter {
                 .parkingSpacePreviewListDTO(ParkingSpaceConverter.toParkingSpacePreviewListDTO(parkingSpaceList))
                 .build();
     }
-
-    public static DrawResponseDTO.CalculateMemberWeightDTO toCalculateMemberWeightDTO(Double result) {
-        return DrawResponseDTO.CalculateMemberWeightDTO.builder().
-                weightResult(result).
-                build();
-    }
-
 }

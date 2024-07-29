@@ -1,7 +1,6 @@
 package com.cruise.parkinglotto.web.controller;
 
 import com.cruise.parkinglotto.domain.Draw;
-import com.cruise.parkinglotto.global.jwt.JwtUtils;
 import com.cruise.parkinglotto.global.response.ApiResponse;
 import com.cruise.parkinglotto.global.response.code.status.SuccessStatus;
 import com.cruise.parkinglotto.service.drawService.DrawService;
@@ -11,7 +10,6 @@ import com.cruise.parkinglotto.web.dto.drawDTO.DrawRequestDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -62,12 +60,5 @@ public class DrawRestController {
     public ApiResponse<DrawResponseDTO.ConfirmDrawCreationResultDTO> confirmDrawCreation(@PathVariable Long drawId) {
         DrawResponseDTO.ConfirmDrawCreationResultDTO drawCreationResultDTO = drawService.confirmDrawCreation(drawId);
         return ApiResponse.onSuccess(SuccessStatus.DRAW_CREATION_CONFIRMED, drawCreationResultDTO);
-    }
-
-    //기존 정보로 가중치 계산을 하는 API
-    @GetMapping("/weight-calculate/{memberId}")
-    public ApiResponse<DrawResponseDTO.CalculateMemberWeightDTO> calculateMemberWeight(@PathVariable Long memberId) {
-        DrawResponseDTO.CalculateMemberWeightDTO calculateMemberWeightDTO = drawService.calculateMemberWeight(httpServletRequest);
-        return ApiResponse.onSuccess(SuccessStatus.CALCUALTE_MEMBER_WEIGHT_COMPLETED, calculateMemberWeightDTO);
     }
 }

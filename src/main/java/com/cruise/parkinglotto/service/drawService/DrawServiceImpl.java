@@ -28,7 +28,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.cruise.parkinglotto.web.converter.DrawConverter.toCalculateMemberWeightDTO;
 import static com.cruise.parkinglotto.web.converter.DrawConverter.toGetCurrentDrawInfo;
 
 @Slf4j
@@ -239,7 +238,7 @@ public class DrawServiceImpl implements DrawService {
         weight += DISTANCE_MAX_SCORE * (1 - Math.exp(-0.02 * distance));
 
         // 연속낙첨횟수에 따른 점수 부여
-        long recentLossCount = applicant.getRecentLossCount();
+        int recentLossCount = applicant.getRecentLossCount();
         if (recentLossCount < 4) {
             weight += RECENT_LOSS_COUNT_BASE_SCORE * (1 - Math.exp(-0.3 * recentLossCount));
         } else {
@@ -248,60 +247,6 @@ public class DrawServiceImpl implements DrawService {
         }
         // 가중치 점수를 Applicant 객체에 설정
         applicantRepository.updateWeightedTotalScore(applicant.getId(), weight);
-    }
-
-    @Override
-    public DrawResponseDTO.CalculateMemberWeightDTO calculateMemberWeight(HttpServletRequest httpServletRequest) {
-        String accountId = jwtUtils.getAccountIdFromRequest(httpServletRequest);
-
-        Member member = memberService.getMemberByAccountId(accountId);
-        double weight = 0;
-
-        WeightDetails weightDetail = weightDetailsRepository.findByMemberId(member.getId());
-
-        if (weightDetail.getWorkType() == null) {
-            throw new ExceptionHandler(ErrorStatus.WORK_TYPE_NOT_FOUND);
-        } else {
-            if (WorkType.TYPE1 == weightDetail.getWorkType()) {
-                weight += WORK_TYPE1_SCORE;
-            } else if (WorkType.TYPE2 == weightDetail.getWorkType()) {
-                weight += WORK_TYPE2_SCORE;
-            }
-        }
-
-        if (weightDetail.getAddress() == null) {
-            throw new ExceptionHandler(ErrorStatus.ADDRESS_NOT_FOUND);
-        } else {
-            long trafficCommuteTime = weightDetail.getTrafficCommuteTime();
-            if (trafficCommuteTime < 60) {
-                weight += TRAFFIC_COMMUTE_BASE_SCORE + 9 * (1 - Math.exp(-0.2 * trafficCommuteTime));
-            } else {
-                weight += TRAFFIC_COMMUTE_BASE_SCORE + (TRAFFIC_COMMUTE_MAX_SCORE - TRAFFIC_COMMUTE_BASE_SCORE)
-                        * (1 - Math.exp(-0.05 * (trafficCommuteTime - 60)));
-            }
-
-            // 자가용 통근시간에 따른 점수 부여
-            long carCommuteTime = weightDetail.getCarCommuteTime();
-            weight += CAR_COMMUTE_MAX_SCORE * (1 - Math.exp(-0.05 * carCommuteTime));
-
-            // 대중교통시간 - 자가용 통근시간 차이에 따른 점수 부여
-            long commuteTimeDiff = Math.abs(trafficCommuteTime - carCommuteTime);
-            weight += COMMUTE_DIFF_MAX_SCORE * (1 - Math.exp(-0.05 * commuteTimeDiff));
-
-            // 직선거리에 따른 점수 부여
-            double distance = weightDetail.getDistance();
-            weight += DISTANCE_MAX_SCORE * (1 - Math.exp(-0.02 * distance));
-        }
-
-        // 연속낙첨횟수에 따른 점수 부여
-        long recentLossCount = weightDetail.getRecentLossCount();
-        if (recentLossCount < 4) {
-            weight += RECENT_LOSS_COUNT_BASE_SCORE * (1 - Math.exp(-0.3 * recentLossCount));
-        } else {
-            weight += RECENT_LOSS_COUNT_BASE_SCORE + RECENT_LOSS_COUNT_EXTRA_SCORE
-                    * (1 - Math.exp(-0.7 * (recentLossCount - 3)));
-        }
-        return toCalculateMemberWeightDTO(weight);
     }
 
     //예비번호 부여 로직 및 예비번호를 받는 즉시 연속 낙첨 횟수 증가

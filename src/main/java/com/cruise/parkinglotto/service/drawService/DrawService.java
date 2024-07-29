@@ -25,8 +25,6 @@ public interface DrawService {
 
     void calculateWeight(Applicant applicant);
 
-    DrawResponseDTO.CalculateMemberWeightDTO calculateMemberWeight(HttpServletRequest httpServletRequest);
-
     void assignWaitListNumbers(List<Applicant> applicants);
   
     void deleteUnconfirmedDrawsAndParkingSpaces();

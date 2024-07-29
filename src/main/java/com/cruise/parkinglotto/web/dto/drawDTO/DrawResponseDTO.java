@@ -1,6 +1,6 @@
 package com.cruise.parkinglotto.web.dto.drawDTO;
 
-import com.cruise.parkinglotto.domain.enums.DrawType;
+import com.cruise.parkinglotto.domain.enums.WorkType;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
 import lombok.AllArgsConstructor;
@@ -62,13 +62,5 @@ public class DrawResponseDTO {
         LocalDateTime usageStartAt;
         LocalDateTime usageEndAt;
         ParkingSpaceResponseDTO.ParkingSpacePreviewListDTO parkingSpacePreviewListDTO;
-    }
-
-    @Getter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class CalculateMemberWeightDTO {
-        private Double weightResult;
     }
 }
