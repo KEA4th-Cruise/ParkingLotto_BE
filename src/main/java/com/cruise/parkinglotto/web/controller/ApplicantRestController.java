@@ -47,11 +47,10 @@ public class ApplicantRestController {
     @PostMapping("/my-apply-list/{draw-id}/cancel")
     public ApiResponse<ApplicantResponseDTO.WinnerCancelResponseDTO> cancelApply(@PathVariable("draw-id") Long drawId, HttpServletRequest request) {
 
-        Authentication authentication = jwtUtils.getAuthentication(jwtUtils.resolveToken(request));
-        String name = authentication.getName( );
-        Long memberId = memberService.getMemberIdByAccountId(name);
+        String accountIdFromRequest = jwtUtils.getAccountIdFromRequest(request);
+        Long memberId = memberService.getMemberIdByAccountId(accountIdFromRequest);
 
-        return ApiResponse.onSuccess(SuccessStatus.CANCEL_SUCCESS, applicantService.giveUpMyWinning(memberId, drawId));
+        return ApiResponse.onSuccess(SuccessStatus.APPLICANT_CANCEL_SUCCESS, applicantService.giveUpMyWinning(memberId, drawId));
     }
 
 
