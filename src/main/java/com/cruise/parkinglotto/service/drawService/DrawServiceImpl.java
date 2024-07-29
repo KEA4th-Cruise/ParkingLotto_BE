@@ -1,17 +1,17 @@
 package com.cruise.parkinglotto.service.drawService;
 
-import com.cruise.parkinglotto.domain.Applicant;
-import com.cruise.parkinglotto.domain.Draw;
-import com.cruise.parkinglotto.domain.ParkingSpace;
+import com.cruise.parkinglotto.domain.*;
 import com.cruise.parkinglotto.domain.enums.DrawStatus;
 import com.cruise.parkinglotto.domain.enums.DrawType;
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import com.cruise.parkinglotto.domain.enums.WorkType;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
+import com.cruise.parkinglotto.global.jwt.JwtUtils;
 import com.cruise.parkinglotto.global.kc.ObjectStorageConfig;
 import com.cruise.parkinglotto.global.kc.ObjectStorageService;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
 import com.cruise.parkinglotto.repository.*;
+import com.cruise.parkinglotto.service.memberService.MemberService;
 import com.cruise.parkinglotto.web.converter.DrawConverter;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawRequestDTO;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
@@ -28,6 +28,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.cruise.parkinglotto.web.converter.DrawConverter.toCalculateMemberWeightDTO;
 import static com.cruise.parkinglotto.web.converter.DrawConverter.toGetCurrentDrawInfo;
 
 @Slf4j
@@ -37,10 +38,12 @@ public class DrawServiceImpl implements DrawService {
 
     private final ApplicantRepository applicantRepository;
     private final DrawRepository drawRepository;
+    private final MemberRepository memberRepository;
     private final ParkingSpaceRepository parkingSpaceRepository;
     private final WeightDetailsRepository weightDetailsRepository;
     private final ObjectStorageService objectStorageService;
     private final ObjectStorageConfig objectStorageConfig;
+    private final MemberService memberService;
 
 
     //계산용 변수
@@ -53,8 +56,10 @@ public class DrawServiceImpl implements DrawService {
     private static final int DISTANCE_MAX_SCORE = 20;
     private static final int RECENT_LOSS_COUNT_BASE_SCORE = 10;
     private static final int RECENT_LOSS_COUNT_EXTRA_SCORE = 5;
+    private final JwtUtils jwtUtils;
 
     @Override
+    @Transactional
     public void executeDraw(Long drawId) {
         Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
 
@@ -85,6 +90,7 @@ public class DrawServiceImpl implements DrawService {
     }
 
     @Override
+    @Transactional
     public void updateSeedNum(Long drawId) {
         try {
             //추첨에 대한 예외처리
@@ -107,6 +113,7 @@ public class DrawServiceImpl implements DrawService {
     }
 
     @Override
+    @Transactional
     public void assignRandomNumber(Long drawId, String seed) {
         List<Applicant> applicants = applicantRepository.findByDrawId(drawId);
         if (applicants == null || applicants.isEmpty()) {
@@ -125,6 +132,7 @@ public class DrawServiceImpl implements DrawService {
     }
 
     @Override
+    @Transactional
     public void handleDrawResults(Long drawId, List<Applicant> orderedApplicants) {
         List<ParkingSpace> parkingSpaces = parkingSpaceRepository.findByDrawId(drawId);
         long totalSlots = parkingSpaces.stream().mapToLong(ParkingSpace::getSlots).sum();
@@ -155,6 +163,7 @@ public class DrawServiceImpl implements DrawService {
     }
 
     @Override
+    @Transactional
     public void assignZones(Long drawId, List<Applicant> selectedWinners) {
         List<ParkingSpace> parkingSpaces = parkingSpaceRepository.findByDrawId(drawId);
 
@@ -197,6 +206,7 @@ public class DrawServiceImpl implements DrawService {
     }
 
     @Override
+    @Transactional
     public void calculateWeight(Applicant applicant) {
         double weight = 0;
 
@@ -240,8 +250,63 @@ public class DrawServiceImpl implements DrawService {
         applicantRepository.updateWeightedTotalScore(applicant.getId(), weight);
     }
 
+    @Override
+    public DrawResponseDTO.CalculateMemberWeightDTO calculateMemberWeight(HttpServletRequest httpServletRequest) {
+        String accountId = jwtUtils.getAccountIdFromRequest(httpServletRequest);
+
+        Member member = memberService.getMemberByAccountId(accountId);
+        double weight = 0;
+
+        WeightDetails weightDetail = weightDetailsRepository.findByMemberId(member.getId());
+
+        if (weightDetail.getWorkType() == null) {
+            throw new ExceptionHandler(ErrorStatus.WORK_TYPE_NOT_FOUND);
+        } else {
+            if (WorkType.TYPE1 == weightDetail.getWorkType()) {
+                weight += WORK_TYPE1_SCORE;
+            } else if (WorkType.TYPE2 == weightDetail.getWorkType()) {
+                weight += WORK_TYPE2_SCORE;
+            }
+        }
+
+        if (weightDetail.getAddress() == null) {
+            throw new ExceptionHandler(ErrorStatus.ADDRESS_NOT_FOUND);
+        } else {
+            long trafficCommuteTime = weightDetail.getTrafficCommuteTime();
+            if (trafficCommuteTime < 60) {
+                weight += TRAFFIC_COMMUTE_BASE_SCORE + 9 * (1 - Math.exp(-0.2 * trafficCommuteTime));
+            } else {
+                weight += TRAFFIC_COMMUTE_BASE_SCORE + (TRAFFIC_COMMUTE_MAX_SCORE - TRAFFIC_COMMUTE_BASE_SCORE)
+                        * (1 - Math.exp(-0.05 * (trafficCommuteTime - 60)));
+            }
+
+            // 자가용 통근시간에 따른 점수 부여
+            long carCommuteTime = weightDetail.getCarCommuteTime();
+            weight += CAR_COMMUTE_MAX_SCORE * (1 - Math.exp(-0.05 * carCommuteTime));
+
+            // 대중교통시간 - 자가용 통근시간 차이에 따른 점수 부여
+            long commuteTimeDiff = Math.abs(trafficCommuteTime - carCommuteTime);
+            weight += COMMUTE_DIFF_MAX_SCORE * (1 - Math.exp(-0.05 * commuteTimeDiff));
+
+            // 직선거리에 따른 점수 부여
+            double distance = weightDetail.getDistance();
+            weight += DISTANCE_MAX_SCORE * (1 - Math.exp(-0.02 * distance));
+        }
+
+        // 연속낙첨횟수에 따른 점수 부여
+        long recentLossCount = weightDetail.getRecentLossCount();
+        if (recentLossCount < 4) {
+            weight += RECENT_LOSS_COUNT_BASE_SCORE * (1 - Math.exp(-0.3 * recentLossCount));
+        } else {
+            weight += RECENT_LOSS_COUNT_BASE_SCORE + RECENT_LOSS_COUNT_EXTRA_SCORE
+                    * (1 - Math.exp(-0.7 * (recentLossCount - 3)));
+        }
+        return toCalculateMemberWeightDTO(weight);
+    }
+
     //예비번호 부여 로직 및 예비번호를 받는 즉시 연속 낙첨 횟수 증가
     @Override
+    @Transactional
     public void assignWaitListNumbers(List<Applicant> applicants) {
         int waitListNumber = 1;
         for (Applicant applicant : applicants) {
@@ -291,6 +356,7 @@ public class DrawServiceImpl implements DrawService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public DrawResponseDTO.DrawResultResponseDTO getDrawResult(HttpServletRequest httpServletRequest, Long drawId) {
         Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
         List<Applicant> applicants = applicantRepository.findByDrawId(drawId);
@@ -368,7 +434,13 @@ public class DrawServiceImpl implements DrawService {
             objectStorageService.deleteObject(draw.getMapImageUrl());
 
         });
-
         drawRepository.deleteAll(unconfirmedDrawList);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Member getMemberByAccountId(String accountId) {
+        return memberRepository.findByAccountId(accountId)
+                .orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
     }
 }

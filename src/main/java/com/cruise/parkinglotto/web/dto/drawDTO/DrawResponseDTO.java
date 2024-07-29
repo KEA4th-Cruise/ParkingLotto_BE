@@ -63,4 +63,12 @@ public class DrawResponseDTO {
         LocalDateTime usageEndAt;
         ParkingSpaceResponseDTO.ParkingSpacePreviewListDTO parkingSpacePreviewListDTO;
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class CalculateMemberWeightDTO {
+        private Double weightResult;
+    }
 }

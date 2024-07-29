@@ -2,6 +2,7 @@ package com.cruise.parkinglotto.service.drawService;
 
 import com.cruise.parkinglotto.domain.Applicant;
 import com.cruise.parkinglotto.domain.Draw;
+import com.cruise.parkinglotto.domain.Member;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawRequestDTO;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,6 +25,8 @@ public interface DrawService {
 
     void calculateWeight(Applicant applicant);
 
+    DrawResponseDTO.CalculateMemberWeightDTO calculateMemberWeight(HttpServletRequest httpServletRequest);
+
     void assignWaitListNumbers(List<Applicant> applicants);
   
     void deleteUnconfirmedDrawsAndParkingSpaces();
@@ -37,4 +40,7 @@ public interface DrawService {
     Draw createDraw(MultipartFile mapImage, DrawRequestDTO.CreateDrawRequestDTO createDrawRequestDTO);
 
     DrawResponseDTO.ConfirmDrawCreationResultDTO confirmDrawCreation(Long drawId);
+
+    // 사용자의 accountId로 멤버 객체를 가져오는 메서드
+    Member getMemberByAccountId(String accountId);
 }

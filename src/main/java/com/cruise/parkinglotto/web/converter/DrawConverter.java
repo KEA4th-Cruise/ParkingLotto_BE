@@ -93,4 +93,10 @@ public class DrawConverter {
                 .build();
     }
 
+    public static DrawResponseDTO.CalculateMemberWeightDTO toCalculateMemberWeightDTO(Double result) {
+        return DrawResponseDTO.CalculateMemberWeightDTO.builder().
+                weightResult(result).
+                build();
+    }
+
 }
