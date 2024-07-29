@@ -26,6 +26,10 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Modifying
     @Query("UPDATE Member m SET m.enrollmentStatus = null WHERE m.accountId = :accountId")
     int updateEnrollmentStatusToNull(@Param("accountId") String accountId);
+  
+    @Modifying
+    @Query("UPDATE Member m SET m.enrollmentStatus = com.cruise.parkinglotto.domain.enums.EnrollmentStatus.ENROLLED WHERE m.accountId = :accountId")
+    int updateEnrollmentStatusToEnrolled(@Param("accountId") String accountId);
 
     @Query("SELECT m FROM Member m WHERE m.enrollmentStatus = :enrollmentStatus")
     List<Member> findByEnrollmentStatus(@Param("enrollmentStatus") EnrollmentStatus enrollmentStatus);

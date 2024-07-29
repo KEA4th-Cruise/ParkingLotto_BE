@@ -25,6 +25,7 @@ public enum ErrorStatus implements BaseErrorCode {
     // 등록 관련 응답
     REGISTER_REQUEST_FAILED(HttpStatus.BAD_REQUEST, "REGISTER4001", "등록 요청에 실패했습니다."),
     REGISTER_MEMBERS_NOT_FOUND(HttpStatus.BAD_REQUEST, "REGISTER4002", "enrollmentStatus가 잘못되었습니다."),
+    REGISTER_APPROVE_FAILED(HttpStatus.BAD_REQUEST, "REGISTER4003", "등록 요청 승인에 실패했습니다."),
     REGISTER_REFUSE_FAILED(HttpStatus.BAD_REQUEST, "REGISTER4004", "등록 요청 거절에 실패했습니다."),
 
     //신청자 관련 응답
