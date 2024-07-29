@@ -16,6 +16,14 @@ public interface RegisterService {
     Object requestRegister(Member member);
 
     /**
+     * 관리자가 사용자의 등록 요청을 거절하는 메서드
+     * 관리자가 사용자의 enrollmentStatus를 pending -> null 로 바꾼다.
+     * @param member
+     * @return
+     */
+    Object refuseRegister(Member member);
+
+    /**
      * 관리자가 사용자의 등록 요청을 승인하는 메서드
      * 관리자가 사용자의 enrollmentStatus를 pending -> enrolled 로 바꾼다.
      */
