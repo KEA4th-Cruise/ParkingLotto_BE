@@ -40,7 +40,9 @@ public enum ErrorStatus implements BaseErrorCode {
     DRAW_NOT_READY(HttpStatus.OK, "DRAW4002", "아직 신청이 종료되지 않은 추첨입니다."),
     DRAW_ALREADY_EXECUTED(HttpStatus.OK, "DRAW4003", "이미 종료된 추첨입니다. 한 번 진행된 추첨은 다시 진행 될 수 없습니다."),
 
-
+    // 추첨 디테일 관련 응답
+    WORK_TYPE_NOT_FOUND(HttpStatus.OK, "MemberDetail4001", "근무타입이 입력되지 않았습니다."),
+    ADDRESS_NOT_FOUND(HttpStatus.OK, "MemberDetail4002", "주소가 입력되지 않았습니다."),
     ;
 
 
