@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/register")
 @RequiredArgsConstructor
-public class RegisterController {
+public class RegisterRestController {
 
     private final MemberService memberService;
     private final RegisterService registerService;
@@ -38,10 +38,18 @@ public class RegisterController {
         return ApiResponse.onSuccess(SuccessStatus.REGISTER_MEMBER_INFO_FOUND, registerService.getMemberInfo(accountId));
     }
 
+    @Operation(summary = "관리자 등록 요청 승인 API", description = "API 요청 시 토큰에서 유저 정보를 가져오기 때문에 RequestDTO가 필요하지 않습니다. 응답 result 또한 null을 반환합니다.")
+    @GetMapping("/member-info/{accountId}/approval")
+    public ApiResponse<Object> approveRegister(HttpServletRequest httpServletRequest, @PathVariable("accountId") String accountId) {
+        Member member = memberService.getMemberByAccountId(accountId);
+        return ApiResponse.onSuccess(SuccessStatus.REGISTER_REQUEST_APPROVED, registerService.approveRegister(member));
+    }
+
     @Operation(summary = "등록 관리 페이지에서 사용자 리스트를 불러오는 API", description = "RequestParam 값에 따라 등록 신청한 사용자 목록, 기존 사용자 목록 조회가 가능합니다.")
     @GetMapping("/members")
-    public ApiResponse<List<RegisterResponseDTO.MembersResponseDTO>> getPendingMembers(HttpServletRequest httpServletRequest, @RequestParam("enrollmentStatus") EnrollmentStatus enrollmentStatus) {
+    public ApiResponse<List<RegisterResponseDTO.MembersResponseDTO>> getMembers(HttpServletRequest httpServletRequest, @RequestParam("enrollmentStatus") EnrollmentStatus enrollmentStatus) {
         return ApiResponse.onSuccess(SuccessStatus.REGISTER_MEMBERS_FOUND, registerService.getMembersByEnrollmentStatus(enrollmentStatus));
     }
+
 
 }
