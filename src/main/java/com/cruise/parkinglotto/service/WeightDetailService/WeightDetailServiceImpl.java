@@ -46,10 +46,10 @@ public class WeightDetailServiceImpl implements WeightDetailService{
 
         WorkType workType;
         String address;
-        int carCommuteTime;
-        int trafficCommuteTime;
-        double distance;
-        int recentLossCount;
+        Integer carCommuteTime;
+        Integer trafficCommuteTime;
+        Double distance;
+        Integer recentLossCount;
         int commuteTimeDifference;
 
         if (weightDetail.getWorkType() == null) {
@@ -87,10 +87,10 @@ public class WeightDetailServiceImpl implements WeightDetailService{
     public WeightDetailResponseDTO.CalculateWeightResponseDTO calculateWeight(WeightDetailRequestDTO.CalculateWeightRequestDTO calculateWeightRequestDTO) {
 
         WorkType workType = calculateWeightRequestDTO.getWorkType();
-        double distance = calculateWeightRequestDTO.getDistance();
-        int carCommuteTime = calculateWeightRequestDTO.getCarCommuteTime();
-        int trafficCommuteTime = calculateWeightRequestDTO.getTrafficCommuteTime();
-        int recentLossCount = calculateWeightRequestDTO.getRecentLossCount();
+        Double distance = calculateWeightRequestDTO.getDistance();
+        Integer carCommuteTime = calculateWeightRequestDTO.getCarCommuteTime();
+        Integer trafficCommuteTime = calculateWeightRequestDTO.getTrafficCommuteTime();
+        Integer recentLossCount = calculateWeightRequestDTO.getRecentLossCount();
 
         double weight = 0;
 
@@ -113,7 +113,7 @@ public class WeightDetailServiceImpl implements WeightDetailService{
         weight += CAR_COMMUTE_MAX_SCORE * (1 - Math.exp(-0.05 * carCommuteTime));
 
         // 대중교통시간 - 자가용 통근시간 차이에 따른 점수 부여
-        long commuteTimeDiff = Math.abs(trafficCommuteTime - carCommuteTime);
+        int commuteTimeDiff = Math.abs(trafficCommuteTime - carCommuteTime);
         weight += COMMUTE_DIFF_MAX_SCORE * (1 - Math.exp(-0.05 * commuteTimeDiff));
 
         // 직선거리에 따른 점수 부여

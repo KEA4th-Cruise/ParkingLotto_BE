@@ -54,7 +54,6 @@ public class DrawServiceImpl implements DrawService {
     private static final int DISTANCE_MAX_SCORE = 20;
     private static final int RECENT_LOSS_COUNT_BASE_SCORE = 10;
     private static final int RECENT_LOSS_COUNT_EXTRA_SCORE = 5;
-    private final JwtUtils jwtUtils;
 
     @Override
     @Transactional
@@ -133,7 +132,7 @@ public class DrawServiceImpl implements DrawService {
     @Transactional
     public void handleDrawResults(Long drawId, List<Applicant> orderedApplicants) {
         List<ParkingSpace> parkingSpaces = parkingSpaceRepository.findByDrawId(drawId);
-        long totalSlots = parkingSpaces.stream().mapToLong(ParkingSpace::getSlots).sum();
+        int totalSlots = parkingSpaces.stream().mapToInt(ParkingSpace::getSlots).sum();
         //당첨자 리스트
         List<Applicant> selectedWinners = new ArrayList<>();
         //낙첨자 리스트
@@ -206,7 +205,7 @@ public class DrawServiceImpl implements DrawService {
     @Override
     @Transactional
     public void calculateWeight(Applicant applicant) {
-        double weight = 0;
+        double weight = 0.0;
 
         // 근무타입에 따른 점수 부여
         if (WorkType.TYPE1.equals(applicant.getWorkType())) {
@@ -216,7 +215,7 @@ public class DrawServiceImpl implements DrawService {
         }
 
         // 대중교통 통근시간에 따른 점수 부여
-        long trafficCommuteTime = applicant.getTrafficCommuteTime();
+        Integer trafficCommuteTime = applicant.getTrafficCommuteTime();
         if (trafficCommuteTime < 60) {
             weight += TRAFFIC_COMMUTE_BASE_SCORE + 9 * (1 - Math.exp(-0.2 * trafficCommuteTime));
         } else {
@@ -225,19 +224,19 @@ public class DrawServiceImpl implements DrawService {
         }
 
         // 자가용 통근시간에 따른 점수 부여
-        long carCommuteTime = applicant.getCarCommuteTime();
+        Integer carCommuteTime = applicant.getCarCommuteTime();
         weight += CAR_COMMUTE_MAX_SCORE * (1 - Math.exp(-0.05 * carCommuteTime));
 
         // 대중교통시간 - 자가용 통근시간 차이에 따른 점수 부여
-        long commuteTimeDiff = Math.abs(trafficCommuteTime - carCommuteTime);
+        int commuteTimeDiff = Math.abs(trafficCommuteTime - carCommuteTime);
         weight += COMMUTE_DIFF_MAX_SCORE * (1 - Math.exp(-0.05 * commuteTimeDiff));
 
         // 직선거리에 따른 점수 부여
-        double distance = applicant.getDistance();
+        Double distance = applicant.getDistance();
         weight += DISTANCE_MAX_SCORE * (1 - Math.exp(-0.02 * distance));
 
         // 연속낙첨횟수에 따른 점수 부여
-        int recentLossCount = applicant.getRecentLossCount();
+        Integer recentLossCount = applicant.getRecentLossCount();
         if (recentLossCount < 4) {
             weight += RECENT_LOSS_COUNT_BASE_SCORE * (1 - Math.exp(-0.3 * recentLossCount));
         } else {
