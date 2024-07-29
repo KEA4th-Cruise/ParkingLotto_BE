@@ -26,6 +26,7 @@ public class ApplicantRestController {
     private final ApplicantService applicantService;
     private final JwtUtils jwtUtils;
     private final MemberService memberService;
+
     @Operation(summary = "신청자 목록을 조회하는 API 입니다. 페이징을 포함합니다.", description = " RequestParam 으로 drawId와 page 번호를 전송해주세요.")
     @GetMapping("/list")
     public ApiResponse<ApplicantResponseDTO.GetApplicantListResultDTO> getApplicantList(@RequestParam(name = "drawId") Long drawId,
@@ -47,6 +48,6 @@ public class ApplicantRestController {
         String accountIdFromRequest = jwtUtils.getAccountIdFromRequest(request);
         Member memberByAccountId = memberService.getMemberByAccountId(accountIdFromRequest);
         List<ApplicantResponseDTO.GetMyApplyResultDTO> applyResultList = applicantService.getApplyResultList(memberByAccountId.getId( ));
-        return ApiResponse.onSuccess(SuccessStatus.APPLICANT_APPLY_LIST_FOUND,applyResultList);
+        return ApiResponse.onSuccess(SuccessStatus.APPLICANT_APPLY_LIST_FOUND, applyResultList);
     }
 }
