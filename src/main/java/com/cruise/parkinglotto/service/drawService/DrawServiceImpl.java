@@ -42,7 +42,6 @@ public class DrawServiceImpl implements DrawService {
     private final WeightDetailsRepository weightDetailsRepository;
     private final ObjectStorageService objectStorageService;
     private final ObjectStorageConfig objectStorageConfig;
-    private final MemberService memberService;
 
 
     //계산용 변수
