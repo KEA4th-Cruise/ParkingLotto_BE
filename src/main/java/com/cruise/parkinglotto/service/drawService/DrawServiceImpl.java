@@ -37,7 +37,6 @@ public class DrawServiceImpl implements DrawService {
 
     private final ApplicantRepository applicantRepository;
     private final DrawRepository drawRepository;
-    private final MemberRepository memberRepository;
     private final ParkingSpaceRepository parkingSpaceRepository;
     private final WeightDetailsRepository weightDetailsRepository;
     private final ObjectStorageService objectStorageService;
@@ -378,12 +377,5 @@ public class DrawServiceImpl implements DrawService {
 
         });
         drawRepository.deleteAll(unconfirmedDrawList);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Member getMemberByAccountId(String accountId) {
-        return memberRepository.findByAccountId(accountId)
-                .orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
     }
 }

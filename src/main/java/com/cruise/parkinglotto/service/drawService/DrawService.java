@@ -38,7 +38,4 @@ public interface DrawService {
     Draw createDraw(MultipartFile mapImage, DrawRequestDTO.CreateDrawRequestDTO createDrawRequestDTO);
 
     DrawResponseDTO.ConfirmDrawCreationResultDTO confirmDrawCreation(Long drawId);
-
-    // 사용자의 accountId로 멤버 객체를 가져오는 메서드
-    Member getMemberByAccountId(String accountId);
 }
