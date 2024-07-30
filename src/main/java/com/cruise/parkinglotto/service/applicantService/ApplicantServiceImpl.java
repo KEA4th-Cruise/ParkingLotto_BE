@@ -90,23 +90,25 @@ public class ApplicantServiceImpl implements ApplicantService {
             throw new ExceptionHandler(ErrorStatus.WEIGHTDETAILS_TOO_LONG_USER_SEED);
         }
 
+        //업로드 할 파일 검증
+        if (certificateDocuments != null) {
+            certificateDocsService.validateCertificateFiles(certificateDocuments);
+        }
+
+        //삭제할 파일 검증
+        List<CertificateDocsRequestDTO.CertifiCateFileDTO> deleteCertificatFileUrlAndNameDTO = applyDrawRequestDTO.getDeleteCertFileUrlAndNameDTO();
+        if (deleteCertificatFileUrlAndNameDTO != null) {
+            certificateDocsService.checkCertificateFileUrlsInBucket(deleteCertificatFileUrlAndNameDTO);
+        }
+
         //Handling carNum
         String carNum = applyDrawRequestDTO.getCarNum();
         memberRepository.updateCarNum(member.getId(), carNum);
 
         //Handling CertFile
 
-        //업로드 할 파일 검증
-        if (certificateDocuments != null) {
-            certificateDocsService.validateCertificateFiles(certificateDocuments);
-        }
-
-        //deleteCertFiles
-        List<CertificateDocsRequestDTO.CertifiCateFileDTO> deleteCertificatFileUrlAndNameDTO = applyDrawRequestDTO.getDeleteCertFileUrlAndNameDTO();
-
-        //지울 정보(fileUrl)가 버킷에 있는지 확인 및 mysql에 있는 지울 정보 삭제
+        //mysql에 있는 지울 정보 삭제
         if (deleteCertificatFileUrlAndNameDTO != null) {
-            certificateDocsService.checkCertificateFileUrlsInBucket(deleteCertificatFileUrlAndNameDTO);
             certificateDocsService.deleteCertificateDocsInMySql(deleteCertificatFileUrlAndNameDTO);
 
             //버킷에서 정보 삭제
