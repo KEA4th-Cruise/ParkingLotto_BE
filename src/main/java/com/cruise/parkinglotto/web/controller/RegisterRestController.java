@@ -45,7 +45,7 @@ public class RegisterRestController {
         return ApiResponse.onSuccess(SuccessStatus.REGISTER_REQUEST_APPROVED, registerService.approveRegister(member));
     }
 
-    @Operation(summary = "관리자 등록 요청 거절 API", description = "API 요청 시 토큰에서 유저 정보를 가져오기 때문에 RequestDTO가 필요하지 않습니다. 응답 result 또한 null을 반환합니다.")
+    @Operation(summary = "관리자 등록 요청 거절 + 등록된 사용자 삭제 API", description = "등록 요청을 거절하는 API와 등록된 사용자를 삭제하는 API가 똑같습니다.")
     @GetMapping("/member-info/{accountId}/refusal")
     public ApiResponse<Object> refuseRegister(HttpServletRequest httpServletRequest, @PathVariable("accountId") String accountId) {
         Member member = memberService.getMemberByAccountId(accountId);
