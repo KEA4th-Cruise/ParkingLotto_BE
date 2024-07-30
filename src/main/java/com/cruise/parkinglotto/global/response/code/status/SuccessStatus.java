@@ -36,11 +36,15 @@ public enum SuccessStatus implements BaseCode {
     PARKING_SPACE_ADDED(HttpStatus.OK, "PARKINGSPACE2001", "해당 회차에 주차구역이 추가되었습니다."),
     PARKING_SPACE_INFO_FOUND(HttpStatus.OK, "PARKINGSPACE2002", "주차 공간 정보를 조회했습니다"),
 
-
     //  신청자 관련
     APPLICANT_LIST_FOUND(HttpStatus.OK, "APPLICANT2001", "신청자 목록을 조회하였습니다."),
-    APPLICANT_PRIORITY_APPROVED(HttpStatus.OK, "APPLICANT2002", "해당 사용자에게 우대 신청 승인 및 주차 공간 배정을 완료했습니다."),
-    APPLICANT_APPLY_INFO_FOUND(HttpStatus.OK, "APPLICANT2003", "해당 사용자의 특정 회차 추첨 결과 정보 조회에 성공했습니다"),
+    APPLICANT_APPLY_INFO_FOUND(HttpStatus.OK, "APPLICANT2002", "해당 사용자의 특정 회차 추첨 결과 정보 조회에 성공했습니다"),
+    APPLICANT_APPLY_LIST_FOUND(HttpStatus.OK, "APPLICANT2003", "사용자가 신청했던 회차 리스트 조회를 성공했습니다."),
+
+    //  우대 신청자 관련
+    PRIORITY_APPLICANT_LIST_FOUND(HttpStatus.OK, "PRIORITY2001", "우대 신청자 목록을 조회하였습니다."),
+    PRIORITY_APPLICANT_APPROVED(HttpStatus.OK, "PRIORITY2002", "해당 사용자에게 우대 신청 승인 및 주차 공간 배정을 완료했습니다."),
+
 
     //  가중치정보 관련
     WEIGHT_DETAIL_FOUND(HttpStatus.OK, "WEIGHTDETAIL2001", "가중치 정보를 조회했습니다."),

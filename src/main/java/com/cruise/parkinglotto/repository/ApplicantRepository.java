@@ -15,7 +15,10 @@ import java.util.Optional;
 public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
 
     @Query("select a.id from Applicant a where a.member.id = :memberId")
-    Optional<Long> findByMember(@Param("memberId") Long memberId);
+    Optional<Long> findIdByMember(@Param("memberId") Long memberId);
+
+    @Query("select a from Applicant a where a.member.id = :memberId")
+    Optional<List<Applicant>> findApplicantListByMemberId(@Param("memberId") Long memberId);
 
     @Query("select a.parkingSpaceId from Applicant a where a.id =:applicantId")
     Optional<Long> findParkingSpaceById(@Param("applicantId") Long applicantId);
@@ -46,6 +49,4 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
     void updateWinningStatus(@Param("winnerId") Long winnerId, @Param("winningStatus") WinningStatus winningStatus);
 
     Page<Applicant> findByDrawId(PageRequest pageRequest, Long drawId);
-
-    Optional<Applicant> findById(Long applicantId);
 }
