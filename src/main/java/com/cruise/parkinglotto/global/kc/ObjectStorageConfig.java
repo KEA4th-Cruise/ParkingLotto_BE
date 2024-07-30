@@ -39,6 +39,12 @@ public class ObjectStorageConfig {
     @Value("${cloud.kc.s3.path.map-image}")
     private String mapImagePath;
 
+    @Value("${cloud.kc.s3.path.general-certificate-docs}")
+    private String generalCertificateDocument;
+
+    @Value("${cloud.kc.s3.path.priority-certificate-docs}")
+    private String priorityCertificateDocument;
+
     @Bean
     public S3Client s3client() {
         return S3Client.builder()

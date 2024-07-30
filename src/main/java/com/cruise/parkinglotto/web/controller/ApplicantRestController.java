@@ -14,6 +14,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 
 @RestController
@@ -41,10 +44,10 @@ public class ApplicantRestController {
 
     @Operation(summary = "사용자가 추첨을 신청하는 api입니다.", description = "")
     @PostMapping("/apply-draw")
-    public ApiResponse<?> drawApply(HttpServletRequest httpServletRequest,
-                                                                                @RequestBody @Valid ApplicantRequestDTO.ApplyDrawRequestDTO applyDrawRequestDTO) {
+    public ApiResponse<?> drawApply(HttpServletRequest httpServletRequest, @RequestPart(value = "certificateDocs", required = true) List<MultipartFile> certificateDocs,
+                                    @RequestPart(value = "applyDrawRequestDTO", required = true) @Valid ApplicantRequestDTO.GeneralApplyDrawRequestDTO applyDrawRequestDTO) {
         String accountId = jwtUtils.getAccountIdFromRequest(httpServletRequest);
-        applicantService.drawApply(applyDrawRequestDTO, accountId);
+        applicantService.drawApply(certificateDocs, applyDrawRequestDTO, accountId);
         return ApiResponse.onSuccess(SuccessStatus.APPLICANT_SUCCESS, null);
     }
 

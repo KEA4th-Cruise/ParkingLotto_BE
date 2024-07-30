@@ -15,21 +15,29 @@ public class ApplicantRequestDTO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class ApplyDrawRequestDTO {
+    public static class GeneralApplyDrawRequestDTO {
         @NotNull
         private Long drawId;
         @NotNull
-        private DrawType drawType;
-
         private String carNum;
+        @NotNull
         private List<CertificateDocsRequestDTO.CertifiCateFileDTO> getCertFileUrlAndNameDTO;
+        private List<CertificateDocsRequestDTO.CertifiCateFileDTO> deleteCertFileUrlAndNameDTO;
+        @NotNull
         private String address;
+        @NotNull
         private Integer trafficCommuteTime;
+        @NotNull
         private Integer carCommuteTime;
+        @NotNull
         private Double distance;
+        @NotNull
         private WorkType workType;
+        @NotNull
         private String userSeed;
+        @NotNull
         private Long firstChoice;
+        @NotNull
         private Long secondChoice;
     }
 

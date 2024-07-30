@@ -2,15 +2,15 @@ package com.cruise.parkinglotto.service.applicantService;
 
 import com.cruise.parkinglotto.domain.*;
 import com.cruise.parkinglotto.domain.enums.DrawStatus;
-import com.cruise.parkinglotto.domain.enums.DrawType;
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import com.cruise.parkinglotto.domain.enums.WorkType;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
+import com.cruise.parkinglotto.global.kc.ObjectStorageConfig;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
 import com.cruise.parkinglotto.repository.*;
 import com.cruise.parkinglotto.service.drawService.DrawService;
 import com.cruise.parkinglotto.web.converter.ApplicantConverter;
-import com.cruise.parkinglotto.web.dto.CertificateDocsDTO.CertificateDocsRequestDTO;
+import com.cruise.parkinglotto.web.dto.CertificateDocsDTO.CertificateDocsRequestDTO.CertifiCateFileDTO;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantRequestDTO;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +18,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import com.cruise.parkinglotto.global.kc.ObjectStorageService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.cruise.parkinglotto.web.converter.CertificateDocsConverter.toCertificateDocs;
 
@@ -35,6 +38,8 @@ public class ApplicantServiceImpl implements ApplicantService {
     private final CertificateDocsRepository certificateDocsRepository;
     private final WeightDetailsRepository weightDetailsRepository;
     private final DrawService drawService;
+    private final ObjectStorageService objectStorageService;
+    private final ObjectStorageConfig objectStorageConfig;
 
     @Override
     @Transactional(readOnly = true)
@@ -56,7 +61,7 @@ public class ApplicantServiceImpl implements ApplicantService {
 
     @Override
     @Transactional
-    public void drawApply(ApplicantRequestDTO.ApplyDrawRequestDTO applyDrawRequestDTO, String accountId) {
+    public void drawApply(List<MultipartFile> certificateDocuments, ApplicantRequestDTO.GeneralApplyDrawRequestDTO applyDrawRequestDTO, String accountId) {
         Draw draw = drawRepository.findById(applyDrawRequestDTO.getDrawId()).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
 
         if (draw.getStatus() != DrawStatus.OPEN) {
@@ -79,79 +84,54 @@ public class ApplicantServiceImpl implements ApplicantService {
         Optional<WeightDetails> weightDetailsOptional = weightDetailsRepository.findByMemberId(member.getId());
 
         //Handling carNum
-        String carNum;
-        if (applyDrawRequestDTO.getCarNum() != null) {
-            carNum = applyDrawRequestDTO.getCarNum();
-            memberRepository.updateCarNum(member.getId(), carNum);
-        } else if (member.getCarNum() == null) {
-            throw new ExceptionHandler(ErrorStatus.APPLICANT_CAR_NUM_NOT_FOUND);
-        }
+        String carNum = applyDrawRequestDTO.getCarNum();
+        memberRepository.updateCarNum(member.getId(), carNum);
 
         //Handling CertFile
-        if (applyDrawRequestDTO.getGetCertFileUrlAndNameDTO() != null) {
-            List<CertificateDocsRequestDTO.CertifiCateFileDTO> certFileDTOList = applyDrawRequestDTO.getGetCertFileUrlAndNameDTO();
-            List<CertificateDocs> certificateDocsList = toCertificateDocs(certFileDTOList, member);
-            certificateDocsRepository.saveAll(certificateDocsList);
+        List<CertifiCateFileDTO> deleteCertificateDocumentationInfomationList = applyDrawRequestDTO.getDeleteCertFileUrlAndNameDTO();
+
+        if (deleteCertificateDocumentationInfomationList != null && !deleteCertificateDocumentationInfomationList.isEmpty()) {
+            List<String> fileUrlsToDelete = deleteCertificateDocumentationInfomationList.stream()
+                    .map(CertifiCateFileDTO::getFileUrl)
+                    .collect(Collectors.toList());
+            certificateDocsRepository.deleteAllByFileUrlIn(fileUrlsToDelete);
+
+            for (CertifiCateFileDTO deleteCertificateFile : deleteCertificateDocumentationInfomationList) {
+                objectStorageService.deleteObject(deleteCertificateFile.getFileUrl());
+            }
         }
-        List<CertificateDocs> certificateDocsList = certificateDocsRepository.findByMemberId(member.getId());
-        if (certificateDocsList.isEmpty()) {
-            throw new ExceptionHandler(ErrorStatus.APPLICANT_CERT_DOCUMENT_NOT_FOUND);
+
+        List<CertifiCateFileDTO> createCertificateFileDTOList = applyDrawRequestDTO.getGetCertFileUrlAndNameDTO();
+        List<CertificateDocs> createCertificateDocumentsInfomationList = toCertificateDocs(createCertificateFileDTOList, member);
+
+        if (createCertificateDocumentsInfomationList.size() != certificateDocuments.size()) {
+            throw new ExceptionHandler(ErrorStatus._BAD_REQUEST);
         }
+
+        for (int i = 0; i < createCertificateDocumentsInfomationList.size(); i++) {
+            CertificateDocs certificateDoc = createCertificateDocumentsInfomationList.get(i);
+            String uploadFileUrl = certificateDoc.getFileUrl();
+            MultipartFile certificateDocumentFile = certificateDocuments.get(i);
+            objectStorageService.uploadObject(objectStorageConfig.getGeneralCertificateDocument(), uploadFileUrl, certificateDocumentFile);
+        }
+
+        certificateDocsRepository.saveAll(createCertificateDocumentsInfomationList);
+
 
         //Handling address
-        String address;
-        Integer trafficCommuteTime;
-        Integer carCommuteTime;
-        Double distance;
-        if (applyDrawRequestDTO.getAddress() != null && applyDrawRequestDTO.getCarCommuteTime() != null && applyDrawRequestDTO.getTrafficCommuteTime() != null && applyDrawRequestDTO.getDistance() != null) {
-            address = applyDrawRequestDTO.getAddress();
-            carCommuteTime = applyDrawRequestDTO.getCarCommuteTime();
-            trafficCommuteTime = applyDrawRequestDTO.getTrafficCommuteTime();
-            distance = applyDrawRequestDTO.getDistance();
-            weightDetailsRepository.updateAddress(member, address);
-        } else {
-            if (weightDetailsOptional.isEmpty()) {
-                throw new ExceptionHandler(ErrorStatus.WEIGHTDETAILS_NOT_FOUND);
-            }
-            WeightDetails weightDetails = weightDetailsOptional.get();
-
-            if (weightDetails.getAddress() != null && weightDetails.getCarCommuteTime() != null && weightDetails.getTrafficCommuteTime() != null && weightDetails.getDistance() != null) {
-                carCommuteTime = weightDetails.getCarCommuteTime();
-                trafficCommuteTime = weightDetails.getTrafficCommuteTime();
-                distance = weightDetails.getDistance();
-            } else {
-                throw new ExceptionHandler(ErrorStatus.WEIGHTDETAILS_ADDRESS_NOT_FOUND);
-            }
-        }
+        String address = applyDrawRequestDTO.getAddress();
+        Integer carCommuteTime = applyDrawRequestDTO.getCarCommuteTime();
+        Integer trafficCommuteTime = applyDrawRequestDTO.getTrafficCommuteTime();
+        Double distance = applyDrawRequestDTO.getDistance();
+        weightDetailsRepository.updateAddress(member, address);
 
         //Handling workType
-        WorkType workType;
-        if (applyDrawRequestDTO.getWorkType() != null) {
-            workType = applyDrawRequestDTO.getWorkType();
-        } else {
-            if (weightDetailsOptional.isEmpty()) {
-                throw new ExceptionHandler(ErrorStatus.WEIGHTDETAILS_NOT_FOUND);
-            }
-            WeightDetails weightDetails = weightDetailsOptional.get();
-
-            if (weightDetails.getWorkType() != null) {
-                workType = weightDetails.getWorkType();
-            } else {
-                throw new ExceptionHandler(ErrorStatus.WEIGHTDETAILS_WORKTYPE_NOT_FOUND);
-            }
-        }
+        WorkType workType = applyDrawRequestDTO.getWorkType();
 
         //Handling userSeed when drawType is general
-        String userSeed = null;
-        if (applyDrawRequestDTO.getDrawType() == DrawType.GENERAL) {
-            if (applyDrawRequestDTO.getUserSeed() == null) {
-                throw new ExceptionHandler(ErrorStatus.WEIGHTDETAILS_USER_SEED_NOT_FOUND);
-            } else {
-                userSeed = applyDrawRequestDTO.getUserSeed();
-                if (userSeed.length() > 1) {
-                    throw new ExceptionHandler(ErrorStatus.WEIGHTDETAILS_TOO_LONG_USER_SEED);
-                }
-            }
+        String userSeed = applyDrawRequestDTO.getUserSeed();
+        if (userSeed.length() > 1) {
+            throw new ExceptionHandler(ErrorStatus.WEIGHTDETAILS_TOO_LONG_USER_SEED);
         }
 
         //recentLossCount
@@ -163,27 +143,19 @@ public class ApplicantServiceImpl implements ApplicantService {
             recentLossCount = weightDetails.getRecentLossCount();
         }
 
-        //Choice
-        if (applyDrawRequestDTO.getFirstChoice() == null && applyDrawRequestDTO.getSecondChoice() == null && applyDrawRequestDTO.getDrawType() == DrawType.GENERAL) {
-            throw new ExceptionHandler(ErrorStatus.APPLICANT_WORK_TYPE_NOT_FOUND);
-        }
 
         WinningStatus winningStatus = WinningStatus.PENDING;
 
-        if (applyDrawRequestDTO.getDrawType() == DrawType.PRIORITY) {
-            Applicant applicant = ApplicantConverter.makeInitialPriorityApplicantObject(member, draw, winningStatus, distance, workType, trafficCommuteTime, carCommuteTime, recentLossCount);
-            applicantRepository.save(applicant);
-        } else {
-            Applicant applicant = ApplicantConverter.makeInitialApplicantObject(member, draw, winningStatus, userSeed, applyDrawRequestDTO.getFirstChoice(), applyDrawRequestDTO.getSecondChoice(), distance, workType, trafficCommuteTime, carCommuteTime, recentLossCount);
-            Applicant toGetApplicantId = applicantRepository.save(applicant);
+        Applicant applicant = ApplicantConverter.makeInitialApplicantObject(member, draw, winningStatus, userSeed, applyDrawRequestDTO.getFirstChoice(), applyDrawRequestDTO.getSecondChoice(), distance, workType, trafficCommuteTime, carCommuteTime, recentLossCount);
+        Applicant toGetApplicantId = applicantRepository.save(applicant);
 
-            //userSeedIndex 배정
-            Integer maxUserSeedIndex = applicantRepository.findMaxUserSeedIndexByDraw(draw);
-            Integer newUserSeedIndex = maxUserSeedIndex + 1;
-            applicantRepository.updateUserSeedIndex(toGetApplicantId.getId(), newUserSeedIndex);
+        //userSeedIndex 배정
+        Integer maxUserSeedIndex = applicantRepository.findMaxUserSeedIndexByDraw(draw);
+        Integer newUserSeedIndex = maxUserSeedIndex + 1;
+        applicantRepository.updateUserSeedIndex(toGetApplicantId.getId(), newUserSeedIndex);
 
-            //weight 계산 및 입력
-            drawService.calculateWeight(applicant);
-        }
+        //weight 계산 및 입력
+        drawService.calculateWeight(applicant);
+
     }
 }
