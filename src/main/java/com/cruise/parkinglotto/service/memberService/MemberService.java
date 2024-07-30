@@ -16,4 +16,6 @@ public interface MemberService {
     // 로그아웃
     MemberResponseDTO.LogoutResponseDTO logout(MemberRequestDTO.LogoutRequestDTO logoutRequestDTO);
 
+    Long getMemberIdByAccountId(String accountId);
+
 }
