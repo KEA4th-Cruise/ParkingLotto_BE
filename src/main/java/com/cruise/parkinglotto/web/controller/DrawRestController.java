@@ -20,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class DrawRestController {
     private final DrawService drawService;
-    private final HttpServletRequest httpServletRequest;
 
     //추첨 실행 후 결과 저장하는 API
     @Operation(summary = "추첨 실행 API", description = "path variable로 추첨 ID를 넘겨주면 해당 추첨을 실행합니다.")
@@ -70,5 +69,11 @@ public class DrawRestController {
     public ApiResponse<DrawResponseDTO.SimulateDrawResponseDTO> simulateDraw(@PathVariable("drawId") Long drawId, @RequestParam("seedNum") String seedNum, @RequestParam("page") Integer page) {
         DrawResponseDTO.SimulateDrawResponseDTO simulateDrawResponseDTO = drawService.simulateDraw(drawId, seedNum, page);
         return ApiResponse.onSuccess(SuccessStatus.DRAW_SIMULATE_COMPLETED, simulateDrawResponseDTO);
+    }
+    @Operation(summary = "(메인페이지용) 추첨정보, 추첨 경쟁률, 주차구역 별 경쟁률, 로그인한 사용자의 신청 여부를 반환하는 API입니다.", description = "진행 중인 추첨이 일반 신청일 경우 [추첨정보, 경쟁률, 주차구역 별 경쟁률]을 반환하고, 우대신청일 경우 [추첨정보]를 반환합니다.")
+    @GetMapping("/overview")
+    public ApiResponse<DrawResponseDTO.GetDrawInfoResultDTO> getDrawInfo(HttpServletRequest httpServletRequest){
+        DrawResponseDTO.GetDrawInfoResultDTO getDrawInfoResultDTO = drawService.getDrawInfo(httpServletRequest);
+        return ApiResponse.onSuccess(SuccessStatus.DRAW_OVERVIEW_FOUND, getDrawInfoResultDTO);
     }
 }
