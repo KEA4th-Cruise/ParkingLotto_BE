@@ -41,8 +41,8 @@ public class ApplicantServiceImpl implements ApplicantService {
     public ApplicantResponseDTO.ApprovePriorityResultDTO approvePriority(Long drawId, Long applicantId) {
         Applicant applicant = applicantRepository.findById(applicantId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND));
         ParkingSpace parkingSpace = parkingSpaceRepository.findParkingSpaceByDrawId(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.PARKING_SPACE_NOT_FOUND));
-        parkingSpace.decrementSlots( );
-        applicant.approveParkingSpaceToPriority(parkingSpace.getId( ), WinningStatus.WINNER, 0);
+        parkingSpace.decrementSlots();
+        applicant.approveParkingSpaceToPriority(parkingSpace.getId(), WinningStatus.WINNER, 0);
         return ApplicantConverter.toApprovePriorityResultDTO(parkingSpace);
     }
 
@@ -51,9 +51,9 @@ public class ApplicantServiceImpl implements ApplicantService {
     public List<ApplicantResponseDTO.GetMyApplyResultDTO> getApplyResultList(Long memberId) {
 
         List<Applicant> findApplicants = applicantRepository.findApplicantListByMemberId(memberId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND));
-        List<ApplicantResponseDTO.GetMyApplyResultDTO> result = findApplicants.stream( )
+        List<ApplicantResponseDTO.GetMyApplyResultDTO> result = findApplicants.stream()
                 .map(a -> ApplicantConverter.toGetMyApplyResultDTO(a))
-                .collect(Collectors.toList( ));
+                .collect(Collectors.toList());
 
         return result;
 

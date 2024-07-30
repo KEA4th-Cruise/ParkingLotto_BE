@@ -20,7 +20,7 @@ public class ParkingSpaceRestController {
     @PostMapping("/{drawId}")
     public ApiResponse<ParkingSpaceResponseDTO.AddParkingSpaceResultDTO> addParkingSpace(@PathVariable Long drawId,
                                                                                          @RequestPart(value = "floorPlanImage", required = true) MultipartFile floorPlanImage,
-                                                                                         @RequestPart(value = "addParkingSpaceDTO", required = true)ParkingSpaceRequestDTO.AddParkingSpaceDTO addParkingSpaceDTO) {
+                                                                                         @RequestPart(value = "addParkingSpaceDTO", required = true) ParkingSpaceRequestDTO.AddParkingSpaceDTO addParkingSpaceDTO) {
         ParkingSpace parkingSpace = parkingSpaceService.addParkingSpace(drawId, floorPlanImage, addParkingSpaceDTO);
         return ApiResponse.onSuccess(SuccessStatus.PARKING_SPACE_ADDED, ParkingSpaceConverter.toAddParkingSpaceResultDTO(parkingSpace));
     }
@@ -28,7 +28,7 @@ public class ParkingSpaceRestController {
     @GetMapping("/myspace/{memberId}")
     public ApiResponse<ParkingSpaceResponseDTO.ParkingSpaceInfoResponseDTO> getParkingSpaceInfo(@PathVariable("memberId") Long memberId) {
 
-        return ApiResponse.onSuccess(SuccessStatus.PARKING_SPACE_INFO_FOUND,parkingSpaceService.findParkingSpaceInfo(memberId));
+        return ApiResponse.onSuccess(SuccessStatus.PARKING_SPACE_INFO_FOUND, parkingSpaceService.findParkingSpaceInfo(memberId));
     }
 
 }

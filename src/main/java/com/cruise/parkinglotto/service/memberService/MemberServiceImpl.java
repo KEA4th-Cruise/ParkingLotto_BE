@@ -70,7 +70,7 @@ public class MemberServiceImpl implements MemberService {
 
         // 등록이 된 사용자인지 아닌지 여부 넘겨줌
         return MemberConverter.toLoginResponseDTO(member, jwtToken);
-        }
+    }
 
     /**
      * 로그아웃 로직
