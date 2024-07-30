@@ -33,13 +33,4 @@ public class ApplicantConverter {
                 .listSize(applicantPage.getSize())
                 .build();
     }
-
-    public static ApplicantResponseDTO.ApprovePriorityResultDTO toApprovePriorityResultDTO(ParkingSpace parkingSpace) {
-        return ApplicantResponseDTO.ApprovePriorityResultDTO.builder()
-                .parkingSpaceId(parkingSpace.getId())
-                .parkingSpaceName(parkingSpace.getName())
-                .remainSlots(parkingSpace.getRemainSlots())
-                .build();
-    }
-
 }

@@ -44,14 +44,4 @@ public class ApplicantResponseDTO {
         Boolean isFirst;
         Boolean isLast;
     }
-
-    @Getter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class ApprovePriorityResultDTO {
-        private Long parkingSpaceId;
-        private String parkingSpaceName;
-        private Integer remainSlots;
-    }
 }
