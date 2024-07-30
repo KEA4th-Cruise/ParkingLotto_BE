@@ -51,6 +51,12 @@ public enum ErrorStatus implements BaseErrorCode {
     WEIGHTDETAILS_USER_SEED_NOT_FOUND(HttpStatus.NOT_FOUND, "WEIGHTDETAILS4004", "입력된 시드가 없습니다."),
     WEIGHTDETAILS_CHOICE_NOT_FOUND(HttpStatus.NOT_FOUND, "WEIGHTDETAILS4005", "입력된 주차 선택지가 없습니다."),
     WEIGHTDETAILS_TOO_LONG_USER_SEED(HttpStatus.BAD_REQUEST, "WEIGHTDETAILS4006", "유효한 신청자의 랜덤 시드는 문자 1개입니다"),
+
+    CERTIFICATEDOCS_NAME_NOT_FOUND(HttpStatus.NOT_FOUND, "CERTIFICATEDOCS4001", "업로드한 문서의 이름이 없습니다."),
+    CERTIFICATEDOCS_NAME_TOO_LONG(HttpStatus.NOT_FOUND, "CERTIFICATEDOCS4002", "업로드한 문서의 이름 너무 깁니다."),
+    CERTIFICATEDOCS_TOO_LARGE(HttpStatus.NOT_FOUND, "CERTIFICATEDOCS4003", "업로드한 문서의 전체 크기가 너무 큽니다."),
+    CERTIFICATEDOCS_FORMAT_NOT_SUPPORTED(HttpStatus.NOT_FOUND, "CERTIFICATEDOCS4004", "업로드한 파일의 형식이 잘못 되었습니다."),
+
     ;
 
 

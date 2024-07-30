@@ -8,8 +8,10 @@ import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
 import com.cruise.parkinglotto.global.kc.ObjectStorageConfig;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
 import com.cruise.parkinglotto.repository.*;
+import com.cruise.parkinglotto.service.certificateDocsService.CertificateDocsService;
 import com.cruise.parkinglotto.service.drawService.DrawService;
 import com.cruise.parkinglotto.web.converter.ApplicantConverter;
+import com.cruise.parkinglotto.web.converter.CertificateDocsConverter;
 import com.cruise.parkinglotto.web.dto.CertificateDocsDTO.CertificateDocsRequestDTO.CertifiCateFileDTO;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantRequestDTO;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
@@ -24,6 +26,7 @@ import com.cruise.parkinglotto.global.kc.ObjectStorageService;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.ArrayList;
 
 import static com.cruise.parkinglotto.web.converter.CertificateDocsConverter.toCertificateDocs;
 
@@ -40,6 +43,7 @@ public class ApplicantServiceImpl implements ApplicantService {
     private final DrawService drawService;
     private final ObjectStorageService objectStorageService;
     private final ObjectStorageConfig objectStorageConfig;
+    private final CertificateDocsService certificateDocsService;
 
     @Override
     @Transactional(readOnly = true)
@@ -88,35 +92,19 @@ public class ApplicantServiceImpl implements ApplicantService {
         memberRepository.updateCarNum(member.getId(), carNum);
 
         //Handling CertFile
-        List<CertifiCateFileDTO> deleteCertificateDocumentationInfomationList = applyDrawRequestDTO.getDeleteCertFileUrlAndNameDTO();
+        List<MultipartFile> validFiles = new ArrayList<>();
 
-        if (deleteCertificateDocumentationInfomationList != null && !deleteCertificateDocumentationInfomationList.isEmpty()) {
-            List<String> fileUrlsToDelete = deleteCertificateDocumentationInfomationList.stream()
-                    .map(CertifiCateFileDTO::getFileUrl)
-                    .collect(Collectors.toList());
-            certificateDocsRepository.deleteAllByFileUrlIn(fileUrlsToDelete);
+        // 파일 검증
+        certificateDocsService.validateCertificateFiles(certificateDocuments);
 
-            for (CertifiCateFileDTO deleteCertificateFile : deleteCertificateDocumentationInfomationList) {
-                objectStorageService.deleteObject(deleteCertificateFile.getFileUrl());
-            }
+        // 유효한 파일만 업로드 및 정보 저장
+        for (MultipartFile certificateDocument : certificateDocuments) {
+            String fileName = certificateDocument.getOriginalFilename();
+            String fileUrl = objectStorageService.uploadObject(objectStorageConfig.getGeneralCertificateDocument(), fileName, certificateDocument);
+
+            CertificateDocs certificateDocs = CertificateDocsConverter.toCertificateDocument(fileName, fileUrl, member);
+            certificateDocsRepository.save(certificateDocs);
         }
-
-        List<CertifiCateFileDTO> createCertificateFileDTOList = applyDrawRequestDTO.getGetCertFileUrlAndNameDTO();
-        List<CertificateDocs> createCertificateDocumentsInfomationList = toCertificateDocs(createCertificateFileDTOList, member);
-
-        if (createCertificateDocumentsInfomationList.size() != certificateDocuments.size()) {
-            throw new ExceptionHandler(ErrorStatus._BAD_REQUEST);
-        }
-
-        for (int i = 0; i < createCertificateDocumentsInfomationList.size(); i++) {
-            CertificateDocs certificateDoc = createCertificateDocumentsInfomationList.get(i);
-            String uploadFileUrl = certificateDoc.getFileUrl();
-            MultipartFile certificateDocumentFile = certificateDocuments.get(i);
-            objectStorageService.uploadObject(objectStorageConfig.getGeneralCertificateDocument(), uploadFileUrl, certificateDocumentFile);
-        }
-
-        certificateDocsRepository.saveAll(createCertificateDocumentsInfomationList);
-
 
         //Handling address
         String address = applyDrawRequestDTO.getAddress();

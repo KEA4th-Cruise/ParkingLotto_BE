@@ -20,8 +20,6 @@ public class ApplicantRequestDTO {
         private Long drawId;
         @NotNull
         private String carNum;
-        @NotNull
-        private List<CertificateDocsRequestDTO.CertifiCateFileDTO> getCertFileUrlAndNameDTO;
         private List<CertificateDocsRequestDTO.CertifiCateFileDTO> deleteCertFileUrlAndNameDTO;
         @NotNull
         private String address;
