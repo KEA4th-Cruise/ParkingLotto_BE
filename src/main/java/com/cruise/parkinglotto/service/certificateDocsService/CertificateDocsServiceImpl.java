@@ -39,7 +39,7 @@ public class CertificateDocsServiceImpl implements CertificateDocsService {
                 String fileExtension = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
                 totalCertificateFileSize += certificateFile.getSize();
 
-                // 파일 크기와 확장자 검증
+                //확장자 검증
                 if (!ALLOWED_CERTIFICATE_FILE_EXTENSIONS.contains(fileExtension)) {
                     throw new ExceptionHandler(ErrorStatus.CERTIFICATEDOCS_FORMAT_NOT_SUPPORTED);
                 }
