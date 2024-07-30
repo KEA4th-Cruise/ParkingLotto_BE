@@ -10,6 +10,11 @@ import java.util.Optional;
 
 public interface CertificateDocsRepository extends JpaRepository<CertificateDocs, Long> {
     List<CertificateDocs> findByMemberId(Long memberId);
+
     void deleteByMember(Member member);
+
     void deleteAllByFileUrlIn(List<String> fileUrls);
+
+    void deleteByFileUrl(String fileUrl);
+
 }

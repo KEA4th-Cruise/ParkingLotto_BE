@@ -12,9 +12,9 @@ import com.cruise.parkinglotto.service.certificateDocsService.CertificateDocsSer
 import com.cruise.parkinglotto.service.drawService.DrawService;
 import com.cruise.parkinglotto.web.converter.ApplicantConverter;
 import com.cruise.parkinglotto.web.converter.CertificateDocsConverter;
-import com.cruise.parkinglotto.web.dto.CertificateDocsDTO.CertificateDocsRequestDTO.CertifiCateFileDTO;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantRequestDTO;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
+import com.cruise.parkinglotto.web.dto.CertificateDocsDTO.CertificateDocsRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,12 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import com.cruise.parkinglotto.global.kc.ObjectStorageService;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.ArrayList;
-
-import static com.cruise.parkinglotto.web.converter.CertificateDocsConverter.toCertificateDocs;
 
 @Service
 @RequiredArgsConstructor
@@ -85,25 +84,46 @@ public class ApplicantServiceImpl implements ApplicantService {
             throw new ExceptionHandler(ErrorStatus.APPLICANT_DUPLICATED_APPLY);
         }
 
-        Optional<WeightDetails> weightDetailsOptional = weightDetailsRepository.findByMemberId(member.getId());
+        //Handling userSeed when drawType is general
+        String userSeed = applyDrawRequestDTO.getUserSeed();
+        if (userSeed.length() > 1) {
+            throw new ExceptionHandler(ErrorStatus.WEIGHTDETAILS_TOO_LONG_USER_SEED);
+        }
 
         //Handling carNum
         String carNum = applyDrawRequestDTO.getCarNum();
         memberRepository.updateCarNum(member.getId(), carNum);
 
         //Handling CertFile
-        List<MultipartFile> validFiles = new ArrayList<>();
 
-        // 파일 검증
-        certificateDocsService.validateCertificateFiles(certificateDocuments);
+        //업로드 할 파일 검증
+        if (certificateDocuments != null) {
+            certificateDocsService.validateCertificateFiles(certificateDocuments);
+        }
 
-        // 유효한 파일만 업로드 및 정보 저장
-        for (MultipartFile certificateDocument : certificateDocuments) {
-            String fileName = certificateDocument.getOriginalFilename();
-            String fileUrl = objectStorageService.uploadObject(objectStorageConfig.getGeneralCertificateDocument(), fileName, certificateDocument);
+        //deleteCertFiles
+        List<CertificateDocsRequestDTO.CertifiCateFileDTO> deleteCertificatFileUrlAndNameDTO = applyDrawRequestDTO.getDeleteCertFileUrlAndNameDTO();
 
-            CertificateDocs certificateDocs = CertificateDocsConverter.toCertificateDocument(fileName, fileUrl, member);
-            certificateDocsRepository.save(certificateDocs);
+        //지울 정보(fileUrl)가 버킷에 있는지 확인 및 mysql에 있는 지울 정보 삭제
+        if (deleteCertificatFileUrlAndNameDTO != null) {
+            certificateDocsService.checkCertificateFileUrlsInBucket(deleteCertificatFileUrlAndNameDTO);
+            certificateDocsService.deleteCertificateDocsInMySql(deleteCertificatFileUrlAndNameDTO);
+
+            //버킷에서 정보 삭제
+            for (CertificateDocsRequestDTO.CertifiCateFileDTO fileDTO : deleteCertificatFileUrlAndNameDTO) {
+                String fileUrl = fileDTO.getFileUrl();
+                objectStorageService.deleteObject(fileUrl);
+            }
+        }
+
+        //uploadCertFiles
+        if (certificateDocuments != null) {
+            for (MultipartFile certificateDocument : certificateDocuments) {
+                String fileName = certificateDocument.getOriginalFilename();
+                String fileUrl = objectStorageService.uploadObject(objectStorageConfig.getGeneralCertificateDocument(), fileName, certificateDocument);
+                CertificateDocs certificateDocs = CertificateDocsConverter.toCertificateDocument(fileUrl, fileName, member);
+                certificateDocsRepository.save(certificateDocs);
+            }
         }
 
         //Handling address
@@ -116,13 +136,9 @@ public class ApplicantServiceImpl implements ApplicantService {
         //Handling workType
         WorkType workType = applyDrawRequestDTO.getWorkType();
 
-        //Handling userSeed when drawType is general
-        String userSeed = applyDrawRequestDTO.getUserSeed();
-        if (userSeed.length() > 1) {
-            throw new ExceptionHandler(ErrorStatus.WEIGHTDETAILS_TOO_LONG_USER_SEED);
-        }
-
         //recentLossCount
+        Optional<WeightDetails> weightDetailsOptional = weightDetailsRepository.findByMemberId(member.getId());
+
         Integer recentLossCount;
         if (weightDetailsOptional.isEmpty()) {
             recentLossCount = 0;
@@ -130,7 +146,6 @@ public class ApplicantServiceImpl implements ApplicantService {
             WeightDetails weightDetails = weightDetailsOptional.get();
             recentLossCount = weightDetails.getRecentLossCount();
         }
-
 
         WinningStatus winningStatus = WinningStatus.PENDING;
 

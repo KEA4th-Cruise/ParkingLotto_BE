@@ -2,6 +2,7 @@ package com.cruise.parkinglotto.web.controller;
 
 import com.cruise.parkinglotto.domain.Applicant;
 import com.cruise.parkinglotto.global.jwt.JwtUtils;
+import com.cruise.parkinglotto.global.kc.ObjectStorageService;
 import com.cruise.parkinglotto.global.response.ApiResponse;
 import com.cruise.parkinglotto.global.response.code.status.SuccessStatus;
 import com.cruise.parkinglotto.service.applicantService.ApplicantService;
@@ -44,7 +45,7 @@ public class ApplicantRestController {
 
     @Operation(summary = "사용자가 일반 추첨을(GENERAL) 신청하는 api입니다.", description = "파일 리스트와 적절한 DTO를 인터페이스 명세서를 참조해서 넣어주세요.")
     @PostMapping("/apply/general")
-    public ApiResponse<?> drawApply(HttpServletRequest httpServletRequest, @RequestPart(value = "certificateDocs", required = true) List<MultipartFile> certificateDocs,
+    public ApiResponse<?> drawApply(HttpServletRequest httpServletRequest, @RequestPart(value = "certificateDocs", required = false) List<MultipartFile> certificateDocs,
                                     @RequestPart(value = "applyDrawRequestDTO", required = true) @Valid ApplicantRequestDTO.GeneralApplyDrawRequestDTO applyDrawRequestDTO) {
         String accountId = jwtUtils.getAccountIdFromRequest(httpServletRequest);
         applicantService.drawApply(certificateDocs, applyDrawRequestDTO, accountId);

@@ -1,7 +1,10 @@
 package com.cruise.parkinglotto.service.certificateDocsService;
 
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
+import com.cruise.parkinglotto.global.kc.ObjectStorageService;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
+import com.cruise.parkinglotto.repository.CertificateDocsRepository;
+import com.cruise.parkinglotto.web.dto.CertificateDocsDTO.CertificateDocsRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,6 +15,9 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class CertificateDocsServiceImpl implements CertificateDocsService {
+
+    private final ObjectStorageService objectStorageService;
+    private final CertificateDocsRepository certificateDocsRepository;
 
     // 100MB
     private static final long MAX_TOTAL_CERTIFICATE_FILE_SIZE = 104857600L;
@@ -43,6 +49,24 @@ public class CertificateDocsServiceImpl implements CertificateDocsService {
         //모든 파일의 전체 크기 검증
         if (totalCertificateFileSize > MAX_TOTAL_CERTIFICATE_FILE_SIZE) {
             throw new ExceptionHandler(ErrorStatus.CERTIFICATEDOCS_TOO_LARGE);
+        }
+    }
+
+    @Override
+    public void checkCertificateFileUrlsInBucket(List<CertificateDocsRequestDTO.CertifiCateFileDTO> certificateFileDTOs) throws ExceptionHandler {
+        for (CertificateDocsRequestDTO.CertifiCateFileDTO fileDTO : certificateFileDTOs) {
+            String fileUrl = fileDTO.getFileUrl();
+            if (!objectStorageService.doesObjectUrlExist(fileUrl)) {
+                throw new ExceptionHandler(ErrorStatus.APPLICANT_CERT_DOCUMENT_NOT_FOUND);
+            }
+        }
+    }
+
+    @Override
+    public void deleteCertificateDocsInMySql(List<CertificateDocsRequestDTO.CertifiCateFileDTO> certificateFileDTOs) throws ExceptionHandler {
+        for (CertificateDocsRequestDTO.CertifiCateFileDTO fileDTO : certificateFileDTOs) {
+            String fileUrl = fileDTO.getFileUrl();
+            certificateDocsRepository.deleteByFileUrl(fileUrl);
         }
     }
 }
