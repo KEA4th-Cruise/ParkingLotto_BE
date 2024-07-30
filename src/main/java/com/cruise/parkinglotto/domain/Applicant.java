@@ -68,4 +68,12 @@ public class Applicant extends BaseEntity {
         this.winningStatus = winningStatus;
         this.reserveNum = reserveNum;
     }
+
+    public void assignRandomNumber(double randomNumber) {
+        this.randomNumber = randomNumber;
+    }
+
+    public void updateTotalWeightedScore(double weightedTotalScore) {
+        this.weightedTotalScore = weightedTotalScore;
+    }
 }
