@@ -4,15 +4,19 @@ import com.cruise.parkinglotto.domain.Applicant;
 import com.cruise.parkinglotto.domain.Draw;
 import com.cruise.parkinglotto.domain.ParkingSpace;
 import com.cruise.parkinglotto.domain.enums.WorkType;
+import com.cruise.parkinglotto.service.drawService.DrawServiceImpl;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import com.cruise.parkinglotto.domain.enums.DrawStatus;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawRequestDTO;
 import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
 import lombok.RequiredArgsConstructor;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
+import com.cruise.parkinglotto.web.dto.drawDTO.SimulationData;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
@@ -91,6 +95,15 @@ public class DrawConverter {
                 .usageStartAt(draw.getUsageStartAt())
                 .usageEndAt(draw.getUsageEndAt())
                 .parkingSpacePreviewListDTO(ParkingSpaceConverter.toParkingSpacePreviewListDTO(parkingSpaceList))
+                .build();
+    }
+
+    public static DrawResponseDTO.SimulateDrawResponseDTO toSimulateDrawResponseDTO(Long drawId, String seed, Map<Long, SimulationData> simulationDataMap, List<DrawResponseDTO.SimulateApplicantDTO> pagedApplicants, int totalApplicants) {
+        return DrawResponseDTO.SimulateDrawResponseDTO.builder()
+                .drawId(drawId)
+                .seed(seed)
+                .winners(pagedApplicants)
+                .totalApplicants(totalApplicants)
                 .build();
     }
 }

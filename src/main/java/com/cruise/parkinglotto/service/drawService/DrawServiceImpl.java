@@ -15,8 +15,9 @@ import com.cruise.parkinglotto.service.memberService.MemberService;
 import com.cruise.parkinglotto.web.converter.DrawConverter;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawRequestDTO;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
+import com.cruise.parkinglotto.web.dto.drawDTO.SimulationData;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -57,32 +58,36 @@ public class DrawServiceImpl implements DrawService {
     @Override
     @Transactional
     public void executeDraw(Long drawId) {
-        Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
+        try {
+            Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
 
-        if (draw.getStatus() == DrawStatus.COMPLETED) {
-            throw new ExceptionHandler(ErrorStatus.DRAW_ALREADY_EXECUTED);
+            if (draw.getStatus() == DrawStatus.COMPLETED) {
+                throw new ExceptionHandler(ErrorStatus.DRAW_ALREADY_EXECUTED);
+            }
+            if (draw.getStatus() != DrawStatus.CLOSED) {
+                throw new ExceptionHandler(ErrorStatus.DRAW_NOT_READY);
+            }
+            updateSeedNum(drawId);
+            String seed = draw.getSeedNum();
+            if (seed == null) {
+                throw new ExceptionHandler(ErrorStatus.SEED_NOT_FOUND);
+            }
+            assignRandomNumber(drawId, seed);
+            List<Applicant> applicants = applicantRepository.findByDrawId(drawId);
+            for (Applicant applicant : applicants) {
+                calculateWeight(applicant);
+            }
+            List<Applicant> orderedApplicants = weightedRandomSelectionAll(applicants, new Random(seed.hashCode()));
+
+            handleDrawResults(drawId, orderedApplicants);
+
+            drawRepository.updateStatus(drawId, DrawStatus.COMPLETED);
+        } catch (Exception e) {
+            log.error("Error occurred during executeDraw for drawId: {}", drawId, e);
+            throw e;
+        } finally {
+            log.info("Transaction committed for drawId: {}", drawId);
         }
-        if (draw.getStatus() != DrawStatus.CLOSED) {
-            throw new ExceptionHandler(ErrorStatus.DRAW_NOT_READY);
-        }
-        //해당 회차 시드 생성
-        updateSeedNum(drawId);
-        //시드 번호 가져오기
-        String seed = draw.getSeedNum();
-        //신청자들에게 난수 부여
-        assignRandomNumber(drawId, seed);
-        //신청자 목록 가져오기
-        List<Applicant> applicants = applicantRepository.findByDrawId(drawId);
-        //가중치 계산하기
-        for (Applicant applicant : applicants) {
-            calculateWeight(applicant);
-        }
-        //순서 매기기
-        List<Applicant> orderedApplicants = weightedRandomSelectionAll(applicants, new Random(seed.hashCode()));
-        //당첨자 및 예비번호 부여
-        handleDrawResults(drawId, orderedApplicants);
-        //추첨 상태를 종료로 변경
-        drawRepository.updateStatus(drawId, DrawStatus.COMPLETED);
     }
 
     @Override
@@ -90,7 +95,7 @@ public class DrawServiceImpl implements DrawService {
     public void updateSeedNum(Long drawId) {
         try {
             //추첨에 대한 예외처리
-            drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
+            Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
 
             List<Applicant> applicants = applicantRepository.findByDrawId(drawId);
 
@@ -100,7 +105,7 @@ public class DrawServiceImpl implements DrawService {
             String seed = applicants.stream()
                     .map(Applicant::getUserSeed)
                     .collect(Collectors.joining());
-            drawRepository.updateSeedNum(drawId, seed);
+            draw.updateSeedNum(seed);
         } catch (IllegalArgumentException e) {
             System.err.println("Error : " + e.getMessage());
         } catch (Exception e) {
@@ -118,12 +123,12 @@ public class DrawServiceImpl implements DrawService {
         //해당 회차 시드로 생성된 첫 난수를 맨 처음 멤버에게 부여
         Random random = new Random(seed.hashCode());
         double randomNumber = random.nextDouble();
-        applicantRepository.assignRandomNumber(applicants.get(0).getId(), randomNumber);
+        applicants.get(0).assignRandomNumber(randomNumber);
         //해당 난수를 시드로 하여 모든 신청자들에게 난수 부여
         for (int i = 1; i < applicants.size(); i++) {
             random = new Random(Double.doubleToLongBits(randomNumber));
             randomNumber = random.nextDouble();
-            applicantRepository.assignRandomNumber(applicants.get(i).getId(), randomNumber);
+            applicants.get(i).assignRandomNumber(randomNumber);
         }
     }
 
@@ -243,7 +248,7 @@ public class DrawServiceImpl implements DrawService {
                     * (1 - Math.exp(-0.7 * (recentLossCount - 3)));
         }
         // 가중치 점수를 Applicant 객체에 설정
-        applicantRepository.updateWeightedTotalScore(applicant.getId(), weight);
+        applicant.updateTotalWeightedScore(weight);
     }
 
     //예비번호 부여 로직 및 예비번호를 받는 즉시 연속 낙첨 횟수 증가
@@ -377,5 +382,162 @@ public class DrawServiceImpl implements DrawService {
 
         });
         drawRepository.deleteAll(unconfirmedDrawList);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public DrawResponseDTO.SimulateDrawResponseDTO simulateDraw(Long drawId, String seed, Integer page) {
+
+        int pageSize = 15;
+        int offset = (page - 1) * pageSize;
+
+        List<Applicant> applicants = applicantRepository.findByDrawId(drawId);
+        if (applicants == null || applicants.isEmpty()) {
+            throw new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND);
+        }
+
+        // 시뮬레이션 데이터를 저장할 HashMap 생성
+        Map<Long, SimulationData> simulationDataMap = new HashMap<>();
+        Map<Long, Applicant> applicantMap = applicants.stream()
+                .collect(Collectors.toMap(Applicant::getId, applicant -> applicant));
+
+        // 가중치 정보 가져오기
+        for (Applicant applicant : applicants) {
+            simulationDataMap.put(applicant.getId(), new SimulationData(0.0, applicant.getWeightedTotalScore(), -1L, -1, WinningStatus.PENDING));
+        }
+
+        // 주어진 시드로 난수 부여하기
+        // 주어진 시드로 첫 번째 신청자에게 난수 부여
+        Random random = new Random(seed.hashCode());
+        double randomNumber = random.nextDouble();
+        simulationDataMap.get(applicants.get(0).getId()).setRandomNumber(randomNumber);
+
+        // 첫 번째 난수를 시드로 하여 나머지 신청자들에게 난수 부여
+        for (int i = 1; i < applicants.size(); i++) {
+            random = new Random(Double.doubleToLongBits(randomNumber));
+            randomNumber = random.nextDouble();
+            simulationDataMap.get(applicants.get(i).getId()).setRandomNumber(randomNumber);
+        }
+
+        // 가중치 랜덤 선택 메서드
+        List<Applicant> orderedApplicants = weightedRandomSelectionAll(new ArrayList<>(applicants), new Random(seed.hashCode()));
+
+        List<ParkingSpace> parkingSpaces = parkingSpaceRepository.findByDrawId(drawId);
+        int totalSlots = parkingSpaces.stream().mapToInt(ParkingSpace::getSlots).sum();
+
+        List<Applicant> selectedWinners = new ArrayList<>();
+        List<Applicant> reserveApplicants = new ArrayList<>();
+        for (int i = 0; i < orderedApplicants.size(); i++) {
+            Applicant applicant = orderedApplicants.get(i);
+            SimulationData simData = simulationDataMap.get(applicant.getId());
+            if (i < totalSlots) {
+                selectedWinners.add(applicant);
+                simData.setWinningStatus(WinningStatus.WINNER);
+            } else {
+                reserveApplicants.add(applicant);
+                simData.setWinningStatus(WinningStatus.RESERVE);
+            }
+        }
+        // 주차 공간 할당 로직
+        Map<Long, Integer> zoneCapacityMap = parkingSpaces.stream()
+                .collect(Collectors.toMap(ParkingSpace::getId, ParkingSpace::getSlots));
+
+        Map<Long, List<Applicant>> zoneAssignments = new HashMap<>();
+        for (Long zone : zoneCapacityMap.keySet()) {
+            zoneAssignments.put(zone, new ArrayList<>());
+        }
+
+        for (Applicant winner : selectedWinners) {
+            Long assignedZone = null;
+
+            // 첫 번째 선택지에 자리 확인 및 할당
+            if (zoneCapacityMap.get(winner.getFirstChoice()) > 0) {
+                zoneAssignments.get(winner.getFirstChoice()).add(winner);
+                assignedZone = winner.getFirstChoice();
+            }
+            // 첫 번째 선택지에 자리가 없으면 두 번째 선택지 확인 및 할당
+            else if (zoneCapacityMap.get(winner.getSecondChoice()) > 0) {
+                zoneAssignments.get(winner.getSecondChoice()).add(winner);
+                assignedZone = winner.getSecondChoice();
+            }
+            // 두 번째 선택지에 자리가 없으면 나머지 구역에서 자리 확인 및 할당
+            else {
+                for (Long zone : zoneCapacityMap.keySet()) {
+                    if (zoneCapacityMap.get(zone) > 0) {
+                        zoneAssignments.get(zone).add(winner);
+                        assignedZone = zone;
+                        break;
+                    }
+                }
+            }
+
+            System.out.println("winner = " + winner.getId() + " assigned Zone = " + assignedZone);
+            if (assignedZone != null) {
+                SimulationData simData = simulationDataMap.get(winner.getId());
+                simData.setParkingSpaceId(assignedZone);
+                zoneCapacityMap.put(assignedZone, zoneCapacityMap.get(assignedZone) - 1);
+            } else {
+                log.error("No available parking space for winner = " + winner.getId());
+            }
+        }
+        // 예비자에게 예비번호 부여하기
+        int waitListNumber = 1;
+        for (Applicant applicant : reserveApplicants) {
+            SimulationData simData = simulationDataMap.get(applicant.getId());
+            simData.setReserveNum(waitListNumber++);
+        }
+        // 모든 응모자를 포함하는 DTO 리스트 생성
+        List<DrawResponseDTO.SimulateApplicantDTO> allApplicantsDTO = new ArrayList<>();
+        for (Applicant applicant : selectedWinners) {
+            SimulationData simData = simulationDataMap.get(applicant.getId());
+            allApplicantsDTO.add(DrawResponseDTO.SimulateApplicantDTO.builder()
+                    .id(applicant.getId())
+                    .name(maskName(applicant.getMember().getNameKo()))
+                    .weightedTotalScore(Double.parseDouble(String.format("%.1f", simData.getTotalWeightScore())))
+                    .randomNumber(simData.getRandomNumber())
+                    .parkingSpaceId(simData.getParkingSpaceId())
+                    .reserveNum(simData.getReserveNum())
+                    .winningStatus(simData.getWinningStatus())
+                    .build());
+        }
+        for (Applicant applicant : reserveApplicants) {
+            SimulationData simData = simulationDataMap.get(applicant.getId());
+            allApplicantsDTO.add(DrawResponseDTO.SimulateApplicantDTO.builder()
+                    .id(applicant.getId())
+                    .name(maskName(applicant.getMember().getNameKo()))
+                    .weightedTotalScore(Double.parseDouble(String.format("%.1f", simData.getTotalWeightScore())))
+                    .randomNumber(simData.getRandomNumber())
+                    .parkingSpaceId(simData.getParkingSpaceId())
+                    .reserveNum(simData.getReserveNum())
+                    .winningStatus(simData.getWinningStatus())
+                    .build());
+        }
+
+        // 페이징 처리
+        int start = Math.min(offset, allApplicantsDTO.size());
+        int end = Math.min((offset + pageSize), allApplicantsDTO.size());
+
+        List<DrawResponseDTO.SimulateApplicantDTO> pagedApplicants = allApplicantsDTO.subList(start, end);
+        return DrawConverter.toSimulateDrawResponseDTO(drawId, seed, simulationDataMap, pagedApplicants, allApplicantsDTO.size());
+    }
+
+    //이름 가리는 로직
+    private static String maskName(String name) {
+        if (name == null || name.length() < 2) {
+            return name; // 이름이 너무 짧으면 마스킹하지 않음
+        }
+        if (name.length() == 2) {
+            return name.charAt(0) + "*"; // 이름이 2글자인 경우, 맨 뒷글자만 가림
+        }
+
+        StringBuilder maskedName = new StringBuilder(name.length());
+        maskedName.append(name.charAt(0)); // 첫 글자 추가
+
+        for (int i = 1; i < name.length() - 1; i++) {
+            maskedName.append('*'); // 중간 글자는 *로 대체
+        }
+
+        maskedName.append(name.charAt(name.length() - 1)); // 마지막 글자 추가
+        return maskedName.toString();
     }
 }
