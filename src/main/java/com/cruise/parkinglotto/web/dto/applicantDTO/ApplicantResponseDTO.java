@@ -3,6 +3,8 @@ package com.cruise.parkinglotto.web.dto.applicantDTO;
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import lombok.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class ApplicantResponseDTO {
@@ -54,4 +56,18 @@ public class ApplicantResponseDTO {
         private String parkingSpaceName;
         private Integer remainSlots;
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MyApplyInfoDTO {
+        private Long parkingSpaceId;
+        private String drawTitle;
+        private WinningStatus winningStatus;
+        private String parkingSpaceAddress;
+        private LocalDateTime startDate;
+        private LocalDateTime endDate;
+    }
+
 }
