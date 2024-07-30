@@ -3,6 +3,8 @@ package com.cruise.parkinglotto.web.dto.applicantDTO;
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import lombok.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class ApplicantResponseDTO {
@@ -49,9 +51,27 @@ public class ApplicantResponseDTO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class ApprovePriorityResultDTO {
-        private Long parkingSpaceId;
-        private String parkingSpaceName;
-        private Integer remainSlots;
+    public static class GetMyApplyResultDTO {
+        private String drawTitle; // 추첨 제목
+        private WinningStatus winningStatus; // 그 추첨의 상태
+        private String statusData; // 해당 상태에서의 String 데이터
+        private Long drawStatisticsId; // 추첨 통계
+        private Integer reserveNum; // 예비번호
+        private Long parkingSpaceId; // 주차 공간 정보 API
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MyApplyInfoDTO {
+        private Long parkingSpaceId;
+        private String drawTitle;
+        private WinningStatus winningStatus;
+        private String parkingSpaceName;
+        private String parkingSpaceAddress;
+        private LocalDateTime startDate;
+        private LocalDateTime endDate;
+    }
+
 }

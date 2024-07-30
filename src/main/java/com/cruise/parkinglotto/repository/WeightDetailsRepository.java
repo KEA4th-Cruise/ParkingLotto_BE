@@ -11,19 +11,20 @@ import java.util.Optional;
 
 public interface WeightDetailsRepository extends JpaRepository<WeightDetails, Long> {
     @Modifying
-    @Transactional
     @Query("UPDATE WeightDetails m SET m.recentLossCount = 0 WHERE m.member = :member")
     void resetRecentLossCount(@Param("member") Member member);
 
     @Modifying
-    @Transactional
     @Query("UPDATE WeightDetails m SET m.recentLossCount = m.recentLossCount + 1 WHERE m.member = :member")
     void increaseRecentLossCount(@Param("member") Member member);
 
-    Optional<WeightDetails> findByMemberId(long memberId);
+    Optional<WeightDetails> findOptionalByMemberId(Long memberId);
 
     @Modifying
     @Transactional
     @Query("UPDATE WeightDetails w SET w.address = :address WHERE w.member = :member")
     void updateAddress(@Param("member") Member member, @Param("address") String address);
+
+    WeightDetails findByMemberId(Long memberId);
+
 }

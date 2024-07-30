@@ -7,6 +7,7 @@ import com.cruise.parkinglotto.global.jwt.JwtUtils;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
 import com.cruise.parkinglotto.repository.MemberRepository;
 import com.cruise.parkinglotto.service.redisService.RedisService;
+import com.cruise.parkinglotto.web.converter.MemberConverter;
 import com.cruise.parkinglotto.web.dto.memberDTO.MemberRequestDTO;
 import com.cruise.parkinglotto.web.dto.memberDTO.MemberResponseDTO;
 import jakarta.annotation.PostConstruct;
@@ -48,6 +49,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional(readOnly = true)
     public MemberResponseDTO.LoginResponseDTO login(MemberRequestDTO.LoginRequestDTO loginRequestDTO) {
 
+
         Member member = getMemberByAccountId(loginRequestDTO.getAccountId());
 
         // 비밀번호 일치 검증
@@ -57,28 +59,29 @@ public class MemberServiceImpl implements MemberService {
 
         // 블랙리스트에서 해당 토큰 값이 있는지 검증
 
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRequestDTO.getAccountId(), loginRequestDTO.getPassword());
 
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRequestDTO.getAccountId( ), loginRequestDTO.getPassword( ));
+
+        Authentication authentication = authenticationManagerBuilder.getObject( ).authenticate(authenticationToken);
 
         // 토큰 생성
         JwtToken jwtToken = jwtUtils.generateToken(authentication);
 
         // 7일간 refresh token을 redis에 저장
-        redisService.setValues(loginRequestDTO.getAccountId(), jwtToken.getRefreshToken(), Duration.ofDays(7));
+        redisService.setValues(loginRequestDTO.getAccountId( ), jwtToken.getRefreshToken( ), Duration.ofDays(7));
 
         // 등록이 된 사용자인지 아닌지 여부 넘겨줌
-        return MemberResponseDTO.LoginResponseDTO.builder()
-                .jwtToken(jwtToken)
-                .enrollmentStatus(member.getEnrollmentStatus())
-                .build();
-        }
+
+        return MemberConverter.toLoginResponseDTO(member, jwtToken);
+    }
+
 
     /**
      * 로그아웃 로직
      * 로그아웃 성공 시 redis에서 refresh token 삭제
      */
     @Override
+    @Transactional(readOnly = true)
     public MemberResponseDTO.LogoutResponseDTO logout(MemberRequestDTO.LogoutRequestDTO logoutRequestDTO) {
 
         // redis에서 refresh token 삭제
@@ -88,9 +91,7 @@ public class MemberServiceImpl implements MemberService {
         redisService.setBlackList(logoutRequestDTO.getAccessToken(), logoutRequestDTO.getAccessToken());
         redisService.setBlackList(logoutRequestDTO.getRefreshToken(), logoutRequestDTO.getRefreshToken());
 
-        return MemberResponseDTO.LogoutResponseDTO.builder()
-                .logoutAt(LocalDateTime.now())
-                .build();
+        return MemberConverter.toLogoutResponseDTO();
     }
 
     @Override
@@ -98,6 +99,11 @@ public class MemberServiceImpl implements MemberService {
     public Member getMemberByAccountId(String accountId) {
         return memberRepository.findByAccountId(accountId)
                 .orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
+    }
+
+    @Override
+    public Long getMemberIdByAccountId(String accountId) {
+        return memberRepository.findIdByAccountId(accountId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
     }
 
 }

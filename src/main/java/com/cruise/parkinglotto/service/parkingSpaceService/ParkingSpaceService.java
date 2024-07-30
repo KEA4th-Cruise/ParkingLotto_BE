@@ -10,5 +10,5 @@ public interface ParkingSpaceService {
                                  MultipartFile floorPlanImage,
                                  ParkingSpaceRequestDTO.AddParkingSpaceDTO addParkingSpaceDto);
 
-    ParkingSpaceResponseDTO.ParkingSpaceInfoResponseDTO findParkingSpaceInfo(Long memberId);
+    ParkingSpaceResponseDTO.ParkingSpaceInfoResponseDTO findParkingSpaceInfo(Long memberId, Long drawId);
 }
