@@ -50,6 +50,4 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
     void updateWinningStatus(@Param("winnerId") Long winnerId, @Param("winningStatus") WinningStatus winningStatus);
 
     Page<Applicant> findByDrawId(PageRequest pageRequest, Long drawId);
-
-    Optional<Applicant> findById(Long applicantId);
 }

@@ -49,16 +49,6 @@ public class ApplicantResponseDTO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class ApprovePriorityResultDTO {
-        private Long parkingSpaceId;
-        private String parkingSpaceName;
-        private Integer remainSlots;
-    }
-
-    @Getter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
     public static class GetMyApplyResultDTO {
         private String drawTitle; // 추첨 제목
         private WinningStatus winningStatus; // 그 추첨의 상태

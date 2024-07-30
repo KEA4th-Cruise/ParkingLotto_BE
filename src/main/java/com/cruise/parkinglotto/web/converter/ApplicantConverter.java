@@ -35,14 +35,6 @@ public class ApplicantConverter {
                 .build();
     }
 
-    public static ApplicantResponseDTO.ApprovePriorityResultDTO toApprovePriorityResultDTO(ParkingSpace parkingSpace) {
-        return ApplicantResponseDTO.ApprovePriorityResultDTO.builder()
-                .parkingSpaceId(parkingSpace.getId())
-                .parkingSpaceName(parkingSpace.getName())
-                .remainSlots(parkingSpace.getRemainSlots())
-                .build();
-    }
-
     public static ApplicantResponseDTO.GetMyApplyResultDTO toGetMyApplyResultDTO(Applicant applicant) {
         String statusData = "";
         if (applicant.getWinningStatus() == WinningStatus.CANCELED) {

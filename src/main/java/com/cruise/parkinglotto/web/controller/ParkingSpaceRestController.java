@@ -11,6 +11,7 @@ import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceRequestDTO;
 import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,7 +23,7 @@ public class ParkingSpaceRestController {
     private final JwtUtils jwtUtils;
     private final MemberService memberService;
 
-    @PostMapping("/{drawId}")
+    @PostMapping(value = "/{drawId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<ParkingSpaceResponseDTO.AddParkingSpaceResultDTO> addParkingSpace(@PathVariable Long drawId,
                                                                                          @RequestPart(value = "floorPlanImage", required = true) MultipartFile floorPlanImage,
                                                                                          @RequestPart(value = "addParkingSpaceDTO", required = true) ParkingSpaceRequestDTO.AddParkingSpaceDTO addParkingSpaceDTO) {

@@ -10,7 +10,5 @@ import java.util.List;
 public interface ApplicantService {
     Page<Applicant> getApplicantList(Integer page, Long drawId);
 
-    ApplicantResponseDTO.ApprovePriorityResultDTO approvePriority(Long drawId, Long applicantId);
-
     List<ApplicantResponseDTO.GetMyApplyResultDTO> getApplyResultList(Long memberId);
 }
