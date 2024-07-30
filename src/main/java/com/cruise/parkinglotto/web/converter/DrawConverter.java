@@ -135,8 +135,8 @@ public class DrawConverter {
         return maskedName.toString();
     }
 
-    public static DrawResponseDTO.GetDrawInfoResultDTO toGetDrawInfoResultDTO(Boolean isApplied, Integer applicantsCount, Draw draw, List<ParkingSpaceResponseDTO.ParkingSpaceCompetitionRateDTO> parkingSpaceCompetitionRateDTOList) {
-        return DrawResponseDTO.GetDrawInfoResultDTO.builder()
+    public static DrawResponseDTO.GetDrawOverviewResultDTO toGetDrawOverviewResultDTO(Boolean isApplied, Integer applicantsCount, Draw draw, List<ParkingSpaceResponseDTO.ParkingSpaceCompetitionRateDTO> parkingSpaceCompetitionRateDTOList) {
+        return DrawResponseDTO.GetDrawOverviewResultDTO.builder()
                 .drawId(draw.getId())
                 .title(draw.getTitle())
                 .status(draw.getStatus())

@@ -1,6 +1,5 @@
 package com.cruise.parkinglotto.service.drawService;
 
-import com.cruise.parkinglotto.domain.*;
 import com.cruise.parkinglotto.domain.Applicant;
 import com.cruise.parkinglotto.domain.Draw;
 import com.cruise.parkinglotto.domain.Member;
@@ -15,7 +14,6 @@ import com.cruise.parkinglotto.global.kc.ObjectStorageConfig;
 import com.cruise.parkinglotto.global.kc.ObjectStorageService;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
 import com.cruise.parkinglotto.repository.*;
-import com.cruise.parkinglotto.service.memberService.MemberService;
 import com.cruise.parkinglotto.web.converter.DrawConverter;
 import com.cruise.parkinglotto.web.converter.ParkingSpaceConverter;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawRequestDTO;
@@ -375,7 +373,7 @@ public class DrawServiceImpl implements DrawService {
     }
 
     @Override
-    public DrawResponseDTO.GetDrawInfoResultDTO getDrawInfo(HttpServletRequest httpServletRequest) {
+    public DrawResponseDTO.GetDrawOverviewResultDTO getDrawOverview(HttpServletRequest httpServletRequest) {
         String loginMemberAccountId = jwtUtils.getAccountIdFromRequest(httpServletRequest);
         Member loginMember = memberRepository.findByAccountId(loginMemberAccountId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
@@ -391,7 +389,7 @@ public class DrawServiceImpl implements DrawService {
             Optional<Applicant> applicant = applicantRepository.findByDrawIdAndMemberId(latestDraw.get().getId(), loginMember.getId());
             isApplied = applicant.isPresent();
             if (latestDraw.get().getType() == DrawType.PRIORITY) {   // 가장 최근 추첨이 우대 신청일 경우
-                return DrawConverter.toGetDrawInfoResultDTO(isApplied, null, latestDraw.get(), null);
+                return DrawConverter.toGetDrawOverviewResultDTO(isApplied, null, latestDraw.get(), null);
             } else {    //  일반 추첨일 경우
                 parkingSpaceList = parkingSpaceRepository.findByDrawId(latestDraw.get().getId());
                 if (latestDraw.get().getStatus() == DrawStatus.OPEN) {  //   신청 기간인 경우 신청자 테이블에서 구역별 신청자 수를 계산한다.
@@ -406,7 +404,7 @@ public class DrawServiceImpl implements DrawService {
                     parkingSpaceCompetitionRateDTOList = parkingSpaceList.stream()
                             .map(parkingSpace -> ParkingSpaceConverter.toParkingSpaceCompetitionRateDTO(parkingSpace, parkingSpace.getApplicantCount())).toList();
                 }
-                return DrawConverter.toGetDrawInfoResultDTO(isApplied, applicantsCount, latestDraw.get(), parkingSpaceCompetitionRateDTOList);
+                return DrawConverter.toGetDrawOverviewResultDTO(isApplied, applicantsCount, latestDraw.get(), parkingSpaceCompetitionRateDTOList);
             }
         }
     }

@@ -3,7 +3,6 @@ package com.cruise.parkinglotto.web.dto.drawDTO;
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import com.cruise.parkinglotto.domain.enums.WorkType;
 import com.cruise.parkinglotto.domain.enums.DrawStatus;
-import com.cruise.parkinglotto.domain.enums.DrawType;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
 import lombok.AllArgsConstructor;
@@ -94,7 +93,7 @@ public class DrawResponseDTO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetDrawInfoResultDTO {   //  메인페이지에 추첨 정보를 띄우기 위한 DTO
+    public static class GetDrawOverviewResultDTO {   //  메인페이지에 추첨 정보를 띄우기 위한 DTO
         private Long drawId;
         private String title;
         private DrawStatus status;
