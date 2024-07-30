@@ -44,7 +44,7 @@ public class ApplicantServiceImpl implements ApplicantService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public ApplicantResponseDTO.MyApplyInfoDTO getMyApplyInfo(Long memberId, Long drawId) {
 
         Applicant findApplicant = applicantRepository.findApplicantById(memberId, drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND));
