@@ -41,12 +41,12 @@ public class ApplicantRestController {
         return ApiResponse.onSuccess(SuccessStatus.APPLICANT_PRIORITY_APPROVED, approvePriorityResultDTO);
     }
 
-//    @GetMapping("/{drawId}/my-apply")
-//    public ApiResponse<ApplicantResponseDTO.MyApplyInfoDTO> getMyApplyInfo(@PathVariable("drawId") Long drawId, HttpServletRequest httpServletRequest) {
-//
-//        String accountIdFromRequest = jwtUtils.getAccountIdFromRequest(httpServletRequest);
-//        Member memberByAccountId = memberService.getMemberByAccountId(accountIdFromRequest);
-//
-//
-//    }
+    @GetMapping("/{drawId}/my-apply")
+    public ApiResponse<ApplicantResponseDTO.MyApplyInfoDTO> getMyApplyInfo(@PathVariable("drawId") Long drawId, HttpServletRequest httpServletRequest) {
+
+        String accountIdFromRequest = jwtUtils.getAccountIdFromRequest(httpServletRequest);
+        Member memberByAccountId = memberService.getMemberByAccountId(accountIdFromRequest);
+        return ApiResponse.onSuccess(SuccessStatus.APPLICANT_APPLY_INFO_FOUND, applicantService.getMyApplyInfo(memberByAccountId.getId(), drawId));
+
+    }
 }

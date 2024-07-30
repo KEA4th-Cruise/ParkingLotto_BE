@@ -65,6 +65,7 @@ public class ApplicantResponseDTO {
         private Long parkingSpaceId;
         private String drawTitle;
         private WinningStatus winningStatus;
+        private String parkingSpaceName;
         private String parkingSpaceAddress;
         private LocalDateTime startDate;
         private LocalDateTime endDate;

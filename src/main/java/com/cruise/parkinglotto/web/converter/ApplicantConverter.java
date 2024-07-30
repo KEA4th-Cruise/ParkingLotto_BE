@@ -42,4 +42,17 @@ public class ApplicantConverter {
                 .build();
     }
 
+    public static ApplicantResponseDTO.MyApplyInfoDTO toMyApplyInfoDTO(Applicant applicant,ParkingSpace parkingSpace) {
+
+        return ApplicantResponseDTO.MyApplyInfoDTO.builder()
+                .parkingSpaceId(applicant.getParkingSpaceId())
+                .drawTitle(applicant.getDraw().getTitle())
+                .winningStatus(applicant.getWinningStatus())
+                .parkingSpaceName(parkingSpace.getName())
+                .parkingSpaceAddress(parkingSpace.getAddress())
+                .startDate(applicant.getDraw().getUsageStartAt())
+                .endDate(applicant.getDraw().getUsageEndAt())
+                .build();
+    }
+
 }

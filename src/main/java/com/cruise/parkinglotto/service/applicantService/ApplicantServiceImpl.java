@@ -16,8 +16,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 
 @Service
 @RequiredArgsConstructor
@@ -45,11 +43,13 @@ public class ApplicantServiceImpl implements ApplicantService {
         return ApplicantConverter.toApprovePriorityResultDTO(parkingSpace);
     }
 
-//    @Override
-//    @Transactional
-//    public ApplicantResponseDTO.MyApplyInfoDTO getMyApplyInfo(Long memberId,Long drawId) {
-//
-//        Long findApplicant = applicantRepository.findByMember(memberId).orElseThrow();
-//
-//    }
+    @Override
+    @Transactional
+    public ApplicantResponseDTO.MyApplyInfoDTO getMyApplyInfo(Long memberId, Long drawId) {
+
+        Applicant findApplicant = applicantRepository.findApplicantById(memberId, drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND));
+        ParkingSpace findParkingSpace = parkingSpaceRepository.findById(findApplicant.getParkingSpaceId()).orElseThrow(() -> new ExceptionHandler(ErrorStatus.PARKING_SPACE_NOT_FOUND));
+        return ApplicantConverter.toMyApplyInfoDTO(findApplicant, findParkingSpace);
+
+    }
 }

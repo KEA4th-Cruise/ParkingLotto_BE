@@ -8,4 +8,6 @@ public interface ApplicantService {
     Page<Applicant> getApplicantList(Integer page, Long drawId);
 
     ApplicantResponseDTO.ApprovePriorityResultDTO approvePriority(Long drawId, Long applicantId);
+
+    ApplicantResponseDTO.MyApplyInfoDTO getMyApplyInfo(Long memberId, Long drawId);
 }

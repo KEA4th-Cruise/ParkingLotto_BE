@@ -40,13 +40,12 @@ public enum SuccessStatus implements BaseCode {
     //  신청자 관련
     APPLICANT_LIST_FOUND(HttpStatus.OK, "APPLICANT2001", "신청자 목록을 조회하였습니다."),
     APPLICANT_PRIORITY_APPROVED(HttpStatus.OK, "APPLICANT2002", "해당 사용자에게 우대 신청 승인 및 주차 공간 배정을 완료했습니다."),
-
+    APPLICANT_APPLY_INFO_FOUND(HttpStatus.OK, "APPLICANT2003", "해당 사용자의 특정 회차 추첨 결과 정보 조회에 성공했습니다"),
 
     //  가중치정보 관련
     WEIGHT_DETAIL_FOUND(HttpStatus.OK, "WEIGHTDETAIL2001", "가중치 정보를 조회했습니다."),
 
     ;
-
 
 
     private final HttpStatus httpStatus;
