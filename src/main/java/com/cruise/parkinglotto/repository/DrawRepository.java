@@ -27,7 +27,6 @@ public interface DrawRepository extends JpaRepository<Draw, Long> {
 
     Optional<Draw> findByStatus(DrawStatus status);
 
-    @Query("SELECT d FROM Draw d WHERE d.status <> :status ORDER BY d.usageStartAt DESC")
     Optional<Draw> findTopByStatusNotOrderByUsageStartAtDesc(@Param("status") DrawStatus status);
 }
 
