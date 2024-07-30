@@ -13,7 +13,8 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class CertificateDocsServiceImpl implements CertificateDocsService {
 
-    private static final long MAX_TOTAL_CERTIFICATE_FILE_SIZE = 104857600L; // 100MB
+    // 100MB
+    private static final long MAX_TOTAL_CERTIFICATE_FILE_SIZE = 104857600L;
     private static final Set<String> ALLOWED_CERTIFICATE_FILE_EXTENSIONS = Set.of(".pdf", ".docx", ".xlsx", ".hwp", ".jpg", ".png"); // 허용된 확장자 목록
     private static final long MAX_CERTIFICATE_FILE_LENGTH = 50L;
 
@@ -22,6 +23,8 @@ public class CertificateDocsServiceImpl implements CertificateDocsService {
         long totalCertificateFileSize = 0L;
         for (MultipartFile certificateFile : certificateFiles) {
             String fileName = certificateFile.getOriginalFilename();
+
+            //파일 이름 검증
             if (fileName == null) {
                 throw new ExceptionHandler(ErrorStatus.CERTIFICATEDOCS_NAME_NOT_FOUND);
             } else if (fileName.length() > MAX_CERTIFICATE_FILE_LENGTH) {
@@ -37,6 +40,7 @@ public class CertificateDocsServiceImpl implements CertificateDocsService {
             }
         }
 
+        //모든 파일의 전체 크기 검증
         if (totalCertificateFileSize > MAX_TOTAL_CERTIFICATE_FILE_SIZE) {
             throw new ExceptionHandler(ErrorStatus.CERTIFICATEDOCS_TOO_LARGE);
         }

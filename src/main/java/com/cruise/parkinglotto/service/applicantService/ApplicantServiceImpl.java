@@ -134,6 +134,7 @@ public class ApplicantServiceImpl implements ApplicantService {
 
         WinningStatus winningStatus = WinningStatus.PENDING;
 
+        //applicant 저장
         Applicant applicant = ApplicantConverter.makeInitialApplicantObject(member, draw, winningStatus, userSeed, applyDrawRequestDTO.getFirstChoice(), applyDrawRequestDTO.getSecondChoice(), distance, workType, trafficCommuteTime, carCommuteTime, recentLossCount);
         Applicant toGetApplicantId = applicantRepository.save(applicant);
 
