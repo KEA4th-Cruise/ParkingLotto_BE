@@ -1,7 +1,6 @@
 package com.cruise.parkinglotto.repository;
 
 import com.cruise.parkinglotto.domain.Applicant;
-import com.cruise.parkinglotto.domain.ParkingSpace;
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,7 +21,7 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
     Optional<Long> findParkingSpaceById(@Param("applicantId") Long applicantId);
 
     @Query("select a from Applicant a where a.member.id = :memberId and a.draw.id = :drawId ")
-    Optional<Applicant> findApplicantById(@Param("memberId") Long memberId, @Param("drawId") Long drawId);
+    Optional<Applicant> findApplicantByMemberIdAndDrawId(@Param("memberId") Long memberId, @Param("drawId") Long drawId);
 
     List<Applicant> findByDrawId(Long drawId);
 
