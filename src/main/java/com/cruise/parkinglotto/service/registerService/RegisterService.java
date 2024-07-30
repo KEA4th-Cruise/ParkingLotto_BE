@@ -17,7 +17,9 @@ public interface RegisterService {
 
     /**
      * 관리자가 사용자의 등록 요청을 거절하는 메서드
-     * 관리자가 사용자의 enrollmentStatus를 pending -> null 로 바꾼다.
+     * 관리자가 등록된 사용자를 삭제하는 메서드
+     * 관리자가 사용자의 enrollmentStatus를 null로 바꾼다.
+     * pending -> null or enrolled -> null
      * @param member
      * @return
      */
