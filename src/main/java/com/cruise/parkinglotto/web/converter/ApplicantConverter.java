@@ -38,23 +38,14 @@ public class ApplicantConverter {
     }
 
     public static ApplicantResponseDTO.GetMyApplyResultDTO toGetMyApplyResultDTO(Applicant applicant) {
-        String statusData = "";
-        if (applicant.getWinningStatus() == WinningStatus.CANCELED) {
-            statusData = "취소됨";
-        } else if (applicant.getWinningStatus() == WinningStatus.RESERVE) {
-            statusData = "예비 " + applicant.getReserveNum() + "번";
-        } else if (applicant.getWinningStatus() == WinningStatus.PENDING) {
-            statusData = "낙첨";
-        } else {
-            statusData = "당첨";
-        }
+
         return ApplicantResponseDTO.GetMyApplyResultDTO.builder()
                 .drawTitle(applicant.getDraw().getTitle())
                 .drawStatisticsId(applicant.getDraw().getDrawStatistics().getId())
                 .reserveNum(applicant.getReserveNum())
                 .winningStatus(applicant.getWinningStatus())
                 .parkingSpaceId(applicant.getParkingSpaceId())
-                .statusData(statusData).build();
+                .build();
     }
 
 
