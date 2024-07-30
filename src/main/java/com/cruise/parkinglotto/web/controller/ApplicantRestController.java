@@ -43,7 +43,7 @@ public class ApplicantRestController {
     }
 
     @Operation(summary = "사용자가 추첨을 신청하는 api입니다.", description = "")
-    @PostMapping("/apply-draw")
+    @PostMapping("/apply/general")
     public ApiResponse<?> drawApply(HttpServletRequest httpServletRequest, @RequestPart(value = "certificateDocs", required = true) List<MultipartFile> certificateDocs,
                                     @RequestPart(value = "applyDrawRequestDTO", required = true) @Valid ApplicantRequestDTO.GeneralApplyDrawRequestDTO applyDrawRequestDTO) {
         String accountId = jwtUtils.getAccountIdFromRequest(httpServletRequest);
