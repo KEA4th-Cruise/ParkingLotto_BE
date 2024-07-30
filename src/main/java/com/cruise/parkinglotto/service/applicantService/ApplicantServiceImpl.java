@@ -16,6 +16,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -41,5 +44,18 @@ public class ApplicantServiceImpl implements ApplicantService {
         parkingSpace.decrementSlots();
         applicant.approveParkingSpaceToPriority(parkingSpace.getId(), WinningStatus.WINNER, 0);
         return ApplicantConverter.toApprovePriorityResultDTO(parkingSpace);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ApplicantResponseDTO.GetMyApplyResultDTO> getApplyResultList(Long memberId) {
+
+        List<Applicant> findApplicants = applicantRepository.findApplicantListByMemberId(memberId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND));
+        List<ApplicantResponseDTO.GetMyApplyResultDTO> result = findApplicants.stream()
+                .map(a -> ApplicantConverter.toGetMyApplyResultDTO(a))
+                .collect(Collectors.toList());
+
+        return result;
+
     }
 }

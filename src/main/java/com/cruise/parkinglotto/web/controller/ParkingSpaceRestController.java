@@ -33,10 +33,12 @@ public class ParkingSpaceRestController {
     @GetMapping("/{drawId}/my-space")
     public ApiResponse<ParkingSpaceResponseDTO.ParkingSpaceInfoResponseDTO> getParkingSpaceInfo(@PathVariable("drawId") Long drawId, HttpServletRequest httpServletRequest) {
 
+
         String accountIdFromRequest = jwtUtils.getAccountIdFromRequest(httpServletRequest);
         Long memberId = memberService.getMemberIdByAccountId(accountIdFromRequest);
 
         return ApiResponse.onSuccess(SuccessStatus.PARKING_SPACE_INFO_FOUND, parkingSpaceService.findParkingSpaceInfo(memberId, drawId));
+
     }
 
 }
