@@ -45,13 +45,13 @@ public class ApplicantConverter {
 
     public static ApplicantResponseDTO.GetMyApplyResultDTO toGetMyApplyResultDTO(Applicant applicant) {
         String statusData="";
-        if(applicant.getWinningStatus()== WinningStatus.CANCELED) {
+        if(applicant.getWinningStatus() == WinningStatus.CANCELED) {
             statusData = "취소됨";
         }
-        else if(applicant.getWinningStatus()==WinningStatus.RESERVE) {
+        else if(applicant.getWinningStatus() == WinningStatus.RESERVE) {
             statusData = "예비 " + applicant.getReserveNum()+"번";
         }
-        else if(applicant.getWinningStatus()==WinningStatus.PENDING) {
+        else if(applicant.getWinningStatus() == WinningStatus.PENDING) {
             statusData = "낙첨";
         }
         else {
