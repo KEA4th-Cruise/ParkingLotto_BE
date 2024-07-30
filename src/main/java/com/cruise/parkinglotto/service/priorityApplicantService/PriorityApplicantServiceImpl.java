@@ -28,14 +28,14 @@ public class PriorityApplicantServiceImpl implements PriorityApplicantService {
     @Transactional(readOnly = true)
     public Page<PriorityApplicant> getPriorityApplicantList(Integer page, Long drawId, ApprovalStatus approvalStatus) {
         drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
-        Page<PriorityApplicant> priorityApplicantList = priorityApplicantRepository.findByDrawIdAndApprovalStatus(PageRequest.of(page, 5), drawId, approvalStatus);
+        Page<PriorityApplicant> priorityApplicantList = priorityApplicantRepository.findPriorityApplicantPageByDrawIdAndApprovalStatus(PageRequest.of(page, 5), drawId, approvalStatus);
         return priorityApplicantList;
     }
 
     @Override
     @Transactional
     public PriorityApplicantResponseDTO.ApprovePriorityResultDTO approvePriority(Long drawId, Long priorityApplicantId) {
-        PriorityApplicant priorityApplicant = priorityApplicantRepository.findById(priorityApplicantId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND));
+        PriorityApplicant priorityApplicant = priorityApplicantRepository.findPriorityApplicantById(priorityApplicantId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND));
         ParkingSpace parkingSpace = parkingSpaceRepository.findParkingSpaceByDrawId(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.PARKING_SPACE_NOT_FOUND));
         parkingSpace.decrementSlots();
         priorityApplicant.approveParkingSpaceToPriority(parkingSpace.getId(), ApprovalStatus.APPROVED);
