@@ -22,7 +22,7 @@ public class CertificateDocsServiceImpl implements CertificateDocsService {
     // 100MB
     private static final long MAX_TOTAL_CERTIFICATE_FILE_SIZE = 104857600L;
     private static final Set<String> ALLOWED_CERTIFICATE_FILE_EXTENSIONS = Set.of(".pdf", ".docx", ".xlsx", ".hwp", ".jpg", ".png"); // 허용된 확장자 목록
-    private static final long MAX_CERTIFICATE_FILE_LENGTH = 50L;
+    private static final long MAX_CERTIFICATE_FILE_LENGTH = 30L;
 
     @Override
     public void validateCertificateFiles(List<MultipartFile> certificateFiles) throws ExceptionHandler {
