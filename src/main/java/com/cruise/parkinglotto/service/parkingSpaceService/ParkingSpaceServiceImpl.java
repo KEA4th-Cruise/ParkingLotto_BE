@@ -1,5 +1,6 @@
 package com.cruise.parkinglotto.service.parkingSpaceService;
 
+import com.cruise.parkinglotto.domain.Applicant;
 import com.cruise.parkinglotto.domain.Draw;
 import com.cruise.parkinglotto.domain.ParkingSpace;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
@@ -46,8 +47,9 @@ public class ParkingSpaceServiceImpl implements ParkingSpaceService {
 
 
 
-        Long applicantId = applicantRepository.findApplicantById(memberId, drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND));
-        Long parkingSpaceId = applicantRepository.findParkingSpaceId(applicantId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.PARKING_SPACE_NOT_FOUND));
+        Applicant applicant = applicantRepository.findApplicantByMemberIdAndDrawId(memberId, drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND));
+        Long parkingSpaceId = applicantRepository.findParkingSpaceById(applicant.getId()).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_PARKING_SPACE_ID_NOT_FOUND));
+
         ParkingSpace findParkingSpace = parkingSpaceRepository.findById(parkingSpaceId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.PARKING_SPACE_NOT_FOUND));
 
         return ParkingSpaceConverter.toParkingSpaceInfoResponseDTO(findParkingSpace);

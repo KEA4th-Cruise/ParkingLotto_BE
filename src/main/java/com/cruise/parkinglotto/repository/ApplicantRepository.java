@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,10 +21,10 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
     Optional<List<Applicant>> findApplicantListByMemberId(@Param("memberId") Long memberId);
 
     @Query("select a.parkingSpaceId from Applicant a where a.id =:applicantId")
-    Optional<Long> findParkingSpaceId(@Param("applicantId") Long applicantId);
+    Optional<Long> findParkingSpaceById(@Param("applicantId") Long applicantId);
 
-    @Query("select a.id from Applicant a where a.member.id = :memberId and a.draw.id = :drawId ")
-    Optional<Long> findApplicantById(@Param("memberId") Long memberId, @Param("drawId") Long drawId);
+    @Query("select a from Applicant a where a.member.id = :memberId and a.draw.id = :drawId ")
+    Optional<Applicant> findApplicantByMemberIdAndDrawId(@Param("memberId") Long memberId, @Param("drawId") Long drawId);
 
     List<Applicant> findByDrawId(Long drawId);
 
