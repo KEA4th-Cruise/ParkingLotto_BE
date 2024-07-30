@@ -19,8 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class ParkingSpaceRestController {
     private final ParkingSpaceService parkingSpaceService;
-    private JwtUtils jwtUtils;
-    private MemberService memberService;
+    private final JwtUtils jwtUtils;
+    private final MemberService memberService;
 
     @PostMapping("/{drawId}")
     public ApiResponse<ParkingSpaceResponseDTO.AddParkingSpaceResultDTO> addParkingSpace(@PathVariable Long drawId,
