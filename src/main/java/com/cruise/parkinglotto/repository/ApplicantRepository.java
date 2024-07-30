@@ -24,30 +24,28 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
     @Query("select a.parkingSpaceId from Applicant a where a.id =:applicantId")
     Optional<Long> findParkingSpaceId(@Param("applicantId") Long applicantId);
 
+    @Query("select a.id from Applicant a where a.member.id = :memberId and a.draw.id = :drawId ")
+    Optional<Long> findApplicantById(@Param("memberId") Long memberId, @Param("drawId") Long drawId);
+
     List<Applicant> findByDrawId(Long drawId);
 
     @Modifying
-    @Transactional
     @Query("UPDATE Applicant a SET a.randomNumber = :randomNumber WHERE a.id = :applicantId")
     void assignRandomNumber(@Param("applicantId") Long applicantId, @Param("randomNumber") double randomNumber);
 
     @Modifying
-    @Transactional
     @Query("UPDATE Applicant a SET a.parkingSpaceId = :parkingSpaceId WHERE a.id = :winnerId")
     void updateParkingSpaceId(@Param("winnerId") Long winnerId, @Param("parkingSpaceId") Long parkingSpaceId);
 
     @Modifying
-    @Transactional
     @Query("UPDATE Applicant a SET a.reserveNum = :reserveNum WHERE a.id = :applicantId")
     void updateReserveNum(@Param("applicantId") Long applicantId, @Param("reserveNum") int reserveNum);
 
     @Modifying
-    @Transactional
     @Query("UPDATE Applicant a SET a.weightedTotalScore = :weight WHERE a.id = :applicantId")
     void updateWeightedTotalScore(@Param("applicantId") Long id, @Param("weight") double weight);
 
     @Modifying
-    @Transactional
     @Query("UPDATE Applicant a SET a.winningStatus = :winningStatus WHERE a.id = :winnerId")
     void updateWinningStatus(@Param("winnerId") Long winnerId, @Param("winningStatus") WinningStatus winningStatus);
 

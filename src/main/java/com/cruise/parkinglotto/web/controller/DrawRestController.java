@@ -1,7 +1,6 @@
 package com.cruise.parkinglotto.web.controller;
 
 import com.cruise.parkinglotto.domain.Draw;
-import com.cruise.parkinglotto.global.jwt.JwtUtils;
 import com.cruise.parkinglotto.global.response.ApiResponse;
 import com.cruise.parkinglotto.global.response.code.status.SuccessStatus;
 import com.cruise.parkinglotto.service.drawService.DrawService;
@@ -11,7 +10,6 @@ import com.cruise.parkinglotto.web.dto.drawDTO.DrawRequestDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class DrawRestController {
     private final DrawService drawService;
+    private final HttpServletRequest httpServletRequest;
 
     //추첨 실행 후 결과 저장하는 API
     @PostMapping("/execution/{drawId}")
@@ -31,7 +30,7 @@ public class DrawRestController {
     }
 
     //회차의 추첨 결과의 명단을 조회하는 API
-    @GetMapping("/result-member-list/{drawId}")
+    @GetMapping("/result-members/{drawId}")
     public ApiResponse<DrawResponseDTO.DrawResultResponseDTO> getDrawResult(HttpServletRequest httpServletRequest, @PathVariable Long drawId) {
 
         DrawResponseDTO.DrawResultResponseDTO drawResultResponseDTO = drawService.getDrawResult(httpServletRequest, drawId);

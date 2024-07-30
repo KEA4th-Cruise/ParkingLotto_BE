@@ -10,12 +10,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface WeightDetailsRepository extends JpaRepository<WeightDetails, Long> {
     @Modifying
-    @Transactional
     @Query("UPDATE WeightDetails m SET m.recentLossCount = 0 WHERE m.member = :member")
     void resetRecentLossCount(@Param("member") Member member);
 
     @Modifying
-    @Transactional
     @Query("UPDATE WeightDetails m SET m.recentLossCount = m.recentLossCount + 1 WHERE m.member = :member")
     void increaseRecentLossCount(@Param("member") Member member);
+
+    WeightDetails findByMemberId(Long memberId);
 }

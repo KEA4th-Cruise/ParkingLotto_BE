@@ -19,11 +19,24 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findById(Long memberId);
 
+
+    @Query("select m.id from Member m where m.accountId = :accountId")
+    Optional<Long> findIdByAccountId(@Param("accountId") String accountId);
+
     @Modifying
     @Query("UPDATE Member m SET m.enrollmentStatus = com.cruise.parkinglotto.domain.enums.EnrollmentStatus.PENDING WHERE m.accountId = :accountId")
     int updateEnrollmentStatusToPending(@Param("accountId") String accountId);
 
+    @Modifying
+    @Query("UPDATE Member m SET m.enrollmentStatus = null WHERE m.accountId = :accountId")
+    int updateEnrollmentStatusToNull(@Param("accountId") String accountId);
+  
+    @Modifying
+    @Query("UPDATE Member m SET m.enrollmentStatus = com.cruise.parkinglotto.domain.enums.EnrollmentStatus.ENROLLED WHERE m.accountId = :accountId")
+    int updateEnrollmentStatusToEnrolled(@Param("accountId") String accountId);
+
     @Query("SELECT m FROM Member m WHERE m.enrollmentStatus = :enrollmentStatus")
     List<Member> findByEnrollmentStatus(@Param("enrollmentStatus") EnrollmentStatus enrollmentStatus);
+
 
 }

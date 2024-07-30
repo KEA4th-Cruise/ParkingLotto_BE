@@ -21,8 +21,10 @@ public class InitDb {
     @PostConstruct
     public void init() {
 
+
         initService.dbInit1();
         initService.dbInit2();
+
 
     }
 
@@ -36,6 +38,7 @@ public class InitDb {
 
 
         public void dbInit1() {
+
 
             LocalDateTime drawStartAt = LocalDateTime.now();
             Draw draw = createDraw(DrawType.GENERAL, "2024년도 1회차 주차추첨", drawStartAt, drawStartAt, drawStartAt, drawStartAt, "100", "추첨", "mapImageUrl", DrawStatus.OPEN, 100, "2024", "1", null);
@@ -65,6 +68,7 @@ public class InitDb {
         public void dbInit2() {
 
 
+
             LocalDateTime drawStartAt = LocalDateTime.now();
             Draw draw = createDraw(DrawType.GENERAL, "2024년도 1회차 주차추첨", drawStartAt, drawStartAt, drawStartAt, drawStartAt, "100", "추첨", "mapImageUrl", DrawStatus.OPEN, 100, "2024", "2", null);
             em.persist(draw);
@@ -87,6 +91,7 @@ public class InitDb {
         private Applicant createApplicant(Double weightedTotalScore, WinningStatus winningStatus, Long parkingSpaceId, Integer reserveNum, Integer userSeedIndex, String userSeed, Double randomNumber, Long firstChoice, Long secondChoice, Double distance, WorkType workType, Integer trafficCommuteTime, Integer carCommuteTime, Integer recentLossCount, Member member, Draw draw) {
 
             return Applicant.builder()
+
                     .weightedTotalScore(weightedTotalScore)
                     .winningStatus(winningStatus)
                     .parkingSpaceId(parkingSpaceId)
@@ -104,11 +109,13 @@ public class InitDb {
                     .member(member)
                     .draw(draw).build();
 
+
         }
 
         private Member createMember(String nameKo, String accountId, String employeeNo, String deptPathName, String email, AccountType accountType, EnrollmentStatus enrollmentStatus, String carNum, String address, WorkType workType, String nickName, Integer trafficCommuteTime, Integer carCommuteTime, Double distance, Integer recentLossCount, String password) {
 
             return Member.builder()
+
                     .nameKo(nameKo)
                     .accountId(accountId)
                     .employeeNo(employeeNo)
@@ -120,9 +127,11 @@ public class InitDb {
                     .password(password)
                     .build();
 
+
         }
 
         private ParkingSpace createParkingSpace(String name, String address, Integer slots, Integer remainSlots, String floorPlanImageUrl, Integer applicantCount, Draw draw) {
+
 
             return ParkingSpace.builder()
                     .name(name)
@@ -133,6 +142,7 @@ public class InitDb {
                     .applicantCount(applicantCount)
                     .draw(draw)
                     .build();
+
 
         }
 
