@@ -3,7 +3,6 @@ package com.cruise.parkinglotto.service.memberService;
 import com.cruise.parkinglotto.domain.Member;
 import com.cruise.parkinglotto.web.dto.memberDTO.MemberRequestDTO;
 import com.cruise.parkinglotto.web.dto.memberDTO.MemberResponseDTO;
-import org.springframework.stereotype.Service;
 
 public interface MemberService {
 
