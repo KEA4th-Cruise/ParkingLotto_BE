@@ -64,8 +64,8 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
 
     Optional<Applicant> findByDrawIdAndMemberId(Long drawId, Long memberId);
 
-    @Query("SELECT COUNT(a) FROM Applicant a WHERE a.draw.id = :drawId AND a.firstChoice = :parkingSpaceId")
-    Integer countByDrawIdAndFirstChoice(@Param("drawId") Long drawId, @Param("firstChoice") Long parkingSpaceId);
+    @Query("SELECT COUNT(a) FROM Applicant a WHERE a.draw.id = :drawId AND a.firstChoice = :firstChoice")
+    Integer countByDrawIdAndFirstChoice(@Param("drawId") Long drawId, @Param("firstChoice") Long firstChoice);
 
     @Query("SELECT COUNT(a) FROM Applicant a WHERE a.draw.id = :drawId")
     Integer countByDrawId(@Param("drawId") Long drawId);
