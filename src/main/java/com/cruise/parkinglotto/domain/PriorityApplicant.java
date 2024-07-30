@@ -3,8 +3,10 @@ package com.cruise.parkinglotto.domain;
 import com.cruise.parkinglotto.domain.common.BaseEntity;
 import com.cruise.parkinglotto.domain.enums.ApprovalStatus;
 import jakarta.persistence.*;
+import lombok.Getter;
 
 @Entity
+@Getter
 @Table(name = "tb_priority_applicants")
 public class PriorityApplicant extends BaseEntity {
     @Id
@@ -12,6 +14,7 @@ public class PriorityApplicant extends BaseEntity {
     @Column(name = "priority_applicant_id")
     private Long id;
 
+    @Enumerated(value = EnumType.STRING)
     private ApprovalStatus approvalStatus;
 
     private Long parkingSpaceId;
@@ -23,4 +26,9 @@ public class PriorityApplicant extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "draw_id")
     private Draw draw;
+
+    public void approveParkingSpaceToPriority(Long parkingSpaceId, ApprovalStatus approvalStatus) {
+        this.parkingSpaceId = parkingSpaceId;
+        this.approvalStatus = approvalStatus;
+    }
 }
