@@ -50,7 +50,7 @@ public class ApplicantServiceImpl implements ApplicantService {
     @Transactional(readOnly = true)
     public List<ApplicantResponseDTO.GetMyApplyResultDTO> getApplyResultList(Long memberId) {
 
-        List<Applicant> findApplicants = applicantRepository.findApplicantsByMemberId(memberId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND));
+        List<Applicant> findApplicants = applicantRepository.findApplicantListByMemberId(memberId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND));
         List<ApplicantResponseDTO.GetMyApplyResultDTO> result = findApplicants.stream( )
                 .map(a -> ApplicantConverter.toGetMyApplyResultDTO(a))
                 .collect(Collectors.toList( ));
