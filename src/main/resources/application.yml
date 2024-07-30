@@ -16,22 +16,27 @@ spring:
         use_sql_comments: true
         dialect: org.hibernate.dialect.MySQLDialect
 
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+
 jwt:
   secret: ${JWT_SECRET}
 
 cloud:
-  aws:
+  kc:
     s3:
-      url: ${AWS_S3_URL}
-      bucket: ${AWS_S3_BUCKET_NAME}
+      url: ${KC_ENDPOINT}
+      bucket: ${KC_S3_BUCKET_NAME}
       path:
         parking-space-image: ${PARKING_SPACE_IMAGE}
         map-image: ${MAP_IMAGE}
-    region:
-      static: ${AWS_REGION}
-    stack:
-      auto: false
-    credentials:
-      accessKey: ${AWS_S3_ACCESS_KEY}
-      secretKey: ${AWS_S3_SECRET_KEY}
+
+      region:
+        static: ${KC_REGION}
+      credentials:
+        accessKey: ${KC_S3_ACCESS_KEY}
+        secretKey: ${KC_S3_SECRET_ACCESS_KEY}
+      project-id: ${KC_PROJECT_ID}
 

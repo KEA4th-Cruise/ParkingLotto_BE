@@ -7,17 +7,23 @@ import com.cruise.parkinglotto.global.jwt.JwtUtils;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
 import com.cruise.parkinglotto.repository.MemberRepository;
 import com.cruise.parkinglotto.service.redisService.RedisService;
+import com.cruise.parkinglotto.web.converter.MemberConverter;
 import com.cruise.parkinglotto.web.dto.memberDTO.MemberRequestDTO;
 import com.cruise.parkinglotto.web.dto.memberDTO.MemberResponseDTO;
-import jakarta.transaction.Transactional;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -28,6 +34,7 @@ public class MemberServiceImpl implements MemberService {
     private final JwtUtils jwtUtils;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final RedisService redisService;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * 로그인 로직
@@ -39,9 +46,19 @@ public class MemberServiceImpl implements MemberService {
      * 로그인 실패 시 에러 발생
      */
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public MemberResponseDTO.LoginResponseDTO login(MemberRequestDTO.LoginRequestDTO loginRequestDTO) {
-        Member member = memberRepository.findByAccountId(loginRequestDTO.getAccountId( )).orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_LOGIN_FAILED));
+
+
+        Member member = getMemberByAccountId(loginRequestDTO.getAccountId());
+
+        // 비밀번호 일치 검증
+        if (!passwordEncoder.matches(loginRequestDTO.getPassword(), member.getPassword())) {
+            throw new ExceptionHandler(ErrorStatus.MEMBER_PASSWORD_NOT_MATCHED);
+        }
+
+        // 블랙리스트에서 해당 토큰 값이 있는지 검증
+
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRequestDTO.getAccountId( ), loginRequestDTO.getPassword( ));
 
@@ -53,22 +70,35 @@ public class MemberServiceImpl implements MemberService {
         // 7일간 refresh token을 redis에 저장
         redisService.setValues(loginRequestDTO.getAccountId( ), jwtToken.getRefreshToken( ), Duration.ofDays(7));
 
-        // 블랙리스트 등록(블랙리스트 등록은 토큰이 삭제될 때 등록되야 할듯)
-
         // 등록이 된 사용자인지 아닌지 여부 넘겨줌
-        return MemberResponseDTO.LoginResponseDTO.builder( )
-                .jwtToken(jwtToken)
-                .enrollmentStatus(member.getEnrollmentStatus( ))
-                .build( );
-    }
+
+        return MemberConverter.toLoginResponseDTO(member, jwtToken);
+        }
+
 
     /**
      * 로그아웃 로직
      * 로그아웃 성공 시 redis에서 refresh token 삭제
      */
     @Override
-    public void logout(String accountId) {
+    @Transactional(readOnly = true)
+    public MemberResponseDTO.LogoutResponseDTO logout(MemberRequestDTO.LogoutRequestDTO logoutRequestDTO) {
 
+        // redis에서 refresh token 삭제
+        redisService.deleteValues(logoutRequestDTO.getAccountId());
+
+        // 블랙리스트에 저장
+        redisService.setBlackList(logoutRequestDTO.getAccessToken(), logoutRequestDTO.getAccessToken());
+        redisService.setBlackList(logoutRequestDTO.getRefreshToken(), logoutRequestDTO.getRefreshToken());
+
+        return MemberConverter.toLogoutResponseDTO();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Member getMemberByAccountId(String accountId) {
+        return memberRepository.findByAccountId(accountId)
+                .orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
     }
 
     @Override
