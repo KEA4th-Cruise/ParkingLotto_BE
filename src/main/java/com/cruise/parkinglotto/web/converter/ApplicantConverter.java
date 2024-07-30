@@ -59,7 +59,8 @@ public class ApplicantConverter {
         }
         return ApplicantResponseDTO.GetMyApplyResultDTO.builder( )
                 .drawTitle(applicant.getDraw().getTitle())
-//                .drawStatisticsId(applicant.getDraw().getDrawStatistics().getId())
+                .drawStatisticsId(applicant.getDraw().getDrawStatistics().getId())
+                .reserveNum(applicant.getReserveNum())
                 .winningStatus(applicant.getWinningStatus())
                 .parkingSpaceId(applicant.getParkingSpaceId())
                 .statusData(statusData).build( );

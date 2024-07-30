@@ -39,19 +39,23 @@ public class InitDb {
             LocalDateTime drawStartAt = LocalDateTime.now( );
             Draw draw = createDraw(DrawType.GENERAL, "2024년도 1회차 주차추첨", drawStartAt, drawStartAt, drawStartAt, drawStartAt, "100", "추첨", "mapImageUrl", DrawStatus.OPEN, 100, "2024", "1", null);
             em.persist(draw);
+
+            DrawStatistics drawStatistics = createDrawStatistics(1.1,60.00,150,draw);
+            em.persist(drawStatistics);
+
             Member member = createMember("최준범", "cjb", "111", "developer", "example1@example.com", AccountType.USER, EnrollmentStatus.ENROLLED, "1234", "Seoul", WorkType.TYPE1, "hello", 50, 30, 30.00, 0, bCryptPasswordEncoder.encode("11111"));
             em.persist(member);
 
             Applicant applicant1 = createApplicant(50.0, WinningStatus.WINNER, 1L, 0, 100, "A", 150.00, 1L, 2L, 30.00, WorkType.TYPE1, 50, 30, 0, member, draw);
-
             em.persist(applicant1);
+
             Applicant applicant2 = createApplicant(50.0, WinningStatus.RESERVE, null, 20, 100, "B", 150.00, 1L, 2L, 30.00, WorkType.TYPE1, 50, 30, 0, member, draw);
-
             em.persist(applicant2);
-            Applicant applicant3 = createApplicant(50.0, WinningStatus.PENDING, null, 0, 100, "C", 150.00, 1L, 2L, 30.00, WorkType.TYPE1, 50, 30, 0, member, draw);
 
+            Applicant applicant3 = createApplicant(50.0, WinningStatus.PENDING, null, 0, 100, "C", 150.00, 1L, 2L, 30.00, WorkType.TYPE1, 50, 30, 0, member, draw);
             em.persist(applicant3);
-            ParkingSpace parkingSpace = createParkingSpace("A", "seoul", 100, 50, "space A", 40, draw);
+
+            ParkingSpace parkingSpace = createParkingSpace("A", "seoul", 100, 50, "space A", 150, draw);
             em.persist(parkingSpace);
 
         }
@@ -62,14 +66,18 @@ public class InitDb {
 
             LocalDateTime drawStartAt = LocalDateTime.now( );
             Draw draw = createDraw(DrawType.GENERAL, "2024년도 1회차 주차추첨", drawStartAt, drawStartAt, drawStartAt, drawStartAt, "100", "추첨", "mapImageUrl", DrawStatus.OPEN, 100, "2024", "2", null);
-
             em.persist(draw);
+
+            DrawStatistics drawStatistics = createDrawStatistics(1.1,60.00,100,draw);
+            em.persist(drawStatistics);
+
             Member member = createMember("준범최", "cjbbb", "112", "marketer", "example2@example.com", AccountType.USER, EnrollmentStatus.ENROLLED, "1236", "Busan", WorkType.TYPE2, "nice", 200, 160, 300.00, 0, bCryptPasswordEncoder.encode("11112"));
             em.persist(member);
-            Applicant applicant = createApplicant(50.0, WinningStatus.WINNER, 2L, 0, 100, "B", 150.00, 1L, 2L, 300.00, WorkType.TYPE2, 200, 160, 0, member, draw);
 
+            Applicant applicant = createApplicant(50.0, WinningStatus.WINNER, 2L, 0, 100, "B", 150.00, 1L, 2L, 300.00, WorkType.TYPE2, 200, 160, 0, member, draw);
             em.persist(applicant);
-            ParkingSpace parkingSpace = createParkingSpace("B", "seoul", 100, 50, "space B", 40, draw);
+
+            ParkingSpace parkingSpace = createParkingSpace("B", "seoul", 100, 50, "space B", 100, draw);
             em.persist(parkingSpace);
 
         }
@@ -98,6 +106,7 @@ public class InitDb {
         }
 
         private Member createMember(String nameKo, String accountId, String employeeNo, String deptPathName, String email, AccountType accountType, EnrollmentStatus enrollmentStatus, String carNum, String address, WorkType workType, String nickName, Integer trafficCommuteTime, Integer carCommuteTime, Double distance, Integer recentLossCount, String password) {
+
             return Member.builder( )
                     .nameKo(nameKo)
                     .accountId(accountId)
@@ -145,8 +154,18 @@ public class InitDb {
                     .drawStatistics(drawStatistics)
                     .build( );
         }
+        public DrawStatistics createDrawStatistics(Double competitionRate, Double applicantsWeightAvg, Integer totalApplicants, Draw draw) {
+
+            return DrawStatistics.builder( )
+                    .competitionRate(competitionRate)
+                    .applicantsWeightAvg(applicantsWeightAvg)
+                    .totalApplicants(totalApplicants)
+                    .draw(draw).build( );
+
+        }
 
     }
+
 
 
 }

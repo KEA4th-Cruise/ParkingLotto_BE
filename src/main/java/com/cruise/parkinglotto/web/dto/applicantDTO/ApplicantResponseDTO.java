@@ -64,6 +64,7 @@ public class ApplicantResponseDTO {
         private WinningStatus winningStatus; // 그 추첨의 상태
         private String statusData; // 해당 상태에서의 String 데이터
         private Long drawStatisticsId; // 추첨 통계
+        private Integer reserveNum; // 예비번호
         private Long parkingSpaceId; // 주차 공간 정보 API
     }
 }
