@@ -1,5 +1,6 @@
 package com.cruise.parkinglotto.web.controller;
 
+import com.cruise.parkinglotto.domain.Member;
 import com.cruise.parkinglotto.domain.ParkingSpace;
 import com.cruise.parkinglotto.global.jwt.JwtUtils;
 import com.cruise.parkinglotto.global.response.ApiResponse;
@@ -36,9 +37,9 @@ public class ParkingSpaceRestController {
 
 
         String accountIdFromRequest = jwtUtils.getAccountIdFromRequest(httpServletRequest);
-        Long memberId = memberService.getMemberIdByAccountId(accountIdFromRequest);
+        Member findMember = memberService.getMemberByAccountId(accountIdFromRequest);
 
-        return ApiResponse.onSuccess(SuccessStatus.PARKING_SPACE_INFO_FOUND, parkingSpaceService.findParkingSpaceInfo(memberId, drawId));
+        return ApiResponse.onSuccess(SuccessStatus.PARKING_SPACE_INFO_FOUND, parkingSpaceService.findParkingSpaceInfo(findMember.getId(), drawId));
 
     }
 
