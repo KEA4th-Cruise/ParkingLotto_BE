@@ -143,7 +143,6 @@ public class DrawServiceImpl implements DrawService {
         List<Applicant> reserveApplicants = new ArrayList<>();
 
         for (int i = 0; i < orderedApplicants.size(); i++) {
-            System.out.println("orderedApplicants = " + orderedApplicants.size());
             Applicant applicant = orderedApplicants.get(i);
             if (i < totalSlots) {
                 // 당첨 처리
@@ -429,13 +428,13 @@ public class DrawServiceImpl implements DrawService {
         List<Applicant> reserveApplicants = new ArrayList<>();
         for (int i = 0; i < orderedApplicants.size(); i++) {
             Applicant applicant = orderedApplicants.get(i);
-            SimulationData simData = simulationDataMap.get(applicant.getId());
+            SimulationData simulationData = simulationDataMap.get(applicant.getId());
             if (i < totalSlots) {
                 selectedWinners.add(applicant);
-                simData.setWinningStatus(WinningStatus.WINNER);
+                simulationData.setWinningStatus(WinningStatus.WINNER);
             } else {
                 reserveApplicants.add(applicant);
-                simData.setWinningStatus(WinningStatus.RESERVE);
+                simulationData.setWinningStatus(WinningStatus.RESERVE);
             }
         }
         // 주차 공간 할당 로직
@@ -471,7 +470,6 @@ public class DrawServiceImpl implements DrawService {
                 }
             }
 
-            System.out.println("winner = " + winner.getId() + " assigned Zone = " + assignedZone);
             if (assignedZone != null) {
                 SimulationData simData = simulationDataMap.get(winner.getId());
                 simData.setParkingSpaceId(assignedZone);
@@ -486,31 +484,16 @@ public class DrawServiceImpl implements DrawService {
             SimulationData simData = simulationDataMap.get(applicant.getId());
             simData.setReserveNum(waitListNumber++);
         }
+
         // 모든 응모자를 포함하는 DTO 리스트 생성
         List<DrawResponseDTO.SimulateApplicantDTO> allApplicantsDTO = new ArrayList<>();
         for (Applicant applicant : selectedWinners) {
             SimulationData simData = simulationDataMap.get(applicant.getId());
-            allApplicantsDTO.add(DrawResponseDTO.SimulateApplicantDTO.builder()
-                    .id(applicant.getId())
-                    .name(maskName(applicant.getMember().getNameKo()))
-                    .weightedTotalScore(Double.parseDouble(String.format("%.1f", simData.getTotalWeightScore())))
-                    .randomNumber(simData.getRandomNumber())
-                    .parkingSpaceId(simData.getParkingSpaceId())
-                    .reserveNum(simData.getReserveNum())
-                    .winningStatus(simData.getWinningStatus())
-                    .build());
+            allApplicantsDTO.add(DrawConverter.toSimulateApplicantDTO(applicant, simData));
         }
         for (Applicant applicant : reserveApplicants) {
             SimulationData simData = simulationDataMap.get(applicant.getId());
-            allApplicantsDTO.add(DrawResponseDTO.SimulateApplicantDTO.builder()
-                    .id(applicant.getId())
-                    .name(maskName(applicant.getMember().getNameKo()))
-                    .weightedTotalScore(Double.parseDouble(String.format("%.1f", simData.getTotalWeightScore())))
-                    .randomNumber(simData.getRandomNumber())
-                    .parkingSpaceId(simData.getParkingSpaceId())
-                    .reserveNum(simData.getReserveNum())
-                    .winningStatus(simData.getWinningStatus())
-                    .build());
+            allApplicantsDTO.add(DrawConverter.toSimulateApplicantDTO(applicant, simData));
         }
 
         // 페이징 처리
@@ -519,25 +502,5 @@ public class DrawServiceImpl implements DrawService {
 
         List<DrawResponseDTO.SimulateApplicantDTO> pagedApplicants = allApplicantsDTO.subList(start, end);
         return DrawConverter.toSimulateDrawResponseDTO(drawId, seed, simulationDataMap, pagedApplicants, allApplicantsDTO.size());
-    }
-
-    //이름 가리는 로직
-    private static String maskName(String name) {
-        if (name == null || name.length() < 2) {
-            return name; // 이름이 너무 짧으면 마스킹하지 않음
-        }
-        if (name.length() == 2) {
-            return name.charAt(0) + "*"; // 이름이 2글자인 경우, 맨 뒷글자만 가림
-        }
-
-        StringBuilder maskedName = new StringBuilder(name.length());
-        maskedName.append(name.charAt(0)); // 첫 글자 추가
-
-        for (int i = 1; i < name.length() - 1; i++) {
-            maskedName.append('*'); // 중간 글자는 *로 대체
-        }
-
-        maskedName.append(name.charAt(name.length() - 1)); // 마지막 글자 추가
-        return maskedName.toString();
     }
 }
