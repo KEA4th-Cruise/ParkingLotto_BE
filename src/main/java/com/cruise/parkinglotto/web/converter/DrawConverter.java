@@ -35,7 +35,7 @@ public class DrawConverter {
                 .build();
     }
 
-    public static DrawResponseDTO.DrawResultResponseDTO toDrawResultResponseDTO(Draw draw, List<Applicant> applicants, Map<Long, String> parkingSpaceNames, int totalApplicants) {
+    public static DrawResponseDTO.DrawResultResponseDTO toDrawResultResponseDTO(Draw draw, List<Applicant> applicants, Map<Long, String> parkingSpaceNames, Integer totalApplicants) {
         List<ApplicantResponseDTO.ApplicantResultDTO> applicantInfoDTOList = applicants.stream()
                 .map(applicant -> ApplicantResponseDTO.ApplicantResultDTO.builder()
                         .weightedTotalScore(applicant.getWeightedTotalScore())
