@@ -136,4 +136,20 @@ public class DrawConverter {
         maskedName.append(name.charAt(name.length() - 1)); // 마지막 글자 추가
         return maskedName.toString();
     }
+
+    public static DrawResponseDTO.GetDrawOverviewResultDTO toGetDrawOverviewResultDTO(Boolean isApplied, Integer applicantsCount, Draw draw, List<ParkingSpaceResponseDTO.ParkingSpaceCompetitionRateDTO> parkingSpaceCompetitionRateDTOList) {
+        return DrawResponseDTO.GetDrawOverviewResultDTO.builder()
+                .drawId(draw.getId())
+                .title(draw.getTitle())
+                .status(draw.getStatus())
+                .isApplied(isApplied)
+                .drawStartAt(draw.getDrawStartAt())
+                .drawEndAt(draw.getDrawEndAt())
+                .usageStartAt(draw.getUsageStartAt())
+                .usageEndAt(draw.getUsageEndAt())
+                .applicantsCount(applicantsCount)
+                .totalSlots(draw.getTotalSlots())
+                .parkingSpaceCompetitionRateDTOList(parkingSpaceCompetitionRateDTOList)
+                .build();
+    }
 }

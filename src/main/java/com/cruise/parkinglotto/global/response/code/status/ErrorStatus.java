@@ -27,6 +27,8 @@ public enum ErrorStatus implements BaseErrorCode {
     REGISTER_MEMBERS_NOT_FOUND(HttpStatus.OK, "REGISTER4002", "enrollmentStatus가 잘못되었습니다."),
     REGISTER_APPROVE_FAILED(HttpStatus.OK, "REGISTER4003", "등록 요청 승인에 실패했습니다."),
     REGISTER_REFUSE_FAILED(HttpStatus.OK, "REGISTER4004", "등록 요청 거절에 실패했습니다."),
+    REGISTER_SEARCH_NOT_FOUND(HttpStatus.OK, "REGISTER4005", "검색 결과가 없습니다."),
+    REGISTER_INVALID_ENROLLMENTSTATUS(HttpStatus.OK, "REGISTER4006", "유효하지 않은 상태입니다."),
 
     //신청자 관련 응답
 
@@ -47,6 +49,7 @@ public enum ErrorStatus implements BaseErrorCode {
     DRAW_NOT_FOUND(HttpStatus.OK, "DRAW4001", "추첨이 존재하지 않습니다."),
     DRAW_NOT_READY(HttpStatus.OK, "DRAW4002", "아직 신청이 종료되지 않은 추첨입니다."),
     DRAW_ALREADY_EXECUTED(HttpStatus.OK, "DRAW4003", "이미 종료된 추첨입니다. 한 번 진행된 추첨은 다시 진행 될 수 없습니다."),
+    DRAW_STATISTICS_NOT_EXIST(HttpStatus.OK, "DRAW4004", "추첨 통계가 존재하지 않습니다."),
 
     DRAW_NOT_IN_APPLY_PERIOD(HttpStatus.OK, "DRAW4005", "추첨 기간이 아닙니다."),
 
@@ -69,6 +72,7 @@ public enum ErrorStatus implements BaseErrorCode {
     // 추첨 디테일 관련 응답
     WORK_TYPE_NOT_FOUND(HttpStatus.OK, "MemberDetail4001", "근무타입이 입력되지 않았습니다."),
     ADDRESS_NOT_FOUND(HttpStatus.OK, "MemberDetail4002", "주소가 입력되지 않았습니다."),
+
     ;
 
 

@@ -15,11 +15,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByAccountId(String accountId);
 
-    @Query("SELECT m.enrollmentStatus FROM Member m WHERE m.id = :memberId")
-    EnrollmentStatus findEnrollmentStatusById(@Param("memberId") Long memberId);
-
     Optional<Member> findById(Long memberId);
-
 
     @Query("select m.id from Member m where m.accountId = :accountId")
     Optional<Long> findIdByAccountId(@Param("accountId") String accountId);
@@ -34,8 +30,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     int updateEnrollmentStatusToPending(@Param("accountId") String accountId);
 
     @Modifying
-    @Query("UPDATE Member m SET m.enrollmentStatus = null WHERE m.accountId = :accountId")
-    int updateEnrollmentStatusToNull(@Param("accountId") String accountId);
+    @Query("UPDATE Member m SET m.enrollmentStatus = com.cruise.parkinglotto.domain.enums.EnrollmentStatus.PREPENDING WHERE m.accountId = :accountId")
+    int updateEnrollmentStatusToPrepending(@Param("accountId") String accountId);
   
     @Modifying
     @Query("UPDATE Member m SET m.enrollmentStatus = com.cruise.parkinglotto.domain.enums.EnrollmentStatus.ENROLLED WHERE m.accountId = :accountId")
@@ -43,6 +39,10 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Query("SELECT m FROM Member m WHERE m.enrollmentStatus = :enrollmentStatus")
     List<Member> findByEnrollmentStatus(@Param("enrollmentStatus") EnrollmentStatus enrollmentStatus);
+
+    Optional<Member> findByAccountIdAndEnrollmentStatus(String accountId, EnrollmentStatus enrollmentStatus);
+
+    Optional<Member> findByEmployeeNoAndEnrollmentStatus(String employeeNo, EnrollmentStatus enrollmentStatus);
 
 
 }

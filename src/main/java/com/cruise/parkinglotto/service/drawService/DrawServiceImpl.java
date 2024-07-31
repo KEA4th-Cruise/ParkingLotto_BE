@@ -1,6 +1,9 @@
 package com.cruise.parkinglotto.service.drawService;
 
-import com.cruise.parkinglotto.domain.*;
+import com.cruise.parkinglotto.domain.Applicant;
+import com.cruise.parkinglotto.domain.Draw;
+import com.cruise.parkinglotto.domain.Member;
+import com.cruise.parkinglotto.domain.ParkingSpace;
 import com.cruise.parkinglotto.domain.enums.DrawStatus;
 import com.cruise.parkinglotto.domain.enums.DrawType;
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
@@ -11,11 +14,12 @@ import com.cruise.parkinglotto.global.kc.ObjectStorageConfig;
 import com.cruise.parkinglotto.global.kc.ObjectStorageService;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
 import com.cruise.parkinglotto.repository.*;
-import com.cruise.parkinglotto.service.memberService.MemberService;
 import com.cruise.parkinglotto.web.converter.DrawConverter;
+import com.cruise.parkinglotto.web.converter.ParkingSpaceConverter;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawRequestDTO;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
 import com.cruise.parkinglotto.web.dto.drawDTO.SimulationData;
+import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +46,8 @@ public class DrawServiceImpl implements DrawService {
     private final WeightDetailsRepository weightDetailsRepository;
     private final ObjectStorageService objectStorageService;
     private final ObjectStorageConfig objectStorageConfig;
+    private final JwtUtils jwtUtils;
+    private final MemberRepository memberRepository;
 
 
     //계산용 변수
@@ -374,6 +380,43 @@ public class DrawServiceImpl implements DrawService {
         return DrawConverter.toConfirmDrawCreationResultDTO(draw, parkingSpaceList);
     }
 
+    @Override
+    public DrawResponseDTO.GetDrawOverviewResultDTO getDrawOverview(HttpServletRequest httpServletRequest) {
+        String loginMemberAccountId = jwtUtils.getAccountIdFromRequest(httpServletRequest);
+        Member loginMember = memberRepository.findByAccountId(loginMemberAccountId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+        //  상태가 PENDING이 아니고, 사용 날짜 기준 가장 최신 추첨
+        Optional<Draw> latestDraw = drawRepository.findTopByStatusNotOrderByUsageStartAtDesc(DrawStatus.PENDING);
+        Boolean isApplied;  //  이 값은 우대신청 or 일반추첨 상관 없이 신청기간일 때만 의미 있는 값임. 신청 기간인 경우 이 플래그를 통해 신청 수정하기 or 취소하기를 띄워줘여함
+        Integer applicantsCount;
+        List<ParkingSpace> parkingSpaceList;
+        List<ParkingSpaceResponseDTO.ParkingSpaceCompetitionRateDTO> parkingSpaceCompetitionRateDTOList;
+        if (latestDraw.isEmpty()) {  //  PENDING이 아닌 추첨이 없을 경우 (최초의 상태: 진행된 추첨이 아직 존재하지 않음)
+            throw new ExceptionHandler(ErrorStatus.DRAW_STATISTICS_NOT_EXIST);
+        } else {
+            Optional<Applicant> applicant = applicantRepository.findByDrawIdAndMemberId(latestDraw.get().getId(), loginMember.getId());
+            isApplied = applicant.isPresent();
+            if (latestDraw.get().getType() == DrawType.PRIORITY) {   // 가장 최근 추첨이 우대 신청일 경우
+                return DrawConverter.toGetDrawOverviewResultDTO(isApplied, null, latestDraw.get(), null);
+            } else {    //  일반 추첨일 경우
+                parkingSpaceList = parkingSpaceRepository.findByDrawId(latestDraw.get().getId());
+                if (latestDraw.get().getStatus() == DrawStatus.OPEN) {  //   신청 기간인 경우 신청자 테이블에서 구역별 신청자 수를 계산한다.
+                    applicantsCount = applicantRepository.countByDrawId(latestDraw.get().getId());
+                    parkingSpaceCompetitionRateDTOList = parkingSpaceList.stream()
+                            .map(parkingSpace -> {
+                                Integer applicantsCountPerParkingSpace = applicantRepository.countByDrawIdAndFirstChoice(latestDraw.get().getId(), parkingSpace.getId());
+                                return ParkingSpaceConverter.toParkingSpaceCompetitionRateDTO(parkingSpace, applicantsCountPerParkingSpace);
+                            }).toList();
+                } else { //  CLOSED or COMPLETED 일 경우 주차구역 테이블에서 총 신청자 수를 확인한다.
+                    applicantsCount = latestDraw.get().getDrawStatistics().getTotalApplicants();
+                    parkingSpaceCompetitionRateDTOList = parkingSpaceList.stream()
+                            .map(parkingSpace -> ParkingSpaceConverter.toParkingSpaceCompetitionRateDTO(parkingSpace, parkingSpace.getApplicantCount())).toList();
+                }
+                return DrawConverter.toGetDrawOverviewResultDTO(isApplied, applicantsCount, latestDraw.get(), parkingSpaceCompetitionRateDTOList);
+            }
+        }
+    }
+
     @Async
     @Override
     public void deleteUnconfirmedDrawsAndParkingSpaces() {
@@ -511,4 +554,5 @@ public class DrawServiceImpl implements DrawService {
         List<DrawResponseDTO.SimulateApplicantDTO> pagedApplicants = allApplicantsDTO.subList(start, end);
         return DrawConverter.toSimulateDrawResponseDTO(drawId, seed, simulationDataMap, pagedApplicants, allApplicantsDTO.size());
     }
+
 }

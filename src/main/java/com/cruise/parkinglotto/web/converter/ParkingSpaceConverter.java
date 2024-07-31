@@ -2,6 +2,7 @@ package com.cruise.parkinglotto.web.converter;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
 import com.cruise.parkinglotto.domain.Draw;
 import com.cruise.parkinglotto.domain.ParkingSpace;
 import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceRequestDTO;
@@ -65,6 +66,15 @@ public class ParkingSpaceConverter {
                 .map(ParkingSpaceConverter::toParkingSpacePreviewDTO).toList();
         return ParkingSpaceResponseDTO.ParkingSpacePreviewListDTO.builder()
                 .parkingSpacePreviewDTOList(parkingSpacePreviewDTOList)
+                .build();
+    }
+
+    public static ParkingSpaceResponseDTO.ParkingSpaceCompetitionRateDTO toParkingSpaceCompetitionRateDTO(ParkingSpace parkingSpace, Integer applicantsCount) {
+        return ParkingSpaceResponseDTO.ParkingSpaceCompetitionRateDTO.builder()
+                .parkingSpaceId(parkingSpace.getId())
+                .applicantsCount(applicantsCount)
+                .name(parkingSpace.getName())
+                .slots(parkingSpace.getSlots())
                 .build();
     }
 
