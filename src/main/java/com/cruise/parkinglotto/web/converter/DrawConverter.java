@@ -106,4 +106,32 @@ public class DrawConverter {
                 .totalApplicants(totalApplicants)
                 .build();
     }
+
+    public static DrawResponseDTO.SimulateApplicantDTO toSimulateApplicantDTO(Applicant applicant, SimulationData simData) {
+        return DrawResponseDTO.SimulateApplicantDTO.builder()
+                .id(applicant.getId())
+                .name(maskName(applicant.getMember().getNameKo()))
+                .weightedTotalScore(Double.parseDouble(String.format("%.1f", simData.getTotalWeightScore())))
+                .randomNumber(simData.getRandomNumber())
+                .parkingSpaceId(simData.getParkingSpaceId())
+                .reserveNum(simData.getReserveNum())
+                .winningStatus(simData.getWinningStatus())
+                .build();
+    }
+
+    private static String maskName(String name) {
+        if (name == null || name.length() < 2) {
+            return name; // 이름이 너무 짧으면 마스킹하지 않음
+        }
+        if (name.length() == 2) {
+            return name.charAt(0) + "*"; // 이름이 2글자인 경우, 맨 뒷글자만 가림
+        }
+        StringBuilder maskedName = new StringBuilder(name.length());
+        maskedName.append(name.charAt(0)); // 첫 글자 추가
+        for (int i = 1; i < name.length() - 1; i++) {
+            maskedName.append('*'); // 중간 글자는 *로 대체
+        }
+        maskedName.append(name.charAt(name.length() - 1)); // 마지막 글자 추가
+        return maskedName.toString();
+    }
 }
