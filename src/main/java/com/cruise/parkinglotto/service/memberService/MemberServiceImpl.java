@@ -97,10 +97,6 @@ public class MemberServiceImpl implements MemberService {
                 .orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
     }
 
-    @Override
-    public Long getMemberIdByAccountId(String accountId) {
-        return memberRepository.findIdByAccountId(accountId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
-    }
 
     @Override
     @Transactional(readOnly = true)
