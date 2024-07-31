@@ -3,6 +3,8 @@ package com.cruise.parkinglotto.service.memberService;
 import com.cruise.parkinglotto.domain.Member;
 import com.cruise.parkinglotto.web.dto.memberDTO.MemberRequestDTO;
 import com.cruise.parkinglotto.web.dto.memberDTO.MemberResponseDTO;
+import org.springframework.transaction.annotation.Transactional;
+
 
 public interface MemberService {
 
@@ -17,4 +19,6 @@ public interface MemberService {
 
     Long getMemberIdByAccountId(String accountId);
 
+    // 내가 입력한 정보 불러오기
+    MemberResponseDTO.MyInfoResponseDTO getMyInfo(Long memberId);
 }
