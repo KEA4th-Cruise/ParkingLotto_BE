@@ -5,6 +5,7 @@ import com.cruise.parkinglotto.global.jwt.JwtToken;
 import com.cruise.parkinglotto.web.dto.memberDTO.MemberResponseDTO;
 
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 public class MemberConverter {
 
@@ -18,6 +19,20 @@ public class MemberConverter {
     public static MemberResponseDTO.LogoutResponseDTO toLogoutResponseDTO() {
         return MemberResponseDTO.LogoutResponseDTO.builder()
                 .logoutAt(LocalDateTime.now())
+                .build();
+    }
+
+    public static MemberResponseDTO.MyInfoResponseDTO toMyInfoResponseDTO(Member member) {
+        return MemberResponseDTO.MyInfoResponseDTO.builder()
+                .address(member.getWeightDetails().getAddress())
+                .carNum(member.getCarNum())
+                .workType(member.getWeightDetails().getWorkType())
+                .myCertificationInfoResponseDTOS(member.getCertificateDocsList()
+                        .stream().map(c-> MemberResponseDTO.MyCertificationInfoResponseDTO.builder()
+                                .fileName(c.getFileName())
+                                .fileUrl(c.getFileUrl())
+                                .certificateDocsId(c.getId()).build())
+                        .collect(Collectors.toList()))
                 .build();
     }
 }
