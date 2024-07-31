@@ -11,10 +11,10 @@ import java.util.List;
 
 public interface ApplicantService {
     Page<Applicant> getApplicantList(Integer page, Long drawId);
-  
-    ApplicantResponseDTO.MyApplyInfoDTO getMyApplyInfo(Long memberId, Long drawId);
 
-    List<ApplicantResponseDTO.GetMyApplyResultDTO> getApplyResultList(Long memberId);
+    Page<ApplicantResponseDTO.GetMyApplyResultDTO> getApplyResultList(Long memberId, Integer page);
+
+    ApplicantResponseDTO.MyApplyInfoDTO getMyApplyInfo(Long memberId, Long drawId);
     
     void drawApply(List<MultipartFile> certificateDocs, ApplicantRequestDTO.GeneralApplyDrawRequestDTO applyDrawRequestDTO, String accountId);
 

@@ -41,11 +41,12 @@ public class ApplicantRestController {
         return ApiResponse.onSuccess(SuccessStatus.APPLICANT_LIST_FOUND, ApplicantConverter.toGetApplicantListResultDTO(applicantList));
     }
 
+    @Operation(summary = "내가 신청했던 추첨 목록을 조회하는 API 입니다. 페이징을 포함합니다", description = " RequestParam 으로 조회하고 싶은 page 번호를 전송해 주세요")
     @GetMapping("/my-apply-list")
-    public ApiResponse<List<ApplicantResponseDTO.GetMyApplyResultDTO>> getMyApplyList(HttpServletRequest httpServletRequest) {
+    public ApiResponse<Page<ApplicantResponseDTO.GetMyApplyResultDTO>> getMyApplyList(HttpServletRequest httpServletRequest, @RequestParam(name = "page") Integer page) {
         String accountIdFromRequest = jwtUtils.getAccountIdFromRequest(httpServletRequest);
         Member memberByAccountId = memberService.getMemberByAccountId(accountIdFromRequest);
-        List<ApplicantResponseDTO.GetMyApplyResultDTO> applyResultList = applicantService.getApplyResultList(memberByAccountId.getId());
+        Page<ApplicantResponseDTO.GetMyApplyResultDTO> applyResultList = applicantService.getApplyResultList(memberByAccountId.getId(), page - 1);
         return ApiResponse.onSuccess(SuccessStatus.APPLICANT_APPLY_LIST_FOUND, applyResultList);
     }
 
@@ -60,7 +61,7 @@ public class ApplicantRestController {
     }
 
     @Operation(summary = "사용자가 일반 추첨을(GENERAL) 신청하는 api입니다.", description = "파일 리스트와 적절한 DTO를 인터페이스 명세서를 참조해서 넣어주세요.")
-    @PostMapping(value = "/apply/general",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/apply/general", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<?> drawApply(HttpServletRequest httpServletRequest, @RequestPart(value = "certificateDocs", required = false) @Parameter(description = "업로드할 인증서 문서 리스트") List<MultipartFile> certificateDocs,
                                     @RequestPart(value = "applyDrawRequestDTO", required = true) @Parameter(description = "일반 추첨 신청에 필요한 요청 데이터") @Valid ApplicantRequestDTO.GeneralApplyDrawRequestDTO applyDrawRequestDTO) {
         String accountId = jwtUtils.getAccountIdFromRequest(httpServletRequest);
