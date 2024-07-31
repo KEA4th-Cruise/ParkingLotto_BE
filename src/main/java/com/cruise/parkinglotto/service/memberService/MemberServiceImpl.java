@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.Duration;
 
+import java.time.Duration;
+
 
 @Slf4j
 @Service
@@ -64,7 +66,7 @@ public class MemberServiceImpl implements MemberService {
         JwtToken jwtToken = jwtUtils.generateToken(authentication);
 
         // 7일간 refresh token을 redis에 저장
-//        redisService.setValues(loginRequestDTO.getAccountId(), jwtToken.getRefreshToken(), Duration.ofDays(7));
+        redisService.setValues(loginRequestDTO.getAccountId(), jwtToken.getRefreshToken(), Duration.ofDays(7));
 
         // 등록이 된 사용자인지 아닌지 여부 넘겨줌
 
