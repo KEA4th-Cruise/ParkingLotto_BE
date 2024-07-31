@@ -2,6 +2,7 @@ package com.cruise.parkinglotto.service.applicantService;
 
 import com.cruise.parkinglotto.domain.*;
 import com.cruise.parkinglotto.domain.enums.DrawStatus;
+import com.cruise.parkinglotto.domain.enums.DrawType;
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import com.cruise.parkinglotto.domain.enums.WorkType;
 import com.cruise.parkinglotto.domain.Applicant;
@@ -107,15 +108,35 @@ public class ApplicantServiceImpl implements ApplicantService {
             throw new ExceptionHandler(ErrorStatus.WEIGHTDETAILS_TOO_LONG_USER_SEED);
         }
 
+        //파일 검증 ==========
+        List<CertificateDocsRequestDTO.CertificateFileDTO> useProfileFileUrlDTO = applyDrawRequestDTO.getUseProfileFileUrlDTO();
+
         //프로파일에 있는 이름과 업로드할 파일의 이름이 동일하면 예외처리
-        if(certificateDocuments!=null && applyDrawRequestDTO.getUseProfileFileUrlDTO()!=null){
+        if (certificateDocuments != null && applyDrawRequestDTO.getUseProfileFileUrlDTO() != null) {
             certificateDocsService.prohibitSameFileNamesBetweenProfileFileUrlsAndMultiPartFiles(certificateDocuments, applyDrawRequestDTO.getUseProfileFileUrlDTO());
         }
 
-        //업로드 할 파일 검증
+        //한개의 추첨에서 들어갈 수 있는 파일 개수 세는 변수
+        Integer totalFileNumber = 0;
+
+        //업로드 할 파일 검증 (길이, 확장자 등)
         if (certificateDocuments != null) {
             certificateDocsService.validateCertificateFiles(certificateDocuments);
+            totalFileNumber += certificateDocuments.size();
         }
+
+        //쓸 유저 프로파일 파일의 url이 유효한지 확인
+        if (useProfileFileUrlDTO != null) {
+            certificateDocsService.checkCertificateFileUrlsInBucket(useProfileFileUrlDTO);
+            totalFileNumber += useProfileFileUrlDTO.size();
+        }
+
+        if (totalFileNumber > 5) {
+            throw new ExceptionHandler(ErrorStatus.CERTIFICATEDOCS_TOO_MANY);
+        }
+
+        //파일 검증 끝 =========
+
 
         //Handling carNum
         String carNum = applyDrawRequestDTO.getCarNum();
@@ -127,15 +148,15 @@ public class ApplicantServiceImpl implements ApplicantService {
         if (certificateDocuments != null) {
             for (MultipartFile certificateDocument : certificateDocuments) {
                 String fileName = certificateDocument.getOriginalFilename();
-                String addMemberIdAndDrawIdFileUrl = member.getId().toString() + "_" + draw.getId().toString() + "_" + fileName;
+                String addMemberIdAndDrawIdFileUrl = certificateDocsService.makeCertificateFileUrl(member.getId(), draw.getId(), DrawType.GENERAL, fileName);
                 String fileUrl = objectStorageService.uploadObject(objectStorageConfig.getGeneralCertificateDocument(), addMemberIdAndDrawIdFileUrl, certificateDocument);
                 CertificateDocs certificateDocs = CertificateDocsConverter.toCertificateDocument(fileUrl, fileName, member, draw.getId());
                 certificateDocsRepository.save(certificateDocs);
             }
         }
 
-        List<CertificateDocsRequestDTO.CertificateFileDTO> useProfileFileUrlDTO = applyDrawRequestDTO.getUseProfileFileUrlDTO();
-        if(useProfileFileUrlDTO!=null){
+
+        if (useProfileFileUrlDTO != null) {
             for (CertificateDocsRequestDTO.CertificateFileDTO certificateFileDTO : useProfileFileUrlDTO) {
                 String fileName = certificateFileDTO.getFileName();
                 String fileUrl = certificateFileDTO.getFileUrl();
@@ -174,7 +195,7 @@ public class ApplicantServiceImpl implements ApplicantService {
         //userSeedIndex 배정
         Integer maxUserSeedIndex = applicantRepository.findMaxUserSeedIndexByDraw(draw);
         Integer newUserSeedIndex = maxUserSeedIndex + 1;
-        applicantRepository.updateUserSeedIndex(toGetApplicantId.getId(), newUserSeedIndex);
+        toGetApplicantId.updateUserSeedIndex(newUserSeedIndex);
 
         //weight 계산 및 입력
         drawService.calculateWeight(applicant);

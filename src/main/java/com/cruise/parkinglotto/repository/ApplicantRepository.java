@@ -57,9 +57,8 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
     @Query("SELECT COALESCE(MAX(a.userSeedIndex), 0) FROM Applicant a WHERE a.draw = :draw")
     Integer findMaxUserSeedIndexByDraw(@Param("draw") Draw draw);
 
-    @Modifying
-    @Transactional
     @Query("UPDATE Applicant a SET a.userSeedIndex = :userSeedIndex WHERE a.id = :applicantId")
+    @Modifying
     void updateUserSeedIndex(@Param("applicantId") Long applicantId, @Param("userSeedIndex") Integer userSeedIndex);
 
     Optional<Applicant> findByDrawIdAndMemberId(Long drawId, Long memberId);
