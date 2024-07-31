@@ -12,4 +12,6 @@ public interface CertificateDocsService {
     void checkCertificateFileUrlsInBucket(List<CertificateDocsRequestDTO.CertificateFileDTO> certifiCateFileDTO);
 
     void deleteCertificateDocsInMySql(List<CertificateDocsRequestDTO.CertificateFileDTO> certifiCateFileDTO);
+
+    void prohibitSameFileNamesBetweenProfileFileUrlsAndMultiPartFiles(List<MultipartFile> certificateFiles, List<CertificateDocsRequestDTO.CertificateFileDTO> certifiCateFileDTO);
 }

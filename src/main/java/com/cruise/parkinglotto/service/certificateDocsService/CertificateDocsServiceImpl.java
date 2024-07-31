@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Service
@@ -69,4 +70,17 @@ public class CertificateDocsServiceImpl implements CertificateDocsService {
             certificateDocsRepository.deleteByFileUrl(fileUrl);
         }
     }
+
+    @Override
+    public void prohibitSameFileNamesBetweenProfileFileUrlsAndMultiPartFiles(List<MultipartFile> certificateFiles, List<CertificateDocsRequestDTO.CertificateFileDTO> certificateFileDTO) throws ExceptionHandler {
+        for (MultipartFile multipartFile : certificateFiles) {
+            for (CertificateDocsRequestDTO.CertificateFileDTO fileDTO : certificateFileDTO) {
+                if(!Objects.equals(multipartFile.getOriginalFilename(), fileDTO.getFileName())){
+                    throw new ExceptionHandler(ErrorStatus.CERTIFICATEDOCS_NAME_DUPLICATED);
+                }
+
+            }
+        }
+    }
+
 }

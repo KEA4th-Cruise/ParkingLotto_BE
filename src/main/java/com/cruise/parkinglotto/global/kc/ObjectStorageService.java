@@ -76,8 +76,8 @@ public class ObjectStorageService {
         try {
             String[] urlParts = fileUrl.split("/");
             String bucketName = urlParts[5];
-            String directory = urlParts[6]+urlParts[7];
-            String encodedObjectKey = urlParts[8];
+            String directory = urlParts[6];
+            String encodedObjectKey = urlParts[7];
             log.info("bucketName: " + bucketName);
             log.info("directory: " + directory);
             log.info("encodedObjectKey: " + encodedObjectKey);
@@ -105,8 +105,8 @@ public class ObjectStorageService {
         try {
             String[] urlParts = fileUrl.split("/");
             String bucketName = urlParts[5];
-            String directory = urlParts[6]+urlParts[7];
-            String objectKey = urlParts[8];
+            String directory = urlParts[6];
+            String objectKey = urlParts[7];
 
             HeadObjectRequest headObjectRequest = HeadObjectRequest.builder()
                     .bucket(bucketName)

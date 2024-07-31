@@ -101,21 +101,20 @@ public class ApplicantServiceImpl implements ApplicantService {
             throw new ExceptionHandler(ErrorStatus.APPLICANT_DUPLICATED_APPLY);
         }
 
-        //Handling userSeed when drawType is general
+        //Handling userSeed
         String userSeed = applyDrawRequestDTO.getUserSeed();
         if (userSeed.length() > 1) {
             throw new ExceptionHandler(ErrorStatus.WEIGHTDETAILS_TOO_LONG_USER_SEED);
         }
 
+        //프로파일에 있는 이름과 업로드할 파일의 이름이 동일하면 예외처리
+        if(certificateDocuments!=null && applyDrawRequestDTO.getUseProfileFileUrlDTO()!=null){
+            certificateDocsService.prohibitSameFileNamesBetweenProfileFileUrlsAndMultiPartFiles(certificateDocuments, applyDrawRequestDTO.getUseProfileFileUrlDTO());
+        }
+
         //업로드 할 파일 검증
         if (certificateDocuments != null) {
             certificateDocsService.validateCertificateFiles(certificateDocuments);
-        }
-
-        //삭제할 파일 검증
-        List<CertificateDocsRequestDTO.CertificateFileDTO> deleteCertificateFileUrlAndNameDTO = applyDrawRequestDTO.getDeleteCertFileUrlAndNameDTO();
-        if (deleteCertificateFileUrlAndNameDTO != null) {
-            certificateDocsService.checkCertificateFileUrlsInBucket(deleteCertificateFileUrlAndNameDTO);
         }
 
         //Handling carNum
@@ -124,23 +123,23 @@ public class ApplicantServiceImpl implements ApplicantService {
 
         //Handling CertFile
 
-        //mysql에 있는 지울 정보 삭제
-        if (deleteCertificateFileUrlAndNameDTO != null) {
-            certificateDocsService.deleteCertificateDocsInMySql(deleteCertificateFileUrlAndNameDTO);
-
-            //버킷에서 정보 삭제
-            for (CertificateDocsRequestDTO.CertificateFileDTO fileDTO : deleteCertificateFileUrlAndNameDTO) {
-                String fileUrl = fileDTO.getFileUrl();
-                objectStorageService.deleteCertificateFileObject(fileUrl);
-            }
-        }
-
         //uploadCertFiles
         if (certificateDocuments != null) {
             for (MultipartFile certificateDocument : certificateDocuments) {
                 String fileName = certificateDocument.getOriginalFilename();
-                String fileUrl = objectStorageService.uploadObject(objectStorageConfig.getGeneralCertificateDocument(), member.getId() + "/" + fileName, certificateDocument);
-                CertificateDocs certificateDocs = CertificateDocsConverter.toCertificateDocument(fileUrl, fileName, member);
+                String addMemberIdAndDrawIdFileUrl = member.getId().toString() + "_" + draw.getId().toString() + "_" + fileName;
+                String fileUrl = objectStorageService.uploadObject(objectStorageConfig.getGeneralCertificateDocument(), addMemberIdAndDrawIdFileUrl, certificateDocument);
+                CertificateDocs certificateDocs = CertificateDocsConverter.toCertificateDocument(fileUrl, fileName, member, draw.getId());
+                certificateDocsRepository.save(certificateDocs);
+            }
+        }
+
+        List<CertificateDocsRequestDTO.CertificateFileDTO> useProfileFileUrlDTO = applyDrawRequestDTO.getUseProfileFileUrlDTO();
+        if(useProfileFileUrlDTO!=null){
+            for (CertificateDocsRequestDTO.CertificateFileDTO certificateFileDTO : useProfileFileUrlDTO) {
+                String fileName = certificateFileDTO.getFileName();
+                String fileUrl = certificateFileDTO.getFileUrl();
+                CertificateDocs certificateDocs = CertificateDocsConverter.toCertificateDocument(fileUrl, fileName, member, draw.getId());
                 certificateDocsRepository.save(certificateDocs);
             }
         }
