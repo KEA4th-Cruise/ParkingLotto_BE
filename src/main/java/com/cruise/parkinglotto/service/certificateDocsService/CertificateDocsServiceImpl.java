@@ -53,8 +53,8 @@ public class CertificateDocsServiceImpl implements CertificateDocsService {
     }
 
     @Override
-    public void checkCertificateFileUrlsInBucket(List<CertificateDocsRequestDTO.CertifiCateFileDTO> certificateFileDTOs) throws ExceptionHandler {
-        for (CertificateDocsRequestDTO.CertifiCateFileDTO fileDTO : certificateFileDTOs) {
+    public void checkCertificateFileUrlsInBucket(List<CertificateDocsRequestDTO.CertificateFileDTO> certificateFileDTOs) throws ExceptionHandler {
+        for (CertificateDocsRequestDTO.CertificateFileDTO fileDTO : certificateFileDTOs) {
             String fileUrl = fileDTO.getFileUrl();
             if (!objectStorageService.doesObjectCertificateFileUrlExist(fileUrl)) {
                 throw new ExceptionHandler(ErrorStatus.APPLICANT_CERT_DOCUMENT_NOT_FOUND);
@@ -63,8 +63,8 @@ public class CertificateDocsServiceImpl implements CertificateDocsService {
     }
 
     @Override
-    public void deleteCertificateDocsInMySql(List<CertificateDocsRequestDTO.CertifiCateFileDTO> certificateFileDTOs) throws ExceptionHandler {
-        for (CertificateDocsRequestDTO.CertifiCateFileDTO fileDTO : certificateFileDTOs) {
+    public void deleteCertificateDocsInMySql(List<CertificateDocsRequestDTO.CertificateFileDTO> certificateFileDTOs) throws ExceptionHandler {
+        for (CertificateDocsRequestDTO.CertificateFileDTO fileDTO : certificateFileDTOs) {
             String fileUrl = fileDTO.getFileUrl();
             certificateDocsRepository.deleteByFileUrl(fileUrl);
         }

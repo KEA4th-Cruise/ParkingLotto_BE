@@ -11,7 +11,7 @@ public class CertificateDocsRequestDTO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class CertifiCateFileDTO {
+    public static class CertificateFileDTO {
         private String fileUrl;
         private String fileName;
     }

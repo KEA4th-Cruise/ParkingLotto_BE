@@ -9,7 +9,7 @@ public interface CertificateDocsService {
 
     void validateCertificateFiles(List<MultipartFile> files);
 
-    void checkCertificateFileUrlsInBucket(List<CertificateDocsRequestDTO.CertifiCateFileDTO> certifiCateFileDTO);
+    void checkCertificateFileUrlsInBucket(List<CertificateDocsRequestDTO.CertificateFileDTO> certifiCateFileDTO);
 
-    void deleteCertificateDocsInMySql(List<CertificateDocsRequestDTO.CertifiCateFileDTO> certifiCateFileDTO);
+    void deleteCertificateDocsInMySql(List<CertificateDocsRequestDTO.CertificateFileDTO> certifiCateFileDTO);
 }

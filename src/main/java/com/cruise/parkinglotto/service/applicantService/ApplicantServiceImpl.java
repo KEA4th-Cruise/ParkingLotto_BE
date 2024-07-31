@@ -110,9 +110,9 @@ public class ApplicantServiceImpl implements ApplicantService {
         }
 
         //삭제할 파일 검증
-        List<CertificateDocsRequestDTO.CertifiCateFileDTO> deleteCertificatFileUrlAndNameDTO = applyDrawRequestDTO.getDeleteCertFileUrlAndNameDTO();
-        if (deleteCertificatFileUrlAndNameDTO != null) {
-            certificateDocsService.checkCertificateFileUrlsInBucket(deleteCertificatFileUrlAndNameDTO);
+        List<CertificateDocsRequestDTO.CertificateFileDTO> deleteCertificateFileUrlAndNameDTO = applyDrawRequestDTO.getDeleteCertFileUrlAndNameDTO();
+        if (deleteCertificateFileUrlAndNameDTO != null) {
+            certificateDocsService.checkCertificateFileUrlsInBucket(deleteCertificateFileUrlAndNameDTO);
         }
 
         //Handling carNum
@@ -122,11 +122,11 @@ public class ApplicantServiceImpl implements ApplicantService {
         //Handling CertFile
 
         //mysql에 있는 지울 정보 삭제
-        if (deleteCertificatFileUrlAndNameDTO != null) {
-            certificateDocsService.deleteCertificateDocsInMySql(deleteCertificatFileUrlAndNameDTO);
+        if (deleteCertificateFileUrlAndNameDTO != null) {
+            certificateDocsService.deleteCertificateDocsInMySql(deleteCertificateFileUrlAndNameDTO);
 
             //버킷에서 정보 삭제
-            for (CertificateDocsRequestDTO.CertifiCateFileDTO fileDTO : deleteCertificatFileUrlAndNameDTO) {
+            for (CertificateDocsRequestDTO.CertificateFileDTO fileDTO : deleteCertificateFileUrlAndNameDTO) {
                 String fileUrl = fileDTO.getFileUrl();
                 objectStorageService.deleteCertificateFileObject(fileUrl);
             }
