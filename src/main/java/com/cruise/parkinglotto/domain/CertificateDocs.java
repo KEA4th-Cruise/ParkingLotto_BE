@@ -26,4 +26,6 @@ public class CertificateDocs extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    private Long drawId;
 }
