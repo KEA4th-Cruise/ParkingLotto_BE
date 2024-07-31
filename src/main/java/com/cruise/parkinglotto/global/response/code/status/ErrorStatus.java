@@ -74,9 +74,11 @@ public enum ErrorStatus implements BaseErrorCode {
     CERTIFICATEDOCS_TOO_LARGE(HttpStatus.OK, "CERTIFICATEDOCS4003", "업로드한 문서의 전체 크기가 너무 큽니다."),
     CERTIFICATEDOCS_FORMAT_NOT_SUPPORTED(HttpStatus.OK, "CERTIFICATEDOCS4004", "업로드한 파일의 형식이 잘못 되었습니다."),
 
+
     CERTIFICATEDOCS_NAME_DUPLICATED(HttpStatus.OK, "CERTIFICATEDOCS4005", "업로드한 파일 이름이 중복됩니다."),
     CERTIFICATEDOCS_TOO_MANY(HttpStatus.OK, "CERTIFICATEDOCS4006", "업로드한 파일이 너무 많습니다."),
     CERTIFICATEDOCS_DRAW_ID_NOT_CORRECT(HttpStatus.OK, "CERTIFICATEDOCS4005", "drawId 가 -1 이 아닙니다" ),
+
 
 
     SEED_NOT_FOUND(HttpStatus.OK, "DRAW4004", "생성된 시드가 없습니다."),
