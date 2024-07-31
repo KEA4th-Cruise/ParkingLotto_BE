@@ -17,7 +17,6 @@ public interface MemberService {
     // 로그아웃
     MemberResponseDTO.LogoutResponseDTO logout(MemberRequestDTO.LogoutRequestDTO logoutRequestDTO);
 
-    Long getMemberIdByAccountId(String accountId);
 
     // 내가 입력한 정보 불러오기
     MemberResponseDTO.MyInfoResponseDTO getMyInfo(Long memberId);
