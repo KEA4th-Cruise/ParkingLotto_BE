@@ -38,4 +38,6 @@ public interface DrawService {
     Draw createDraw(MultipartFile mapImage, DrawRequestDTO.CreateDrawRequestDTO createDrawRequestDTO);
 
     DrawResponseDTO.ConfirmDrawCreationResultDTO confirmDrawCreation(Long drawId);
+
+    DrawResponseDTO.SimulateDrawResponseDTO simulateDraw(Long drawId, String seedNum, Integer page);
 }

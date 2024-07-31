@@ -1,5 +1,6 @@
 package com.cruise.parkinglotto.web.dto.drawDTO;
 
+import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import com.cruise.parkinglotto.domain.enums.WorkType;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
@@ -62,5 +63,28 @@ public class DrawResponseDTO {
         LocalDateTime usageStartAt;
         LocalDateTime usageEndAt;
         ParkingSpaceResponseDTO.ParkingSpacePreviewListDTO parkingSpacePreviewListDTO;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SimulateDrawResponseDTO {
+        private Long drawId;
+        private String seed;
+        private List<SimulateApplicantDTO> winners;
+        private int totalApplicants; // 전체 응모자 수
+    }
+
+    @Builder
+    @Getter
+    public static class SimulateApplicantDTO {
+        private Long id;
+        private String name;
+        private double weightedTotalScore;
+        private double randomNumber;
+        private Long parkingSpaceId;
+        private int reserveNum;
+        private WinningStatus winningStatus;
     }
 }
