@@ -58,7 +58,7 @@ public class DrawConverter {
                 .totalSlots(draw.getTotalSlots())
                 .year(draw.getYear())
                 .quarter(draw.getQuarter())
-                .totalApplicants(totalApplicants)
+                .totalApplicants(totalApplicants) // 전체 응모자 수 추가
                 .applicants(applicantInfoDTOList)
                 .build();
     }
@@ -103,6 +103,7 @@ public class DrawConverter {
         return DrawResponseDTO.SimulateDrawResponseDTO.builder()
                 .drawId(drawId)
                 .seed(seed)
+                .totalApplicants(totalApplicants)
                 .winners(pagedApplicants)
                 .totalApplicants(totalApplicants)
                 .build();
