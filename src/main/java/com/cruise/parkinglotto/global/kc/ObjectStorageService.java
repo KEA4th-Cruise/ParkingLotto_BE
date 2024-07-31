@@ -71,14 +71,42 @@ public class ObjectStorageService {
 
     /**
      * @param fileUrl: 삭제할 파일의 url. (DB에 저장되어있는 문자열)
-     * @return 객체가 존재하면 true, 아니면 false
      */
-    public boolean doesObjectUrlExist(String fileUrl) {
+    public void deleteCertificateFileObject(String fileUrl) {
         try {
             String[] urlParts = fileUrl.split("/");
             String bucketName = urlParts[5];
-            String directory = urlParts[6];
-            String objectKey = urlParts[7];
+            String directory = urlParts[6]+urlParts[7];
+            String encodedObjectKey = urlParts[8];
+            log.info("bucketName: " + bucketName);
+            log.info("directory: " + directory);
+            log.info("encodedObjectKey: " + encodedObjectKey);
+
+            String objectKey = URLDecoder.decode(encodedObjectKey, "UTF-8");
+            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(directory + "/" + objectKey)
+                    .build();
+
+            s3Client.deleteObject(deleteObjectRequest);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    /**
+     * @param fileUrl: 삭제할 파일의 url. (DB에 저장되어있는 문자열)
+     * @return 객체가 존재하면 true, 아니면 false
+     */
+    public boolean doesObjectCertificateFileUrlExist(String fileUrl) {
+        try {
+            String[] urlParts = fileUrl.split("/");
+            String bucketName = urlParts[5];
+            String directory = urlParts[6]+urlParts[7];
+            String objectKey = urlParts[8];
 
             HeadObjectRequest headObjectRequest = HeadObjectRequest.builder()
                     .bucket(bucketName)

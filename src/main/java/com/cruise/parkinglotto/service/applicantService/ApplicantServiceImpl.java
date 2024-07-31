@@ -128,7 +128,7 @@ public class ApplicantServiceImpl implements ApplicantService {
             //버킷에서 정보 삭제
             for (CertificateDocsRequestDTO.CertifiCateFileDTO fileDTO : deleteCertificatFileUrlAndNameDTO) {
                 String fileUrl = fileDTO.getFileUrl();
-                objectStorageService.deleteObject(fileUrl);
+                objectStorageService.deleteCertificateFileObject(fileUrl);
             }
         }
 

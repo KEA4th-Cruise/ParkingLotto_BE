@@ -56,7 +56,7 @@ public class CertificateDocsServiceImpl implements CertificateDocsService {
     public void checkCertificateFileUrlsInBucket(List<CertificateDocsRequestDTO.CertifiCateFileDTO> certificateFileDTOs) throws ExceptionHandler {
         for (CertificateDocsRequestDTO.CertifiCateFileDTO fileDTO : certificateFileDTOs) {
             String fileUrl = fileDTO.getFileUrl();
-            if (!objectStorageService.doesObjectUrlExist(fileUrl)) {
+            if (!objectStorageService.doesObjectCertificateFileUrlExist(fileUrl)) {
                 throw new ExceptionHandler(ErrorStatus.APPLICANT_CERT_DOCUMENT_NOT_FOUND);
             }
         }
