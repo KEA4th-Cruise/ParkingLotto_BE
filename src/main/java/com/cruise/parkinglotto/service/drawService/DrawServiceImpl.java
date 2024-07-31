@@ -303,7 +303,10 @@ public class DrawServiceImpl implements DrawService {
 
     @Override
     @Transactional(readOnly = true)
-    public DrawResponseDTO.DrawResultResponseDTO getDrawResult(HttpServletRequest httpServletRequest, Long drawId) {
+    public DrawResponseDTO.DrawResultResponseDTO getDrawResult(HttpServletRequest httpServletRequest, Long drawId, Integer page) {
+        int pageSize = 15;
+        int offset = (page -1) * pageSize;
+
         Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
         List<Applicant> applicants = applicantRepository.findByDrawId(drawId);
 
@@ -316,7 +319,12 @@ public class DrawServiceImpl implements DrawService {
         Map<Long, String> parkingSpaceNames = parkingSpaceRepository.findAllById(parkingSpaceIds).stream()
                 .collect(Collectors.toMap(ParkingSpace::getId, ParkingSpace::getName));
 
-        return DrawConverter.toDrawResultResponseDTO(draw, applicants, parkingSpaceNames);
+        int start = Math.min(offset, applicants.size());
+        int end = Math.min(offset + pageSize, applicants.size());
+
+        List<Applicant> pagedApplicants = applicants.subList(start, end);
+
+        return DrawConverter.toDrawResultResponseDTO(draw, pagedApplicants, parkingSpaceNames, applicants.size());
     }
 
     @Override

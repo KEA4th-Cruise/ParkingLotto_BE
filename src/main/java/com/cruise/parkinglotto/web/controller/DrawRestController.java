@@ -33,9 +33,9 @@ public class DrawRestController {
     //회차의 추첨 결과의 명단을 조회하는 API
     @Operation(summary = "해당 회차 추첨 결과 조회 API", description = "path variable로 추첨 ID를 넘겨주면 해당 추첨의 결과를 반환합니다.")
     @GetMapping("/result-members/{drawId}")
-    public ApiResponse<DrawResponseDTO.DrawResultResponseDTO> getDrawResult(HttpServletRequest httpServletRequest, @PathVariable("drawId") Long drawId) {
+    public ApiResponse<DrawResponseDTO.DrawResultResponseDTO> getDrawResult(HttpServletRequest httpServletRequest, @PathVariable("drawId") Long drawId, @RequestParam("page") Integer page) {
 
-        DrawResponseDTO.DrawResultResponseDTO drawResultResponseDTO = drawService.getDrawResult(httpServletRequest, drawId);
+        DrawResponseDTO.DrawResultResponseDTO drawResultResponseDTO = drawService.getDrawResult(httpServletRequest, drawId, page);
         return ApiResponse.onSuccess(SuccessStatus.DRAW_INFO_FOUND, drawResultResponseDTO);
     }
 
