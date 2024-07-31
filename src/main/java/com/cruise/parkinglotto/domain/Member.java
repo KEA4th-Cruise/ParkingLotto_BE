@@ -47,6 +47,7 @@ public class Member extends BaseEntity implements UserDetails {
     private String password;
 
     @Enumerated(value = EnumType.STRING)
+    @Column(nullable = false)
     private EnrollmentStatus enrollmentStatus;
 
     @Column(length = 8)
