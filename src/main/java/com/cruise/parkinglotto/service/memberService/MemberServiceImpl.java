@@ -6,6 +6,8 @@ import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
 import com.cruise.parkinglotto.global.jwt.JwtToken;
 import com.cruise.parkinglotto.global.jwt.JwtUtils;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
+
+import com.cruise.parkinglotto.global.response.code.status.SuccessStatus;
 import com.cruise.parkinglotto.repository.CertificateDocsRepository;
 import com.cruise.parkinglotto.repository.MemberRepository;
 import com.cruise.parkinglotto.service.redisService.RedisService;
@@ -20,10 +22,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.Duration;
 
 import java.time.Duration;
 import java.util.List;
+
 
 @Slf4j
 @Service
