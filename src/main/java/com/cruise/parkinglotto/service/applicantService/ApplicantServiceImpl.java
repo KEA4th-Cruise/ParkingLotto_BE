@@ -136,7 +136,7 @@ public class ApplicantServiceImpl implements ApplicantService {
         if (certificateDocuments != null) {
             for (MultipartFile certificateDocument : certificateDocuments) {
                 String fileName = certificateDocument.getOriginalFilename();
-                String fileUrl = objectStorageService.uploadObject(objectStorageConfig.getGeneralCertificateDocument(), fileName, certificateDocument);
+                String fileUrl = objectStorageService.uploadObject(objectStorageConfig.getGeneralCertificateDocument(), member.getId() + "/" + fileName, certificateDocument);
                 CertificateDocs certificateDocs = CertificateDocsConverter.toCertificateDocument(fileUrl, fileName, member);
                 certificateDocsRepository.save(certificateDocs);
             }
