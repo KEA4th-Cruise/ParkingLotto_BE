@@ -107,4 +107,12 @@ public class DrawResponseDTO {
         private Integer totalSlots;
         private List<ParkingSpaceResponseDTO.ParkingSpaceCompetitionRateDTO> parkingSpaceCompetitionRateDTOList;
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class DrawResultExcelDTO {
+        private String URL;
+    }
 }

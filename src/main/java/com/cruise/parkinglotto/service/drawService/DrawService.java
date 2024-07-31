@@ -7,12 +7,13 @@ import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
 public interface DrawService {
     //추첨을 실행
-    void executeDraw(Long drawId);
+    void executeDraw(Long drawId) throws IOException;
 
     //추첨의 시드 번호를 저장
     void updateSeedNum(Long drawId);
@@ -43,5 +44,7 @@ public interface DrawService {
     DrawResponseDTO.SimulateDrawResponseDTO simulateDraw(Long drawId, String seedNum, Integer page);
 
     DrawResponseDTO.GetDrawOverviewResultDTO getDrawOverview(HttpServletRequest httpServletRequest);
+
+    DrawResponseDTO.DrawResultExcelDTO getDrawResultExcel(Long drawId);
 
 }

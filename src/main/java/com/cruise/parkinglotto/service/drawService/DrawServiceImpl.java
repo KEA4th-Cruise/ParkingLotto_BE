@@ -23,16 +23,23 @@ import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.cruise.parkinglotto.web.converter.DrawConverter.toDrawResultExcelDTO;
 import static com.cruise.parkinglotto.web.converter.DrawConverter.toGetCurrentDrawInfo;
 
 @Slf4j
@@ -63,7 +70,7 @@ public class DrawServiceImpl implements DrawService {
 
     @Override
     @Transactional
-    public void executeDraw(Long drawId) {
+    public void executeDraw(Long drawId) throws IOException {
         try {
             Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
 
@@ -86,6 +93,11 @@ public class DrawServiceImpl implements DrawService {
             List<Applicant> orderedApplicants = weightedRandomSelectionAll(applicants, new Random(seed.hashCode()));
 
             handleDrawResults(drawId, orderedApplicants);
+
+            //생성하고 DB에 저장
+            String url = generateDrawResultExcel(draw, orderedApplicants);
+            draw.updateResultURL(url);
+            System.out.println("url = " + url);
 
             drawRepository.updateStatus(drawId, DrawStatus.COMPLETED);
         } catch (Exception e) {
@@ -311,7 +323,7 @@ public class DrawServiceImpl implements DrawService {
     @Transactional(readOnly = true)
     public DrawResponseDTO.DrawResultResponseDTO getDrawResult(HttpServletRequest httpServletRequest, Long drawId, Integer page) {
         int pageSize = 15;
-        int offset = (page -1) * pageSize;
+        int offset = (page - 1) * pageSize;
 
         Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
         List<Applicant> applicants = applicantRepository.findByDrawId(drawId);
@@ -555,4 +567,79 @@ public class DrawServiceImpl implements DrawService {
         return DrawConverter.toSimulateDrawResponseDTO(drawId, seed, simulationDataMap, pagedApplicants, allApplicantsDTO.size());
     }
 
+    private String generateDrawResultExcel(Draw draw, List<Applicant> orderedApplicants) throws IOException {
+        try (Workbook workbook = new XSSFWorkbook()) {
+            Sheet sheet = workbook.createSheet("추첨결과");
+
+            // 데이터 형식과 스타일 설정
+            DataFormat format = workbook.createDataFormat();
+            CellStyle cellStyle = workbook.createCellStyle();
+            cellStyle.setDataFormat(format.getFormat("0.0")); // 소수점 한 자리 형식
+            cellStyle.setAlignment(HorizontalAlignment.CENTER); // 가운데 정렬
+
+            Row headerRow = sheet.createRow(1);
+            String[] headers = {"순번", "이름", "직종", "가중치", "당첨여부", "주차구역"};
+            for (int i = 0; i < headers.length; i++) {
+                headerRow.createCell(i).setCellValue(headers[i]);
+            }
+
+            int rowNum = 2;
+            int i = 1;
+            for (Applicant applicant : orderedApplicants) {
+                Row row = sheet.createRow(rowNum++);
+
+                row.createCell(0).setCellValue(i);
+                row.createCell(1).setCellValue(maskName(applicant.getMember().getNameKo()));
+                row.createCell(2).setCellValue(applicant.getMember().getDeptPathName());
+
+                Cell cell3 = row.createCell(3);
+                cell3.setCellValue(applicant.getWeightedTotalScore());
+                cell3.setCellStyle(cellStyle);
+
+                row.createCell(4).setCellValue(applicant.getWinningStatus().toString());
+                if (applicant.getParkingSpaceId() != null) {
+                    row.createCell(5).setCellValue(parkingSpaceRepository.findById(applicant.getParkingSpaceId()).get().getName());
+                } else {
+                    row.createCell(5).setCellValue("예비번호: " + applicant.getReserveNum());
+                }
+            }
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            workbook.write(baos);
+            byte[] excelBytes = baos.toByteArray();
+
+            // byte[]를 MultipartFile로 변환
+            ByteArrayInputStream bis = new ByteArrayInputStream(excelBytes);
+            MultipartFile multipartFile = new MockMultipartFile("file", "draw_results_" + draw.getId() + ".xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", bis);
+
+            String fileName = draw.getTitle().replace(" ", "_") + "_추첨결과.xlsx";
+
+            return objectStorageService.uploadObject(objectStorageConfig.getDrawResultDocument(), fileName, multipartFile);
+        } catch (Exception e) {
+            log.error("Error occurred while generating or uploading Excel file for drawId: {}", draw.getId(), e);
+            return null;
+        }
+    }
+
+    private static String maskName(String name) {
+        if (name == null || name.length() < 2) {
+            return name; // 이름이 너무 짧으면 마스킹하지 않음
+        }
+        if (name.length() == 2) {
+            return name.charAt(0) + "*"; // 이름이 2글자인 경우, 맨 뒷글자만 가림
+        }
+        StringBuilder maskedName = new StringBuilder(name.length());
+        maskedName.append(name.charAt(0)); // 첫 글자 추가
+        for (int i = 1; i < name.length() - 1; i++) {
+            maskedName.append('*'); // 중간 글자는 *로 대체
+        }
+        maskedName.append(name.charAt(name.length() - 1)); // 마지막 글자 추가
+        return maskedName.toString();
+    }
+
+    @Override
+    public DrawResponseDTO.DrawResultExcelDTO getDrawResultExcel(Long drawId) {
+        Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
+        return toDrawResultExcelDTO(draw.getResultURL());
+    }
 }

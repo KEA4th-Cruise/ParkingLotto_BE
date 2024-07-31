@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/draws")
@@ -47,7 +48,7 @@ public class DrawRestController {
     //추첨 실행 후 결과 저장하는 API
     @Operation(summary = "추첨 실행 API", description = "path variable로 추첨 ID를 넘겨주면 해당 추첨을 실행합니다.")
     @PostMapping("/{drawId}/execution")
-    public ApiResponse<Void> executeDraw(@PathVariable("drawId") Long drawId) {
+    public ApiResponse<Void> executeDraw(@PathVariable("drawId") Long drawId) throws IOException {
         drawService.executeDraw(drawId);
 
         return ApiResponse.onSuccess(SuccessStatus.DRAW_EXECUTE_RESULT, null);
@@ -93,9 +94,10 @@ public class DrawRestController {
         DrawResponseDTO.SimulateDrawResponseDTO simulateDrawResponseDTO = drawService.simulateDraw(drawId, seedNum, page);
         return ApiResponse.onSuccess(SuccessStatus.DRAW_SIMULATE_COMPLETED, simulateDrawResponseDTO);
     }
+
     @Operation(summary = "(메인페이지용) 추첨정보, 추첨 경쟁률, 주차구역 별 경쟁률, 로그인한 사용자의 신청 여부를 반환하는 API입니다.", description = "진행 중인 추첨이 일반 신청일 경우 [추첨정보, 경쟁률, 주차구역 별 경쟁률]을 반환하고, 우대신청일 경우 [추첨정보]를 반환합니다.")
     @GetMapping("/overview")
-    public ApiResponse<DrawResponseDTO.GetDrawOverviewResultDTO> getDrawInfo(HttpServletRequest httpServletRequest){
+    public ApiResponse<DrawResponseDTO.GetDrawOverviewResultDTO> getDrawInfo(HttpServletRequest httpServletRequest) {
         DrawResponseDTO.GetDrawOverviewResultDTO getDrawInfoResultDTO = drawService.getDrawOverview(httpServletRequest);
         return ApiResponse.onSuccess(SuccessStatus.DRAW_OVERVIEW_FOUND, getDrawInfoResultDTO);
     }
@@ -119,7 +121,7 @@ public class DrawRestController {
     }
 
     @Operation(summary = "사용자가 일반 추첨을(GENERAL) 신청하는 api입니다.", description = "파일 리스트와 적절한 DTO를 인터페이스 명세서를 참조해서 넣어주세요.")
-    @PostMapping(value = "/{drawId}/general/apply",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/{drawId}/general/apply", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<?> drawApply(HttpServletRequest httpServletRequest, @RequestPart(value = "certificateDocs", required = false) @Parameter(description = "업로드할 인증서 문서 리스트") List<MultipartFile> certificateDocs,
                                     @RequestPart(value = "applyDrawRequestDTO", required = true) @Parameter(description = "일반 추첨 신청에 필요한 요청 데이터") @Valid ApplicantRequestDTO.GeneralApplyDrawRequestDTO applyDrawRequestDTO) {
         String accountId = jwtUtils.getAccountIdFromRequest(httpServletRequest);
@@ -149,5 +151,13 @@ public class DrawRestController {
     public ApiResponse<ApplicantResponseDTO.GetApplicantResultDTO> searchApplicant(@RequestParam(name = "searchKeyword") String searchKeyword) {
 
         return ApiResponse.onSuccess(SuccessStatus.APPLICANT_SEARCH_FOUND, applicantService.searchApplicantBySearchKeyword(searchKeyword));
+    }
+
+    @Operation(summary = "추첨 결과 엑셀 저장 API", description = "추첨의 최초 결과를 엑셀로 저장할 수 있는 API 입니다. drawId를 넘겨주면 해당 추첨의 결과를 엑셀로 저장합니다.")
+    @GetMapping("/{drawId}/result-excel")
+    public ApiResponse<DrawResponseDTO.DrawResultExcelDTO> downloadResultExcel(@PathVariable("drawId") Long drawId) {
+        DrawResponseDTO.DrawResultExcelDTO drawResultExcelDTO = drawService.getDrawResultExcel(drawId);
+        return ApiResponse.onSuccess(SuccessStatus.DRAW_RESULT_EXCEL_DOWNLOADED, drawResultExcelDTO);
+
     }
 }
