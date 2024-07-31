@@ -35,7 +35,7 @@ public class DrawConverter {
                 .build();
     }
 
-    public static DrawResponseDTO.DrawResultResponseDTO toDrawResultResponseDTO(Draw draw, List<Applicant> applicants, Map<Long, String> parkingSpaceNames) {
+    public static DrawResponseDTO.DrawResultResponseDTO toDrawResultResponseDTO(Draw draw, List<Applicant> applicants, Map<Long, String> parkingSpaceNames, Integer totalApplicants) {
         List<ApplicantResponseDTO.ApplicantResultDTO> applicantInfoDTOList = applicants.stream()
                 .map(applicant -> ApplicantResponseDTO.ApplicantResultDTO.builder()
                         .weightedTotalScore(applicant.getWeightedTotalScore())
@@ -48,18 +48,19 @@ public class DrawConverter {
                         .secondChoice(parkingSpaceNames.get(applicant.getSecondChoice()))
                         .userName(applicant.getMember().getNameKo())
                         .build())
-                .toList();
+                .collect(Collectors.toList());
 
-        return DrawResponseDTO.DrawResultResponseDTO.builder().
-                drawId(draw.getId())
+        return DrawResponseDTO.DrawResultResponseDTO.builder()
+                .drawId(draw.getId())
                 .drawType(draw.getType().name())
                 .title(draw.getTitle())
                 .seedNum(draw.getSeedNum())
                 .totalSlots(draw.getTotalSlots())
                 .year(draw.getYear())
                 .quarter(draw.getQuarter())
-                .applicants(applicantInfoDTOList).
-                build();
+                .totalApplicants(totalApplicants) // 전체 응모자 수 추가
+                .applicants(applicantInfoDTOList)
+                .build();
     }
 
     public static Draw toDraw(DrawRequestDTO.CreateDrawRequestDTO createDrawRequestDTO, String title, String mapImageUrl, String year, String quarter) {
@@ -102,6 +103,7 @@ public class DrawConverter {
         return DrawResponseDTO.SimulateDrawResponseDTO.builder()
                 .drawId(drawId)
                 .seed(seed)
+                .totalApplicants(totalApplicants)
                 .winners(pagedApplicants)
                 .totalApplicants(totalApplicants)
                 .build();
@@ -150,5 +152,4 @@ public class DrawConverter {
                 .parkingSpaceCompetitionRateDTOList(parkingSpaceCompetitionRateDTOList)
                 .build();
     }
-
 }
