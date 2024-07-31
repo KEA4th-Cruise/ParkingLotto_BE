@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,8 +35,8 @@ public class RegisterServiceImpl implements RegisterService {
     @Override
     @Transactional
     public Object refuseRegister(Member member) {
-        int updatedCount = memberRepository.updateEnrollmentStatusToNull(member.getAccountId());
-        if (updatedCount == 0) { // 등록 거절을 했지만 null로 바뀌지 않은 경우
+        int updatedCount = memberRepository.updateEnrollmentStatusToPrepending(member.getAccountId());
+        if (updatedCount == 0) { // 등록 거절을 했지만 prepending으로 바뀌지 않은 경우
             throw new ExceptionHandler(ErrorStatus.REGISTER_REFUSE_FAILED);
         }
         return null;
@@ -65,6 +66,25 @@ public class RegisterServiceImpl implements RegisterService {
             return RegisterConverter.toMembersResponseDTOList(members);
         } else {
             throw new ExceptionHandler(ErrorStatus.REGISTER_MEMBERS_NOT_FOUND);
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public RegisterResponseDTO.MembersResponseDTO findMemberBySearchKeywordAndEnrollmentStatus(String searchKeyword, EnrollmentStatus enrollmentStatus) {
+        if (enrollmentStatus == EnrollmentStatus.PREPENDING || enrollmentStatus == null) {
+            throw new ExceptionHandler(ErrorStatus.REGISTER_MEMBERS_NOT_FOUND);
+        }
+
+        Optional<Member> memberByAccountId = memberRepository.findByAccountIdAndEnrollmentStatus(searchKeyword, enrollmentStatus);
+        Optional<Member> memberByEmployeeNo = memberRepository.findByEmployeeNoAndEnrollmentStatus(searchKeyword, enrollmentStatus);
+
+        if (memberByAccountId.isPresent()) { // 사원명으로 검색된 경우
+            return RegisterConverter.toMembersResponseDTO(memberByAccountId.get());
+        } else if (memberByEmployeeNo.isPresent()) { // 사번으로 검색된 경우
+            return RegisterConverter.toMembersResponseDTO(memberByEmployeeNo.get());
+        } else { // 아무것도 검색되지 않은 경우
+            throw new ExceptionHandler(ErrorStatus.REGISTER_SEARCH_NOT_FOUND);
         }
     }
 

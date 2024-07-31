@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/register")
@@ -58,4 +59,9 @@ public class RegisterRestController {
         return ApiResponse.onSuccess(SuccessStatus.REGISTER_MEMBERS_FOUND, registerService.getMembersByEnrollmentStatus(enrollmentStatus));
     }
 
+    @Operation(summary = "등록 관리 페이지에서 사용자를 검색하는 API", description = "RequestParam으로 enrollmentStatus와 searchKeyword를 받아서 검색합니다. searchKeyword는 사원명 혹은 사번이 들어가야 합니다.")
+    @GetMapping("/members/search")
+    public ApiResponse<RegisterResponseDTO.MembersResponseDTO> searchMember(@RequestParam("enrollmentStatus") EnrollmentStatus enrollmentStatus, @RequestParam(value = "searchKeyword") String searchKeyword) {
+        return ApiResponse.onSuccess(SuccessStatus.REGISTER_SEARCH_FOUND, registerService.findMemberBySearchKeywordAndEnrollmentStatus(searchKeyword, enrollmentStatus));
+    }
 }
