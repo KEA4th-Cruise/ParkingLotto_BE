@@ -18,8 +18,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.time.Duration;
 
 import java.time.Duration;
+
 
 @Slf4j
 @Service
@@ -56,15 +58,15 @@ public class MemberServiceImpl implements MemberService {
         // 블랙리스트에서 해당 토큰 값이 있는지 검증
 
 
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRequestDTO.getAccountId( ), loginRequestDTO.getPassword( ));
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRequestDTO.getAccountId(), loginRequestDTO.getPassword());
 
-        Authentication authentication = authenticationManagerBuilder.getObject( ).authenticate(authenticationToken);
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         // 토큰 생성
         JwtToken jwtToken = jwtUtils.generateToken(authentication);
 
         // 7일간 refresh token을 redis에 저장
-        redisService.setValues(loginRequestDTO.getAccountId( ), jwtToken.getRefreshToken( ), Duration.ofDays(7));
+        redisService.setValues(loginRequestDTO.getAccountId(), jwtToken.getRefreshToken(), Duration.ofDays(7));
 
         // 등록이 된 사용자인지 아닌지 여부 넘겨줌
 
@@ -97,9 +99,14 @@ public class MemberServiceImpl implements MemberService {
                 .orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
     }
 
+
     @Override
-    public Long getMemberIdByAccountId(String accountId) {
-        return memberRepository.findIdByAccountId(accountId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
+    @Transactional(readOnly = true)
+    public MemberResponseDTO.MyInfoResponseDTO getMyInfo(Long memberId) {
+
+        Member findMember = memberRepository.findById(memberId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
+        return MemberConverter.toMyInfoResponseDTO(findMember);
+
     }
 
 }
