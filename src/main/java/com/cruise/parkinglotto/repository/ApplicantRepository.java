@@ -1,6 +1,7 @@
 package com.cruise.parkinglotto.repository;
 
 import com.cruise.parkinglotto.domain.Applicant;
+import com.cruise.parkinglotto.domain.Draw;
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -8,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -49,4 +51,17 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
     void updateWinningStatus(@Param("winnerId") Long winnerId, @Param("winningStatus") WinningStatus winningStatus);
 
     Page<Applicant> findByDrawId(PageRequest pageRequest, Long drawId);
+
+    Optional<Applicant> findById(Long applicantId);
+
+    @Query("SELECT COALESCE(MAX(a.userSeedIndex), 0) FROM Applicant a WHERE a.draw = :draw")
+    Integer findMaxUserSeedIndexByDraw(@Param("draw") Draw draw);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Applicant a SET a.userSeedIndex = :userSeedIndex WHERE a.id = :applicantId")
+    void updateUserSeedIndex(@Param("applicantId") Long applicantId, @Param("userSeedIndex") Integer userSeedIndex);
+
+    Optional<Applicant> findByDrawIdAndMemberId(Long drawId, Long memberId);
+
 }

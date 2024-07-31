@@ -5,8 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.*;
 
 import java.net.URLDecoder;
 import java.nio.file.Files;
@@ -67,6 +66,61 @@ public class ObjectStorageService {
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * @param fileUrl: 삭제할 파일의 url. (DB에 저장되어있는 문자열)
+     */
+    public void deleteCertificateFileObject(String fileUrl) {
+        try {
+            String[] urlParts = fileUrl.split("/");
+            String bucketName = urlParts[5];
+            String directory = urlParts[6]+urlParts[7];
+            String encodedObjectKey = urlParts[8];
+            log.info("bucketName: " + bucketName);
+            log.info("directory: " + directory);
+            log.info("encodedObjectKey: " + encodedObjectKey);
+
+            String objectKey = URLDecoder.decode(encodedObjectKey, "UTF-8");
+            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(directory + "/" + objectKey)
+                    .build();
+
+            s3Client.deleteObject(deleteObjectRequest);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    /**
+     * @param fileUrl: 삭제할 파일의 url. (DB에 저장되어있는 문자열)
+     * @return 객체가 존재하면 true, 아니면 false
+     */
+    public boolean doesObjectCertificateFileUrlExist(String fileUrl) {
+        try {
+            String[] urlParts = fileUrl.split("/");
+            String bucketName = urlParts[5];
+            String directory = urlParts[6]+urlParts[7];
+            String objectKey = urlParts[8];
+
+            HeadObjectRequest headObjectRequest = HeadObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(directory + "/" + objectKey)
+                    .build();
+
+            HeadObjectResponse response = s3Client.headObject(headObjectRequest);
+            return response != null;
+        } catch (S3Exception e) {
+            if (e.statusCode() == 404) {
+                return false;
+            }
+            e.printStackTrace();
+            return false;
         }
     }
 }
