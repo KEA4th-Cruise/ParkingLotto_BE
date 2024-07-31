@@ -1,5 +1,6 @@
 package com.cruise.parkinglotto.service.certificateDocsService;
 
+import com.cruise.parkinglotto.domain.enums.DrawType;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
 import com.cruise.parkinglotto.global.kc.ObjectStorageService;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Service
@@ -69,4 +71,22 @@ public class CertificateDocsServiceImpl implements CertificateDocsService {
             certificateDocsRepository.deleteByFileUrl(fileUrl);
         }
     }
+
+    @Override
+    public void prohibitSameFileNamesBetweenProfileFileUrlsAndMultiPartFiles(List<MultipartFile> certificateFiles, List<CertificateDocsRequestDTO.CertificateFileDTO> certificateFileDTO) throws ExceptionHandler {
+        for (MultipartFile multipartFile : certificateFiles) {
+            for (CertificateDocsRequestDTO.CertificateFileDTO fileDTO : certificateFileDTO) {
+                if (Objects.equals(multipartFile.getOriginalFilename(), fileDTO.getFileName())) {
+                    throw new ExceptionHandler(ErrorStatus.CERTIFICATEDOCS_NAME_DUPLICATED);
+                }
+
+            }
+        }
+    }
+
+    @Override
+    public String makeCertificateFileUrl(Long memberId, Long drawId, DrawType drawType, String fileName) {
+        return memberId.toString() + '_' + drawId.toString() + '_' + drawType.toString() + '_' + fileName;
+    }
+
 }

@@ -20,11 +20,12 @@ public class CertificateDocsConverter {
                 .collect(Collectors.toList());
     }
 
-    public static CertificateDocs toCertificateDocument(String fileUrl, String fileName, Member member) {
+    public static CertificateDocs toCertificateDocument(String fileUrl, String fileName, Member member, Long drawId) {
         return CertificateDocs.builder()
                 .fileUrl(fileUrl)
                 .fileName(fileName)
                 .member(member)
+                .drawId(drawId)
                 .build();
     }
 

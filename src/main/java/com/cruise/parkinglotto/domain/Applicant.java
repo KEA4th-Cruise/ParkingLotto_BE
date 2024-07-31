@@ -76,4 +76,8 @@ public class Applicant extends BaseEntity {
     public void updateTotalWeightedScore(double weightedTotalScore) {
         this.weightedTotalScore = weightedTotalScore;
     }
+
+    public void updateUserSeedIndex(Integer userSeedIndex) {
+        this.userSeedIndex = userSeedIndex;
+    }
 }
