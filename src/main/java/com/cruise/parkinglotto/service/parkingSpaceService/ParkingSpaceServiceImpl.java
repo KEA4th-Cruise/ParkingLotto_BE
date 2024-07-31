@@ -1,5 +1,6 @@
 package com.cruise.parkinglotto.service.parkingSpaceService;
 
+import com.cruise.parkinglotto.domain.Applicant;
 import com.cruise.parkinglotto.domain.Draw;
 import com.cruise.parkinglotto.domain.ParkingSpace;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
@@ -31,20 +32,24 @@ public class ParkingSpaceServiceImpl implements ParkingSpaceService {
     @Transactional
     public ParkingSpace addParkingSpace(Long drawId, MultipartFile floorPlanImage, ParkingSpaceRequestDTO.AddParkingSpaceDTO addParkingSpaceDTO) {
         Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
+
         String drawTitle = draw.getTitle().replace(" ", "_");
         String parkingSpaceName = addParkingSpaceDTO.getName().replace(" ", "_");
         String floorPlanImageUrl = objectStorageService.uploadObject(objectStorageConfig.getParkingSpaceImagePath(),
+
                 drawTitle + "_" + parkingSpaceName,
                 floorPlanImage);
         ParkingSpace parkingSpace = ParkingSpaceConverter.toParkingSpace(addParkingSpaceDTO, floorPlanImageUrl, draw);
         return parkingSpaceRepository.save(parkingSpace);
     }
 
-    public ParkingSpaceResponseDTO.ParkingSpaceInfoResponseDTO findParkingSpaceInfo(Long memberId) {
+    public ParkingSpaceResponseDTO.ParkingSpaceInfoResponseDTO findParkingSpaceInfo(Long memberId, Long drawId) {
 
 
-        Long applicantId = applicantRepository.findByMember(memberId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND));
-        Long parkingSpaceId = applicantRepository.findParkingSpaceId(applicantId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.PARKING_SPACE_NOT_FOUND));
+
+        Applicant applicant = applicantRepository.findApplicantByMemberIdAndDrawId(memberId, drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND));
+        Long parkingSpaceId = applicantRepository.findParkingSpaceById(applicant.getId()).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_PARKING_SPACE_ID_NOT_FOUND));
+
         ParkingSpace findParkingSpace = parkingSpaceRepository.findById(parkingSpaceId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.PARKING_SPACE_NOT_FOUND));
 
         return ParkingSpaceConverter.toParkingSpaceInfoResponseDTO(findParkingSpace);

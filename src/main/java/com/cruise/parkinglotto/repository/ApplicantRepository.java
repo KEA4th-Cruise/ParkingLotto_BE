@@ -1,7 +1,6 @@
 package com.cruise.parkinglotto.repository;
 
 import com.cruise.parkinglotto.domain.Applicant;
-import com.cruise.parkinglotto.domain.Member;
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -9,7 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,10 +15,16 @@ import java.util.Optional;
 public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
 
     @Query("select a.id from Applicant a where a.member.id = :memberId")
-    Optional<Long> findByMember(@Param("memberId") Long memberId);
+    Optional<Long> findIdByMember(@Param("memberId") Long memberId);
+
+    @Query("select a from Applicant a where a.member.id = :memberId")
+    Optional<List<Applicant>> findApplicantListByMemberId(@Param("memberId") Long memberId);
 
     @Query("select a.parkingSpaceId from Applicant a where a.id =:applicantId")
-    Optional<Long> findParkingSpaceId(@Param("applicantId") Long applicantId);
+    Optional<Long> findParkingSpaceById(@Param("applicantId") Long applicantId);
+
+    @Query("select a from Applicant a where a.member.id = :memberId and a.draw.id = :drawId ")
+    Optional<Applicant> findApplicantByMemberIdAndDrawId(@Param("memberId") Long memberId, @Param("drawId") Long drawId);
 
     List<Applicant> findByDrawId(Long drawId);
 
@@ -45,6 +49,4 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
     void updateWinningStatus(@Param("winnerId") Long winnerId, @Param("winningStatus") WinningStatus winningStatus);
 
     Page<Applicant> findByDrawId(PageRequest pageRequest, Long drawId);
-
-    Optional<Applicant> findById(Long applicantId);
 }

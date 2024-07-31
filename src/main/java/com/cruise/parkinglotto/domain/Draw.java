@@ -69,6 +69,9 @@ public class Draw extends BaseEntity {
     @OneToMany(mappedBy = "draw", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Applicant> applicantList;
 
+    @OneToMany(mappedBy = "draw", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PriorityApplicant> priorityApplicantList;
+
     @OneToOne(mappedBy = "draw", fetch = FetchType.LAZY)
     private DrawStatistics drawStatistics;
 

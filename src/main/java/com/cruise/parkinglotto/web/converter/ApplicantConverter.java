@@ -3,6 +3,7 @@ package com.cruise.parkinglotto.web.converter;
 import com.cruise.parkinglotto.domain.Applicant;
 import com.cruise.parkinglotto.domain.Member;
 import com.cruise.parkinglotto.domain.ParkingSpace;
+import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import org.springframework.data.domain.Page;
 
@@ -34,11 +35,37 @@ public class ApplicantConverter {
                 .build();
     }
 
-    public static ApplicantResponseDTO.ApprovePriorityResultDTO toApprovePriorityResultDTO(ParkingSpace parkingSpace) {
-        return ApplicantResponseDTO.ApprovePriorityResultDTO.builder()
-                .parkingSpaceId(parkingSpace.getId())
+    public static ApplicantResponseDTO.GetMyApplyResultDTO toGetMyApplyResultDTO(Applicant applicant) {
+        String statusData = "";
+        if (applicant.getWinningStatus() == WinningStatus.CANCELED) {
+            statusData = "취소됨";
+        } else if (applicant.getWinningStatus() == WinningStatus.RESERVE) {
+            statusData = "예비 " + applicant.getReserveNum() + "번";
+        } else if (applicant.getWinningStatus() == WinningStatus.PENDING) {
+            statusData = "낙첨";
+        } else {
+            statusData = "당첨";
+        }
+        return ApplicantResponseDTO.GetMyApplyResultDTO.builder()
+                .drawTitle(applicant.getDraw().getTitle())
+                .drawStatisticsId(applicant.getDraw().getDrawStatistics().getId())
+                .reserveNum(applicant.getReserveNum())
+                .winningStatus(applicant.getWinningStatus())
+                .parkingSpaceId(applicant.getParkingSpaceId())
+                .statusData(statusData).build();
+    }
+
+
+    public static ApplicantResponseDTO.MyApplyInfoDTO toMyApplyInfoDTO(Applicant applicant,ParkingSpace parkingSpace) {
+
+        return ApplicantResponseDTO.MyApplyInfoDTO.builder()
+                .parkingSpaceId(applicant.getParkingSpaceId())
+                .drawTitle(applicant.getDraw().getTitle())
+                .winningStatus(applicant.getWinningStatus())
                 .parkingSpaceName(parkingSpace.getName())
-                .remainSlots(parkingSpace.getRemainSlots())
+                .parkingSpaceAddress(parkingSpace.getAddress())
+                .startDate(applicant.getDraw().getUsageStartAt())
+                .endDate(applicant.getDraw().getUsageEndAt())
                 .build();
     }
 

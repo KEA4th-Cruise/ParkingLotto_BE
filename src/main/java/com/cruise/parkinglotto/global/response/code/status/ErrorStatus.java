@@ -30,6 +30,7 @@ public enum ErrorStatus implements BaseErrorCode {
 
     //신청자 관련 응답
     APPLICANT_NOT_FOUND(HttpStatus.OK, "APPLICANT4001", "신청자가 존재하지 않습니다"),
+    APPLICANT_PARKING_SPACE_ID_NOT_FOUND(HttpStatus.OK, "APPLICANT4002", "신청자의 주차공간 id 가 존재하지 않습니다"),
 
     // 주차 공간 관련 응답
     PARKING_SPACE_NOT_FOUND(HttpStatus.OK, "PARKINGSPACE4001", "주차 공간이 존재하지 않습니다"),

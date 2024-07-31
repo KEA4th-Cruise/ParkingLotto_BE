@@ -49,6 +49,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional(readOnly = true)
     public MemberResponseDTO.LoginResponseDTO login(MemberRequestDTO.LoginRequestDTO loginRequestDTO) {
 
+
         Member member = getMemberByAccountId(loginRequestDTO.getAccountId());
 
         // 비밀번호 일치 검증
@@ -58,19 +59,22 @@ public class MemberServiceImpl implements MemberService {
 
         // 블랙리스트에서 해당 토큰 값이 있는지 검증
 
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRequestDTO.getAccountId(), loginRequestDTO.getPassword());
 
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRequestDTO.getAccountId( ), loginRequestDTO.getPassword( ));
+
+        Authentication authentication = authenticationManagerBuilder.getObject( ).authenticate(authenticationToken);
 
         // 토큰 생성
         JwtToken jwtToken = jwtUtils.generateToken(authentication);
 
         // 7일간 refresh token을 redis에 저장
-        redisService.setValues(loginRequestDTO.getAccountId(), jwtToken.getRefreshToken(), Duration.ofDays(7));
+        redisService.setValues(loginRequestDTO.getAccountId( ), jwtToken.getRefreshToken( ), Duration.ofDays(7));
 
         // 등록이 된 사용자인지 아닌지 여부 넘겨줌
+
         return MemberConverter.toLoginResponseDTO(member, jwtToken);
-        }
+    }
+
 
     /**
      * 로그아웃 로직
@@ -95,6 +99,11 @@ public class MemberServiceImpl implements MemberService {
     public Member getMemberByAccountId(String accountId) {
         return memberRepository.findByAccountId(accountId)
                 .orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
+    }
+
+    @Override
+    public Long getMemberIdByAccountId(String accountId) {
+        return memberRepository.findIdByAccountId(accountId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
     }
 
 }
