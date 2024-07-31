@@ -2,6 +2,7 @@ package com.cruise.parkinglotto.web.dto.drawDTO;
 
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import com.cruise.parkinglotto.domain.enums.WorkType;
+import com.cruise.parkinglotto.domain.enums.DrawStatus;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
 import lombok.AllArgsConstructor;
@@ -57,7 +58,7 @@ public class DrawResponseDTO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class ConfirmDrawCreationResultDTO{
+    public static class ConfirmDrawCreationResultDTO {
         private Long drawId;
         private String title;
         LocalDateTime usageStartAt;
@@ -86,5 +87,23 @@ public class DrawResponseDTO {
         private Long parkingSpaceId;
         private int reserveNum;
         private WinningStatus winningStatus;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetDrawOverviewResultDTO {   //  메인페이지에 추첨 정보를 띄우기 위한 DTO
+        private Long drawId;
+        private String title;
+        private DrawStatus status;
+        private boolean isApplied;
+        private LocalDateTime drawStartAt;
+        private LocalDateTime drawEndAt;
+        private LocalDateTime usageStartAt;
+        private LocalDateTime usageEndAt;
+        private Integer applicantsCount;
+        private Integer totalSlots;
+        private List<ParkingSpaceResponseDTO.ParkingSpaceCompetitionRateDTO> parkingSpaceCompetitionRateDTOList;
     }
 }
