@@ -85,4 +85,8 @@ public class Draw extends BaseEntity {
         this.confirmed = confirmed;
         this.totalSlots = totalSlots;
     }
+
+    public void updateSeedNum(String seedNum) {
+        this.seedNum = seedNum;
+    }
 }

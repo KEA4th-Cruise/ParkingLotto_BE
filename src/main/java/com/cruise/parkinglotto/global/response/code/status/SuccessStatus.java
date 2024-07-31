@@ -31,6 +31,7 @@ public enum SuccessStatus implements BaseCode {
     DRAW_INFO_SAVED(HttpStatus.OK, "DRAW2003", "추첨 생성 정보가 저장되었습니다."),
     DRAW_CREATION_CONFIRMED(HttpStatus.OK, "DRAW2004", "추첨 생성이 완료되었습니다."),
     CALCULATE_MEMBER_WEIGHT_COMPLETED(HttpStatus.OK, "DRAW2005", "계산이 완료되었습니다."),
+    DRAW_SIMULATE_COMPLETED(HttpStatus.OK, "DRAW2006", "추첨 시뮬레이션이 완료되었습니다."),
 
     //  주차 구역 관련
     PARKING_SPACE_ADDED(HttpStatus.OK, "PARKINGSPACE2001", "해당 회차에 주차구역이 추가되었습니다."),
@@ -51,7 +52,8 @@ public enum SuccessStatus implements BaseCode {
     //  가중치정보 관련
     WEIGHT_DETAIL_FOUND(HttpStatus.OK, "WEIGHTDETAIL2001", "가중치 정보를 조회했습니다."),
 
-    ;
+
+;
 
 
     private final HttpStatus httpStatus;

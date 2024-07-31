@@ -5,6 +5,7 @@ import com.cruise.parkinglotto.domain.enums.DrawStatus;
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import com.cruise.parkinglotto.domain.enums.WorkType;
 import com.cruise.parkinglotto.domain.Applicant;
+import com.cruise.parkinglotto.domain.ParkingSpace;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
 import com.cruise.parkinglotto.global.kc.ObjectStorageConfig;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
@@ -13,6 +14,7 @@ import com.cruise.parkinglotto.service.certificateDocsService.CertificateDocsSer
 import com.cruise.parkinglotto.service.drawService.DrawService;
 import com.cruise.parkinglotto.repository.ApplicantRepository;
 import com.cruise.parkinglotto.repository.DrawRepository;
+import com.cruise.parkinglotto.repository.ParkingSpaceRepository;
 import com.cruise.parkinglotto.web.converter.ApplicantConverter;
 import com.cruise.parkinglotto.web.converter.CertificateDocsConverter;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantRequestDTO;
@@ -44,6 +46,7 @@ public class ApplicantServiceImpl implements ApplicantService {
     private final ObjectStorageService objectStorageService;
     private final ObjectStorageConfig objectStorageConfig;
     private final CertificateDocsService certificateDocsService;
+
 
     @Override
     @Transactional(readOnly = true)
