@@ -83,8 +83,8 @@ public class ApplicantServiceImpl implements ApplicantService {
     public ApplicantResponseDTO.MyApplyInfoDTO getMyApplyInfo(Long memberId, Long drawId) {
 
         Applicant findApplicant = applicantRepository.findApplicantByMemberIdAndDrawId(memberId, drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND));
-        ParkingSpace findParkingSpace = parkingSpaceRepository.findById(findApplicant.getParkingSpaceId()).orElseThrow(() -> new ExceptionHandler(ErrorStatus.PARKING_SPACE_NOT_FOUND));
-        return ApplicantConverter.toMyApplyInfoDTO(findApplicant, findParkingSpace);
+
+        return ApplicantConverter.toMyApplyInfoDTO(findApplicant);
 
     }
 
