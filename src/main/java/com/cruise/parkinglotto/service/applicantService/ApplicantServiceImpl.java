@@ -21,6 +21,8 @@ import com.cruise.parkinglotto.web.converter.CertificateDocsConverter;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantRequestDTO;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import com.cruise.parkinglotto.web.dto.CertificateDocsDTO.CertificateDocsRequestDTO;
+import com.cruise.parkinglotto.domain.ParkingSpace;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -82,8 +84,8 @@ public class ApplicantServiceImpl implements ApplicantService {
 
     @Override
     @Transactional
-    public void drawApply(List<MultipartFile> certificateDocuments, ApplicantRequestDTO.GeneralApplyDrawRequestDTO applyDrawRequestDTO, String accountId) {
-        Draw draw = drawRepository.findById(applyDrawRequestDTO.getDrawId()).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
+    public void drawApply(List<MultipartFile> certificateDocuments, ApplicantRequestDTO.GeneralApplyDrawRequestDTO applyDrawRequestDTO, String accountId, Long drawId) {
+        Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
 
         if (draw.getStatus() != DrawStatus.OPEN) {
             throw new ExceptionHandler(ErrorStatus.DRAW_NOT_IN_APPLY_PERIOD);
@@ -165,12 +167,17 @@ public class ApplicantServiceImpl implements ApplicantService {
             }
         }
 
-        //Handling address
+        //Handling weightDetails
         String address = applyDrawRequestDTO.getAddress();
         Integer carCommuteTime = applyDrawRequestDTO.getCarCommuteTime();
         Integer trafficCommuteTime = applyDrawRequestDTO.getTrafficCommuteTime();
         Double distance = applyDrawRequestDTO.getDistance();
-        weightDetailsRepository.updateAddress(member, address);
+        WeightDetails weightDetails = weightDetailsRepository.findByMemberId(member.getId());
+        weightDetails.updateAddress(address);
+        weightDetails.updateCarCommuteTime(carCommuteTime);
+        weightDetails.updateTrafficCommuteTime(trafficCommuteTime);
+        weightDetails.updateDistance(distance);
+        weightDetails.updateWorkType(applyDrawRequestDTO.getWorkType());
 
         //Handling workType
         WorkType workType = applyDrawRequestDTO.getWorkType();
@@ -182,7 +189,6 @@ public class ApplicantServiceImpl implements ApplicantService {
         if (weightDetailsOptional.isEmpty()) {
             recentLossCount = 0;
         } else {
-            WeightDetails weightDetails = weightDetailsOptional.get();
             recentLossCount = weightDetails.getRecentLossCount();
         }
 
@@ -196,6 +202,10 @@ public class ApplicantServiceImpl implements ApplicantService {
         Integer maxUserSeedIndex = applicantRepository.findMaxUserSeedIndexByDraw(draw);
         Integer newUserSeedIndex = maxUserSeedIndex + 1;
         toGetApplicantId.updateUserSeedIndex(newUserSeedIndex);
+
+        //주차장 자리 업데이트
+        ParkingSpace parkingSpace = parkingSpaceRepository.findUserCountWthDrawAndFirstChoice(applyDrawRequestDTO.getFirstChoice(), drawId);
+        parkingSpace.updateApplicantCount();
 
         //weight 계산 및 입력
         drawService.calculateWeight(applicant);

@@ -17,7 +17,7 @@ public interface ApplicantService {
 
     List<ApplicantResponseDTO.GetMyApplyResultDTO> getApplyResultList(Long memberId);
     
-    void drawApply(List<MultipartFile> certificateDocs, ApplicantRequestDTO.GeneralApplyDrawRequestDTO applyDrawRequestDTO, String accountId);
+    void drawApply(List<MultipartFile> certificateDocs, ApplicantRequestDTO.GeneralApplyDrawRequestDTO applyDrawRequestDTO, String accountId, Long drawId);
 
     /**
      * 검색 키워드로 신청자 목록에서 신청자를 검색하는 메서드
