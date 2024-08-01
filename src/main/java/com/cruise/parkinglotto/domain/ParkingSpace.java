@@ -48,7 +48,9 @@ public class ParkingSpace extends BaseEntity {
         this.confirmed = confirmed;
     }
 
-    public void updateApplicantCount() { this.applicantCount = this.applicantCount + 1; }
+    public void updateApplicantCount() {
+        this.applicantCount = this.applicantCount + 1;
+    }
 
     public void decrementSlots() {
         if (this.remainSlots > 0) {

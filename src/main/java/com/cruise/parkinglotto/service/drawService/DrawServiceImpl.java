@@ -311,7 +311,7 @@ public class DrawServiceImpl implements DrawService {
     @Transactional(readOnly = true)
     public DrawResponseDTO.DrawResultResponseDTO getDrawResult(HttpServletRequest httpServletRequest, Long drawId, Integer page) {
         int pageSize = 15;
-        int offset = (page -1) * pageSize;
+        int offset = (page - 1) * pageSize;
 
         Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
         List<Applicant> applicants = applicantRepository.findByDrawId(drawId);

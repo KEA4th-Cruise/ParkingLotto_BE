@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name ="tb_weight_section_statistics" )
+@Table(name = "tb_weight_section_statistics")
 @Getter
 @Builder
 @AllArgsConstructor

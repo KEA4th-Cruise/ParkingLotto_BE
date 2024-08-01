@@ -93,9 +93,10 @@ public class DrawRestController {
         DrawResponseDTO.SimulateDrawResponseDTO simulateDrawResponseDTO = drawService.simulateDraw(drawId, seedNum, page);
         return ApiResponse.onSuccess(SuccessStatus.DRAW_SIMULATE_COMPLETED, simulateDrawResponseDTO);
     }
+
     @Operation(summary = "(메인페이지용) 추첨정보, 추첨 경쟁률, 주차구역 별 경쟁률, 로그인한 사용자의 신청 여부를 반환하는 API입니다.", description = "진행 중인 추첨이 일반 신청일 경우 [추첨정보, 경쟁률, 주차구역 별 경쟁률]을 반환하고, 우대신청일 경우 [추첨정보]를 반환합니다.")
     @GetMapping("/overview")
-    public ApiResponse<DrawResponseDTO.GetDrawOverviewResultDTO> getDrawInfo(HttpServletRequest httpServletRequest){
+    public ApiResponse<DrawResponseDTO.GetDrawOverviewResultDTO> getDrawInfo(HttpServletRequest httpServletRequest) {
         DrawResponseDTO.GetDrawOverviewResultDTO getDrawInfoResultDTO = drawService.getDrawOverview(httpServletRequest);
         return ApiResponse.onSuccess(SuccessStatus.DRAW_OVERVIEW_FOUND, getDrawInfoResultDTO);
     }
@@ -119,7 +120,7 @@ public class DrawRestController {
     }
 
     @Operation(summary = "사용자가 일반 추첨을(GENERAL) 신청하는 api입니다.", description = "파일 리스트와 적절한 DTO를 인터페이스 명세서를 참조해서 넣어주세요.")
-    @PostMapping(value = "/{drawId}/general/apply",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/{drawId}/general/apply", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<?> drawApply(HttpServletRequest httpServletRequest, @PathVariable(name = "drawId") Long drawId, @RequestPart(value = "certificateDocs", required = false) @Parameter(description = "업로드할 인증서 문서 리스트") List<MultipartFile> certificateDocs,
                                     @RequestPart(value = "applyDrawRequestDTO", required = true) @Parameter(description = "일반 추첨 신청에 필요한 요청 데이터") @Valid ApplicantRequestDTO.GeneralApplyDrawRequestDTO applyDrawRequestDTO) {
         String accountId = jwtUtils.getAccountIdFromRequest(httpServletRequest);
