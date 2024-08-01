@@ -41,6 +41,13 @@ public class ApplicantRestController {
         return ApiResponse.onSuccess(SuccessStatus.APPLICANT_LIST_FOUND, ApplicantConverter.toGetApplicantListResultDTO(applicantList));
     }
 
+    @Operation(summary = "일반 추첨 신청자 목록에서 검색하는 API 입니다.", description = "검색 키워드로 사원명 또는 사번을 입력해주세요.")
+    @GetMapping("/list/search")
+    public ApiResponse<ApplicantResponseDTO.GetApplicantResultDTO> searchApplicant(@RequestParam(name = "searchKeyword") String searchKeyword) {
+
+        return ApiResponse.onSuccess(SuccessStatus.APPLICANT_SEARCH_FOUND, applicantService.searchApplicantBySearchKeyword(searchKeyword));
+    }
+
     @GetMapping("/my-apply-list")
     public ApiResponse<List<ApplicantResponseDTO.GetMyApplyResultDTO>> getMyApplyList(HttpServletRequest httpServletRequest) {
         String accountIdFromRequest = jwtUtils.getAccountIdFromRequest(httpServletRequest);

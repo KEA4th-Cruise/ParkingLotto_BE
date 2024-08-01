@@ -24,7 +24,7 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 등록 관련 응답
     REGISTER_REQUEST_FAILED(HttpStatus.OK, "REGISTER4001", "등록 요청에 실패했습니다."),
-    REGISTER_MEMBERS_NOT_FOUND(HttpStatus.OK, "REGISTER4002", "enrollmentStatus가 잘못되었습니다."),
+    REGISTER_MEMBERS_NOT_FOUND(HttpStatus.OK, "REGISTER4002", "등록 상태가 잘못되었습니다."),
     REGISTER_APPROVE_FAILED(HttpStatus.OK, "REGISTER4003", "등록 요청 승인에 실패했습니다."),
     REGISTER_REFUSE_FAILED(HttpStatus.OK, "REGISTER4004", "등록 요청 거절에 실패했습니다."),
     REGISTER_SEARCH_NOT_FOUND(HttpStatus.OK, "REGISTER4005", "검색 결과가 없습니다."),
@@ -40,6 +40,7 @@ public enum ErrorStatus implements BaseErrorCode {
     APPLICANT_SEED_NOT_FOUND(HttpStatus.OK, "APPLICANT4006", "신청자의 랜덤 시드가 존재하지 않습니다"),
     APPLICANT_DUPLICATED_APPLY(HttpStatus.OK, "APPLICANT4007", "중복된 신청입니다"),
     APPLICANT_PARKING_SPACE_ID_NOT_FOUND(HttpStatus.OK, "APPLICANT4008", "신청자의 주차공간 id 가 존재하지 않습니다"),
+    APPLICANT_SEARCH_NOT_FOUND(HttpStatus.OK, "APPLICANT4009", "검색 결과가 없습니다."),
 
     // 주차 공간 관련 응답
     PARKING_SPACE_NOT_FOUND(HttpStatus.OK, "PARKINGSPACE4001", "주차 공간이 존재하지 않습니다"),

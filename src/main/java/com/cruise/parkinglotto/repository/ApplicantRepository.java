@@ -68,4 +68,7 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
 
     @Query("SELECT COUNT(a) FROM Applicant a WHERE a.draw.id = :drawId")
     Integer countByDrawId(@Param("drawId") Long drawId);
+
+    @Query("SELECT a FROM Applicant a JOIN a.member m WHERE m.employeeNo = :searchKeyword OR m.accountId = :searchKeyword")
+    Optional<Applicant> findByMemberEmployeeNoOrAccountId(@Param("searchKeyword") String searchKeyword);
 }
