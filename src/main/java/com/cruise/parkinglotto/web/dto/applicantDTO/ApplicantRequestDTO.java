@@ -17,8 +17,6 @@ public class ApplicantRequestDTO {
     @AllArgsConstructor
     public static class GeneralApplyDrawRequestDTO {
         @NotNull
-        private Long drawId;
-        @NotNull
         private String carNum;
         private List<CertificateDocsRequestDTO.CertificateFileDTO> useProfileFileUrlDTO;
         @NotNull

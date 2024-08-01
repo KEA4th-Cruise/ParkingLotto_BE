@@ -34,7 +34,7 @@ public class Member extends BaseEntity implements UserDetails {
     @Column(nullable = false, length = 20)
     private String accountId;
 
-    @Column(nullable = false,  length = 10)
+    @Column(nullable = false, length = 10)
     private String employeeNo;
 
     @Column(nullable = false, length = 15)
@@ -96,6 +96,7 @@ public class Member extends BaseEntity implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
     @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
     private WeightDetails weightDetails;
 }
