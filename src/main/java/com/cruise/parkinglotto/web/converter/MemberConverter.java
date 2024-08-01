@@ -24,7 +24,6 @@ public class MemberConverter {
                 .build();
     }
 
-
     public static MemberResponseDTO.RefreshResponseDTO toRefreshResponseDTO(String accessToken) {
         return MemberResponseDTO.RefreshResponseDTO.builder()
                 .accessToken(accessToken)
@@ -33,11 +32,12 @@ public class MemberConverter {
 
 
     public static MemberResponseDTO.MyInfoResponseDTO toMyInfoResponseDTO(Member member, List<CertificateDocs> certificateDocs) {
+
         return MemberResponseDTO.MyInfoResponseDTO.builder()
                 .address(member.getWeightDetails().getAddress())
                 .carNum(member.getCarNum())
                 .workType(member.getWeightDetails().getWorkType())
-                .myCertificationInfoResponseDTOS(certificateDocs
+                .myCertificationInfoResponseDTOS(member.getCertificateDocsList()
                         .stream().map(c -> MemberResponseDTO.MyCertificationInfoResponseDTO.builder()
                                 .fileName(c.getFileName())
                                 .fileUrl(c.getFileUrl())
