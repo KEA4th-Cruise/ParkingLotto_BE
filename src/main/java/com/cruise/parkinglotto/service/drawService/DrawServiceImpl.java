@@ -9,6 +9,7 @@ import com.cruise.parkinglotto.domain.enums.DrawType;
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import com.cruise.parkinglotto.domain.enums.WorkType;
 import com.cruise.parkinglotto.global.excel.ByteArrayMultipartFile;
+import com.cruise.parkinglotto.global.excel.FileGeneration;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
 import com.cruise.parkinglotto.global.jwt.JwtUtils;
 import com.cruise.parkinglotto.global.kc.ObjectStorageConfig;
@@ -26,6 +27,8 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.transaction.support.TransactionSynchronizationAdapter;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -54,7 +57,7 @@ public class DrawServiceImpl implements DrawService {
     private final ObjectStorageConfig objectStorageConfig;
     private final JwtUtils jwtUtils;
     private final MemberRepository memberRepository;
-
+    private final FileGeneration fileGenerationService;
 
     //계산용 변수
     private static final int WORK_TYPE1_SCORE = 25;
@@ -93,18 +96,23 @@ public class DrawServiceImpl implements DrawService {
 
             handleDrawResults(drawId, orderedApplicants);
 
-            //생성하고 DB에 저장
-            String url = generateDrawResultExcel(draw, orderedApplicants);
-            draw.updateResultURL(url);
-            System.out.println("url = " + url);
-
+            // 트랜잭션이 성공적으로 커밋된 후 엑셀 파일을 생성하도록 작업 예약
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
+                @Override
+                public void afterCommit() {
+                    fileGenerationService.generateAndUploadExcel(draw, orderedApplicants);
+                }
+            });
             drawRepository.updateStatus(drawId, DrawStatus.COMPLETED);
         } catch (Exception e) {
             log.error("Error occurred during executeDraw for drawId: {}", drawId, e);
             throw e;
-        } finally {
-            log.info("Transaction committed for drawId: {}", drawId);
         }
+    }
+
+    private void generateAndUploadExcel(Draw draw, List<Applicant> orderedApplicants) throws IOException {
+        draw.updateResultURL(generateDrawResultExcel(draw, orderedApplicants));
+        drawRepository.save(draw);
     }
 
     @Override
@@ -619,6 +627,7 @@ public class DrawServiceImpl implements DrawService {
             return null;
         }
     }
+
     private static String maskName(String name) {
         if (name == null || name.length() < 2) {
             return name; // 이름이 너무 짧으면 마스킹하지 않음
