@@ -15,17 +15,17 @@ public enum SuccessStatus implements BaseCode {
     _OK(HttpStatus.OK, "COMMON200", "성공입니다."),
 
     // 멤버 관련 응답
-    MEMBER_LOGIN_SUCCESS(HttpStatus.OK, "MEMBER2001", "로그인 성공"),
-    MEMBER_LOGOUT_SUCCESS(HttpStatus.OK, "MEMBER2002", "로그아웃 성공"),
-    MEMBER_INFO_FOUND(HttpStatus.OK, "MEMBER2003", "맴버 정보 조회에 성공했습니다"),
+    MEMBER_LOGIN_SUCCESS(HttpStatus.OK, "MEMBER2001", "로그인에 성공했습니다."),
+    MEMBER_LOGOUT_SUCCESS(HttpStatus.OK, "MEMBER2002", "로그아웃에 성공했습니다."),
+    MEMBER_INFO_FOUND(HttpStatus.OK, "MEMBER2003", "맴버 정보를 조회했습니다."),
 
     // 등록 관련 응답
-    REGISTER_REQUEST_SUCCESS(HttpStatus.OK, "REGISTER2001", "등록 요청 성공"),
-    REGISTER_MEMBER_INFO_FOUND(HttpStatus.OK, "REGISTER2002", "세부 정보 조회 성공"),
-    REGISTER_MEMBERS_FOUND(HttpStatus.OK, "REGISTER2003", "사용자 목록 조회 성공"),
-    REGISTER_REQUEST_APPROVED(HttpStatus.OK, "REGISTER2004", "등록 승인 성공"),
-    REGISTER_REQUEST_REFUSED(HttpStatus.OK, "REGISTER2005", "등록 거절 성공"),
-    REGISTER_SEARCH_FOUND(HttpStatus.OK, "REGISTER2006", "사용자 검색 성공"),
+    REGISTER_REQUEST_SUCCESS(HttpStatus.OK, "REGISTER2001", "등록 요청을 보냈습니다."),
+    REGISTER_MEMBER_INFO_FOUND(HttpStatus.OK, "REGISTER2002", "멤버 세부 정보를 조회했습니다."),
+    REGISTER_MEMBERS_FOUND(HttpStatus.OK, "REGISTER2003", "사용자 목록을 조회했습니다."),
+    REGISTER_REQUEST_APPROVED(HttpStatus.OK, "REGISTER2004", "등록을 승인했습니다."),
+    REGISTER_REQUEST_REFUSED(HttpStatus.OK, "REGISTER2005", "등록을 거절했습니다."),
+    REGISTER_SEARCH_FOUND(HttpStatus.OK, "REGISTER2006", "검색을 완료했습니다."),
 
     // 추첨 관련
     DRAW_INFO_FOUND(HttpStatus.OK, "DRAW2001", "추첨 정보를 조회했습니다."),
@@ -47,7 +47,7 @@ public enum SuccessStatus implements BaseCode {
     APPLICANT_SUCCESS(HttpStatus.OK, "APPLICANT2003","신청에 성공했습니다."),
     APPLICANT_APPLY_INFO_FOUND(HttpStatus.OK, "APPLICANT2004","해당 사용자의 특정 회차 추첨 결과 정보 조회에 성공했습니다"),
     APPLICANT_APPLY_LIST_FOUND(HttpStatus.OK, "APPLICANT2005","사용자가 신청했던 회차 리스트 조회를 성공했습니다."),
-    APPLICANT_SEARCH_FOUND(HttpStatus.OK, "APPLICANT2006", "신청자 검색 성공"),
+    APPLICANT_SEARCH_FOUND(HttpStatus.OK, "APPLICANT2006", "검색을 완료했습니다."),
 
     //  우대 신청자 관련
     PRIORITY_APPLICANT_LIST_FOUND(HttpStatus.OK, "PRIORITY2001","우대 신청자 목록을 조회하였습니다."),
