@@ -40,23 +40,11 @@ public class WeightDetails extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public void updateAddress(String address) {
+    public void updateWeightDetailsInApply(String address, WorkType workType, Integer trafficCommuteTime, Integer carCommuteTime, Double distance){
         this.address = address;
-    }
-
-    public void updateWorkType(WorkType workType) {
         this.workType = workType;
-    }
-
-    public void updateTrafficCommuteTime(Integer trafficCommuteTime) {
         this.trafficCommuteTime = trafficCommuteTime;
-    }
-
-    public void updateCarCommuteTime(Integer carCommuteTime) {
         this.carCommuteTime = carCommuteTime;
-    }
-
-    public void updateDistance(Double distance) {
         this.distance = distance;
     }
 

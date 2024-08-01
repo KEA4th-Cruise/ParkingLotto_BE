@@ -173,11 +173,7 @@ public class ApplicantServiceImpl implements ApplicantService {
         Integer trafficCommuteTime = applyDrawRequestDTO.getTrafficCommuteTime();
         Double distance = applyDrawRequestDTO.getDistance();
         WeightDetails weightDetails = weightDetailsRepository.findByMemberId(member.getId());
-        weightDetails.updateAddress(address);
-        weightDetails.updateCarCommuteTime(carCommuteTime);
-        weightDetails.updateTrafficCommuteTime(trafficCommuteTime);
-        weightDetails.updateDistance(distance);
-        weightDetails.updateWorkType(applyDrawRequestDTO.getWorkType());
+        weightDetails.updateWeightDetailsInApply(address, applyDrawRequestDTO.getWorkType(), trafficCommuteTime, carCommuteTime, distance);
 
         //Handling workType
         WorkType workType = applyDrawRequestDTO.getWorkType();
@@ -204,7 +200,7 @@ public class ApplicantServiceImpl implements ApplicantService {
         toGetApplicantId.updateUserSeedIndex(newUserSeedIndex);
 
         //주차장 자리 업데이트
-        ParkingSpace parkingSpace = parkingSpaceRepository.findUserCountWthDrawAndFirstChoice(applyDrawRequestDTO.getFirstChoice(), drawId);
+        ParkingSpace parkingSpace = parkingSpaceRepository.findUserCountWithDrawAndFirstChoice(applyDrawRequestDTO.getFirstChoice(), drawId);
         parkingSpace.updateApplicantCount();
 
         //weight 계산 및 입력
