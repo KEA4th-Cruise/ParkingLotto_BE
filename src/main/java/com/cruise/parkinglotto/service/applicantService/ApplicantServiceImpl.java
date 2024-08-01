@@ -181,4 +181,11 @@ public class ApplicantServiceImpl implements ApplicantService {
         drawService.calculateWeight(applicant);
 
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ApplicantResponseDTO.GetApplicantResultDTO searchApplicantBySearchKeyword(String searchKeyword) {
+        Applicant applicant = applicantRepository.findByMemberEmployeeNoOrAccountId(searchKeyword).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_SEARCH_NOT_FOUND));
+        return ApplicantConverter.toGetApplicantResultDTO(applicant);
+    }
 }

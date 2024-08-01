@@ -43,7 +43,7 @@ public class Member extends BaseEntity implements UserDetails {
     @Column(nullable = false, length = 50)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 60)
     private String password;
 
     @Enumerated(value = EnumType.STRING)
@@ -53,7 +53,7 @@ public class Member extends BaseEntity implements UserDetails {
     @Column(length = 8)
     private String carNum;
 
-    private LocalDate deleteAt;
+    private LocalDate deletedAt;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CertificateDocs> certificateDocsList;
