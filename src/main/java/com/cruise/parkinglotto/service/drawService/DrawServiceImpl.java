@@ -8,6 +8,7 @@ import com.cruise.parkinglotto.domain.enums.DrawStatus;
 import com.cruise.parkinglotto.domain.enums.DrawType;
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import com.cruise.parkinglotto.domain.enums.WorkType;
+import com.cruise.parkinglotto.global.excel.ByteArrayMultipartFile;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
 import com.cruise.parkinglotto.global.jwt.JwtUtils;
 import com.cruise.parkinglotto.global.kc.ObjectStorageConfig;
@@ -25,13 +26,11 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
@@ -602,6 +601,7 @@ public class DrawServiceImpl implements DrawService {
                 } else {
                     row.createCell(5).setCellValue("예비번호: " + applicant.getReserveNum());
                 }
+                i++;
             }
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -609,8 +609,7 @@ public class DrawServiceImpl implements DrawService {
             byte[] excelBytes = baos.toByteArray();
 
             // byte[]를 MultipartFile로 변환
-            ByteArrayInputStream bis = new ByteArrayInputStream(excelBytes);
-            MultipartFile multipartFile = new MockMultipartFile("file", "draw_results_" + draw.getId() + ".xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", bis);
+            MultipartFile multipartFile = new ByteArrayMultipartFile("file", "draw_results_" + draw.getId() + ".xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelBytes);
 
             String fileName = draw.getTitle().replace(" ", "_") + "_추첨결과.xlsx";
 
@@ -620,7 +619,6 @@ public class DrawServiceImpl implements DrawService {
             return null;
         }
     }
-
     private static String maskName(String name) {
         if (name == null || name.length() < 2) {
             return name; // 이름이 너무 짧으면 마스킹하지 않음
