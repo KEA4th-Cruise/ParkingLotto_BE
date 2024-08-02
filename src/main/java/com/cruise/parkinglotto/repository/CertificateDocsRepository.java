@@ -22,4 +22,5 @@ public interface CertificateDocsRepository extends JpaRepository<CertificateDocs
     @Query("select c from CertificateDocs c where c.member.id = :memberId and c.drawId = :drawId")
     Optional<List<CertificateDocs>> findCertificateDocsByMemberIdAndDrawId(@Param("memberId") Long memberId, @Param("drawId") Long drawId);
 
+    List<CertificateDocs> findByMemberAndDrawId(Member member, Long drawId);
 }

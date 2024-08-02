@@ -29,4 +29,10 @@ public class CertificateDocsConverter {
                 .build();
     }
 
+    public static CertificateDocsRequestDTO.CertificateFileDTO toCertificateFileDTO(CertificateDocs certificateDocs) {
+        return CertificateDocsRequestDTO.CertificateFileDTO.builder()
+                .fileName(certificateDocs.getFileName())
+                .fileUrl(certificateDocs.getFileUrl())
+                .build();
+    }
 }

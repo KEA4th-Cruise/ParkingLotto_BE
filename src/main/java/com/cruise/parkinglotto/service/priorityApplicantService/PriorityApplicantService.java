@@ -11,4 +11,5 @@ public interface PriorityApplicantService {
 
     PriorityApplicantResponseDTO.ApprovePriorityResultDTO approvePriority(Long drawId, Long applicantId);
 
+    PriorityApplicantResponseDTO.GetPriorityApplicantDetailsResultDTO getPriorityApplicantDetails(Long drawId, Long priorityApplicantId);
 }
