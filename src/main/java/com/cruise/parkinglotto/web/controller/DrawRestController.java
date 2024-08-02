@@ -158,6 +158,7 @@ public class DrawRestController {
         DrawResponseDTO.DrawResultExcelDTO drawResultExcelDTO = drawService.getDrawResultExcel(drawId);
         return ApiResponse.onSuccess(SuccessStatus.DRAW_RESULT_EXCEL_DOWNLOADED, drawResultExcelDTO);
     }
+
     //회차의 추첨 결과의 명단을 조회하는 API
     @Operation(summary = "해당 회차 추첨 시드의 상세 조회 API", description = "path variable로 추첨 ID를 넘겨주면 해당 추첨 시드의 상세 결과를 반환합니다.")
     @GetMapping("/{drawId}/result/seed")
@@ -165,5 +166,12 @@ public class DrawRestController {
 
         DrawResponseDTO.GetDrawInfoDetailDTO drawSeedDetail = drawService.getDrawInfoDetail(httpServletRequest, drawId);
         return ApiResponse.onSuccess(SuccessStatus.DRAW_INFO_FOUND, drawSeedDetail);
+    }
+
+    @Operation(summary = "우대 신청자의 신청정보를 상세조회하는 API입니다. ", description = "pathVariable로 drawId와 priorityApplicantId를 전송해주세요.")
+    @GetMapping("/{drawId}/priority-applicants/{priorityApplicantId}")
+    public ApiResponse<PriorityApplicantResponseDTO.GetPriorityApplicantDetailsResultDTO> getPriorityApplicantDetails(@PathVariable(name = "drawId") Long drawId,
+                                                                                                                      @PathVariable(name = "priorityApplicantId") Long priorityApplicantId) {
+        return ApiResponse.onSuccess(SuccessStatus.PRIORITY_APPLICANT_DETAILS_FOUND, priorityApplicantService.getPriorityApplicantDetails(drawId, priorityApplicantId));
     }
 }
