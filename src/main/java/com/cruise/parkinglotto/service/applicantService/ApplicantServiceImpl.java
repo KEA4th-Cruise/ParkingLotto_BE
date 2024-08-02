@@ -25,6 +25,7 @@ import com.cruise.parkinglotto.domain.ParkingSpace;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,12 +62,17 @@ public class ApplicantServiceImpl implements ApplicantService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ApplicantResponseDTO.GetMyApplyResultDTO> getApplyResultList(Long memberId) {
+    public Page<ApplicantResponseDTO.GetMyApplyResultDTO> getApplyResultList(Long memberId, Integer page) {
 
         List<Applicant> findApplicants = applicantRepository.findApplicantListByMemberId(memberId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND));
-        List<ApplicantResponseDTO.GetMyApplyResultDTO> result = findApplicants.stream()
+        List<ApplicantResponseDTO.GetMyApplyResultDTO> applyResultDTOList = findApplicants.stream()
                 .map(a -> ApplicantConverter.toGetMyApplyResultDTO(a))
                 .collect(Collectors.toList());
+
+        PageRequest pageRequest = PageRequest.of(page, 4);
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min((start + pageRequest.getPageSize()), applyResultDTOList.size());
+        Page<ApplicantResponseDTO.GetMyApplyResultDTO> result = new PageImpl<ApplicantResponseDTO.GetMyApplyResultDTO>(applyResultDTOList.subList(start, end), pageRequest, applyResultDTOList.size());
 
         return result;
 
