@@ -323,11 +323,11 @@ public class DrawServiceImpl implements DrawService {
 
     @Override
     @Transactional(readOnly = true)
-    public DrawResponseDTO.DrawResultResponseDTO getDrawResult(HttpServletRequest httpServletRequest, Long drawId, Integer page) {
+    public DrawResponseDTO.DrawMemberResultResponseDTO getDrawResult(HttpServletRequest httpServletRequest, Long drawId, Integer page) {
         int pageSize = 15;
         int offset = (page - 1) * pageSize;
 
-        Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
+        drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
         List<Applicant> applicants = applicantRepository.findByDrawId(drawId);
 
         List<Long> parkingSpaceIds = applicants.stream()
@@ -344,7 +344,7 @@ public class DrawServiceImpl implements DrawService {
 
         List<Applicant> pagedApplicants = applicants.subList(start, end);
 
-        return DrawConverter.toDrawResultResponseDTO(draw, pagedApplicants, parkingSpaceNames, applicants.size());
+        return DrawConverter.toDrawResultResponseDTO(pagedApplicants, parkingSpaceNames);
     }
 
     @Override
@@ -462,8 +462,6 @@ public class DrawServiceImpl implements DrawService {
 
         // 시뮬레이션 데이터를 저장할 HashMap 생성
         Map<Long, SimulationData> simulationDataMap = new HashMap<>();
-        Map<Long, Applicant> applicantMap = applicants.stream()
-                .collect(Collectors.toMap(Applicant::getId, applicant -> applicant));
 
         // 가중치 정보 가져오기
         for (Applicant applicant : applicants) {
@@ -573,5 +571,15 @@ public class DrawServiceImpl implements DrawService {
     public DrawResponseDTO.DrawResultExcelDTO getDrawResultExcel(Long drawId) {
         Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
         return toDrawResultExcelDTO(draw.getResultURL());
+    }
+
+    @Override
+    public DrawResponseDTO.GetDrawInfoDetailDTO getDrawInfoDetail(HttpServletRequest httpServletRequest, Long drawId) {
+        Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
+        List<Applicant> applicants = applicantRepository.findByDrawId(drawId);
+        if (applicants == null || applicants.isEmpty()) {
+            throw new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND);
+        }
+        return DrawConverter.toGetDrawInfoDetail(draw, applicants);
     }
 }

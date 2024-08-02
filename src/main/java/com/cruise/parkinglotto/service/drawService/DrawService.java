@@ -35,7 +35,7 @@ public interface DrawService {
 
     DrawResponseDTO.GetCurrentDrawInfoDTO getCurrentDrawInfo(HttpServletRequest httpServletRequest, Long drawId);
 
-    DrawResponseDTO.DrawResultResponseDTO getDrawResult(HttpServletRequest httpServletRequest, Long drawId, Integer page);
+    DrawResponseDTO.DrawMemberResultResponseDTO getDrawResult(HttpServletRequest httpServletRequest, Long drawId, Integer page);
 
     Draw createDraw(MultipartFile mapImage, DrawRequestDTO.CreateDrawRequestDTO createDrawRequestDTO);
 
@@ -47,4 +47,5 @@ public interface DrawService {
 
     DrawResponseDTO.DrawResultExcelDTO getDrawResultExcel(Long drawId);
 
+    DrawResponseDTO.GetDrawInfoDetailDTO getDrawInfoDetail(HttpServletRequest httpServletRequest, Long drawId);
 }
