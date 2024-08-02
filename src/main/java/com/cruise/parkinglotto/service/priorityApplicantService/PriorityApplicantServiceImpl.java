@@ -6,6 +6,7 @@ import com.cruise.parkinglotto.domain.ParkingSpace;
 import com.cruise.parkinglotto.domain.PriorityApplicant;
 import com.cruise.parkinglotto.domain.enums.ApprovalStatus;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
+import com.cruise.parkinglotto.global.response.ApiResponse;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
 import com.cruise.parkinglotto.repository.CertificateDocsRepository;
 import com.cruise.parkinglotto.repository.DrawRepository;
@@ -53,8 +54,6 @@ public class PriorityApplicantServiceImpl implements PriorityApplicantService {
     @Override
     @Transactional(readOnly = true)
     public PriorityApplicantResponseDTO.GetPriorityApplicantDetailsResultDTO getPriorityApplicantDetails(Long drawId, Long priorityApplicantId) {
-
-
         Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
         PriorityApplicant priorityApplicant = priorityApplicantRepository.findById(priorityApplicantId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND));
         if (!Objects.equals(draw.getId(), priorityApplicant.getDraw().getId())) {
@@ -63,4 +62,13 @@ public class PriorityApplicantServiceImpl implements PriorityApplicantService {
         List<CertificateDocs> certificateDocsList = certificateDocsRepository.findByMemberAndDrawId(priorityApplicant.getMember(), priorityApplicant.getDraw().getId());
         return PriorityApplicantConverter.toGetPriorityApplicantDetailsResultDTO(priorityApplicant, certificateDocsList);
     }
+
+    @Override
+    @Transactional
+    public PriorityApplicantResponseDTO.RejectPriorityResultDTO rejectPriority(Long drawId, Long priorityApplicantId) {
+        PriorityApplicant priorityApplicant = priorityApplicantRepository.findById(priorityApplicantId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND));
+        priorityApplicant.rejectPriorityApply( ApprovalStatus.REJECTED);
+        return PriorityApplicantConverter.toRejectPriorityResultDTO(priorityApplicant);
+    }
+
 }

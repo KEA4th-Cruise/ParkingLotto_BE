@@ -60,4 +60,13 @@ public class PriorityApplicantResponseDTO {
         private List<CertificateDocsRequestDTO.CertificateFileDTO> certificateFiles;
         private ApprovalStatus approvalStatus;
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class RejectPriorityResultDTO {
+        private Long priorityApplicantId;
+        private ApprovalStatus approvalStatus;
+    }
 }

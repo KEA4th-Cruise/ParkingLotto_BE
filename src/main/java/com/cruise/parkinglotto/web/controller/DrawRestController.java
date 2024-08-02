@@ -174,4 +174,12 @@ public class DrawRestController {
                                                                                                                       @PathVariable(name = "priorityApplicantId") Long priorityApplicantId) {
         return ApiResponse.onSuccess(SuccessStatus.PRIORITY_APPLICANT_DETAILS_FOUND, priorityApplicantService.getPriorityApplicantDetails(drawId, priorityApplicantId));
     }
+
+    @Operation(summary = "우대 신청을 거절하는 API 입니다.", description = " PathVariable 으로 drawId와 priorityApplicantId 번호를 전송해주세요.")
+    @PatchMapping("/{drawId}/priority-applicants/{priorityApplicantId}/rejection")
+    public ApiResponse<PriorityApplicantResponseDTO.RejectPriorityResultDTO> rejectPriority(@PathVariable(name = "drawId") Long drawId,
+                                                                                            @PathVariable(name = "priorityApplicantId") Long priorityApplicantId) {
+        PriorityApplicantResponseDTO.RejectPriorityResultDTO rejectPriorityResultDTO = priorityApplicantService.rejectPriority(drawId, priorityApplicantId);
+        return ApiResponse.onSuccess(SuccessStatus.PRIORITY_APPLICANT_REJECTED, rejectPriorityResultDTO);
+    }
 }
