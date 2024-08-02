@@ -102,7 +102,7 @@ public class DrawRestController {
     }
 
     @Operation(summary = "임시저장된 추첨에 주차구역을 추가하는 API입니다.", description = "path variable로 추첨의 drawId를 전송해주세요. MultipartFile 타입으로 주차구역 평면도 이미지를 전송헤주세요. addParkingSpaceDTO로 주차구역에 대한 정보를 입력헤주세요. ")
-    @PostMapping(value = "/{drawId}/parking-spaces역", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/{drawId}/parking-spaces", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<ParkingSpaceResponseDTO.AddParkingSpaceResultDTO> addParkingSpace(@PathVariable Long drawId,
                                                                                          @RequestPart(value = "floorPlanImage", required = true) MultipartFile floorPlanImage,
                                                                                          @RequestPart(value = "addParkingSpaceDTO", required = true) ParkingSpaceRequestDTO.AddParkingSpaceDTO addParkingSpaceDTO) {
