@@ -1,10 +1,12 @@
 package com.cruise.parkinglotto.web.converter;
 
+import com.cruise.parkinglotto.domain.CertificateDocs;
 import com.cruise.parkinglotto.domain.Member;
 import com.cruise.parkinglotto.global.jwt.JwtToken;
 import com.cruise.parkinglotto.web.dto.memberDTO.MemberResponseDTO;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class MemberConverter {
@@ -22,12 +24,12 @@ public class MemberConverter {
                 .build();
     }
 
-    public static MemberResponseDTO.MyInfoResponseDTO toMyInfoResponseDTO(Member member) {
+    public static MemberResponseDTO.MyInfoResponseDTO toMyInfoResponseDTO(Member member, List<CertificateDocs> certificateDocs) {
         return MemberResponseDTO.MyInfoResponseDTO.builder()
                 .address(member.getWeightDetails().getAddress())
                 .carNum(member.getCarNum())
                 .workType(member.getWeightDetails().getWorkType())
-                .myCertificationInfoResponseDTOS(member.getCertificateDocsList()
+                .myCertificationInfoResponseDTOS(certificateDocs
                         .stream().map(c -> MemberResponseDTO.MyCertificationInfoResponseDTO.builder()
                                 .fileName(c.getFileName())
                                 .fileUrl(c.getFileUrl())
