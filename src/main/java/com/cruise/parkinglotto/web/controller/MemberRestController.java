@@ -38,6 +38,11 @@ public class MemberRestController {
     public ApiResponse<MemberResponseDTO.LoginResponseDTO> login(@RequestBody @Valid MemberRequestDTO.LoginRequestDTO loginRequestDTO, HttpServletResponse httpServletResponse) {
         MemberResponseDTO.LoginResponseDTO loginResponseDTO = memberService.login(loginRequestDTO);
 
+        // access token과 refresh token을 각각의 쿠키에 담아서 보냄
+        JwtToken jwtToken = loginResponseDTO.getJwtToken();
+        setCookie(httpServletResponse, "accessToken", jwtToken.getAccessToken(),   60 * 60 * 24); // 1일
+        setCookie(httpServletResponse, "refreshToken", jwtToken.getRefreshToken(), 60 * 60 * 24 * 7); // 7일
+
         return ApiResponse.onSuccess(SuccessStatus.MEMBER_LOGIN_SUCCESS, loginResponseDTO);
     }
 
@@ -84,4 +89,11 @@ public class MemberRestController {
 
     }
 
+    private void setCookie(HttpServletResponse httpServletResponse, String name, String value, int maxAge) {
+        Cookie cookie = new Cookie(name, value);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(maxAge);
+        httpServletResponse.addCookie(cookie);
+    }
 }

@@ -55,9 +55,6 @@ public class MemberServiceImpl implements MemberService {
             throw new ExceptionHandler(ErrorStatus.MEMBER_PASSWORD_NOT_MATCHED);
         }
 
-        // 블랙리스트에서 해당 토큰 값이 있는지 검증
-
-
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRequestDTO.getAccountId(), loginRequestDTO.getPassword());
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
@@ -98,7 +95,6 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.findByAccountId(accountId)
                 .orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
     }
-
 
     @Override
     @Transactional(readOnly = true)
