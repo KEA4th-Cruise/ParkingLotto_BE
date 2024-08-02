@@ -1,7 +1,6 @@
 package com.cruise.parkinglotto.web.dto.drawDTO;
 
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
-import com.cruise.parkinglotto.domain.enums.WorkType;
 import com.cruise.parkinglotto.domain.enums.DrawStatus;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
@@ -33,15 +32,7 @@ public class DrawResponseDTO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class DrawResultResponseDTO {
-        private Long drawId;
-        private String drawType;
-        private String title;
-        private String seedNum;
-        private Integer totalSlots;
-        private Integer totalApplicants;
-        private String year;
-        private String quarter;
+    public static class DrawMemberResultResponseDTO {
         private List<ApplicantResponseDTO.ApplicantResultDTO> applicants;
     }
 
@@ -106,5 +97,35 @@ public class DrawResponseDTO {
         private Integer applicantsCount;
         private Integer totalSlots;
         private List<ParkingSpaceResponseDTO.ParkingSpaceCompetitionRateDTO> parkingSpaceCompetitionRateDTOList;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class DrawResultExcelDTO {
+        private String URL;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetDrawInfoDetailDTO {   //  시뮬레이션 시작할때 사용되는 추첨 회차 정보를 띄우기 위한 DTO
+        private Long drawId;
+        private String title;
+        private Integer applicantsCount;
+        private Integer totalSlots;
+        private String seed;
+        private List<DrawResponseDTO.SeedDetailDTO> seedDetail;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SeedDetailDTO {   //  추첨 회차의 시드 정보를 띄우기 위한 DTO
+        private String accountId;
+        private String userSeed;
     }
 }

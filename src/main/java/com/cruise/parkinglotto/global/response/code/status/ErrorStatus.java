@@ -51,8 +51,8 @@ public enum ErrorStatus implements BaseErrorCode {
     DRAW_NOT_READY(HttpStatus.OK, "DRAW4002", "아직 신청이 종료되지 않은 추첨입니다."),
     DRAW_ALREADY_EXECUTED(HttpStatus.OK, "DRAW4003", "이미 종료된 추첨입니다. 한 번 진행된 추첨은 다시 진행 될 수 없습니다."),
     DRAW_STATISTICS_NOT_EXIST(HttpStatus.OK, "DRAW4004", "추첨 통계가 존재하지 않습니다."),
-
     DRAW_NOT_IN_APPLY_PERIOD(HttpStatus.OK, "DRAW4005", "추첨 기간이 아닙니다."),
+    DRAW_SEED_NOT_FOUND(HttpStatus.OK, "DRAW4006", "생성된 시드가 없습니다."),
 
     //사용자 가중치 관련
     WEIGHTDETAILS_NOT_FOUND(HttpStatus.OK, "WEIGHTDETAILS4001", "해당 사용자의 가중치 정보가 없습니다."),
@@ -72,9 +72,10 @@ public enum ErrorStatus implements BaseErrorCode {
     SEED_NOT_FOUND(HttpStatus.OK, "DRAW4004", "생성된 시드가 없습니다."),
 
 
+
     // 추첨 디테일 관련 응답
-    WORK_TYPE_NOT_FOUND(HttpStatus.OK, "MemberDetail4001", "근무타입이 입력되지 않았습니다."),
-    ADDRESS_NOT_FOUND(HttpStatus.OK, "MemberDetail4002", "주소가 입력되지 않았습니다."),
+    WORK_TYPE_NOT_FOUND(HttpStatus.OK, "MEMBERDETAIL4001", "근무타입이 입력되지 않았습니다."),
+    ADDRESS_NOT_FOUND(HttpStatus.OK, "MEMBERDETAIL4002", "주소가 입력되지 않았습니다."),
 
     ;
 
