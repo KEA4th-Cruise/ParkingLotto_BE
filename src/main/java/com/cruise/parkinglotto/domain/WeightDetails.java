@@ -39,4 +39,13 @@ public class WeightDetails extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    public void updateWeightDetailsInApply(String address, WorkType workType, Integer trafficCommuteTime, Integer carCommuteTime, Double distance){
+        this.address = address;
+        this.workType = workType;
+        this.trafficCommuteTime = trafficCommuteTime;
+        this.carCommuteTime = carCommuteTime;
+        this.distance = distance;
+    }
+
 }
