@@ -7,7 +7,6 @@ import com.cruise.parkinglotto.global.response.ApiResponse;
 import com.cruise.parkinglotto.global.response.code.status.SuccessStatus;
 import com.cruise.parkinglotto.service.applicantService.ApplicantService;
 import com.cruise.parkinglotto.service.drawService.DrawService;
-import com.cruise.parkinglotto.service.memberService.MemberService;
 import com.cruise.parkinglotto.service.parkingSpaceService.ParkingSpaceService;
 import com.cruise.parkinglotto.service.priorityApplicantService.PriorityApplicantService;
 import com.cruise.parkinglotto.web.converter.ApplicantConverter;
@@ -55,12 +54,12 @@ public class DrawRestController {
     }
 
     //회차의 추첨 결과의 명단을 조회하는 API
-    @Operation(summary = "해당 회차 추첨 결과 조회 API", description = "path variable로 추첨 ID를 넘겨주면 해당 추첨의 결과를 반환합니다.")
+    @Operation(summary = "해당 회차 당첨 멤버 조회 API", description = "path variable로 추첨 ID와 페이지를 넘겨주면 해당 추첨의 결과를 15개씩 반환합니다.")
     @GetMapping("/{drawId}/result")
-    public ApiResponse<DrawResponseDTO.DrawResultResponseDTO> getDrawResult(HttpServletRequest httpServletRequest, @PathVariable("drawId") Long drawId, @RequestParam("page") Integer page) {
+    public ApiResponse<DrawResponseDTO.DrawMemberResultResponseDTO> getDrawResult(HttpServletRequest httpServletRequest, @PathVariable("drawId") Long drawId, @RequestParam("page") Integer page) {
 
-        DrawResponseDTO.DrawResultResponseDTO drawResultResponseDTO = drawService.getDrawResult(httpServletRequest, drawId, page);
-        return ApiResponse.onSuccess(SuccessStatus.DRAW_INFO_FOUND, drawResultResponseDTO);
+        DrawResponseDTO.DrawMemberResultResponseDTO drawResultResponseDTO = drawService.getDrawResult(httpServletRequest, drawId, page);
+        return ApiResponse.onSuccess(SuccessStatus.DRAW_RESULT_FOUND, drawResultResponseDTO);
     }
 
     @Operation(summary = "추첨 정보 상세 조회 API", description = "path variable로 상세조회할 추첨의 drawId를 전송해주세요.")
@@ -158,6 +157,13 @@ public class DrawRestController {
     public ApiResponse<DrawResponseDTO.DrawResultExcelDTO> downloadResultExcel(@PathVariable("drawId") Long drawId) {
         DrawResponseDTO.DrawResultExcelDTO drawResultExcelDTO = drawService.getDrawResultExcel(drawId);
         return ApiResponse.onSuccess(SuccessStatus.DRAW_RESULT_EXCEL_DOWNLOADED, drawResultExcelDTO);
+    }
+    //회차의 추첨 결과의 명단을 조회하는 API
+    @Operation(summary = "해당 회차 추첨 시드의 상세 조회 API", description = "path variable로 추첨 ID를 넘겨주면 해당 추첨 시드의 상세 결과를 반환합니다.")
+    @GetMapping("/{drawId}/result/seed")
+    public ApiResponse<DrawResponseDTO.GetDrawInfoDetailDTO> getDrawSeedInfoResult(HttpServletRequest httpServletRequest, @PathVariable("drawId") Long drawId) {
 
+        DrawResponseDTO.GetDrawInfoDetailDTO drawSeedDetail = drawService.getDrawInfoDetail(httpServletRequest, drawId);
+        return ApiResponse.onSuccess(SuccessStatus.DRAW_INFO_FOUND, drawSeedDetail);
     }
 }

@@ -51,8 +51,8 @@ public enum ErrorStatus implements BaseErrorCode {
     DRAW_NOT_READY(HttpStatus.OK, "DRAW4002", "아직 신청이 종료되지 않은 추첨입니다."),
     DRAW_ALREADY_EXECUTED(HttpStatus.OK, "DRAW4003", "이미 종료된 추첨입니다. 한 번 진행된 추첨은 다시 진행 될 수 없습니다."),
     DRAW_STATISTICS_NOT_EXIST(HttpStatus.OK, "DRAW4004", "추첨 통계가 존재하지 않습니다."),
-
     DRAW_NOT_IN_APPLY_PERIOD(HttpStatus.OK, "DRAW4005", "추첨 기간이 아닙니다."),
+    DRAW_SEED_NOT_FOUND(HttpStatus.OK, "DRAW4006", "생성된 시드가 없습니다."),
 
     //사용자 가중치 관련
     WEIGHTDETAILS_NOT_FOUND(HttpStatus.OK, "WEIGHTDETAILS4001", "해당 사용자의 가중치 정보가 없습니다."),
@@ -68,8 +68,6 @@ public enum ErrorStatus implements BaseErrorCode {
     CERTIFICATEDOCS_FORMAT_NOT_SUPPORTED(HttpStatus.OK, "CERTIFICATEDOCS4004", "업로드한 파일의 형식이 잘못 되었습니다."),
     CERTIFICATEDOCS_NAME_DUPLICATED(HttpStatus.OK, "CERTIFICATEDOCS4005", "업로드한 파일 이름이 중복됩니다."),
     CERTIFICATEDOCS_TOO_MANY(HttpStatus.OK, "CERTIFICATEDOCS4006", "업로드한 파일이 너무 많습니다."),
-
-    SEED_NOT_FOUND(HttpStatus.OK, "DRAW4004", "생성된 시드가 없습니다."),
 
 
     // 추첨 디테일 관련 응답

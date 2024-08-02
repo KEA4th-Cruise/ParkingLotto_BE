@@ -37,6 +37,7 @@ public enum SuccessStatus implements BaseCode {
     DRAW_OVERVIEW_FOUND(HttpStatus.OK,"DRAW2007","추첨 개요 정보를 조회하였습니다."),
     DRAW_STATISTICS_FOUND(HttpStatus.OK, "DRAW2008","최근 진행된 추첨들의 통계를 조회하였습니다."),
     DRAW_RESULT_EXCEL_DOWNLOADED(HttpStatus.OK, "DRAW2009","추첨결과의 URL이 정상적으로 전송되었습니다."),
+    DRAW_RESULT_FOUND(HttpStatus.OK, "DRAW2010", "추첨 결과를 조회했습니다."),
 
     //  주차 구역 관련
     PARKING_SPACE_ADDED(HttpStatus.OK, "PARKINGSPACE2001","해당 회차에 주차구역이 추가되었습니다."),
