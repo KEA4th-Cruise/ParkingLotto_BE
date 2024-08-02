@@ -85,7 +85,7 @@ public class DrawServiceImpl implements DrawService {
             updateSeedNum(drawId);
             String seed = draw.getSeedNum();
             if (seed == null) {
-                throw new ExceptionHandler(ErrorStatus.SEED_NOT_FOUND);
+                throw new ExceptionHandler(ErrorStatus.DRAW_SEED_NOT_FOUND);
             }
             assignRandomNumber(drawId, seed);
             List<Applicant> applicants = applicantRepository.findByDrawId(drawId);
