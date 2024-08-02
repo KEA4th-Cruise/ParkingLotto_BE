@@ -15,7 +15,7 @@ public interface ApplicantService {
 
     ApplicantResponseDTO.MyApplyInfoDTO getMyApplyInfo(Long memberId, Long drawId);
 
-    List<ApplicantResponseDTO.GetMyApplyResultDTO> getApplyResultList(Long memberId);
+    Page<ApplicantResponseDTO.GetMyApplyResultDTO> getApplyResultList(Long memberId, Integer page);
 
     void drawApply(List<MultipartFile> certificateDocs, ApplicantRequestDTO.GeneralApplyDrawRequestDTO applyDrawRequestDTO, String accountId, Long drawId);
 
