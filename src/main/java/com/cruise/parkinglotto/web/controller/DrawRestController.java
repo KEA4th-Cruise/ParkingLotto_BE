@@ -59,7 +59,7 @@ public class DrawRestController {
     public ApiResponse<DrawResponseDTO.DrawMemberResultResponseDTO> getDrawResult(HttpServletRequest httpServletRequest, @PathVariable("drawId") Long drawId, @RequestParam("page") Integer page) {
 
         DrawResponseDTO.DrawMemberResultResponseDTO drawResultResponseDTO = drawService.getDrawResult(httpServletRequest, drawId, page);
-        return ApiResponse.onSuccess(SuccessStatus.DRAW_INFO_FOUND, drawResultResponseDTO);
+        return ApiResponse.onSuccess(SuccessStatus.DRAW_RESULT_FOUND, drawResultResponseDTO);
     }
 
     @Operation(summary = "추첨 정보 상세 조회 API", description = "path variable로 상세조회할 추첨의 drawId를 전송해주세요.")
