@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/draws")
@@ -47,7 +48,7 @@ public class DrawRestController {
     //추첨 실행 후 결과 저장하는 API
     @Operation(summary = "추첨 실행 API", description = "path variable로 추첨 ID를 넘겨주면 해당 추첨을 실행합니다.")
     @PostMapping("/{drawId}/execution")
-    public ApiResponse<Void> executeDraw(@PathVariable("drawId") Long drawId) {
+    public ApiResponse<Void> executeDraw(@PathVariable("drawId") Long drawId) throws IOException {
         drawService.executeDraw(drawId);
 
         return ApiResponse.onSuccess(SuccessStatus.DRAW_EXECUTE_RESULT, null);
@@ -150,5 +151,13 @@ public class DrawRestController {
     public ApiResponse<ApplicantResponseDTO.GetApplicantResultDTO> searchApplicant(@RequestParam(name = "searchKeyword") String searchKeyword) {
 
         return ApiResponse.onSuccess(SuccessStatus.APPLICANT_SEARCH_FOUND, applicantService.searchApplicantBySearchKeyword(searchKeyword));
+    }
+
+    @Operation(summary = "추첨 결과 엑셀 저장 API", description = "추첨의 최초 결과를 엑셀로 저장할 수 있는 API 입니다. drawId를 넘겨주면 해당 추첨의 결과를 엑셀로 저장합니다.")
+    @GetMapping("/{drawId}/result-excel")
+    public ApiResponse<DrawResponseDTO.DrawResultExcelDTO> downloadResultExcel(@PathVariable("drawId") Long drawId) {
+        DrawResponseDTO.DrawResultExcelDTO drawResultExcelDTO = drawService.getDrawResultExcel(drawId);
+        return ApiResponse.onSuccess(SuccessStatus.DRAW_RESULT_EXCEL_DOWNLOADED, drawResultExcelDTO);
+
     }
 }

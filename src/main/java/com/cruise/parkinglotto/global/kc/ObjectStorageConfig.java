@@ -45,6 +45,9 @@ public class ObjectStorageConfig {
     @Value("${cloud.kc.s3.path.priority-certificate-docs}")
     private String priorityCertificateDocument;
 
+    @Value("${cloud.kc.s3.path.draw-result-docs}")
+    private String drawResultDocument;
+
     @Bean
     public S3Client s3client() {
         return S3Client.builder()

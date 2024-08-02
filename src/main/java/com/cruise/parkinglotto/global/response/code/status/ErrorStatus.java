@@ -73,8 +73,8 @@ public enum ErrorStatus implements BaseErrorCode {
 
 
     // 추첨 디테일 관련 응답
-    WORK_TYPE_NOT_FOUND(HttpStatus.OK, "MemberDetail4001", "근무타입이 입력되지 않았습니다."),
-    ADDRESS_NOT_FOUND(HttpStatus.OK, "MemberDetail4002", "주소가 입력되지 않았습니다."),
+    WORK_TYPE_NOT_FOUND(HttpStatus.OK, "MEMBERDETAIL4001", "근무타입이 입력되지 않았습니다."),
+    ADDRESS_NOT_FOUND(HttpStatus.OK, "MEMBERDETAIL4002", "주소가 입력되지 않았습니다."),
 
     ;
 

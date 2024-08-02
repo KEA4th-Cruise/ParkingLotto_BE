@@ -152,4 +152,10 @@ public class DrawConverter {
                 .parkingSpaceCompetitionRateDTOList(parkingSpaceCompetitionRateDTOList)
                 .build();
     }
+
+    public static DrawResponseDTO.DrawResultExcelDTO toDrawResultExcelDTO(String url) {
+        return DrawResponseDTO.DrawResultExcelDTO.builder()
+                .URL(url)
+                .build();
+    }
 }

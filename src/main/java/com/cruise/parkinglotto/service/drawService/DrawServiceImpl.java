@@ -8,6 +8,8 @@ import com.cruise.parkinglotto.domain.enums.DrawStatus;
 import com.cruise.parkinglotto.domain.enums.DrawType;
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import com.cruise.parkinglotto.domain.enums.WorkType;
+import com.cruise.parkinglotto.global.excel.ByteArrayMultipartFile;
+import com.cruise.parkinglotto.global.excel.FileGeneration;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
 import com.cruise.parkinglotto.global.jwt.JwtUtils;
 import com.cruise.parkinglotto.global.kc.ObjectStorageConfig;
@@ -23,16 +25,23 @@ import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.transaction.support.TransactionSynchronizationAdapter;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.cruise.parkinglotto.web.converter.DrawConverter.toDrawResultExcelDTO;
 import static com.cruise.parkinglotto.web.converter.DrawConverter.toGetCurrentDrawInfo;
 
 @Slf4j
@@ -48,7 +57,7 @@ public class DrawServiceImpl implements DrawService {
     private final ObjectStorageConfig objectStorageConfig;
     private final JwtUtils jwtUtils;
     private final MemberRepository memberRepository;
-
+    private final FileGeneration fileGenerationService;
 
     //계산용 변수
     private static final int WORK_TYPE1_SCORE = 25;
@@ -63,7 +72,7 @@ public class DrawServiceImpl implements DrawService {
 
     @Override
     @Transactional
-    public void executeDraw(Long drawId) {
+    public void executeDraw(Long drawId) throws IOException {
         try {
             Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
 
@@ -87,12 +96,17 @@ public class DrawServiceImpl implements DrawService {
 
             handleDrawResults(drawId, orderedApplicants);
 
+            // 트랜잭션이 성공적으로 커밋된 후 엑셀 파일을 생성하도록 작업 예약
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
+                @Override
+                public void afterCommit() {
+                    fileGenerationService.generateAndUploadExcel(draw, orderedApplicants);
+                }
+            });
             drawRepository.updateStatus(drawId, DrawStatus.COMPLETED);
         } catch (Exception e) {
             log.error("Error occurred during executeDraw for drawId: {}", drawId, e);
             throw e;
-        } finally {
-            log.info("Transaction committed for drawId: {}", drawId);
         }
     }
 
@@ -555,4 +569,9 @@ public class DrawServiceImpl implements DrawService {
         return DrawConverter.toSimulateDrawResponseDTO(drawId, seed, simulationDataMap, pagedApplicants, allApplicantsDTO.size());
     }
 
+    @Override
+    public DrawResponseDTO.DrawResultExcelDTO getDrawResultExcel(Long drawId) {
+        Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
+        return toDrawResultExcelDTO(draw.getResultURL());
+    }
 }
