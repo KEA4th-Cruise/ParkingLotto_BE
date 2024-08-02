@@ -54,6 +54,7 @@ public class PriorityApplicantConverter {
                 .certificateFiles(certificateDocsList.stream()
                         .map(CertificateDocsConverter::toCertificateFileDTO)
                         .toList())
+                .approvalStatus(priorityApplicant.getApprovalStatus())
                 .build();
     }
 

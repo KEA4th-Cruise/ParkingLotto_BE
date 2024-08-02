@@ -58,5 +58,6 @@ public class PriorityApplicantResponseDTO {
         private String accountId;
         private String deptPathName;
         private List<CertificateDocsRequestDTO.CertificateFileDTO> certificateFiles;
+        private ApprovalStatus approvalStatus;
     }
 }
