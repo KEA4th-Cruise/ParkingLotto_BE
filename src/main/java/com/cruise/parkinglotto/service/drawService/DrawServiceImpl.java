@@ -589,6 +589,7 @@ public class DrawServiceImpl implements DrawService {
         return DrawConverter.toGetDrawListResultDTO(drawList);
     }
 
+    @Override
     @Transactional
     public void assignReservedApplicant(Long drawId, Long winnerId) {
         Applicant currentWinner = applicantRepository.findByDrawIdAndId(drawId, winnerId);
