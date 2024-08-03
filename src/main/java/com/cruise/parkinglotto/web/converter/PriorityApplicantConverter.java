@@ -58,4 +58,10 @@ public class PriorityApplicantConverter {
                 .build();
     }
 
+    public static PriorityApplicantResponseDTO.RejectPriorityResultDTO toRejectPriorityResultDTO(PriorityApplicant priorityApplicant) {
+        return PriorityApplicantResponseDTO.RejectPriorityResultDTO.builder()
+                .priorityApplicantId(priorityApplicant.getId())
+                .approvalStatus(priorityApplicant.getApprovalStatus())
+                .build();
+    }
 }
