@@ -10,6 +10,7 @@ import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
 import com.cruise.parkinglotto.repository.ApplicantRepository;
 import com.cruise.parkinglotto.repository.DrawRepository;
 import com.cruise.parkinglotto.repository.WeightSectionStatisticsRepository;
+import com.cruise.parkinglotto.web.converter.WeightSectionConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -57,15 +58,10 @@ public class WeightSectionStatisticsServiceImpl implements WeightSectionStatisti
         Map<WeightSection, WeightSectionStatistics> map = new EnumMap<>(WeightSection.class);
         Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
         for (WeightSection section : WeightSection.values()) {
-            WeightSectionStatistics statistics = WeightSectionStatistics.builder()
-                    .section(section)
-                    .applicantsCount(0)
-                    .winnerCount(0)
-                    .draw(draw)
-                    .build();
-            WeightSectionStatistics ws = weightSectionStatisticsRepository.saveAndFlush(statistics);
-            log.info("Created WeightSectionStatistics: {}", ws.getId());
-            map.put(section, statistics);
+
+            WeightSectionStatistics weightSectionStatistics = WeightSectionConverter.toWeightSectionStatistics(section, draw);
+            weightSectionStatisticsRepository.saveAndFlush(weightSectionStatistics);
+            map.put(section, weightSectionStatistics);
         }
         return map;
     }

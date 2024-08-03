@@ -11,6 +11,7 @@ import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
 import com.cruise.parkinglotto.repository.ApplicantRepository;
 import com.cruise.parkinglotto.repository.DrawRepository;
 import com.cruise.parkinglotto.repository.DrawStatisticsRepository;
+import com.cruise.parkinglotto.web.converter.DrawStatisticConverter;
 import jakarta.persistence.Table;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -45,13 +46,7 @@ public class DrawStatisticsServiceImpl implements DrawStatisticsService {
         Draw draw = drawRepository.findById(drawId).orElseThrow();
         int totalSlots = draw.getTotalSlots();
         List<Applicant> applicants = applicantRepository.findByDrawId(drawId);
-        DrawStatistics drawStatistics =
-                DrawStatistics.builder()
-                        .competitionRate((double) applicants.size() / totalSlots)
-                        .totalApplicants(applicants.size())
-                        .applicantsWeightAvg(applicants.stream().mapToDouble(Applicant::getWeightedTotalScore).average().orElse(0))
-                        .draw(draw)
-                        .build();
+        DrawStatistics drawStatistics = DrawStatisticConverter.toDrawStatistics(draw, applicants, totalSlots);
         drawStatisticsRepository.save(drawStatistics);
     }
 }
