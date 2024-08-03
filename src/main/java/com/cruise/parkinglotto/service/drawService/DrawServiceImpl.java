@@ -589,4 +589,25 @@ public class DrawServiceImpl implements DrawService {
         List<Draw> drawList = drawRepository.findByYearAndType(year, drawType);
         return DrawConverter.toGetDrawListResultDTO(drawList);
     }
+
+    @Transactional
+    public void assignReservedApplicant(Long drawId, Long winnerId) {
+        Applicant currentWinner = applicantRepository.findByDrawIdAndId(drawId, winnerId);
+
+        Long parkingSpaceId = currentWinner.getParkingSpaceId();
+        Applicant nextWinner = applicantRepository.findByDrawIdAndReserveNum(drawId, 1);
+
+        nextWinner.updateParkingSpace(parkingSpaceId);
+        nextWinner.updateReserveNum(0);
+
+        List<Applicant> reservedApplicants = applicantRepository.findByDrawIdAndReserveNumGreaterThan(drawId, 1);
+
+        for (Applicant applicant : reservedApplicants) {
+            applicant.updateReserveNum(applicant.getReserveNum() - 1);
+        }
+
+        currentWinner.updateParkingSpace(null);
+        currentWinner.updateWinningStatus(WinningStatus.CANCELED);
+        currentWinner.updateReserveNum(reservedApplicants.size() + 1);
+    }
 }

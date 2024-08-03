@@ -51,4 +51,6 @@ public interface DrawService {
     DrawResponseDTO.GetDrawInfoDetailDTO getDrawInfoDetail(HttpServletRequest httpServletRequest, Long drawId);
 
     DrawResponseDTO.GetDrawListResultDTO getDrawList(String year, DrawType drawType);
+
+    void assignReservedApplicant(Long drawId, Long winnerId);
 }
