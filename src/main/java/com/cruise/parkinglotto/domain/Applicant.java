@@ -90,4 +90,8 @@ public class Applicant extends BaseEntity {
         this.reserveNum = reserveNum;
         this.winningStatus = winningStatus;
     }
+
+    public void updateWinningStatus(WinningStatus winningStatus) {
+        this.winningStatus = winningStatus;
+    }
 }
