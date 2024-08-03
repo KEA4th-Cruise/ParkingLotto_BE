@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface DrawStatisticsService {
     List<DrawStatistics> getRecentDrawStatistics();
+
+    void updateDrawStatistics(Long drawId);
 }

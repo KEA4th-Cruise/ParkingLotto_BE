@@ -15,6 +15,8 @@ import com.cruise.parkinglotto.global.kc.ObjectStorageConfig;
 import com.cruise.parkinglotto.global.kc.ObjectStorageService;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
 import com.cruise.parkinglotto.repository.*;
+import com.cruise.parkinglotto.service.drawStatisticsService.DrawStatisticsService;
+import com.cruise.parkinglotto.service.weightSectionStatisticsService.WeightSectionStatisticsService;
 import com.cruise.parkinglotto.web.converter.DrawConverter;
 import com.cruise.parkinglotto.web.converter.ParkingSpaceConverter;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawRequestDTO;
@@ -24,8 +26,6 @@ import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,7 +33,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -57,6 +56,8 @@ public class DrawServiceImpl implements DrawService {
     private final JwtUtils jwtUtils;
     private final MemberRepository memberRepository;
     private final FileGeneration fileGenerationService;
+    private final WeightSectionStatisticsService weightSectionStatisticsService;
+    private final DrawStatisticsService drawStatisticsService;
 
     //계산용 변수
     private static final int WORK_TYPE1_SCORE = 25;
@@ -95,6 +96,12 @@ public class DrawServiceImpl implements DrawService {
 
             handleDrawResults(drawId, orderedApplicants);
 
+            drawRepository.updateStatus(drawId, DrawStatus.COMPLETED);
+
+            weightSectionStatisticsService.updateWeightSectionStatistics(drawId);
+
+            drawStatisticsService.updateDrawStatistics(drawId);
+
             // 트랜잭션이 성공적으로 커밋된 후 엑셀 파일을 생성하도록 작업 예약
             TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
                 @Override
@@ -102,7 +109,7 @@ public class DrawServiceImpl implements DrawService {
                     fileGenerationService.generateAndUploadExcel(draw, orderedApplicants);
                 }
             });
-            drawRepository.updateStatus(drawId, DrawStatus.COMPLETED);
+
         } catch (Exception e) {
             log.error("Error occurred during executeDraw for drawId: {}", drawId, e);
             throw e;
@@ -167,12 +174,12 @@ public class DrawServiceImpl implements DrawService {
                 // 당첨 처리
                 selectedWinners.add(applicant);
                 applicantRepository.updateReserveNum(applicant.getId(), 0);
-                applicantRepository.updateWinningStatus(applicant.getId(), WinningStatus.WINNER);
+                applicant.updateWinningStatus(WinningStatus.WINNER);
                 weightDetailsRepository.resetRecentLossCount(applicant.getMember());
             } else {
                 // 예비자 처리
                 reserveApplicants.add(applicant);
-                applicantRepository.updateWinningStatus(applicant.getId(), WinningStatus.RESERVE);
+                applicant.updateWinningStatus(WinningStatus.RESERVE);
             }
         }
         // 당첨자들에게 자리 부여하기
