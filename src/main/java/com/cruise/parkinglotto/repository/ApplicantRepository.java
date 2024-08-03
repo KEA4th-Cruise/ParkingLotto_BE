@@ -42,14 +42,6 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
     @Query("UPDATE Applicant a SET a.reserveNum = :reserveNum WHERE a.id = :applicantId")
     void updateReserveNum(@Param("applicantId") Long applicantId, @Param("reserveNum") int reserveNum);
 
-    @Modifying
-    @Query("UPDATE Applicant a SET a.weightedTotalScore = :weight WHERE a.id = :applicantId")
-    void updateWeightedTotalScore(@Param("applicantId") Long id, @Param("weight") double weight);
-
-    @Modifying
-    @Query("UPDATE Applicant a SET a.winningStatus = :winningStatus WHERE a.id = :winnerId")
-    void updateWinningStatus(@Param("winnerId") Long winnerId, @Param("winningStatus") WinningStatus winningStatus);
-
     Page<Applicant> findByDrawId(PageRequest pageRequest, Long drawId);
 
     Optional<Applicant> findById(Long applicantId);
