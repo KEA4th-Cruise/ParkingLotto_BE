@@ -8,7 +8,6 @@ import com.cruise.parkinglotto.domain.enums.DrawStatus;
 import com.cruise.parkinglotto.domain.enums.DrawType;
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import com.cruise.parkinglotto.domain.enums.WorkType;
-import com.cruise.parkinglotto.global.excel.ByteArrayMultipartFile;
 import com.cruise.parkinglotto.global.excel.FileGeneration;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
 import com.cruise.parkinglotto.global.jwt.JwtUtils;
@@ -599,6 +598,7 @@ public class DrawServiceImpl implements DrawService {
 
         nextWinner.updateParkingSpace(parkingSpaceId);
         nextWinner.updateReserveNum(0);
+        nextWinner.updateWinningStatus(WinningStatus.WINNER);
 
         List<Applicant> reservedApplicants = applicantRepository.findByDrawIdAndReserveNumGreaterThan(drawId, 1);
 
