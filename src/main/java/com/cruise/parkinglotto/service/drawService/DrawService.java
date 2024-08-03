@@ -53,4 +53,6 @@ public interface DrawService {
     DrawResponseDTO.GetDrawListResultDTO getDrawList(String year, DrawType drawType);
 
     void assignReservedApplicant(Long drawId, Long winnerId);
+
+    DrawResponseDTO.GetYearsFromDrawListDTO getYearsFromDrawList();
 }

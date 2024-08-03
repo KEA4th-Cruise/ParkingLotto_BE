@@ -145,7 +145,16 @@ public class DrawResponseDTO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetDrawListResultDTO {   //  시뮬레이션 시작할때 사용되는 추첨 회차 정보를 띄우기 위한 DTO
+    public static class GetDrawListResultDTO {
+        private List<String> yearList;
         private List<DrawPreviewDTO> drawList;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetYearsFromDrawListDTO {
+        private List<String> yearList;
     }
 }

@@ -593,7 +593,8 @@ public class DrawServiceImpl implements DrawService {
     @Transactional(readOnly = true)
     public DrawResponseDTO.GetDrawListResultDTO getDrawList(String year, DrawType drawType) {
         List<Draw> drawList = drawRepository.findByYearAndType(year, drawType);
-        return DrawConverter.toGetDrawListResultDTO(drawList);
+        List<String> yearList = drawRepository.findYearList();
+        return DrawConverter.toGetDrawListResultDTO(yearList, drawList);
     }
 
     @Override
@@ -613,5 +614,12 @@ public class DrawServiceImpl implements DrawService {
         }
 
         currentWinner.updateReserve(null, reservedApplicants.size() + 1, WinningStatus.CANCELED);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public DrawResponseDTO.GetYearsFromDrawListDTO getYearsFromDrawList() {
+        List<String> yearList = drawRepository.findYearList();
+        return DrawConverter.toGetYearsFromDrawListDTO(yearList);
     }
 }

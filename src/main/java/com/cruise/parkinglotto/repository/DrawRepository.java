@@ -28,5 +28,8 @@ public interface DrawRepository extends JpaRepository<Draw, Long> {
     List<Draw> findTop5ByTypeOrderByUsageStartAtDesc(DrawType type);
 
     List<Draw> findByYearAndType(String year, DrawType drawType);
+
+    @Query("SELECT DISTINCT d.year FROM Draw d  ORDER BY d.year DESC")
+    List<String> findYearList();
 }
 
