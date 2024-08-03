@@ -596,9 +596,7 @@ public class DrawServiceImpl implements DrawService {
         Long parkingSpaceId = currentWinner.getParkingSpaceId();
         Applicant nextWinner = applicantRepository.findByDrawIdAndReserveNum(drawId, 1);
 
-        nextWinner.updateParkingSpace(parkingSpaceId);
-        nextWinner.updateReserveNum(0);
-        nextWinner.updateWinningStatus(WinningStatus.WINNER);
+        nextWinner.updateReserve(parkingSpaceId, 0, WinningStatus.WINNER);
 
         List<Applicant> reservedApplicants = applicantRepository.findByDrawIdAndReserveNumGreaterThan(drawId, 1);
 
@@ -606,8 +604,6 @@ public class DrawServiceImpl implements DrawService {
             applicant.updateReserveNum(applicant.getReserveNum() - 1);
         }
 
-        currentWinner.updateParkingSpace(null);
-        currentWinner.updateWinningStatus(WinningStatus.CANCELED);
-        currentWinner.updateReserveNum(reservedApplicants.size() + 1);
+        currentWinner.updateReserve(null, reservedApplicants.size() + 1, WinningStatus.CANCELED);
     }
 }
