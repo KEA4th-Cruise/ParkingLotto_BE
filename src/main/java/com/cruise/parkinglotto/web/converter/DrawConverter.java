@@ -180,4 +180,11 @@ public class DrawConverter {
                         .toList())
                 .build();
     }
+
+    public static DrawResponseDTO.GetYearsFromDrawListDTO toGetYearsFromDrawListDTO(List<String> yearList) {
+        return DrawResponseDTO.GetYearsFromDrawListDTO.builder()
+                .yearList(yearList)
+                .build();
+    }
+
 }

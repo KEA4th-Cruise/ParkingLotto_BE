@@ -191,4 +191,10 @@ public class DrawRestController {
         DrawResponseDTO.GetDrawListResultDTO drawListDTO = drawService.getDrawList(year, drawType);
         return ApiResponse.onSuccess(SuccessStatus.DRAW_LIST_FOUND, drawListDTO);
     }
+
+    @Operation(summary = "추첨이 존재하는 연도 목록을 조회하는 API 입니다.", description = "추첨이 존재하는 연도의 목록을 내림차순으로 조회합니다.")
+    @GetMapping("years")
+    public ApiResponse<DrawResponseDTO.GetYearsFromDrawListDTO> getYearList() {
+        return ApiResponse.onSuccess(SuccessStatus.DRAW_YEAR_LIST_FOUND, drawService.getYearsFromDrawList());
+    }
 }
