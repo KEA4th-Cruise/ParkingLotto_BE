@@ -30,4 +30,12 @@ public class WeightSectionStatistics extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "draw_id")
     private Draw draw;
+
+    public void updateApplicantsCount() {
+        this.applicantsCount++;
+    }
+
+    public void updateWinnerCount() {
+        this.winnerCount++;
+    }
 }
