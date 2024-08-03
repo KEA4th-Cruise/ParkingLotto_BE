@@ -184,7 +184,7 @@ public class DrawRestController {
         return ApiResponse.onSuccess(SuccessStatus.PRIORITY_APPLICANT_REJECTED, rejectPriorityResultDTO);
     }
 
-    @Operation(summary = "필터(연도, 추첨 유형)에 따라 추첨 목록을 조회하는 API 입니다.", description = "RequestParam으로 연도(string)와 drawType을 전송해주세요.")
+    @Operation(summary = "추첨이 존재하는 연도 목록과 필터(연도, 추첨 유형)에 따라 추첨 목록을 조회하는 API 입니다. ", description = "RequestParam으로 연도(string)와 drawType을 전송해주세요.")
     @GetMapping
     public ApiResponse<DrawResponseDTO.GetDrawListResultDTO> getDrawList(@RequestParam(name = "year") String year,
                                                                          @RequestParam(name = "drawType") DrawType drawType) {

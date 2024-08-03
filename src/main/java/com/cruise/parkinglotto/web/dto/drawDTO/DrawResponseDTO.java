@@ -146,6 +146,7 @@ public class DrawResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class GetDrawListResultDTO {
+        private List<String> yearList;
         private List<DrawPreviewDTO> drawList;
     }
 

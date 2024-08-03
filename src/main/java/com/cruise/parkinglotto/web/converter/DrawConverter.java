@@ -173,8 +173,9 @@ public class DrawConverter {
                 .build();
     }
 
-    public static DrawResponseDTO.GetDrawListResultDTO toGetDrawListResultDTO(List<Draw> drawList) {
+    public static DrawResponseDTO.GetDrawListResultDTO toGetDrawListResultDTO(List<String> yearList, List<Draw> drawList) {
         return DrawResponseDTO.GetDrawListResultDTO.builder()
+                .yearList(yearList)
                 .drawList(drawList.stream()
                         .map(DrawConverter::toDrawPreviewDTO)
                         .toList())
