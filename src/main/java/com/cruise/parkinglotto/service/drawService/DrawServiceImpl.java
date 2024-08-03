@@ -4,10 +4,7 @@ import com.cruise.parkinglotto.domain.Applicant;
 import com.cruise.parkinglotto.domain.Draw;
 import com.cruise.parkinglotto.domain.Member;
 import com.cruise.parkinglotto.domain.ParkingSpace;
-import com.cruise.parkinglotto.domain.enums.DrawStatus;
-import com.cruise.parkinglotto.domain.enums.DrawType;
-import com.cruise.parkinglotto.domain.enums.WinningStatus;
-import com.cruise.parkinglotto.domain.enums.WorkType;
+import com.cruise.parkinglotto.domain.enums.*;
 import com.cruise.parkinglotto.global.excel.FileGeneration;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
 import com.cruise.parkinglotto.global.jwt.JwtUtils;
@@ -26,6 +23,7 @@ import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.multipart.MultipartFile;
@@ -597,7 +595,6 @@ public class DrawServiceImpl implements DrawService {
         return DrawConverter.toGetDrawListResultDTO(yearList, drawList);
     }
 
-    @Override
     @Transactional
     public void assignReservedApplicant(Long drawId, Long winnerId) {
         Applicant currentWinner = applicantRepository.findByDrawIdAndId(drawId, winnerId);
@@ -612,7 +609,6 @@ public class DrawServiceImpl implements DrawService {
         for (Applicant applicant : reservedApplicants) {
             applicant.updateReserveNum(applicant.getReserveNum() - 1);
         }
-
         currentWinner.updateReserve(null, reservedApplicants.size() + 1, WinningStatus.CANCELED);
     }
 
@@ -622,4 +618,17 @@ public class DrawServiceImpl implements DrawService {
         List<String> yearList = drawRepository.findYearList();
         return DrawConverter.toGetYearsFromDrawListDTO(yearList);
     }
+
+    @Transactional
+    public void adminCancelWinner(HttpServletRequest httpServletRequest, Long drawId, Long winnerId) {
+        String accountIdFromRequest = jwtUtils.getAccountIdFromRequest(httpServletRequest);
+        Member member = memberRepository.findByAccountId(accountIdFromRequest).orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
+        if (member.getAccountType() == AccountType.ADMIN) {
+            assignReservedApplicant(drawId, winnerId);
+        }
+        else{
+            throw new ExceptionHandler(ErrorStatus._UNAUTHORIZED_ACCESS);
+        }
+    }
 }
+

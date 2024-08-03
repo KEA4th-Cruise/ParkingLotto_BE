@@ -55,4 +55,6 @@ public interface DrawService {
     void assignReservedApplicant(Long drawId, Long winnerId);
 
     DrawResponseDTO.GetYearsFromDrawListDTO getYearsFromDrawList();
+
+    void adminCancelWinner(HttpServletRequest httpServletRequest, Long drawId, Long applicantId);
 }
