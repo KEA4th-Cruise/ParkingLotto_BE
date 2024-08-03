@@ -2,6 +2,7 @@ package com.cruise.parkinglotto.service.drawService;
 
 import com.cruise.parkinglotto.domain.Applicant;
 import com.cruise.parkinglotto.domain.Draw;
+import com.cruise.parkinglotto.domain.enums.DrawType;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawRequestDTO;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
@@ -48,4 +49,6 @@ public interface DrawService {
     DrawResponseDTO.DrawResultExcelDTO getDrawResultExcel(Long drawId);
 
     DrawResponseDTO.GetDrawInfoDetailDTO getDrawInfoDetail(HttpServletRequest httpServletRequest, Long drawId);
+
+    DrawResponseDTO.GetDrawListResultDTO getDrawList(String year, DrawType drawType);
 }

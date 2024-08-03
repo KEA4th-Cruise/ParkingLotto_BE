@@ -2,6 +2,7 @@ package com.cruise.parkinglotto.web.controller;
 
 import com.cruise.parkinglotto.domain.*;
 import com.cruise.parkinglotto.domain.enums.ApprovalStatus;
+import com.cruise.parkinglotto.domain.enums.DrawType;
 import com.cruise.parkinglotto.global.jwt.JwtUtils;
 import com.cruise.parkinglotto.global.response.ApiResponse;
 import com.cruise.parkinglotto.global.response.code.status.SuccessStatus;
@@ -181,5 +182,13 @@ public class DrawRestController {
                                                                                             @PathVariable(name = "priorityApplicantId") Long priorityApplicantId) {
         PriorityApplicantResponseDTO.RejectPriorityResultDTO rejectPriorityResultDTO = priorityApplicantService.rejectPriority(drawId, priorityApplicantId);
         return ApiResponse.onSuccess(SuccessStatus.PRIORITY_APPLICANT_REJECTED, rejectPriorityResultDTO);
+    }
+
+    @Operation(summary = "필터(연도, 추첨 유형)에 따라 추첨 목록을 조회하는 API 입니다.", description = "RequestParam으로 연도(string)와 drawType을 전송해주세요.")
+    @GetMapping
+    public ApiResponse<DrawResponseDTO.GetDrawListResultDTO> getDrawList(@RequestParam(name = "year") String year,
+                                                                         @RequestParam(name = "drawType") DrawType drawType) {
+        DrawResponseDTO.GetDrawListResultDTO drawListDTO = drawService.getDrawList(year, drawType);
+        return ApiResponse.onSuccess(SuccessStatus.DRAW_LIST_FOUND, drawListDTO);
     }
 }

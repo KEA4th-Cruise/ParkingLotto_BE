@@ -147,6 +147,7 @@ public class DrawConverter {
                 .URL(url)
                 .build();
     }
+
     public static DrawResponseDTO.GetDrawInfoDetailDTO toGetDrawInfoDetail(Draw draw, List<Applicant> applicants) {
         return DrawResponseDTO.GetDrawInfoDetailDTO.builder()
                 .drawId(draw.getId())
@@ -160,6 +161,23 @@ public class DrawConverter {
                                 .userSeed(applicant.getUserSeed())
                                 .build())
                         .collect(Collectors.toList()))
+                .build();
+    }
+
+    public static DrawResponseDTO.DrawPreviewDTO toDrawPreviewDTO(Draw draw) {
+        return DrawResponseDTO.DrawPreviewDTO.builder()
+                .drawId(draw.getId())
+                .drawType(draw.getType())
+                .drawStatus(draw.getStatus())
+                .drawTitle(draw.getTitle())
+                .build();
+    }
+
+    public static DrawResponseDTO.GetDrawListResultDTO toGetDrawListResultDTO(List<Draw> drawList) {
+        return DrawResponseDTO.GetDrawListResultDTO.builder()
+                .drawList(drawList.stream()
+                        .map(DrawConverter::toDrawPreviewDTO)
+                        .toList())
                 .build();
     }
 }

@@ -1,5 +1,6 @@
 package com.cruise.parkinglotto.web.dto.drawDTO;
 
+import com.cruise.parkinglotto.domain.enums.DrawType;
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import com.cruise.parkinglotto.domain.enums.DrawStatus;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
@@ -127,5 +128,24 @@ public class DrawResponseDTO {
     public static class SeedDetailDTO {   //  추첨 회차의 시드 정보를 띄우기 위한 DTO
         private String accountId;
         private String userSeed;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class DrawPreviewDTO {
+        private Long drawId;
+        private DrawType drawType;
+        private String drawTitle;
+        private DrawStatus drawStatus;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetDrawListResultDTO {   //  시뮬레이션 시작할때 사용되는 추첨 회차 정보를 띄우기 위한 DTO
+        private List<DrawPreviewDTO> drawList;
     }
 }
