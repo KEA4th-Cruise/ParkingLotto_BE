@@ -34,7 +34,7 @@ public class PriorityApplicant extends BaseEntity {
 
     public void rejectPriorityApply(ApprovalStatus approvalStatus) {
         this.approvalStatus = approvalStatus;
-        this.parkingSpaceId = null;
+        this.parkingSpaceId = -1L;
 
     }
 }
