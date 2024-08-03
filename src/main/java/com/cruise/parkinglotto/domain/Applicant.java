@@ -80,4 +80,8 @@ public class Applicant extends BaseEntity {
     public void updateUserSeedIndex(Integer userSeedIndex) {
         this.userSeedIndex = userSeedIndex;
     }
+
+    public void updateWinningStatus(WinningStatus winningStatus) {
+        this.winningStatus = winningStatus;
+    }
 }
