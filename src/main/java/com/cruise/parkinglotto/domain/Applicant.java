@@ -81,6 +81,16 @@ public class Applicant extends BaseEntity {
         this.userSeedIndex = userSeedIndex;
     }
 
+    public void updateReserveNum(Integer reserveNum) {
+        this.reserveNum = reserveNum;
+    }
+
+    public void updateReserve(Long parkingSpaceId, Integer reserveNum, WinningStatus winningStatus) {
+        this.parkingSpaceId = parkingSpaceId;
+        this.reserveNum = reserveNum;
+        this.winningStatus = winningStatus;
+    }
+
     public void updateWinningStatus(WinningStatus winningStatus) {
         this.winningStatus = winningStatus;
     }

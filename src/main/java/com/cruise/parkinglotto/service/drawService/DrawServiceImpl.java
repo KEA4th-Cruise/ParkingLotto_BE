@@ -8,7 +8,6 @@ import com.cruise.parkinglotto.domain.enums.DrawStatus;
 import com.cruise.parkinglotto.domain.enums.DrawType;
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import com.cruise.parkinglotto.domain.enums.WorkType;
-import com.cruise.parkinglotto.global.excel.ByteArrayMultipartFile;
 import com.cruise.parkinglotto.global.excel.FileGeneration;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
 import com.cruise.parkinglotto.global.jwt.JwtUtils;
@@ -595,5 +594,24 @@ public class DrawServiceImpl implements DrawService {
     public DrawResponseDTO.GetDrawListResultDTO getDrawList(String year, DrawType drawType) {
         List<Draw> drawList = drawRepository.findByYearAndType(year, drawType);
         return DrawConverter.toGetDrawListResultDTO(drawList);
+    }
+
+    @Override
+    @Transactional
+    public void assignReservedApplicant(Long drawId, Long winnerId) {
+        Applicant currentWinner = applicantRepository.findByDrawIdAndId(drawId, winnerId);
+
+        Long parkingSpaceId = currentWinner.getParkingSpaceId();
+        Applicant nextWinner = applicantRepository.findByDrawIdAndReserveNum(drawId, 1);
+
+        nextWinner.updateReserve(parkingSpaceId, 0, WinningStatus.WINNER);
+
+        List<Applicant> reservedApplicants = applicantRepository.findByDrawIdAndReserveNumGreaterThan(drawId, 1);
+
+        for (Applicant applicant : reservedApplicants) {
+            applicant.updateReserveNum(applicant.getReserveNum() - 1);
+        }
+
+        currentWinner.updateReserve(null, reservedApplicants.size() + 1, WinningStatus.CANCELED);
     }
 }
