@@ -582,4 +582,11 @@ public class DrawServiceImpl implements DrawService {
         }
         return DrawConverter.toGetDrawInfoDetail(draw, applicants);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public DrawResponseDTO.GetDrawListResultDTO getDrawList(String year, DrawType drawType) {
+        List<Draw> drawList = drawRepository.findByYearAndType(year, drawType);
+        return DrawConverter.toGetDrawListResultDTO(drawList);
+    }
 }

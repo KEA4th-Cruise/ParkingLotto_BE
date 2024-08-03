@@ -30,5 +30,7 @@ public interface DrawRepository extends JpaRepository<Draw, Long> {
     Optional<Draw> findTopByStatusNotOrderByUsageStartAtDesc(DrawStatus status);
 
     List<Draw> findTop5ByTypeOrderByUsageStartAtDesc(DrawType type);
+
+    List<Draw> findByYearAndType(String year, DrawType drawType);
 }
 
