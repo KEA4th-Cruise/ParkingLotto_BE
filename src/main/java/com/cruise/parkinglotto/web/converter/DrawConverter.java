@@ -28,6 +28,8 @@ public class DrawConverter {
                 .usageStartAt(draw.getUsageStartAt())
                 .usageEndAt(draw.getUsageEndAt())
                 .mapImageUrl(draw.getMapImageUrl())
+                .description(draw.getDescription())
+                .totalSlot(draw.getTotalSlots())
                 .getNameAndUrlParkingSpaceResultDTO(dto)
                 .build();
     }

@@ -26,6 +26,7 @@ public class ParkingSpaceResponseDTO {
     public static class GetNameAndUrlParkingSpaceResultDTO {
         String name;
         String floorPlanImageUrl;
+        Integer slots;
     }
 
     @Getter
