@@ -26,6 +26,8 @@ public class DrawResponseDTO {
         private LocalDateTime usageStartAt;
         private LocalDateTime usageEndAt;
         private String mapImageUrl;
+        private String description;
+        private Integer totalSlots;
         private List<GetNameAndUrlParkingSpaceResultDTO> getNameAndUrlParkingSpaceResultDTO;
     }
 
