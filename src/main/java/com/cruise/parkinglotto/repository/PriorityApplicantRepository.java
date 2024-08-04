@@ -1,5 +1,6 @@
 package com.cruise.parkinglotto.repository;
 
+import com.cruise.parkinglotto.domain.Applicant;
 import com.cruise.parkinglotto.domain.PriorityApplicant;
 import com.cruise.parkinglotto.domain.enums.ApprovalStatus;
 import org.springframework.data.domain.Page;
@@ -13,4 +14,5 @@ public interface PriorityApplicantRepository extends JpaRepository<PriorityAppli
 
     Optional<PriorityApplicant> findById(Long priorityApplicantId);
 
+    Optional<PriorityApplicant> findByDrawIdAndMemberId(Long drawId, Long memberId);
 }
