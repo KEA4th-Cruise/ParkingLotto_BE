@@ -31,8 +31,7 @@ public enum ErrorStatus implements BaseErrorCode {
     REGISTER_SEARCH_NOT_FOUND(HttpStatus.OK, "REGISTER4005", "검색 결과가 없습니다."),
     REGISTER_INVALID_ENROLLMENTSTATUS(HttpStatus.OK, "REGISTER4006", "유효하지 않은 상태입니다."),
 
-    //신청자 관련 응답
-
+    // 신청자 관련 응답
     APPLICANT_NOT_FOUND(HttpStatus.OK, "APPLICANT4001", "신청자가 존재하지 않습니다"),
     APPLICANT_CAR_NUM_NOT_FOUND(HttpStatus.OK, "APPLICANT4002", "신청자의 차량번호 정보가 존재하지 않습니다"),
     APPLICANT_CERT_DOCUMENT_NOT_FOUND(HttpStatus.OK, "APPLICANT4003", "신청자의 서류 정보가 존재하지 않습니다"),
@@ -41,7 +40,8 @@ public enum ErrorStatus implements BaseErrorCode {
     APPLICANT_SEED_NOT_FOUND(HttpStatus.OK, "APPLICANT4006", "신청자의 랜덤 시드가 존재하지 않습니다"),
     APPLICANT_DUPLICATED_APPLY(HttpStatus.OK, "APPLICANT4007", "중복된 신청입니다"),
     APPLICANT_PARKING_SPACE_ID_NOT_FOUND(HttpStatus.OK, "APPLICANT4008", "신청자의 주차공간 id 가 존재하지 않습니다"),
-    APPLICANT_SEARCH_NOT_FOUND(HttpStatus.OK, "APPLICANT4009", "검색 결과가 없습니다."),
+    APPLICANT_SEARCH_NOT_FOUND(HttpStatus.OK, "APPLICANT4009", "신청자 검색 결과가 없습니다."),
+    WINNER_SEARCH_NOT_FOUND(HttpStatus.OK, "APPLICANT40010", "당첨자 검색 결과가 없습니다."),
 
     // 주차 공간 관련 응답
     PARKING_SPACE_NOT_FOUND(HttpStatus.OK, "PARKINGSPACE4001", "주차 공간이 존재하지 않습니다"),
