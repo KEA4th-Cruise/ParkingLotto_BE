@@ -22,6 +22,12 @@ public class MemberConverter {
                 .build();
     }
 
+    public static MemberResponseDTO.RefreshResponseDTO toRefreshResponseDTO(String accessToken) {
+        return MemberResponseDTO.RefreshResponseDTO.builder()
+                .accessToken(accessToken)
+                .build();
+    }
+
     public static MemberResponseDTO.MyInfoResponseDTO toMyInfoResponseDTO(Member member) {
         return MemberResponseDTO.MyInfoResponseDTO.builder()
                 .address(member.getWeightDetails().getAddress())

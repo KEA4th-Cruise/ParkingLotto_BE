@@ -33,34 +33,38 @@ public class JwtUtils {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    // Jwt토큰을 생성하는 메서드
-    public JwtToken generateToken(Authentication authentication) {
-        // 권한 가져오기
+    public String generateAccessToken(Authentication authentication) {
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
-        log.info("authentication.getName() = {}", authentication.getName());
-
-        // Access Token 생성
         Long now = new Date().getTime();
-        Date accessTokenExpiresIn = new Date(now + 60  * 60 * 24 * 1000); // 1일
-        String accessToken = Jwts.builder()
+        Date accessTokenExpiresIn = new Date(now + 60 * 60 * 24 * 1000); // 1일
+
+        return Jwts.builder()
                 .setSubject(authentication.getName())
-                .setAudience("domain.com") // 해당 부분은 도메인이 나온 후에 제대로 작성
+                .setAudience("domain.com")
                 .setIssuedAt(new Date())
                 .setIssuer("parkinglotto")
                 .setExpiration(accessTokenExpiresIn)
                 .claim("auth", authorities)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
+    }
 
-        // Refresh Token 생성
-        Date refreshTokenExpiresIn = new Date(now + 60  * 60 * 24 * 1000 * 7); // 7일
-        String refreshToken = Jwts.builder()
-                .setExpiration(refreshTokenExpiresIn) // 일주일
+    public String generateRefreshToken() {
+        Long now = new Date().getTime();
+        Date refreshTokenExpiresIn = new Date(now + 60 * 60 * 24 * 1000 * 7); // 7일
+
+        return Jwts.builder()
+                .setExpiration(refreshTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+    public JwtToken generateToken(Authentication authentication) {
+        String accessToken = generateAccessToken(authentication);
+        String refreshToken = generateRefreshToken();
 
         return JwtToken.builder()
                 .grantType("Bearer")
@@ -143,4 +147,5 @@ public class JwtUtils {
         Authentication authentication = getAuthentication(token);
         return authentication.getName();
     }
+
 }

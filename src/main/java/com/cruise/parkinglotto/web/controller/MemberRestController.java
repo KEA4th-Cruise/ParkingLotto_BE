@@ -52,6 +52,14 @@ public class MemberRestController {
         return ApiResponse.onSuccess(SuccessStatus.MEMBER_LOGOUT_SUCCESS, memberService.logout(logoutRequestDTO));
     }
 
+    @Operation(summary = "토큰 재발급 API", description = "access token이 만료된 경우 refresh token을 사용하여 자동 로그인을 해주는 API 입니다.")
+    @PostMapping("/refresh")
+    public ApiResponse<MemberResponseDTO.RefreshResponseDTO> refreshAccessToken(@RequestBody JwtToken jwtToken, HttpServletResponse httpServletResponse) {
+        MemberResponseDTO.RefreshResponseDTO refreshResponseDTO = memberService.refreshToken(jwtToken);
+        setCookie(httpServletResponse, "accessToken", refreshResponseDTO.getAccessToken(), 60 * 60 * 24); // 1일
+        return ApiResponse.onSuccess(SuccessStatus.MEMBER_REFRESH_TOKEN_SUCCESS, refreshResponseDTO);
+    }
+
     @Operation(summary = "사용자 입력정보 조회 API", description = "로그인한 사용자의 입력정보를 불러오는 API 입니다. 주요 정보로는 차량번호, 증명서류, 거주지주소, 근무타입이 있습니다.")
     @GetMapping("/info")
     public ApiResponse<MemberResponseDTO.MyInfoResponseDTO> getMyInfo(HttpServletRequest httpServletRequest) {

@@ -21,6 +21,10 @@ public enum ErrorStatus implements BaseErrorCode {
     // 멤버 관련 응답
     MEMBER_NOT_FOUND(HttpStatus.OK, "MEMBER4001", "사용자가 존재하지 않습니다"),
     MEMBER_PASSWORD_NOT_MATCHED(HttpStatus.OK, "MEMBER4002", "비밀번호가 일치하지 않습니다."),
+    MEMBER_REFRESH_TOKEN_NULL(HttpStatus.OK, "MEMBER4003", "리프레시 토큰 값이 비워져 있습니다."),
+    MEMBER_REFRESH_TOKEN_BLACKLIST(HttpStatus.OK, "MEMBER4004", "블랙리스트로 등록된 리프레시 토큰 입니다."),
+    MEMBER_REFRESH_TOKEN_FAILED(HttpStatus.OK, "MEMBER4005", "유효한 리프레시 토큰이 아닙니다."),
+
 
     // 등록 관련 응답
     REGISTER_REQUEST_FAILED(HttpStatus.OK, "REGISTER4001", "등록 요청에 실패했습니다."),
