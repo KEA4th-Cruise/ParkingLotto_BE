@@ -20,7 +20,7 @@ import java.util.List;
 public class DrawStatisticsRestController {
     private final DrawStatisticsService drawStatisticsService;
 
-    @Operation(summary = "(메인페이지용) 최근 5회차 일반 추첨의 drawId, 제목, 경쟁률을 응답하는 API 입니다.")
+    @Operation(summary = "(메인페이지용) 최근 5회차 일반 추첨의 drawId, 제목, 경쟁률을 응답하는 API 입니다.", description = "이윤서")
     @GetMapping("/recent")
     public ApiResponse<DrawStatisticsResponseDTO.DrawCompetitionRateListDTO> getRecentDrawCompetitionRate() {
         List<DrawStatistics> drawStatisticsList = drawStatisticsService.getRecentDrawStatistics();

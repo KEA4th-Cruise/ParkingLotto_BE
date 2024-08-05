@@ -34,7 +34,7 @@ public class MemberRestController {
     private final ApplicantService applicantService;
 
 
-    @Operation(summary = "로그인 API", description = "accountId, password를 loginRequestDTO에 담아 요청을 보내면 등록 여부와 토큰을 반환합니다.")
+    @Operation(summary = "로그인 API", description = "accountId, password를 loginRequestDTO에 담아 요청을 보내면 등록 여부와 토큰을 반환합니다(신해철).")
     @PostMapping("/login")
     public ApiResponse<MemberResponseDTO.LoginResponseDTO> login(@RequestBody @Valid MemberRequestDTO.LoginRequestDTO loginRequestDTO, HttpServletResponse httpServletResponse) {
         MemberResponseDTO.LoginResponseDTO loginResponseDTO = memberService.login(loginRequestDTO);
@@ -47,13 +47,13 @@ public class MemberRestController {
         return ApiResponse.onSuccess(SuccessStatus.MEMBER_LOGIN_SUCCESS, loginResponseDTO);
     }
 
-    @Operation(summary = "로그아웃 API", description = "accountId, accessToken, refreshToken을 logoutRequestDTO에 담아 요청을 보내면 로그아웃 시간을 반환합니다.")
+    @Operation(summary = "로그아웃 API", description = "accountId, accessToken, refreshToken을 logoutRequestDTO에 담아 요청을 보내면 로그아웃 시간을 반환합니다.(신해철)")
     @PostMapping("/logout")
     public ApiResponse<MemberResponseDTO.LogoutResponseDTO> logout(@RequestBody MemberRequestDTO.LogoutRequestDTO logoutRequestDTO) {
         return ApiResponse.onSuccess(SuccessStatus.MEMBER_LOGOUT_SUCCESS, memberService.logout(logoutRequestDTO));
     }
 
-    @Operation(summary = "토큰 재발급 API", description = "access token이 만료된 경우 refresh token을 사용하여 자동 로그인을 해주는 API 입니다.")
+    @Operation(summary = "토큰 재발급 API", description = "access token이 만료된 경우 refresh token을 사용하여 자동 로그인을 해주는 API 입니다.(신해철)")
     @PostMapping("/refresh")
     public ApiResponse<MemberResponseDTO.RefreshResponseDTO> refreshAccessToken(@RequestBody JwtToken jwtToken, HttpServletResponse httpServletResponse) {
         MemberResponseDTO.RefreshResponseDTO refreshResponseDTO = memberService.refreshToken(jwtToken);
@@ -61,7 +61,7 @@ public class MemberRestController {
         return ApiResponse.onSuccess(SuccessStatus.MEMBER_REFRESH_TOKEN_SUCCESS, refreshResponseDTO);
     }
 
-    @Operation(summary = "사용자 입력정보 조회 API", description = "로그인한 사용자의 입력정보를 불러오는 API 입니다. 주요 정보로는 차량번호, 증명서류, 거주지주소, 근무타입이 있습니다.")
+    @Operation(summary = "사용자 입력정보 조회 API", description = "로그인한 사용자의 입력정보를 불러오는 API 입니다. 주요 정보로는 차량번호, 증명서류, 거주지주소, 근무타입이 있습니다.(최준범)")
     @GetMapping("/info")
     public ApiResponse<MemberResponseDTO.MyInfoResponseDTO> getMyInfo(HttpServletRequest httpServletRequest) {
 
@@ -71,7 +71,7 @@ public class MemberRestController {
 
     }
 
-    @Operation(summary = "내가 배정받은 주차공간 정보를 조회하는 API 입니다.", description = " Pathvariable 로 drawId 를 보내주면 해당 회차에 내 주차공간 정보를 보내줍니다. 주요 정보는 주차공간 주소, 구역이름, 이미지입니다")
+    @Operation(summary = "내가 배정받은 주차공간 정보를 조회하는 API 입니다.", description = " Pathvariable 로 drawId 를 보내주면 해당 회차에 내 주차공간 정보를 보내줍니다. 주요 정보는 주차공간 주소, 구역이름, 이미지입니다.(이윤서)")
     @GetMapping("/{drawId}/my-space")
     public ApiResponse<ParkingSpaceResponseDTO.ParkingSpaceInfoResponseDTO> getParkingSpaceInfo(@PathVariable("drawId") Long drawId, HttpServletRequest httpServletRequest) {
 
@@ -82,7 +82,7 @@ public class MemberRestController {
     }
 
 
-    @Operation(summary = "내가 신청했던 추첨 목록을 조회하는 API 입니다. 페이징을 포함합니다", description = " RequestParam 으로 조회하고 싶은 page 번호를 전송해 주세요")
+    @Operation(summary = "내가 신청했던 추첨 목록을 조회하는 API 입니다. 페이징을 포함합니다", description = " RequestParam 으로 조회하고 싶은 page 번호를 전송해 주세요.(최준범)")
     @GetMapping("/applied/draws")
     public ApiResponse<Page<ApplicantResponseDTO.GetMyApplyResultDTO>> getMyApplyList(HttpServletRequest httpServletRequest,  @RequestParam(name = "page") Integer page) {
         String accountIdFromRequest = jwtUtils.getAccountIdFromRequest(httpServletRequest);
@@ -91,7 +91,7 @@ public class MemberRestController {
         return ApiResponse.onSuccess(SuccessStatus.APPLICANT_APPLY_LIST_FOUND, applyResultList);
     }
 
-    @Operation(summary = "특정 회차 결과 조회 API", description = "내가 신청했던 회차중 특정 회차의 결과를 조회하는 API 입니다, PathVariable 으로 drawId 를 보내주세요 ")
+    @Operation(summary = "특정 회차 결과 조회 API", description = "내가 신청했던 회차중 특정 회차의 결과를 조회하는 API 입니다, PathVariable 으로 drawId 를 보내주세요.(이윤서)")
     @GetMapping("/applied/draws/{drawId}")
     public ApiResponse<ApplicantResponseDTO.MyApplyInfoDTO> getMyApplyInfo(@PathVariable("drawId") Long drawId, HttpServletRequest httpServletRequest) {
 

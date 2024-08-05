@@ -18,7 +18,7 @@ public class WeightRestController {
     private final WeightDetailService weightDetailService;
 
     //가중치 정보 조회 API
-    @Operation(summary = "가중치 정보 조회 API", description = "가중치 계산기를 사용할 때 쓰이는 API로 토큰으로 기존 가중치 정보를 조회하는 API입니다.")
+    @Operation(summary = "가중치 정보 조회 API", description = "가중치 계산기를 사용할 때 쓰이는 API로 토큰으로 기존 가중치 정보를 조회하는 API입니다.(이정균)")
     @GetMapping("/detail")
     public ApiResponse<WeightDetailResponseDTO.GetMemberWeightDTO> getMemberWeight(HttpServletRequest httpServletRequest) {
         WeightDetailResponseDTO.GetMemberWeightDTO calculateMemberWeightResponseDTO = weightDetailService.getMemberWeight(httpServletRequest);
@@ -26,7 +26,7 @@ public class WeightRestController {
     }
 
     //가중치 계산 API
-    @Operation(summary = "가중치 계산 API", description = "가중치 계산기를 사용할 때 쓰이는 API로 가중치 요소들을 JSON 형태로 받아 가중치 계산을 요청하는 API입니다.")
+    @Operation(summary = "가중치 계산 API", description = "가중치 계산기를 사용할 때 쓰이는 API로 가중치 요소들을 JSON 형태로 받아 가중치 계산을 요청하는 API입니다.(이정균)")
     @GetMapping("/calculate")
     public ApiResponse<WeightDetailResponseDTO.CalculateWeightResponseDTO> calculateWeight(@Valid @RequestBody WeightDetailRequestDTO.CalculateWeightRequestDTO calculateWeightRequestDTO){
         WeightDetailResponseDTO.CalculateWeightResponseDTO calculateWeightResponseDTO = weightDetailService.calculateWeight(calculateWeightRequestDTO);
