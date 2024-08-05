@@ -1,6 +1,7 @@
 package com.cruise.parkinglotto.service.memberService;
 
 import com.cruise.parkinglotto.domain.Member;
+import com.cruise.parkinglotto.global.jwt.JwtToken;
 import com.cruise.parkinglotto.web.dto.memberDTO.MemberRequestDTO;
 import com.cruise.parkinglotto.web.dto.memberDTO.MemberResponseDTO;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +18,10 @@ public interface MemberService {
     // 로그아웃
     MemberResponseDTO.LogoutResponseDTO logout(MemberRequestDTO.LogoutRequestDTO logoutRequestDTO);
 
+    // 리프레시 토큰을 이용하여 로그인을 유지하는 메서드
+    MemberResponseDTO.RefreshResponseDTO refreshToken(JwtToken jwtToken);
 
     // 내가 입력한 정보 불러오기
     MemberResponseDTO.MyInfoResponseDTO getMyInfo(Long memberId);
+
 }

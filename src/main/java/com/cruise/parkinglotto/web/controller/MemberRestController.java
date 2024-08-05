@@ -1,6 +1,7 @@
 package com.cruise.parkinglotto.web.controller;
 
 import com.cruise.parkinglotto.domain.Member;
+import com.cruise.parkinglotto.global.jwt.JwtToken;
 import com.cruise.parkinglotto.global.jwt.JwtUtils;
 import com.cruise.parkinglotto.global.response.ApiResponse;
 import com.cruise.parkinglotto.global.response.code.status.SuccessStatus;
@@ -12,7 +13,10 @@ import com.cruise.parkinglotto.web.dto.memberDTO.MemberRequestDTO;
 import com.cruise.parkinglotto.web.dto.memberDTO.MemberResponseDTO;
 import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -32,14 +36,29 @@ public class MemberRestController {
 
     @Operation(summary = "로그인 API", description = "accountId, password를 loginRequestDTO에 담아 요청을 보내면 등록 여부와 토큰을 반환합니다.")
     @PostMapping("/login")
-    public ApiResponse<MemberResponseDTO.LoginResponseDTO> login(@RequestBody MemberRequestDTO.LoginRequestDTO loginRequestDTO) {
-        return ApiResponse.onSuccess(SuccessStatus.MEMBER_LOGIN_SUCCESS, memberService.login(loginRequestDTO));
+    public ApiResponse<MemberResponseDTO.LoginResponseDTO> login(@RequestBody @Valid MemberRequestDTO.LoginRequestDTO loginRequestDTO, HttpServletResponse httpServletResponse) {
+        MemberResponseDTO.LoginResponseDTO loginResponseDTO = memberService.login(loginRequestDTO);
+
+        // access token과 refresh token을 각각의 쿠키에 담아서 보냄
+        JwtToken jwtToken = loginResponseDTO.getJwtToken();
+        setCookie(httpServletResponse, "accessToken", jwtToken.getAccessToken(),   60 * 60 * 24); // 1일
+        setCookie(httpServletResponse, "refreshToken", jwtToken.getRefreshToken(), 60 * 60 * 24 * 7); // 7일
+
+        return ApiResponse.onSuccess(SuccessStatus.MEMBER_LOGIN_SUCCESS, loginResponseDTO);
     }
 
     @Operation(summary = "로그아웃 API", description = "accountId, accessToken, refreshToken을 logoutRequestDTO에 담아 요청을 보내면 로그아웃 시간을 반환합니다.")
     @PostMapping("/logout")
     public ApiResponse<MemberResponseDTO.LogoutResponseDTO> logout(@RequestBody MemberRequestDTO.LogoutRequestDTO logoutRequestDTO) {
         return ApiResponse.onSuccess(SuccessStatus.MEMBER_LOGOUT_SUCCESS, memberService.logout(logoutRequestDTO));
+    }
+
+    @Operation(summary = "토큰 재발급 API", description = "access token이 만료된 경우 refresh token을 사용하여 자동 로그인을 해주는 API 입니다.")
+    @PostMapping("/refresh")
+    public ApiResponse<MemberResponseDTO.RefreshResponseDTO> refreshAccessToken(@RequestBody JwtToken jwtToken, HttpServletResponse httpServletResponse) {
+        MemberResponseDTO.RefreshResponseDTO refreshResponseDTO = memberService.refreshToken(jwtToken);
+        setCookie(httpServletResponse, "accessToken", refreshResponseDTO.getAccessToken(), 60 * 60 * 24); // 1일
+        return ApiResponse.onSuccess(SuccessStatus.MEMBER_REFRESH_TOKEN_SUCCESS, refreshResponseDTO);
     }
 
     @Operation(summary = "사용자 입력정보 조회 API", description = "로그인한 사용자의 입력정보를 불러오는 API 입니다. 주요 정보로는 차량번호, 증명서류, 거주지주소, 근무타입이 있습니다.")
@@ -80,5 +99,13 @@ public class MemberRestController {
         Member memberByAccountId = memberService.getMemberByAccountId(accountIdFromRequest);
         return ApiResponse.onSuccess(SuccessStatus.APPLICANT_APPLY_INFO_FOUND, applicantService.getMyApplyInfo(memberByAccountId.getId(), drawId));
 
+    }
+
+    private void setCookie(HttpServletResponse httpServletResponse, String name, String value, int maxAge) {
+        Cookie cookie = new Cookie(name, value);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(maxAge);
+        httpServletResponse.addCookie(cookie);
     }
 }
