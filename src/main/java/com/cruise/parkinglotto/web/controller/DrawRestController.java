@@ -199,10 +199,17 @@ public class DrawRestController {
     }
 
     @Operation(summary = "관리자가 당첨자를 강제 취소시키는 API 입니다.", description = "path variable로 drawId와 취소시킬 당첨자의 applicantId를 전송해주세요.")
-    @PatchMapping("/{drawId}/applicants/{applicantId}/cancel")
+    @PatchMapping("/{drawId}/applicants/{applicantId}/admin-cancel")
     public ApiResponse<Void> cancelApplicant(HttpServletRequest httpServletRequest, @PathVariable(name = "drawId") Long drawId,
-                                                                                      @PathVariable(name = "applicantId") Long applicantId) {
+                                             @PathVariable(name = "applicantId") Long applicantId) {
         drawService.adminCancelWinner(httpServletRequest, drawId, applicantId);
         return ApiResponse.onSuccess(SuccessStatus.DRAW_ADMIN_CANCEL, null);
+    }
+
+    @Operation(summary = "당첨자가 당첨을 포기하는 API 입니다.", description = "pathvariable로 drawId를 넘겨주세요")
+    @PatchMapping("/{drawId}/self-cancel")
+    public ApiResponse<Void> selfCancel(HttpServletRequest httpServletRequest, @PathVariable(name = "drawId") Long drawId) {
+        drawService.selfCancelWinner(httpServletRequest, drawId);
+        return ApiResponse.onSuccess(SuccessStatus.DRAW_SELF_CANCEL, null);
     }
 }
