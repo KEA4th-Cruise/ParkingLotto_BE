@@ -112,7 +112,7 @@ public class DrawRestController {
     }
 
 
-    @Operation(summary = "일반 추첨 신청자 목록을 조회하는 API 입니다. 페이징을 포함합니다.", description = "Path variable로 신청자 목 drawId를 전송해주세요. RequestParam 으로 page 번호를 전송해주세요.(이윤서)")
+    @Operation(summary = "일반 추첨 신청자 목록을 조회하는 API 입니다. 페이징을 포함합니다.", description = "Path variable로 신청자 목록을 조회할 추첨의 drawId를 전송해주세요. RequestParam 으로 page 번호를 전송해주세요.(이윤서)")
     @GetMapping("/{drawId}/applicants")
     public ApiResponse<ApplicantResponseDTO.GetApplicantListResultDTO> getApplicantList(@PathVariable(name = "drawId") Long drawId,
                                                                                         @RequestParam(name = "page") Integer page) {
