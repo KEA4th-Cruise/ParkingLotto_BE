@@ -217,7 +217,14 @@ public class ApplicantServiceImpl implements ApplicantService {
     @Override
     @Transactional(readOnly = true)
     public ApplicantResponseDTO.GetApplicantResultDTO searchApplicantBySearchKeyword(String searchKeyword) {
-        Applicant applicant = applicantRepository.findByMemberEmployeeNoOrAccountId(searchKeyword).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_SEARCH_NOT_FOUND));
+        Applicant applicant = applicantRepository.findByApplicantEmployeeNoOrAccountId(searchKeyword).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_SEARCH_NOT_FOUND));
         return ApplicantConverter.toGetApplicantResultDTO(applicant);
     }
+
+    @Override
+    public ApplicantResponseDTO.GetApplicantResultDTO searchWinnerBySearchKeyword(String searchKeyword) {
+        Applicant winner = applicantRepository.findByWinnerEmployeeNoOrAccountId(searchKeyword).orElseThrow(() -> new ExceptionHandler(ErrorStatus.WINNER_SEARCH_NOT_FOUND));
+        return ApplicantConverter.toGetApplicantResultDTO(winner);
+    }
+
 }
