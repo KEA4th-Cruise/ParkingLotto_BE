@@ -37,7 +37,13 @@ public class DrawResponseDTO {
     @AllArgsConstructor
     public static class DrawMemberResultResponseDTO {
         private List<ApplicantResponseDTO.ApplicantResultDTO> applicants;
+        private Integer listSize;
+        private Integer totalPage;
+        private Long totalElements;
+        private Boolean isFirst;
+        private Boolean isLast;
     }
+
 
     @Getter
     @Builder

@@ -13,12 +13,9 @@ public class ApplicantResponseDTO {
     public static class ApplicantResultDTO {
         private Double weightedTotalScore;
         private WinningStatus winningStatus;
-        private String parkingSpaceName;
         private Integer reserveNum;
         private Integer userSeedIndex;
         private String userSeed;
-        private String firstChoice;
-        private String secondChoice;
         private String userName;
     }
 
