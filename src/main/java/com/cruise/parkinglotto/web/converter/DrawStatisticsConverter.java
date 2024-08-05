@@ -1,8 +1,6 @@
 package com.cruise.parkinglotto.web.converter;
 
-import com.cruise.parkinglotto.domain.DrawStatistics;
-import com.cruise.parkinglotto.domain.ParkingSpace;
-import com.cruise.parkinglotto.domain.WeightSectionStatistics;
+import com.cruise.parkinglotto.domain.*;
 import com.cruise.parkinglotto.web.dto.drawStatisticsDTO.DrawStatisticsResponseDTO;
 
 import java.util.List;
@@ -41,5 +39,16 @@ public class DrawStatisticsConverter {
                         .map(parkingSpace -> ParkingSpaceConverter.toParkingSpaceCompetitionRateDTO(parkingSpace, parkingSpace.getApplicantCount()))
                         .toList())
                 .build();
+    }
+
+    public static DrawStatistics toDrawStatistics(Draw draw, List<Applicant> applicants, int totalSlots) {
+        DrawStatistics drawStatistics =
+                DrawStatistics.builder()
+                        .competitionRate((double) applicants.size() / totalSlots)
+                        .totalApplicants(applicants.size())
+                        .applicantsWeightAvg(applicants.stream().mapToDouble(Applicant::getWeightedTotalScore).average().orElse(0))
+                        .draw(draw)
+                        .build();
+        return drawStatistics;
     }
 }

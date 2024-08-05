@@ -6,7 +6,6 @@ import com.cruise.parkinglotto.domain.enums.WeightSection;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
 import com.cruise.parkinglotto.repository.*;
-import com.cruise.parkinglotto.web.converter.DrawStatisticConverter;
 import com.cruise.parkinglotto.web.converter.DrawStatisticsConverter;
 import com.cruise.parkinglotto.web.dto.drawStatisticsDTO.DrawStatisticsResponseDTO;
 import jakarta.persistence.Table;
@@ -46,7 +45,7 @@ public class DrawStatisticsServiceImpl implements DrawStatisticsService {
         Draw draw = drawRepository.findById(drawId).orElseThrow();
         int totalSlots = draw.getTotalSlots();
         List<Applicant> applicants = applicantRepository.findByDrawId(drawId);
-        DrawStatistics drawStatistics = DrawStatisticConverter.toDrawStatistics(draw, applicants, totalSlots);
+        DrawStatistics drawStatistics = DrawStatisticsConverter.toDrawStatistics(draw, applicants, totalSlots);
         drawStatisticsRepository.save(drawStatistics);
     }
 
