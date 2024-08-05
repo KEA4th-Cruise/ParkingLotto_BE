@@ -3,8 +3,6 @@ package com.cruise.parkinglotto.web.converter;
 import com.cruise.parkinglotto.domain.Applicant;
 import com.cruise.parkinglotto.domain.Draw;
 import com.cruise.parkinglotto.domain.ParkingSpace;
-import com.cruise.parkinglotto.domain.enums.WorkType;
-import com.cruise.parkinglotto.service.drawService.DrawServiceImpl;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import com.cruise.parkinglotto.domain.enums.DrawStatus;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawRequestDTO;
@@ -13,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
 import com.cruise.parkinglotto.web.dto.drawDTO.SimulationData;
 
-import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -31,11 +28,13 @@ public class DrawConverter {
                 .usageStartAt(draw.getUsageStartAt())
                 .usageEndAt(draw.getUsageEndAt())
                 .mapImageUrl(draw.getMapImageUrl())
+                .description(draw.getDescription())
+                .totalSlots(draw.getTotalSlots())
                 .getNameAndUrlParkingSpaceResultDTO(dto)
                 .build();
     }
 
-    public static DrawResponseDTO.DrawResultResponseDTO toDrawResultResponseDTO(Draw draw, List<Applicant> applicants, Map<Long, String> parkingSpaceNames, Integer totalApplicants) {
+    public static DrawResponseDTO.DrawMemberResultResponseDTO toDrawResultResponseDTO(List<Applicant> applicants, Map<Long, String> parkingSpaceNames) {
         List<ApplicantResponseDTO.ApplicantResultDTO> applicantInfoDTOList = applicants.stream()
                 .map(applicant -> ApplicantResponseDTO.ApplicantResultDTO.builder()
                         .weightedTotalScore(applicant.getWeightedTotalScore())
@@ -46,19 +45,11 @@ public class DrawConverter {
                         .userSeed(applicant.getUserSeed())
                         .firstChoice(parkingSpaceNames.get(applicant.getFirstChoice()))
                         .secondChoice(parkingSpaceNames.get(applicant.getSecondChoice()))
-                        .userName(applicant.getMember().getNameKo())
+                        .userName(maskName(applicant.getMember().getNameKo()))
                         .build())
                 .collect(Collectors.toList());
 
-        return DrawResponseDTO.DrawResultResponseDTO.builder()
-                .drawId(draw.getId())
-                .drawType(draw.getType().name())
-                .title(draw.getTitle())
-                .seedNum(draw.getSeedNum())
-                .totalSlots(draw.getTotalSlots())
-                .year(draw.getYear())
-                .quarter(draw.getQuarter())
-                .totalApplicants(totalApplicants) // 전체 응모자 수 추가
+        return DrawResponseDTO.DrawMemberResultResponseDTO.builder()
                 .applicants(applicantInfoDTOList)
                 .build();
     }
@@ -152,4 +143,51 @@ public class DrawConverter {
                 .parkingSpaceCompetitionRateDTOList(parkingSpaceCompetitionRateDTOList)
                 .build();
     }
+
+    public static DrawResponseDTO.DrawResultExcelDTO toDrawResultExcelDTO(String url) {
+        return DrawResponseDTO.DrawResultExcelDTO.builder()
+                .URL(url)
+                .build();
+    }
+
+    public static DrawResponseDTO.GetDrawInfoDetailDTO toGetDrawInfoDetail(Draw draw, List<Applicant> applicants) {
+        return DrawResponseDTO.GetDrawInfoDetailDTO.builder()
+                .drawId(draw.getId())
+                .title(draw.getTitle())
+                .applicantsCount(applicants.size())
+                .totalSlots(draw.getTotalSlots())
+                .seed(draw.getSeedNum())
+                .seedDetail(applicants.stream()
+                        .map(applicant -> DrawResponseDTO.SeedDetailDTO.builder()
+                                .accountId(applicant.getMember().getAccountId())
+                                .userSeed(applicant.getUserSeed())
+                                .build())
+                        .collect(Collectors.toList()))
+                .build();
+    }
+
+    public static DrawResponseDTO.DrawPreviewDTO toDrawPreviewDTO(Draw draw) {
+        return DrawResponseDTO.DrawPreviewDTO.builder()
+                .drawId(draw.getId())
+                .drawType(draw.getType())
+                .drawStatus(draw.getStatus())
+                .drawTitle(draw.getTitle())
+                .build();
+    }
+
+    public static DrawResponseDTO.GetDrawListResultDTO toGetDrawListResultDTO(List<String> yearList, List<Draw> drawList) {
+        return DrawResponseDTO.GetDrawListResultDTO.builder()
+                .yearList(yearList)
+                .drawList(drawList.stream()
+                        .map(DrawConverter::toDrawPreviewDTO)
+                        .toList())
+                .build();
+    }
+
+    public static DrawResponseDTO.GetYearsFromDrawListDTO toGetYearsFromDrawListDTO(List<String> yearList) {
+        return DrawResponseDTO.GetYearsFromDrawListDTO.builder()
+                .yearList(yearList)
+                .build();
+    }
+
 }

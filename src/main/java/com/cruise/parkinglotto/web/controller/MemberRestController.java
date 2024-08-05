@@ -18,6 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -70,6 +71,7 @@ public class MemberRestController {
 
     }
 
+    @Operation(summary = "내가 배정받은 주차공간 정보를 조회하는 API 입니다.", description = " Pathvariable 로 drawId 를 보내주면 해당 회차에 내 주차공간 정보를 보내줍니다. 주요 정보는 주차공간 주소, 구역이름, 이미지입니다")
     @GetMapping("/{drawId}/my-space")
     public ApiResponse<ParkingSpaceResponseDTO.ParkingSpaceInfoResponseDTO> getParkingSpaceInfo(@PathVariable("drawId") Long drawId, HttpServletRequest httpServletRequest) {
 
@@ -79,11 +81,13 @@ public class MemberRestController {
         return ApiResponse.onSuccess(SuccessStatus.PARKING_SPACE_INFO_FOUND, parkingSpaceService.findParkingSpaceInfo(findMember.getId(), drawId));
     }
 
+
+    @Operation(summary = "내가 신청했던 추첨 목록을 조회하는 API 입니다. 페이징을 포함합니다", description = " RequestParam 으로 조회하고 싶은 page 번호를 전송해 주세요")
     @GetMapping("/applied/draws")
-    public ApiResponse<List<ApplicantResponseDTO.GetMyApplyResultDTO>> getMyApplyList(HttpServletRequest httpServletRequest) {
+    public ApiResponse<Page<ApplicantResponseDTO.GetMyApplyResultDTO>> getMyApplyList(HttpServletRequest httpServletRequest,  @RequestParam(name = "page") Integer page) {
         String accountIdFromRequest = jwtUtils.getAccountIdFromRequest(httpServletRequest);
         Member memberByAccountId = memberService.getMemberByAccountId(accountIdFromRequest);
-        List<ApplicantResponseDTO.GetMyApplyResultDTO> applyResultList = applicantService.getApplyResultList(memberByAccountId.getId());
+        Page<ApplicantResponseDTO.GetMyApplyResultDTO> applyResultList = applicantService.getApplyResultList(memberByAccountId.getId(), page - 1);
         return ApiResponse.onSuccess(SuccessStatus.APPLICANT_APPLY_LIST_FOUND, applyResultList);
     }
 

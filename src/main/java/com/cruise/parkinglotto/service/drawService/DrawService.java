@@ -2,17 +2,19 @@ package com.cruise.parkinglotto.service.drawService;
 
 import com.cruise.parkinglotto.domain.Applicant;
 import com.cruise.parkinglotto.domain.Draw;
+import com.cruise.parkinglotto.domain.enums.DrawType;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawRequestDTO;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
 public interface DrawService {
     //추첨을 실행
-    void executeDraw(Long drawId);
+    void executeDraw(Long drawId) throws IOException;
 
     //추첨의 시드 번호를 저장
     void updateSeedNum(Long drawId);
@@ -34,7 +36,7 @@ public interface DrawService {
 
     DrawResponseDTO.GetCurrentDrawInfoDTO getCurrentDrawInfo(HttpServletRequest httpServletRequest, Long drawId);
 
-    DrawResponseDTO.DrawResultResponseDTO getDrawResult(HttpServletRequest httpServletRequest, Long drawId, Integer page);
+    DrawResponseDTO.DrawMemberResultResponseDTO getDrawResult(HttpServletRequest httpServletRequest, Long drawId, Integer page);
 
     Draw createDraw(MultipartFile mapImage, DrawRequestDTO.CreateDrawRequestDTO createDrawRequestDTO);
 
@@ -44,4 +46,15 @@ public interface DrawService {
 
     DrawResponseDTO.GetDrawOverviewResultDTO getDrawOverview(HttpServletRequest httpServletRequest);
 
+    DrawResponseDTO.DrawResultExcelDTO getDrawResultExcel(Long drawId);
+
+    DrawResponseDTO.GetDrawInfoDetailDTO getDrawInfoDetail(HttpServletRequest httpServletRequest, Long drawId);
+
+    DrawResponseDTO.GetDrawListResultDTO getDrawList(String year, DrawType drawType);
+
+    void assignReservedApplicant(Long drawId, Long winnerId);
+
+    DrawResponseDTO.GetYearsFromDrawListDTO getYearsFromDrawList();
+
+    void adminCancelWinner(HttpServletRequest httpServletRequest, Long drawId, Long applicantId);
 }

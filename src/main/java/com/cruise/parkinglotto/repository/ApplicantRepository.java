@@ -32,7 +32,7 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
 
     @Modifying
     @Query("UPDATE Applicant a SET a.randomNumber = :randomNumber WHERE a.id = :applicantId")
-    void assignRandomNumber(@Param("applicantId") Long applicantId, @Param("randomNumber") double randomNumber);
+    void assignRandomNumber(@Param("applicantId") Long applicantId, @Param("randomNumber") Double randomNumber);
 
     @Modifying
     @Query("UPDATE Applicant a SET a.parkingSpaceId = :parkingSpaceId WHERE a.id = :winnerId")
@@ -40,15 +40,7 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
 
     @Modifying
     @Query("UPDATE Applicant a SET a.reserveNum = :reserveNum WHERE a.id = :applicantId")
-    void updateReserveNum(@Param("applicantId") Long applicantId, @Param("reserveNum") int reserveNum);
-
-    @Modifying
-    @Query("UPDATE Applicant a SET a.weightedTotalScore = :weight WHERE a.id = :applicantId")
-    void updateWeightedTotalScore(@Param("applicantId") Long id, @Param("weight") double weight);
-
-    @Modifying
-    @Query("UPDATE Applicant a SET a.winningStatus = :winningStatus WHERE a.id = :winnerId")
-    void updateWinningStatus(@Param("winnerId") Long winnerId, @Param("winningStatus") WinningStatus winningStatus);
+    void updateReserveNum(@Param("applicantId") Long applicantId, @Param("reserveNum") Integer reserveNum);
 
     Page<Applicant> findByDrawId(PageRequest pageRequest, Long drawId);
 
@@ -71,4 +63,10 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
 
     @Query("SELECT a FROM Applicant a JOIN a.member m WHERE m.employeeNo = :searchKeyword OR m.accountId = :searchKeyword")
     Optional<Applicant> findByMemberEmployeeNoOrAccountId(@Param("searchKeyword") String searchKeyword);
+
+    Applicant findByDrawIdAndId(Long drawId, Long winnerId);
+
+    Applicant findByDrawIdAndReserveNum(Long drawId, Integer reserveNum);
+
+    List<Applicant> findByDrawIdAndReserveNumGreaterThan(Long drawId, Integer reserveNum);
 }

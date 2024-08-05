@@ -15,10 +15,6 @@ import org.springframework.data.repository.query.Param;
 public interface DrawRepository extends JpaRepository<Draw, Long> {
     Optional<Draw> findById(long drawId);
 
-    @Modifying
-    @Query("UPDATE Draw d SET d.seedNum = :seedNum WHERE d.id = :drawId")
-    void updateSeedNum(@Param("drawId") Long drawId, @Param("seedNum") String seedNum);
-
     List<Draw> findByConfirmed(Boolean confirmed);
 
     @Modifying
@@ -30,5 +26,10 @@ public interface DrawRepository extends JpaRepository<Draw, Long> {
     Optional<Draw> findTopByStatusNotOrderByUsageStartAtDesc(DrawStatus status);
 
     List<Draw> findTop5ByTypeOrderByUsageStartAtDesc(DrawType type);
+
+    List<Draw> findByYearAndType(String year, DrawType drawType);
+
+    @Query("SELECT DISTINCT d.year FROM Draw d  ORDER BY d.year DESC")
+    List<String> findYearList();
 }
 

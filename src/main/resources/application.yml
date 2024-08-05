@@ -34,6 +34,7 @@ cloud:
         map-image: ${MAP_IMAGE}
         general-certificate-docs: ${GENERAL_CERTIFICATE_DOCS}
         priority-certificate-docs: ${PRIORITY_CERTIFICATE_DOCS}
+        draw-result-docs: ${DRAW_RESULT_DOCS}
 
       region:
         static: ${KC_REGION}

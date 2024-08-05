@@ -1,9 +1,6 @@
 package com.cruise.parkinglotto.web.converter;
 
-import com.cruise.parkinglotto.domain.Applicant;
-import com.cruise.parkinglotto.domain.Member;
-import com.cruise.parkinglotto.domain.ParkingSpace;
-import com.cruise.parkinglotto.domain.PriorityApplicant;
+import com.cruise.parkinglotto.domain.*;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import com.cruise.parkinglotto.web.dto.priorityApplicantDTO.PriorityApplicantResponseDTO;
 import org.springframework.data.domain.Page;
@@ -45,4 +42,26 @@ public class PriorityApplicantConverter {
                 .build();
     }
 
+    public static PriorityApplicantResponseDTO.GetPriorityApplicantDetailsResultDTO toGetPriorityApplicantDetailsResultDTO(PriorityApplicant priorityApplicant,
+                                                                                                                           List<CertificateDocs> certificateDocsList) {
+
+        Member member = priorityApplicant.getMember();
+        return PriorityApplicantResponseDTO.GetPriorityApplicantDetailsResultDTO.builder()
+                .nameKo(member.getNameKo())
+                .accountId(member.getAccountId())
+                .employeeNo(member.getEmployeeNo())
+                .deptPathName((member.getDeptPathName()))
+                .certificateFiles(certificateDocsList.stream()
+                        .map(CertificateDocsConverter::toCertificateFileDTO)
+                        .toList())
+                .approvalStatus(priorityApplicant.getApprovalStatus())
+                .build();
+    }
+
+    public static PriorityApplicantResponseDTO.RejectPriorityResultDTO toRejectPriorityResultDTO(PriorityApplicant priorityApplicant) {
+        return PriorityApplicantResponseDTO.RejectPriorityResultDTO.builder()
+                .priorityApplicantId(priorityApplicant.getId())
+                .approvalStatus(priorityApplicant.getApprovalStatus())
+                .build();
+    }
 }

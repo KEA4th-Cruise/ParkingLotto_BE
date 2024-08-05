@@ -81,6 +81,9 @@ public class Draw extends BaseEntity {
     @OneToMany(mappedBy = "draw", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ParkingSpace> parkingSpaceList;
 
+    @Column
+    private String resultURL;
+
     public void updateConfirmed(Boolean confirmed, Integer totalSlots) {
         this.confirmed = confirmed;
         this.totalSlots = totalSlots;
@@ -88,5 +91,9 @@ public class Draw extends BaseEntity {
 
     public void updateSeedNum(String seedNum) {
         this.seedNum = seedNum;
+    }
+
+    public void updateResultURL(String resultURL) {
+        this.resultURL = resultURL;
     }
 }

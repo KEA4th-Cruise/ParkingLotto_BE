@@ -4,16 +4,16 @@ import com.cruise.parkinglotto.domain.Applicant;
 import com.cruise.parkinglotto.domain.Draw;
 import com.cruise.parkinglotto.domain.Member;
 import com.cruise.parkinglotto.domain.ParkingSpace;
-import com.cruise.parkinglotto.domain.enums.DrawStatus;
-import com.cruise.parkinglotto.domain.enums.DrawType;
-import com.cruise.parkinglotto.domain.enums.WinningStatus;
-import com.cruise.parkinglotto.domain.enums.WorkType;
+import com.cruise.parkinglotto.domain.enums.*;
+import com.cruise.parkinglotto.global.excel.FileGeneration;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
 import com.cruise.parkinglotto.global.jwt.JwtUtils;
 import com.cruise.parkinglotto.global.kc.ObjectStorageConfig;
 import com.cruise.parkinglotto.global.kc.ObjectStorageService;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
 import com.cruise.parkinglotto.repository.*;
+import com.cruise.parkinglotto.service.drawStatisticsService.DrawStatisticsService;
+import com.cruise.parkinglotto.service.weightSectionStatisticsService.WeightSectionStatisticsService;
 import com.cruise.parkinglotto.web.converter.DrawConverter;
 import com.cruise.parkinglotto.web.converter.ParkingSpaceConverter;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawRequestDTO;
@@ -23,16 +23,21 @@ import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.transaction.support.TransactionSynchronizationAdapter;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.cruise.parkinglotto.web.converter.DrawConverter.toDrawResultExcelDTO;
 import static com.cruise.parkinglotto.web.converter.DrawConverter.toGetCurrentDrawInfo;
 
 @Slf4j
@@ -48,7 +53,9 @@ public class DrawServiceImpl implements DrawService {
     private final ObjectStorageConfig objectStorageConfig;
     private final JwtUtils jwtUtils;
     private final MemberRepository memberRepository;
-
+    private final FileGeneration fileGenerationService;
+    private final WeightSectionStatisticsService weightSectionStatisticsService;
+    private final DrawStatisticsService drawStatisticsService;
 
     //계산용 변수
     private static final int WORK_TYPE1_SCORE = 25;
@@ -63,7 +70,7 @@ public class DrawServiceImpl implements DrawService {
 
     @Override
     @Transactional
-    public void executeDraw(Long drawId) {
+    public void executeDraw(Long drawId) throws IOException {
         try {
             Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
 
@@ -76,7 +83,7 @@ public class DrawServiceImpl implements DrawService {
             updateSeedNum(drawId);
             String seed = draw.getSeedNum();
             if (seed == null) {
-                throw new ExceptionHandler(ErrorStatus.SEED_NOT_FOUND);
+                throw new ExceptionHandler(ErrorStatus.DRAW_SEED_NOT_FOUND);
             }
             assignRandomNumber(drawId, seed);
             List<Applicant> applicants = applicantRepository.findByDrawId(drawId);
@@ -88,11 +95,22 @@ public class DrawServiceImpl implements DrawService {
             handleDrawResults(drawId, orderedApplicants);
 
             drawRepository.updateStatus(drawId, DrawStatus.COMPLETED);
+
+            weightSectionStatisticsService.updateWeightSectionStatistics(drawId);
+
+            drawStatisticsService.updateDrawStatistics(drawId);
+
+            // 트랜잭션이 성공적으로 커밋된 후 엑셀 파일을 생성하도록 작업 예약
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
+                @Override
+                public void afterCommit() {
+                    fileGenerationService.generateAndUploadExcel(draw, orderedApplicants);
+                }
+            });
+
         } catch (Exception e) {
             log.error("Error occurred during executeDraw for drawId: {}", drawId, e);
             throw e;
-        } finally {
-            log.info("Transaction committed for drawId: {}", drawId);
         }
     }
 
@@ -154,12 +172,12 @@ public class DrawServiceImpl implements DrawService {
                 // 당첨 처리
                 selectedWinners.add(applicant);
                 applicantRepository.updateReserveNum(applicant.getId(), 0);
-                applicantRepository.updateWinningStatus(applicant.getId(), WinningStatus.WINNER);
+                applicant.updateWinningStatus(WinningStatus.WINNER);
                 weightDetailsRepository.resetRecentLossCount(applicant.getMember());
             } else {
                 // 예비자 처리
                 reserveApplicants.add(applicant);
-                applicantRepository.updateWinningStatus(applicant.getId(), WinningStatus.RESERVE);
+                applicant.updateWinningStatus(WinningStatus.RESERVE);
             }
         }
         // 당첨자들에게 자리 부여하기
@@ -309,11 +327,11 @@ public class DrawServiceImpl implements DrawService {
 
     @Override
     @Transactional(readOnly = true)
-    public DrawResponseDTO.DrawResultResponseDTO getDrawResult(HttpServletRequest httpServletRequest, Long drawId, Integer page) {
+    public DrawResponseDTO.DrawMemberResultResponseDTO getDrawResult(HttpServletRequest httpServletRequest, Long drawId, Integer page) {
         int pageSize = 15;
-        int offset = (page -1) * pageSize;
+        int offset = (page - 1) * pageSize;
 
-        Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
+        drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
         List<Applicant> applicants = applicantRepository.findByDrawId(drawId);
 
         List<Long> parkingSpaceIds = applicants.stream()
@@ -330,7 +348,7 @@ public class DrawServiceImpl implements DrawService {
 
         List<Applicant> pagedApplicants = applicants.subList(start, end);
 
-        return DrawConverter.toDrawResultResponseDTO(draw, pagedApplicants, parkingSpaceNames, applicants.size());
+        return DrawConverter.toDrawResultResponseDTO(pagedApplicants, parkingSpaceNames);
     }
 
     @Override
@@ -448,8 +466,6 @@ public class DrawServiceImpl implements DrawService {
 
         // 시뮬레이션 데이터를 저장할 HashMap 생성
         Map<Long, SimulationData> simulationDataMap = new HashMap<>();
-        Map<Long, Applicant> applicantMap = applicants.stream()
-                .collect(Collectors.toMap(Applicant::getId, applicant -> applicant));
 
         // 가중치 정보 가져오기
         for (Applicant applicant : applicants) {
@@ -555,4 +571,64 @@ public class DrawServiceImpl implements DrawService {
         return DrawConverter.toSimulateDrawResponseDTO(drawId, seed, simulationDataMap, pagedApplicants, allApplicantsDTO.size());
     }
 
+    @Override
+    public DrawResponseDTO.DrawResultExcelDTO getDrawResultExcel(Long drawId) {
+        Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
+        return toDrawResultExcelDTO(draw.getResultURL());
+    }
+
+    @Override
+    public DrawResponseDTO.GetDrawInfoDetailDTO getDrawInfoDetail(HttpServletRequest httpServletRequest, Long drawId) {
+        Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
+        List<Applicant> applicants = applicantRepository.findByDrawId(drawId);
+        if (applicants == null || applicants.isEmpty()) {
+            throw new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND);
+        }
+        return DrawConverter.toGetDrawInfoDetail(draw, applicants);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public DrawResponseDTO.GetDrawListResultDTO getDrawList(String year, DrawType drawType) {
+        List<Draw> drawList = drawRepository.findByYearAndType(year, drawType);
+        List<String> yearList = drawRepository.findYearList();
+        return DrawConverter.toGetDrawListResultDTO(yearList, drawList);
+    }
+
+    @Transactional
+    public void assignReservedApplicant(Long drawId, Long winnerId) {
+        Applicant currentWinner = applicantRepository.findByDrawIdAndId(drawId, winnerId);
+
+        Long parkingSpaceId = currentWinner.getParkingSpaceId();
+        Applicant nextWinner = applicantRepository.findByDrawIdAndReserveNum(drawId, 1);
+
+        nextWinner.updateReserve(parkingSpaceId, 0, WinningStatus.WINNER);
+
+        List<Applicant> reservedApplicants = applicantRepository.findByDrawIdAndReserveNumGreaterThan(drawId, 1);
+
+        for (Applicant applicant : reservedApplicants) {
+            applicant.updateReserveNum(applicant.getReserveNum() - 1);
+        }
+        currentWinner.updateReserve(null, reservedApplicants.size() + 1, WinningStatus.CANCELED);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public DrawResponseDTO.GetYearsFromDrawListDTO getYearsFromDrawList() {
+        List<String> yearList = drawRepository.findYearList();
+        return DrawConverter.toGetYearsFromDrawListDTO(yearList);
+    }
+
+    @Transactional
+    public void adminCancelWinner(HttpServletRequest httpServletRequest, Long drawId, Long winnerId) {
+        String accountIdFromRequest = jwtUtils.getAccountIdFromRequest(httpServletRequest);
+        Member member = memberRepository.findByAccountId(accountIdFromRequest).orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
+        if (member.getAccountType() == AccountType.ADMIN) {
+            assignReservedApplicant(drawId, winnerId);
+        }
+        else{
+            throw new ExceptionHandler(ErrorStatus._UNAUTHORIZED_ACCESS);
+        }
+    }
 }
+
