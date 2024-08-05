@@ -53,7 +53,7 @@ public class ApplicantResponseDTO {
         private WinningStatus winningStatus; // 그 추첨의 상태
         private Long drawStatisticsId; // 추첨 통계
         private Integer reserveNum; // 예비번호
-        private Long parkingSpaceId; // 주차 공간 정보 API
+        private Long parkingSpaceId; // 주차 공간 정보 id
     }
 
     @Getter
@@ -64,10 +64,22 @@ public class ApplicantResponseDTO {
         private Long parkingSpaceId;
         private String drawTitle;
         private WinningStatus winningStatus;
-        private String parkingSpaceName;
-        private String parkingSpaceAddress;
         private LocalDateTime startDate;
         private LocalDateTime endDate;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetMyApplyResultListDTO {
+        private List<GetMyApplyResultDTO> getMyApplyResultDTOList;
+        Integer listSize;
+        Integer totalPage;
+        Long totalElements;
+        Boolean isFirst;
+        Boolean isLast;
+
     }
 
 }

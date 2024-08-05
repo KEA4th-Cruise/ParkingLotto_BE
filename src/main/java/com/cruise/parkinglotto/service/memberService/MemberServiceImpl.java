@@ -1,10 +1,11 @@
 package com.cruise.parkinglotto.service.memberService;
 
-import com.cruise.parkinglotto.domain.CertificateDocs;
 import com.cruise.parkinglotto.domain.Member;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
 import com.cruise.parkinglotto.global.jwt.JwtToken;
 import com.cruise.parkinglotto.global.jwt.JwtUtils;
+import com.cruise.parkinglotto.global.kc.ObjectStorageConfig;
+import com.cruise.parkinglotto.global.kc.ObjectStorageService;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
 import com.cruise.parkinglotto.repository.CertificateDocsRepository;
 import com.cruise.parkinglotto.repository.MemberRepository;
@@ -23,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Duration;
 
 import java.time.Duration;
-import java.util.List;
+
 
 @Slf4j
 @Service
@@ -35,7 +36,6 @@ public class MemberServiceImpl implements MemberService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final RedisService redisService;
     private final PasswordEncoder passwordEncoder;
-    private final CertificateDocsRepository certificateDocsRepository;
 
     /**
      * 로그인 로직
@@ -135,11 +135,7 @@ public class MemberServiceImpl implements MemberService {
     public MemberResponseDTO.MyInfoResponseDTO getMyInfo(Long memberId) {
 
         Member findMember = memberRepository.findById(memberId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
-        List<CertificateDocs> certificateDocs = certificateDocsRepository.findCertificateDocsByMemberIdAndDrawId(memberId, -1L).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_CERT_DOCUMENT_NOT_FOUND));
-        if(certificateDocs.size() == 0) {
-            throw new ExceptionHandler(ErrorStatus.CERTIFICATEDOCS_DRAW_ID_NOT_CORRECT);
-        }
-        return MemberConverter.toMyInfoResponseDTO(findMember, certificateDocs);
+        return MemberConverter.toMyInfoResponseDTO(findMember);
 
     }
 

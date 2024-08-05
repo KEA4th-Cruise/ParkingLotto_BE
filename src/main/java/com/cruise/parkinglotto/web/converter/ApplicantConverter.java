@@ -49,14 +49,12 @@ public class ApplicantConverter {
     }
 
 
-    public static ApplicantResponseDTO.MyApplyInfoDTO toMyApplyInfoDTO(Applicant applicant,ParkingSpace parkingSpace) {
+    public static ApplicantResponseDTO.MyApplyInfoDTO toMyApplyInfoDTO(Applicant applicant ) {
 
         return ApplicantResponseDTO.MyApplyInfoDTO.builder()
                 .parkingSpaceId(applicant.getParkingSpaceId())
                 .drawTitle(applicant.getDraw().getTitle())
                 .winningStatus(applicant.getWinningStatus())
-                .parkingSpaceName(parkingSpace.getName())
-                .parkingSpaceAddress(parkingSpace.getAddress())
                 .startDate(applicant.getDraw().getUsageStartAt())
                 .endDate(applicant.getDraw().getUsageEndAt())
                 .build();
@@ -90,6 +88,19 @@ public class ApplicantConverter {
                 .trafficCommuteTime(trafficCommuteTime)
                 .carCommuteTime(carCommuteTime)
                 .recentLossCount(recentLossCount)
+                .build();
+    }
+
+    public static ApplicantResponseDTO.GetMyApplyResultListDTO toGetMyApplyResultListDTO (Page<ApplicantResponseDTO.GetMyApplyResultDTO> applyResultDTOList) {
+        List<ApplicantResponseDTO.GetMyApplyResultDTO> getApplicantResultDTOList = applyResultDTOList.stream()
+                .map((d)-> (d)).toList();
+        return ApplicantResponseDTO.GetMyApplyResultListDTO.builder()
+                .getMyApplyResultDTOList(getApplicantResultDTOList)
+                .isFirst(applyResultDTOList.isFirst())
+                .isLast(applyResultDTOList.isLast())
+                .totalElements(applyResultDTOList.getTotalElements())
+                .totalPage(applyResultDTOList.getTotalPages())
+                .listSize(applyResultDTOList.getSize())
                 .build();
     }
 }
