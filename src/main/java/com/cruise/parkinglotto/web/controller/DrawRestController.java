@@ -62,9 +62,8 @@ public class DrawRestController {
     @Operation(summary = "해당 회차 당첨 멤버 조회 API", description = "path variable로 추첨 ID와 페이지를 넘겨주면 해당 추첨의 결과를 15개씩 반환합니다.(이정균)")
     @GetMapping("/{drawId}/result")
     public ApiResponse<DrawResponseDTO.DrawMemberResultResponseDTO> getDrawResult(HttpServletRequest httpServletRequest, @PathVariable("drawId") Long drawId, @RequestParam("page") Integer page) {
-
-        DrawResponseDTO.DrawMemberResultResponseDTO drawResultResponseDTO = drawService.getDrawResult(httpServletRequest, drawId, page);
-        return ApiResponse.onSuccess(SuccessStatus.DRAW_RESULT_FOUND, drawResultResponseDTO);
+        Page<Applicant> drawResultPage = drawService.getDrawResult(httpServletRequest, drawId, page - 1);
+        return ApiResponse.onSuccess(SuccessStatus.DRAW_RESULT_FOUND, DrawConverter.toDrawResultResponseDTO(drawResultPage));
     }
 
     @Operation(summary = "추첨 정보 상세 조회 API", description = "path variable로 상세조회할 추첨의 drawId를 전송해주세요.(김성호)")

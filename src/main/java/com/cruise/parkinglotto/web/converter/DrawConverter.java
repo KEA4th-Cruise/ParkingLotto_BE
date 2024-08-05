@@ -10,6 +10,7 @@ import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
 import lombok.RequiredArgsConstructor;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
 import com.cruise.parkinglotto.web.dto.drawDTO.SimulationData;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Map;
@@ -34,23 +35,25 @@ public class DrawConverter {
                 .build();
     }
 
-    public static DrawResponseDTO.DrawMemberResultResponseDTO toDrawResultResponseDTO(List<Applicant> applicants, Map<Long, String> parkingSpaceNames) {
-        List<ApplicantResponseDTO.ApplicantResultDTO> applicantInfoDTOList = applicants.stream()
+    public static DrawResponseDTO.DrawMemberResultResponseDTO toDrawResultResponseDTO (Page<Applicant> applicantsPage) {
+        List<ApplicantResponseDTO.ApplicantResultDTO> applicantInfoDTOList = applicantsPage.stream()
                 .map(applicant -> ApplicantResponseDTO.ApplicantResultDTO.builder()
                         .weightedTotalScore(applicant.getWeightedTotalScore())
                         .winningStatus(applicant.getWinningStatus())
-                        .parkingSpaceName(parkingSpaceNames.get(applicant.getParkingSpaceId()))
                         .reserveNum(applicant.getReserveNum())
                         .userSeedIndex(applicant.getUserSeedIndex())
                         .userSeed(applicant.getUserSeed())
-                        .firstChoice(parkingSpaceNames.get(applicant.getFirstChoice()))
-                        .secondChoice(parkingSpaceNames.get(applicant.getSecondChoice()))
                         .userName(maskName(applicant.getMember().getNameKo()))
                         .build())
                 .collect(Collectors.toList());
 
         return DrawResponseDTO.DrawMemberResultResponseDTO.builder()
                 .applicants(applicantInfoDTOList)
+                .listSize(applicantsPage.getSize())
+                .totalPage(applicantsPage.getTotalPages())
+                .totalElements(applicantsPage.getTotalElements())
+                .isFirst(applicantsPage.isFirst())
+                .isLast(applicantsPage.isLast())
                 .build();
     }
 

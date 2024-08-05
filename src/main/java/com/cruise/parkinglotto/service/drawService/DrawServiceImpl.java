@@ -23,7 +23,8 @@ import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,7 +36,6 @@ import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static com.cruise.parkinglotto.web.converter.DrawConverter.toDrawResultExcelDTO;
 import static com.cruise.parkinglotto.web.converter.DrawConverter.toGetCurrentDrawInfo;
@@ -327,28 +327,16 @@ public class DrawServiceImpl implements DrawService {
 
     @Override
     @Transactional(readOnly = true)
-    public DrawResponseDTO.DrawMemberResultResponseDTO getDrawResult(HttpServletRequest httpServletRequest, Long drawId, Integer page) {
-        int pageSize = 15;
-        int offset = (page - 1) * pageSize;
+    public Page<Applicant> getDrawResult(HttpServletRequest httpServletRequest, Long drawId, Integer page) {
+        PageRequest pageRequest = PageRequest.of(page, 15);
 
         drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
-        List<Applicant> applicants = applicantRepository.findByDrawId(drawId);
+        Page<Applicant> applicantsPage = applicantRepository.findByDrawId(pageRequest, drawId);
 
-        List<Long> parkingSpaceIds = applicants.stream()
-                .flatMap(applicant -> Stream.of(applicant.getParkingSpaceId(), applicant.getFirstChoice(), applicant.getSecondChoice()))
-                .filter(Objects::nonNull)
-                .distinct()
-                .collect(Collectors.toList());
-
-        Map<Long, String> parkingSpaceNames = parkingSpaceRepository.findAllById(parkingSpaceIds).stream()
-                .collect(Collectors.toMap(ParkingSpace::getId, ParkingSpace::getName));
-
-        int start = Math.min(offset, applicants.size());
-        int end = Math.min(offset + pageSize, applicants.size());
-
-        List<Applicant> pagedApplicants = applicants.subList(start, end);
-
-        return DrawConverter.toDrawResultResponseDTO(pagedApplicants, parkingSpaceNames);
+        if (applicantsPage.isEmpty()) {
+            throw new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND);
+        }
+        return applicantsPage;
     }
 
     @Override
