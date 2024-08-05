@@ -235,7 +235,7 @@ public class DrawRestController {
         return ApiResponse.onSuccess(SuccessStatus.DRAW_SELF_CANCEL, null);
     }
 
-    @Operation(summary = "추첨의 통계를 조회하는 API입니댜.",description = "pathvariable로 통계를 조회할 추첨의 drawId를 넘겨주세요. (이윤서)")
+    @Operation(summary = "추첨의 통계를 조회하는 API입니다.",description = "pathvariable로 통계를 조회할 추첨의 drawId를 넘겨주세요. (이윤서)")
     @GetMapping("/{drawId}/statistics")
     public ApiResponse<DrawStatisticsResponseDTO.GetDrawStatisticsResultDTO> getDrawStatistics(@PathVariable(name = "drawId") Long drawId) {
         return ApiResponse.onSuccess(SuccessStatus.DRAW_STATISTICS_FOUND, drawStatisticsService.getDrawStatistics(drawId));
