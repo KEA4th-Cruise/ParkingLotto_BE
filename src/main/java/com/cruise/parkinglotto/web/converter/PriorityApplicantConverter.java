@@ -1,6 +1,9 @@
 package com.cruise.parkinglotto.web.converter;
 
 import com.cruise.parkinglotto.domain.*;
+import com.cruise.parkinglotto.domain.enums.ApprovalStatus;
+import com.cruise.parkinglotto.domain.enums.WinningStatus;
+import com.cruise.parkinglotto.domain.enums.WorkType;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import com.cruise.parkinglotto.web.dto.priorityApplicantDTO.PriorityApplicantResponseDTO;
 import org.springframework.data.domain.Page;
@@ -62,6 +65,16 @@ public class PriorityApplicantConverter {
         return PriorityApplicantResponseDTO.RejectPriorityResultDTO.builder()
                 .priorityApplicantId(priorityApplicant.getId())
                 .approvalStatus(priorityApplicant.getApprovalStatus())
+                .build();
+    }
+
+    public static PriorityApplicant makeInitialPriorityApplicantObject(Member member, Draw draw, String carNum) {
+        return PriorityApplicant.builder()
+                .approvalStatus(ApprovalStatus.PENDING)
+                .parkingSpaceId(null)
+                .carNum(carNum)
+                .member(member)
+                .draw(draw)
                 .build();
     }
 }

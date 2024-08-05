@@ -20,6 +20,7 @@ import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawRequestDTO;
 import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceRequestDTO;
 import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
+import com.cruise.parkinglotto.web.dto.priorityApplicantDTO.PriorityApplicantRequestDTO;
 import com.cruise.parkinglotto.web.dto.priorityApplicantDTO.PriorityApplicantResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -213,6 +214,17 @@ public class DrawRestController {
         return ApiResponse.onSuccess(SuccessStatus.DRAW_ADMIN_CANCEL, null);
     }
 
+    @Operation(summary = "사용자가 우대 추첨을(Priority) 신청하는 api입니다.", description = "파일 리스트와 적절한 DTO를 인터페이스 명세서를 참조해서 넣어주세요.")
+    @PostMapping(value = " /api/draws/{drawId}/general/apply", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ApiResponse<?> drawPriorityApply(HttpServletRequest httpServletRequest, @PathVariable(name = "drawId") Long drawId,
+                                            @RequestPart(value = "GeneralCertificateDocs", required = false) @Parameter(description = "업로드할 일반 인증서 문서 리스트") List<MultipartFile> GeneralCertificateDocs,
+                                            @RequestPart(value = "priorityCertificateDocs", required = true) @Parameter(description = "업로드할 우대 인증서 문서 리스트") List<MultipartFile> priorityCertificateDocs,
+                                            @RequestPart(value = "applyDrawRequestDTO", required = true) @Parameter(description = "우대 추첨 신청에 필요한 요청 데이터") @Valid PriorityApplicantRequestDTO.PriorityApplyDrawRequestDTO priorityApplyDrawRequestDTO) {
+        String accountId = jwtUtils.getAccountIdFromRequest(httpServletRequest);
+        priorityApplicantService.drawPriorityApply(GeneralCertificateDocs, priorityCertificateDocs, priorityApplyDrawRequestDTO, accountId, drawId);
+        return ApiResponse.onSuccess(SuccessStatus.APPLICANT_SUCCESS, null);
+    }
+  
     @Operation(summary = "당첨자가 당첨을 포기하는 API 입니다.", description = "pathvariable로 drawId를 넘겨주세요.(이정균)")
     @PatchMapping("/{drawId}/self-cancel")
     public ApiResponse<Void> selfCancel(HttpServletRequest httpServletRequest, @PathVariable(name = "drawId") Long drawId) {

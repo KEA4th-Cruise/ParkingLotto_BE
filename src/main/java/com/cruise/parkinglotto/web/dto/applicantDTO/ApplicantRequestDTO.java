@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import software.amazon.awssdk.annotations.NotNull;
+
 import java.util.List;
 
 public class ApplicantRequestDTO {
