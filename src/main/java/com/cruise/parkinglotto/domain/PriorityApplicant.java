@@ -22,6 +22,9 @@ public class PriorityApplicant extends BaseEntity {
 
     private Long parkingSpaceId;
 
+    @Column(length = 8)
+    private String carNum;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;

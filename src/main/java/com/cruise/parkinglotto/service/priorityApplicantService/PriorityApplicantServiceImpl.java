@@ -156,7 +156,6 @@ public class PriorityApplicantServiceImpl implements PriorityApplicantService {
             }
         }
 
-
         if (useProfileFileUrlDTO != null) {
             for (CertificateDocsRequestDTO.CertificateFileDTO certificateFileDTO : useProfileFileUrlDTO) {
                 String fileName = certificateFileDTO.getFileName();
@@ -170,36 +169,13 @@ public class PriorityApplicantServiceImpl implements PriorityApplicantService {
         for (MultipartFile certificateDocument : priorityCertificateDocs){
             String fileName = certificateDocument.getOriginalFilename();
             String addMemberIdAndDrawIdFileUrl = certificateDocsService.makeCertificateFileUrl(member.getId(), draw.getId(), DrawType.PRIORITY, fileName);
-            String fileUrl = objectStorageService.uploadObject(objectStorageConfig.getGeneralCertificateDocument(), addMemberIdAndDrawIdFileUrl, certificateDocument);
+            String fileUrl = objectStorageService.uploadObject(objectStorageConfig.getPriorityCertificateDocument() , addMemberIdAndDrawIdFileUrl, certificateDocument);
             CertificateDocs certificateDocs = CertificateDocsConverter.toCertificateDocument(fileUrl, fileName, member, draw.getId());
             certificateDocsRepository.save(certificateDocs);
         }
 
-        //Handling weightDetails
-        String address = priorityApplyDrawRequestDTO.getAddress();
-        Integer carCommuteTime = priorityApplyDrawRequestDTO.getCarCommuteTime();
-        Integer trafficCommuteTime = priorityApplyDrawRequestDTO.getTrafficCommuteTime();
-        Double distance = priorityApplyDrawRequestDTO.getDistance();
-        WeightDetails weightDetails = weightDetailsRepository.findByMemberId(member.getId());
-        weightDetails.updateWeightDetailsInApply(address, priorityApplyDrawRequestDTO.getWorkType(), trafficCommuteTime, carCommuteTime, distance);
-
-        //Handling workType
-        WorkType workType = priorityApplyDrawRequestDTO.getWorkType();
-
-        //recentLossCount
-        Optional<WeightDetails> weightDetailsOptional = weightDetailsRepository.findOptionalByMemberId(member.getId());
-
-        Integer recentLossCount;
-        if (weightDetailsOptional.isEmpty()) {
-            recentLossCount = 0;
-        } else {
-            recentLossCount = weightDetails.getRecentLossCount();
-        }
-
-        WinningStatus winningStatus = WinningStatus.PENDING;
-
         //applicant 저장
-        PriorityApplicant priorityApplicant = PriorityApplicantConverter.makeInitialPriorityApplicantObject(member, draw);
+        PriorityApplicant priorityApplicant = PriorityApplicantConverter.makeInitialPriorityApplicantObject(member, draw, carNum);
         priorityApplicantRepository.save(priorityApplicant);
 
     }

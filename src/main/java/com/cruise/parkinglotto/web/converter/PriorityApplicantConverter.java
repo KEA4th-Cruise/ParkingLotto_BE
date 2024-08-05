@@ -68,10 +68,11 @@ public class PriorityApplicantConverter {
                 .build();
     }
 
-    public static PriorityApplicant makeInitialPriorityApplicantObject(Member member, Draw draw) {
+    public static PriorityApplicant makeInitialPriorityApplicantObject(Member member, Draw draw, String carNum) {
         return PriorityApplicant.builder()
                 .approvalStatus(ApprovalStatus.PENDING)
                 .parkingSpaceId(null)
+                .carNum(carNum)
                 .member(member)
                 .draw(draw)
                 .build();

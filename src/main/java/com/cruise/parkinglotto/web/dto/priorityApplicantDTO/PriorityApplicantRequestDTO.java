@@ -19,15 +19,5 @@ public class PriorityApplicantRequestDTO {
         @NotNull
         private String carNum;
         private List<CertificateDocsRequestDTO.CertificateFileDTO> useProfileFileUrlDTO;
-        @NotNull
-        private String address;
-        @NotNull
-        private Integer trafficCommuteTime;
-        @NotNull
-        private Integer carCommuteTime;
-        @NotNull
-        private Double distance;
-        @NotNull
-        private WorkType workType;
     }
 }
