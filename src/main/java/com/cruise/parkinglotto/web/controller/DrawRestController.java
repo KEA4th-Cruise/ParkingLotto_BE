@@ -125,7 +125,9 @@ public class DrawRestController {
 
     @Operation(summary = "사용자가 일반 추첨을(GENERAL) 신청하는 api입니다.", description = "파일 리스트와 적절한 DTO를 인터페이스 명세서를 참조해서 넣어주세요.(김성호)")
     @PostMapping(value = "/{drawId}/general/apply", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ApiResponse<?> drawApply(HttpServletRequest httpServletRequest, @PathVariable(name = "drawId") Long drawId, @RequestPart(value = "certificateDocs", required = false) @Parameter(description = "업로드할 인증서 문서 리스트") List<MultipartFile> certificateDocs,
+    public ApiResponse<?> drawApply(HttpServletRequest httpServletRequest,
+                                    @PathVariable(name = "drawId") Long drawId,
+                                    @RequestPart(value = "certificateDocs", required = false) @Parameter(description = "업로드할 인증서 문서 리스트") List<MultipartFile> certificateDocs,
                                     @RequestPart(value = "applyDrawRequestDTO", required = true) @Parameter(description = "일반 추첨 신청에 필요한 요청 데이터") @Valid ApplicantRequestDTO.GeneralApplyDrawRequestDTO applyDrawRequestDTO) {
         String accountId = jwtUtils.getAccountIdFromRequest(httpServletRequest);
         applicantService.drawApply(certificateDocs, applyDrawRequestDTO, accountId, drawId);

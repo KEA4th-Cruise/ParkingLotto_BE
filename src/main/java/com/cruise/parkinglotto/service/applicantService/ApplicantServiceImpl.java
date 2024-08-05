@@ -10,6 +10,7 @@ import com.cruise.parkinglotto.domain.ParkingSpace;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
 import com.cruise.parkinglotto.global.kc.ObjectStorageConfig;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
+import com.cruise.parkinglotto.global.sse.SseEmitters;
 import com.cruise.parkinglotto.repository.*;
 import com.cruise.parkinglotto.service.certificateDocsService.CertificateDocsService;
 import com.cruise.parkinglotto.service.drawService.DrawService;
@@ -50,6 +51,7 @@ public class ApplicantServiceImpl implements ApplicantService {
     private final ObjectStorageService objectStorageService;
     private final ObjectStorageConfig objectStorageConfig;
     private final CertificateDocsService certificateDocsService;
+    private final SseEmitters sseEmitters;
 
 
     @Override
@@ -212,6 +214,8 @@ public class ApplicantServiceImpl implements ApplicantService {
         //weight 계산 및 입력
         drawService.calculateWeight(applicant);
 
+        //  SSE로 실시간 데이터 전송 (비동기)
+        sseEmitters.realTimeDrawInfo(draw);
     }
 
     @Override
