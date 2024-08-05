@@ -1,6 +1,16 @@
 package com.cruise.parkinglotto.global.sse;
 
+import com.cruise.parkinglotto.domain.Draw;
+import com.cruise.parkinglotto.domain.ParkingSpace;
+import com.cruise.parkinglotto.repository.ApplicantRepository;
+import com.cruise.parkinglotto.repository.DrawRepository;
+import com.cruise.parkinglotto.repository.ParkingSpaceRepository;
+import com.cruise.parkinglotto.web.converter.ParkingSpaceConverter;
+import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
+import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -14,11 +24,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class SseEmitters {
 
     private final List<SseEmitter> emitters = new CopyOnWriteArrayList<>();
     private static final AtomicLong counter = new AtomicLong();
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ApplicantRepository applicantRepository;
+    private final ParkingSpaceRepository parkingSpaceRepository;
 
     public SseEmitter add(SseEmitter emitter) {
         this.emitters.add(emitter);
@@ -36,10 +49,22 @@ public class SseEmitters {
         return emitter;
     }
 
-    //  SSE 연결 테스트를 위한 sample 메서드
-    public void count() {
-        long count = counter.incrementAndGet();
-        sendEvent("count", count);
+    @Async
+    public void realTimeDrawInfo(Draw draw) {
+        Integer applicantsCount = applicantRepository.countByDrawId(draw.getId());
+        Integer totalSlots = draw.getTotalSlots();
+        List<ParkingSpace> parkingSpaceList = parkingSpaceRepository.findByDrawId(draw.getId());
+        List<ParkingSpaceResponseDTO.ParkingSpaceCompetitionRateDTO> parkingSpaceCompetitionRateDTOList = parkingSpaceList.stream()
+                .map(parkingSpace -> {
+                    Integer applicantsCountPerParkingSpace = applicantRepository.countByDrawIdAndFirstChoice(draw.getId(), parkingSpace.getId());
+                    return ParkingSpaceConverter.toParkingSpaceCompetitionRateDTO(parkingSpace, applicantsCountPerParkingSpace);
+                }).toList();
+        DrawResponseDTO.RealTimeDrawInfo realTimeDrawInfo = DrawResponseDTO.RealTimeDrawInfo.builder()
+                .applicantsCount(applicantsCount)
+                .totalSlots(totalSlots)
+                .parkingSpaceCompetitionRateDTOList(parkingSpaceCompetitionRateDTOList)
+                .build();
+        sendEvent("realTimeDrawInfo", realTimeDrawInfo);
     }
 
     public void sendEvent(String eventName, Object data) {
@@ -55,10 +80,6 @@ public class SseEmitters {
                 this.emitters.remove(emitter);
             }
         });
-    }
-
-    public void sendMultipleEvents(String eventName, List<Object> dataList) {
-        dataList.forEach(data -> sendEvent(eventName, data));
     }
 
     private String convertToJson(Object data) {

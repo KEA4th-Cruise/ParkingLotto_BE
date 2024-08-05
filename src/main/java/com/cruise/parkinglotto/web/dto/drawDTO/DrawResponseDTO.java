@@ -165,4 +165,14 @@ public class DrawResponseDTO {
     public static class GetYearsFromDrawListDTO {
         private List<String> yearList;
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class RealTimeDrawInfo {
+        private Integer applicantsCount;
+        private Integer totalSlots;
+        private List<ParkingSpaceResponseDTO.ParkingSpaceCompetitionRateDTO> parkingSpaceCompetitionRateDTOList;
+    }
 }
