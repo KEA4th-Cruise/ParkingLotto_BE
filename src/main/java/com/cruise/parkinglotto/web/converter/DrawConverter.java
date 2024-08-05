@@ -21,9 +21,10 @@ import java.util.stream.Collectors;
 public class DrawConverter {
     public static DrawResponseDTO.GetCurrentDrawInfoDTO toGetCurrentDrawInfo(Draw draw, List<ParkingSpace> parkingSpace) {
 
-        List<ParkingSpaceResponseDTO.GetNameAndUrlParkingSpaceResultDTO> dto = ParkingSpaceConverter.toGetNameAndUrlParkingResponse(parkingSpace);
+        List<ParkingSpaceResponseDTO.GetParkingSpaceResultDTO> dto = ParkingSpaceConverter.toGetNameAndUrlParkingResponse(parkingSpace);
 
         return DrawResponseDTO.GetCurrentDrawInfoDTO.builder()
+                .title(draw.getTitle())
                 .drawStartAt(draw.getDrawStartAt())
                 .drawEndAt(draw.getDrawEndAt())
                 .usageStartAt(draw.getUsageStartAt())
