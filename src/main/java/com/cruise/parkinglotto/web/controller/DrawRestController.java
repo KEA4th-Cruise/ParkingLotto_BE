@@ -212,7 +212,7 @@ public class DrawRestController {
     public ApiResponse<?> drawPriorityApply(HttpServletRequest httpServletRequest, @PathVariable(name = "drawId") Long drawId,
                                             @RequestPart(value = "GeneralCertificateDocs", required = false) @Parameter(description = "업로드할 일반 인증서 문서 리스트") List<MultipartFile> GeneralCertificateDocs,
                                             @RequestPart(value = "priorityCertificateDocs", required = true) @Parameter(description = "업로드할 우대 인증서 문서 리스트") List<MultipartFile> priorityCertificateDocs,
-                                            @RequestPart(value = "applyDrawRequestDTO", required = true) @Parameter(description = "일반 추첨 신청에 필요한 요청 데이터") @Valid PriorityApplicantRequestDTO.PriorityApplyDrawRequestDTO priorityApplyDrawRequestDTO) {
+                                            @RequestPart(value = "applyDrawRequestDTO", required = true) @Parameter(description = "우대 추첨 신청에 필요한 요청 데이터") @Valid PriorityApplicantRequestDTO.PriorityApplyDrawRequestDTO priorityApplyDrawRequestDTO) {
         String accountId = jwtUtils.getAccountIdFromRequest(httpServletRequest);
         priorityApplicantService.drawPriorityApply(GeneralCertificateDocs, priorityCertificateDocs, priorityApplyDrawRequestDTO, accountId, drawId);
         return ApiResponse.onSuccess(SuccessStatus.APPLICANT_SUCCESS, null);
