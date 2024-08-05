@@ -1,5 +1,6 @@
 package com.cruise.parkinglotto.global.config;
 
+import com.cruise.parkinglotto.global.config.webConfig.CorsConfig;
 import com.cruise.parkinglotto.global.filter.JwtAuthenticationFilter;
 import com.cruise.parkinglotto.global.jwt.JwtUtils;
 import lombok.RequiredArgsConstructor;
@@ -23,15 +24,10 @@ public class SecurityConfig {
         return httpSecurity
                 .httpBasic(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(Customizer.withDefaults())
+                .cors(cors -> cors.configurationSource(CorsConfig.corsConfigurationSource()))
                 .sessionManagement(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        // 해당 부분은 다른 API가 개발되면 그때 구현하겠습니다.
                         .requestMatchers("/", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll()
-                        /**
-                        .requestMatchers("/member-service/send-mail-certification").permitAll() // 로그인 API, 로그아웃 API 들어가야 한다.
-                        .anyRequest().authenticated()
-                         */
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtUtils), UsernamePasswordAuthenticationFilter.class)
