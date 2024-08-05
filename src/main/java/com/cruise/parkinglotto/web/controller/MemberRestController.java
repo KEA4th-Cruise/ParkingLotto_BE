@@ -33,7 +33,6 @@ public class MemberRestController {
     private final ParkingSpaceService parkingSpaceService;
     private final ApplicantService applicantService;
 
-
     @Operation(summary = "로그인 API", description = "accountId, password를 loginRequestDTO에 담아 요청을 보내면 등록 여부와 토큰을 반환합니다(신해철).")
     @PostMapping("/login")
     public ApiResponse<MemberResponseDTO.LoginResponseDTO> login(@RequestBody @Valid MemberRequestDTO.LoginRequestDTO loginRequestDTO, HttpServletResponse httpServletResponse) {
