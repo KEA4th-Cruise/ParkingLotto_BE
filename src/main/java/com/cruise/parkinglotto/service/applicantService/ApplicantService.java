@@ -13,13 +13,11 @@ import java.util.Optional;
 public interface ApplicantService {
     Page<Applicant> getApplicantList(Integer page, Long drawId);
 
-
     ApplicantResponseDTO.MyApplyInfoDTO getMyApplyInfo(Long memberId, Long drawId);
 
     Page<ApplicantResponseDTO.GetMyApplyResultDTO> getApplyResultList(Long memberId, Integer page);
 
     void drawApply(List<MultipartFile> certificateDocs, ApplicantRequestDTO.GeneralApplyDrawRequestDTO applyDrawRequestDTO, String accountId, Long drawId);
-
 
     /**
      * 검색 키워드로 신청자 목록에서 신청자를 검색하는 메서드

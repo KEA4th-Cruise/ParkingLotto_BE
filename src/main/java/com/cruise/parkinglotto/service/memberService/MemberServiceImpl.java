@@ -4,12 +4,10 @@ import com.cruise.parkinglotto.domain.Member;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
 import com.cruise.parkinglotto.global.jwt.JwtToken;
 import com.cruise.parkinglotto.global.jwt.JwtUtils;
+import com.cruise.parkinglotto.global.kc.ObjectStorageConfig;
+import com.cruise.parkinglotto.global.kc.ObjectStorageService;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
-
-
-import com.cruise.parkinglotto.global.response.code.status.SuccessStatus;
 import com.cruise.parkinglotto.repository.CertificateDocsRepository;
-
 import com.cruise.parkinglotto.repository.MemberRepository;
 import com.cruise.parkinglotto.service.redisService.RedisService;
 import com.cruise.parkinglotto.web.converter.MemberConverter;
