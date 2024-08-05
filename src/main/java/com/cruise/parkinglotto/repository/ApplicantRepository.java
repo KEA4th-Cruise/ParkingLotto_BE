@@ -62,7 +62,10 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
     Integer countByDrawId(@Param("drawId") Long drawId);
 
     @Query("SELECT a FROM Applicant a JOIN a.member m WHERE m.employeeNo = :searchKeyword OR m.accountId = :searchKeyword")
-    Optional<Applicant> findByMemberEmployeeNoOrAccountId(@Param("searchKeyword") String searchKeyword);
+    Optional<Applicant> findByApplicantEmployeeNoOrAccountId(@Param("searchKeyword") String searchKeyword);
+
+    @Query("SELECT a FROM Applicant a JOIN a.member m WHERE a.winningStatus = com.cruise.parkinglotto.domain.enums.WinningStatus.WINNER AND (m.employeeNo = :searchKeyword OR m.accountId = :searchKeyword)")
+    Optional<Applicant> findByWinnerEmployeeNoOrAccountId(@Param("searchKeyword") String searchKeyword);
 
     Applicant findByDrawIdAndId(Long drawId, Long winnerId);
 

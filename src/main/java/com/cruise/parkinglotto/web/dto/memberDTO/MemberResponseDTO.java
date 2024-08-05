@@ -35,6 +35,14 @@ public class MemberResponseDTO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    public static class RefreshResponseDTO {
+        private String accessToken;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class MyInfoResponseDTO {
         private String carNum;
         private List<MyCertificationInfoResponseDTO> myCertificationInfoResponseDTOS;

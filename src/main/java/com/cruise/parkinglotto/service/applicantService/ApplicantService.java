@@ -27,4 +27,13 @@ public interface ApplicantService {
      * @return
      */
     ApplicantResponseDTO.GetApplicantResultDTO searchApplicantBySearchKeyword(String searchKeyword);
+
+    /**
+     * 검색 키워드로 당첨자 목록에서 신청자를 검색하는 메서드
+     * 검색 키워드는 employeeNo 또는 accountId를 받을 수 있고 필터링을 사용하지 않는다.
+     *
+     * @param searchKeyword
+     * @return
+     */
+    ApplicantResponseDTO.GetApplicantResultDTO searchWinnerBySearchKeyword(String searchKeyword);
 }

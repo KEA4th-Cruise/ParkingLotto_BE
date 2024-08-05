@@ -148,10 +148,17 @@ public class DrawRestController {
     }
 
     @Operation(summary = "일반 추첨 신청자 목록에서 검색하는 API 입니다.", description = "검색 키워드로 사원명 또는 사번을 입력해주세요.")
-    @GetMapping("/list/search")
+    @GetMapping("/applicants/search")
     public ApiResponse<ApplicantResponseDTO.GetApplicantResultDTO> searchApplicant(@RequestParam(name = "searchKeyword") String searchKeyword) {
 
         return ApiResponse.onSuccess(SuccessStatus.APPLICANT_SEARCH_FOUND, applicantService.searchApplicantBySearchKeyword(searchKeyword));
+    }
+
+    @Operation(summary = "일반 추첨 당첨자 목록에서 검색하는 API 입니다.", description = "검색 키워드로 사원명 또는 사번을 입력해주세요.")
+    @GetMapping("/winners/search")
+    public ApiResponse<ApplicantResponseDTO.GetApplicantResultDTO> searchWinner(@RequestParam(name = "searchKeyword") String searchKeyword) {
+
+        return ApiResponse.onSuccess(SuccessStatus.WINNER_SEARCH_FOUND, applicantService.searchWinnerBySearchKeyword(searchKeyword));
     }
 
     @Operation(summary = "추첨 결과 엑셀 저장 API", description = "추첨의 최초 결과를 엑셀로 저장할 수 있는 API 입니다. drawId를 넘겨주면 해당 추첨의 결과를 엑셀로 저장합니다.")
@@ -200,7 +207,7 @@ public class DrawRestController {
     }
 
     @Operation(summary = "관리자가 당첨자를 강제 취소시키는 API 입니다.", description = "path variable로 drawId와 취소시킬 당첨자의 applicantId를 전송해주세요.")
-    @PatchMapping("/{drawId}/applicants/{applicantId}/cancel")
+    @PatchMapping("/{drawId}/applicants/{applicantId}/admin-cancel")
     public ApiResponse<Void> cancelApplicant(HttpServletRequest httpServletRequest, @PathVariable(name = "drawId") Long drawId,
                                              @PathVariable(name = "applicantId") Long applicantId) {
         drawService.adminCancelWinner(httpServletRequest, drawId, applicantId);
@@ -218,4 +225,10 @@ public class DrawRestController {
         return ApiResponse.onSuccess(SuccessStatus.APPLICANT_SUCCESS, null);
     }
 
+    @Operation(summary = "당첨자가 당첨을 포기하는 API 입니다.", description = "pathvariable로 drawId를 넘겨주세요")
+    @PatchMapping("/{drawId}/self-cancel")
+    public ApiResponse<Void> selfCancel(HttpServletRequest httpServletRequest, @PathVariable(name = "drawId") Long drawId) {
+        drawService.selfCancelWinner(httpServletRequest, drawId);
+        return ApiResponse.onSuccess(SuccessStatus.DRAW_SELF_CANCEL, null);
+    }
 }
