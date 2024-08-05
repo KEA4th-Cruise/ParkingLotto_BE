@@ -1,10 +1,8 @@
 package com.cruise.parkinglotto.web.dto.parkingSpaceDTO;
 
 import lombok.*;
-import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 
 import java.time.LocalDateTime;
-import java.util.Iterator;
 import java.util.List;
 
 public class ParkingSpaceResponseDTO {
@@ -23,9 +21,10 @@ public class ParkingSpaceResponseDTO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetNameAndUrlParkingSpaceResultDTO {
+    public static class GetParkingSpaceResultDTO {
         String name;
         String floorPlanImageUrl;
+        String parkingSpaceAddress;
         Integer slots;
     }
 

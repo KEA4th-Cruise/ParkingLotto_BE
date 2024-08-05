@@ -12,12 +12,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ParkingSpaceConverter {
 
-    public static List<ParkingSpaceResponseDTO.GetNameAndUrlParkingSpaceResultDTO> toGetNameAndUrlParkingResponse(List<ParkingSpace> parkingSpaces) {
+    public static List<ParkingSpaceResponseDTO.GetParkingSpaceResultDTO> toGetNameAndUrlParkingResponse(List<ParkingSpace> parkingSpaces) {
         return parkingSpaces.stream()
-                .map(parkingSpace -> ParkingSpaceResponseDTO.GetNameAndUrlParkingSpaceResultDTO.builder()
+                .map(parkingSpace -> ParkingSpaceResponseDTO.GetParkingSpaceResultDTO.builder()
                         .name(parkingSpace.getName())
                         .floorPlanImageUrl(parkingSpace.getFloorPlanImageUrl())
                         .slots(parkingSpace.getSlots())
+                        .parkingSpaceAddress(parkingSpace.getAddress())
                         .build())
                 .collect(Collectors.toList());
     }
