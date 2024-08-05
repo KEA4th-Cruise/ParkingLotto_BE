@@ -34,6 +34,8 @@ public class SseController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return ResponseEntity.ok(emitter);
+        return ResponseEntity.ok()
+                .header("X-Accel-Buffering", "no") // Nginx 사용 시 버퍼링 방지
+                .body(emitter);
     }
 }
