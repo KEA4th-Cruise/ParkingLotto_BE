@@ -27,8 +27,21 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(CorsConfig.corsConfigurationSource()))
                 .sessionManagement(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll()
-                        .anyRequest().permitAll()
+                        .requestMatchers("/api/members/login", "/api/members/logout", "/api/members/refresh").permitAll()
+                        .requestMatchers("/api/draws",
+                                "/api/draws/{drawId}",
+                                "/api/draws/{drawId}/parking-spaces",
+                                "/api/draws/{drawId}/applicants",
+                                "/api/draws/{drawId}/applicants/{applicantId}/admin-cancel",
+                                "/api/draws/{drawId}/priority-applicants",
+                                "/api/draws/{drawId}/priority-applicants/{priorityApplicantId}/approval",
+                                "/api/draws/{drawId}/execution",
+                                "/api/register/info/{accountId}",
+                                "/api/register/info/{accountId}/approval",
+                                "/api/register/info/{accountId}/refusal",
+                                "/api/register/members",
+                                "/api/register/members/search").hasRole("ADMIN")
+                        .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtUtils), UsernamePasswordAuthenticationFilter.class)
                 .build();
