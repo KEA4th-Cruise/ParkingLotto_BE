@@ -36,7 +36,7 @@ public enum SuccessStatus implements BaseCode {
     CALCULATE_MEMBER_WEIGHT_COMPLETED(HttpStatus.OK, "DRAW2005", "계산이 완료되었습니다."),
     DRAW_SIMULATE_COMPLETED(HttpStatus.OK, "DRAW2006", "추첨 시뮬레이션이 완료되었습니다."),
     DRAW_OVERVIEW_FOUND(HttpStatus.OK, "DRAW2007", "추첨 개요 정보를 조회하였습니다."),
-    DRAW_STATISTICS_FOUND(HttpStatus.OK, "DRAW2008", "최근 진행된 추첨들의 통계를 조회하였습니다."),
+    DRAW_STATISTICS_FOUND(HttpStatus.OK, "DRAW2008", "추첨의 통계를 조회하였습니다."),
     DRAW_RESULT_EXCEL_DOWNLOADED(HttpStatus.OK, "DRAW2009", "추첨결과의 URL이 정상적으로 전송되었습니다."),
     DRAW_RESULT_FOUND(HttpStatus.OK, "DRAW2010", "추첨 결과를 조회했습니다."),
     DRAW_LIST_FOUND(HttpStatus.OK, "DRAW2011", "추첨 목록을 조회하였습니다."),
