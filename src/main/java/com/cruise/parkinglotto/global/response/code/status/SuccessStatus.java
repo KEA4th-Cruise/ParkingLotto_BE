@@ -42,6 +42,7 @@ public enum SuccessStatus implements BaseCode {
     DRAW_LIST_FOUND(HttpStatus.OK, "DRAW2011", "추첨 목록을 조회하였습니다."),
     DRAW_YEAR_LIST_FOUND(HttpStatus.OK, "DRAW2012", "추첨이 존재하는 연도 목록을 조회하였습니다."),
     DRAW_ADMIN_CANCEL(HttpStatus.OK, "DRAW2013", "강제 취소에 성공하였습니다."),
+    DRAW_SELF_CANCEL(HttpStatus.OK, "DRAW2014", "취소에 성공하였습니다."),
 
     //  주차 구역 관련
     PARKING_SPACE_ADDED(HttpStatus.OK, "PARKINGSPACE2001", "해당 회차에 주차구역이 추가되었습니다."),

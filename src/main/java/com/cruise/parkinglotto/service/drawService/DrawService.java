@@ -57,4 +57,6 @@ public interface DrawService {
     DrawResponseDTO.GetYearsFromDrawListDTO getYearsFromDrawList();
 
     void adminCancelWinner(HttpServletRequest httpServletRequest, Long drawId, Long applicantId);
+
+    void selfCancelWinner(HttpServletRequest httpServletRequest, Long drawId);
 }
