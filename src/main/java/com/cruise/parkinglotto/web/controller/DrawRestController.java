@@ -204,7 +204,7 @@ public class DrawRestController {
     }
 
     @Operation(summary = "추첨이 존재하는 연도 목록을 조회하는 API 입니다.", description = "추첨이 존재하는 연도의 목록을 내림차순으로 조회합니다.(이윤서)")
-    @GetMapping("years")
+    @GetMapping("/years")
     public ApiResponse<DrawResponseDTO.GetYearsFromDrawListDTO> getYearList() {
         return ApiResponse.onSuccess(SuccessStatus.DRAW_YEAR_LIST_FOUND, drawService.getYearsFromDrawList());
     }
@@ -218,7 +218,7 @@ public class DrawRestController {
     }
 
     @Operation(summary = "사용자가 우대 추첨을(Priority) 신청하는 api입니다.", description = "파일 리스트와 적절한 DTO를 인터페이스 명세서를 참조해서 넣어주세요.(김성호)")
-    @PostMapping(value = " /api/draws/{drawId}/priority/apply", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/{drawId}/priority/apply", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<?> drawPriorityApply(HttpServletRequest httpServletRequest, @PathVariable(name = "drawId") Long drawId,
                                             @RequestPart(value = "GeneralCertificateDocs", required = false) @Parameter(description = "업로드할 일반 인증서 문서 리스트") List<MultipartFile> GeneralCertificateDocs,
                                             @RequestPart(value = "priorityCertificateDocs", required = true) @Parameter(description = "업로드할 우대 인증서 문서 리스트") List<MultipartFile> priorityCertificateDocs,
