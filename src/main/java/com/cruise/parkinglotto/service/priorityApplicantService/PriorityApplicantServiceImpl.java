@@ -76,13 +76,13 @@ public class PriorityApplicantServiceImpl implements PriorityApplicantService {
     @Transactional
     public PriorityApplicantResponseDTO.RejectPriorityResultDTO rejectPriority(Long drawId, Long priorityApplicantId) {
         PriorityApplicant priorityApplicant = priorityApplicantRepository.findById(priorityApplicantId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND));
-        priorityApplicant.rejectPriorityApply( ApprovalStatus.REJECTED);
+        priorityApplicant.rejectPriorityApply(ApprovalStatus.REJECTED);
         return PriorityApplicantConverter.toRejectPriorityResultDTO(priorityApplicant);
     }
 
     @Override
     @Transactional
-    public void drawPriorityApply(List<MultipartFile> generalCertificateDocs, List<MultipartFile> priorityCertificateDocs, PriorityApplicantRequestDTO.PriorityApplyDrawRequestDTO priorityApplyDrawRequestDTO, String accountId, Long drawId){
+    public void drawPriorityApply(List<MultipartFile> generalCertificateDocs, List<MultipartFile> priorityCertificateDocs, PriorityApplicantRequestDTO.PriorityApplyDrawRequestDTO priorityApplyDrawRequestDTO, String accountId, Long drawId) {
         Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
 
         if (draw.getStatus() != DrawStatus.OPEN) {
@@ -130,7 +130,7 @@ public class PriorityApplicantServiceImpl implements PriorityApplicantService {
         }
 
         //우대 서류 검증 (확장자 및 길이, 개수)
-        if(priorityCertificateDocs.size()>5){
+        if (priorityCertificateDocs.size() > 5) {
             throw new ExceptionHandler(ErrorStatus.CERTIFICATEDOCS_TOO_MANY);
         }
 
@@ -166,10 +166,10 @@ public class PriorityApplicantServiceImpl implements PriorityApplicantService {
         }
 
         //Priority
-        for (MultipartFile certificateDocument : priorityCertificateDocs){
+        for (MultipartFile certificateDocument : priorityCertificateDocs) {
             String fileName = certificateDocument.getOriginalFilename();
             String addMemberIdAndDrawIdFileUrl = certificateDocsService.makeCertificateFileUrl(member.getId(), draw.getId(), DrawType.PRIORITY, fileName);
-            String fileUrl = objectStorageService.uploadObject(objectStorageConfig.getPriorityCertificateDocument() , addMemberIdAndDrawIdFileUrl, certificateDocument);
+            String fileUrl = objectStorageService.uploadObject(objectStorageConfig.getPriorityCertificateDocument(), addMemberIdAndDrawIdFileUrl, certificateDocument);
             CertificateDocs certificateDocs = CertificateDocsConverter.toCertificateDocument(fileUrl, fileName, member, draw.getId());
             certificateDocsRepository.save(certificateDocs);
         }
