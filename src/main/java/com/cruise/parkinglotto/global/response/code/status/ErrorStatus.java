@@ -22,6 +22,10 @@ public enum ErrorStatus implements BaseErrorCode {
     // 멤버 관련 응답
     MEMBER_NOT_FOUND(HttpStatus.OK, "MEMBER4001", "사용자가 존재하지 않습니다"),
     MEMBER_PASSWORD_NOT_MATCHED(HttpStatus.OK, "MEMBER4002", "비밀번호가 일치하지 않습니다."),
+    MEMBER_REFRESH_TOKEN_NULL(HttpStatus.OK, "MEMBER4003", "리프레시 토큰 값이 비워져 있습니다."),
+    MEMBER_REFRESH_TOKEN_BLACKLIST(HttpStatus.OK, "MEMBER4004", "블랙리스트로 등록된 리프레시 토큰 입니다."),
+    MEMBER_REFRESH_TOKEN_FAILED(HttpStatus.OK, "MEMBER4005", "유효한 리프레시 토큰이 아닙니다."),
+
 
     // 등록 관련 응답
     REGISTER_REQUEST_FAILED(HttpStatus.OK, "REGISTER4001", "등록 요청에 실패했습니다."),
@@ -31,8 +35,7 @@ public enum ErrorStatus implements BaseErrorCode {
     REGISTER_SEARCH_NOT_FOUND(HttpStatus.OK, "REGISTER4005", "검색 결과가 없습니다."),
     REGISTER_INVALID_ENROLLMENTSTATUS(HttpStatus.OK, "REGISTER4006", "유효하지 않은 상태입니다."),
 
-    //신청자 관련 응답
-
+    // 신청자 관련 응답
     APPLICANT_NOT_FOUND(HttpStatus.OK, "APPLICANT4001", "신청자가 존재하지 않습니다"),
     APPLICANT_CAR_NUM_NOT_FOUND(HttpStatus.OK, "APPLICANT4002", "신청자의 차량번호 정보가 존재하지 않습니다"),
     APPLICANT_CERT_DOCUMENT_NOT_FOUND(HttpStatus.OK, "APPLICANT4003", "신청자의 서류 정보가 존재하지 않습니다"),
@@ -42,6 +45,8 @@ public enum ErrorStatus implements BaseErrorCode {
     APPLICANT_DUPLICATED_APPLY(HttpStatus.OK, "APPLICANT4007", "중복된 신청입니다"),
     APPLICANT_PARKING_SPACE_ID_NOT_FOUND(HttpStatus.OK, "APPLICANT4008", "신청자의 주차공간 id 가 존재하지 않습니다"),
     APPLICANT_SEARCH_NOT_FOUND(HttpStatus.OK, "APPLICANT4009", "검색 결과가 없습니다."),
+    WINNER_SEARCH_NOT_FOUND(HttpStatus.OK, "APPLICANT4010", "당첨자 검색 결과가 없습니다."),
+    APPLICANT_NOT_WINNING_STATUS(HttpStatus.OK, "APPLICANT4011", "당첨되지 않았습니다."),
 
     // 주차 공간 관련 응답
     PARKING_SPACE_NOT_FOUND(HttpStatus.OK, "PARKINGSPACE4001", "주차 공간이 존재하지 않습니다"),

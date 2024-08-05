@@ -25,7 +25,6 @@ import java.time.Duration;
 import java.time.Duration;
 import java.util.List;
 
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -59,9 +58,6 @@ public class MemberServiceImpl implements MemberService {
             throw new ExceptionHandler(ErrorStatus.MEMBER_PASSWORD_NOT_MATCHED);
         }
 
-        // 블랙리스트에서 해당 토큰 값이 있는지 검증
-
-
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRequestDTO.getAccountId(), loginRequestDTO.getPassword());
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
@@ -90,10 +86,41 @@ public class MemberServiceImpl implements MemberService {
         redisService.deleteValues(logoutRequestDTO.getAccountId());
 
         // 블랙리스트에 저장
-        redisService.setBlackList(logoutRequestDTO.getAccessToken(), logoutRequestDTO.getAccessToken());
         redisService.setBlackList(logoutRequestDTO.getRefreshToken(), logoutRequestDTO.getRefreshToken());
 
         return MemberConverter.toLogoutResponseDTO();
+    }
+
+    @Override
+    public MemberResponseDTO.RefreshResponseDTO refreshToken(JwtToken jwtToken) {
+
+        String refreshToken = jwtToken.getRefreshToken();
+        if (refreshToken == null) {
+            throw new ExceptionHandler(ErrorStatus.MEMBER_REFRESH_TOKEN_NULL);
+        }
+
+        String blacklistValue = redisService.getBlackList(refreshToken);
+        if (!blacklistValue.equals("false")) {
+            throw new ExceptionHandler(ErrorStatus.MEMBER_REFRESH_TOKEN_BLACKLIST);
+        }
+
+        // 만료된 access token을 활용하여 authentication을 가져옴
+        Authentication authentication = jwtUtils.getAuthentication(jwtToken.getAccessToken());
+
+        // accountId 필요함 -> redis에 있는 Refresh token이 유효한지 확인하기 위해서
+        String accountId = authentication.getName();
+
+        // 유효하다면, authentication으로 새로운 토큰을 발급
+        String values = redisService.getValues(accountId);
+        if (values != null) { // redis에 값이 있다면
+            if (values.equals(jwtToken.getRefreshToken())) { // redis 값과 refresh token 값이 일치하는 경우
+                return MemberConverter.toRefreshResponseDTO(jwtUtils.generateAccessToken(authentication));
+            } else {
+                throw new ExceptionHandler(ErrorStatus.MEMBER_REFRESH_TOKEN_FAILED);
+            }
+        }
+
+        throw new ExceptionHandler(ErrorStatus.MEMBER_REFRESH_TOKEN_FAILED);
     }
 
     @Override
@@ -102,7 +129,6 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.findByAccountId(accountId)
                 .orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
     }
-
 
     @Override
     @Transactional(readOnly = true)

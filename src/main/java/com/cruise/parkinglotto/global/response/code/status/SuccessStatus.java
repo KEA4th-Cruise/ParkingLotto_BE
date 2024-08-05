@@ -18,6 +18,7 @@ public enum SuccessStatus implements BaseCode {
     MEMBER_LOGIN_SUCCESS(HttpStatus.OK, "MEMBER2001", "로그인에 성공했습니다."),
     MEMBER_LOGOUT_SUCCESS(HttpStatus.OK, "MEMBER2002", "로그아웃에 성공했습니다."),
     MEMBER_INFO_FOUND(HttpStatus.OK, "MEMBER2003", "맴버 정보를 조회했습니다."),
+    MEMBER_REFRESH_TOKEN_SUCCESS(HttpStatus.OK, "MEMBER2004", "토큰 재발급을 성공했습니다."),
 
     // 등록 관련 응답
     REGISTER_REQUEST_SUCCESS(HttpStatus.OK, "REGISTER2001", "등록 요청을 보냈습니다."),
@@ -41,6 +42,7 @@ public enum SuccessStatus implements BaseCode {
     DRAW_LIST_FOUND(HttpStatus.OK, "DRAW2011", "추첨 목록을 조회하였습니다."),
     DRAW_YEAR_LIST_FOUND(HttpStatus.OK, "DRAW2012", "추첨이 존재하는 연도 목록을 조회하였습니다."),
     DRAW_ADMIN_CANCEL(HttpStatus.OK, "DRAW2013", "강제 취소에 성공하였습니다."),
+    DRAW_SELF_CANCEL(HttpStatus.OK, "DRAW2014", "취소에 성공하였습니다."),
 
     //  주차 구역 관련
     PARKING_SPACE_ADDED(HttpStatus.OK, "PARKINGSPACE2001", "해당 회차에 주차구역이 추가되었습니다."),
@@ -52,7 +54,8 @@ public enum SuccessStatus implements BaseCode {
     APPLICANT_SUCCESS(HttpStatus.OK, "APPLICANT2003", "신청에 성공했습니다."),
     APPLICANT_APPLY_INFO_FOUND(HttpStatus.OK, "APPLICANT2004", "해당 사용자의 특정 회차 추첨 결과 정보 조회에 성공했습니다"),
     APPLICANT_APPLY_LIST_FOUND(HttpStatus.OK, "APPLICANT2005", "사용자가 신청했던 회차 리스트 조회를 성공했습니다."),
-    APPLICANT_SEARCH_FOUND(HttpStatus.OK, "APPLICANT2006", "검색을 완료했습니다."),
+    APPLICANT_SEARCH_FOUND(HttpStatus.OK, "APPLICANT2006", "신청자 검색을 완료했습니다."),
+    WINNER_SEARCH_FOUND(HttpStatus.OK, "APPLICANT2007", "당첨자 검색을 완료했습니다."),
 
     //  우대 신청자 관련
     PRIORITY_APPLICANT_LIST_FOUND(HttpStatus.OK, "PRIORITY2001", "우대 신청자 목록을 조회하였습니다."),

@@ -625,10 +625,22 @@ public class DrawServiceImpl implements DrawService {
         Member member = memberRepository.findByAccountId(accountIdFromRequest).orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
         if (member.getAccountType() == AccountType.ADMIN) {
             assignReservedApplicant(drawId, winnerId);
-        }
-        else{
+        } else {
             throw new ExceptionHandler(ErrorStatus._UNAUTHORIZED_ACCESS);
         }
+    }
+
+    @Transactional
+    public void selfCancelWinner(HttpServletRequest httpServletRequest, Long drawId) {
+        String accountIdFromRequest = jwtUtils.getAccountIdFromRequest(httpServletRequest);
+        Member member = memberRepository.findByAccountId(accountIdFromRequest).orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
+        Applicant winner = applicantRepository.findByDrawIdAndMemberId(drawId, member.getId()).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND));
+        if (winner.getWinningStatus() == WinningStatus.WINNER) {
+            assignReservedApplicant(drawId, winner.getId());
+        } else {
+            throw new ExceptionHandler(ErrorStatus.APPLICANT_NOT_WINNING_STATUS);
+        }
+
     }
 }
 
