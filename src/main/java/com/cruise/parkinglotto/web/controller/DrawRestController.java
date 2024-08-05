@@ -8,6 +8,7 @@ import com.cruise.parkinglotto.global.response.ApiResponse;
 import com.cruise.parkinglotto.global.response.code.status.SuccessStatus;
 import com.cruise.parkinglotto.service.applicantService.ApplicantService;
 import com.cruise.parkinglotto.service.drawService.DrawService;
+import com.cruise.parkinglotto.service.drawStatisticsService.DrawStatisticsService;
 import com.cruise.parkinglotto.service.parkingSpaceService.ParkingSpaceService;
 import com.cruise.parkinglotto.service.priorityApplicantService.PriorityApplicantService;
 import com.cruise.parkinglotto.web.converter.ApplicantConverter;
@@ -18,6 +19,7 @@ import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantRequestDTO;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawRequestDTO;
+import com.cruise.parkinglotto.web.dto.drawStatisticsDTO.DrawStatisticsResponseDTO;
 import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceRequestDTO;
 import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
 import com.cruise.parkinglotto.web.dto.priorityApplicantDTO.PriorityApplicantRequestDTO;
@@ -44,6 +46,7 @@ public class DrawRestController {
     private final JwtUtils jwtUtils;
     private final ApplicantService applicantService;
     private final PriorityApplicantService priorityApplicantService;
+    private final DrawStatisticsService drawStatisticsService;
 
 
     //추첨 실행 후 결과 저장하는 API
@@ -230,5 +233,11 @@ public class DrawRestController {
     public ApiResponse<Void> selfCancel(HttpServletRequest httpServletRequest, @PathVariable(name = "drawId") Long drawId) {
         drawService.selfCancelWinner(httpServletRequest, drawId);
         return ApiResponse.onSuccess(SuccessStatus.DRAW_SELF_CANCEL, null);
+    }
+
+    @Operation(summary = "추첨의 통계를 조회하는 API입니댜.",description = "pathvariable로 통계를 조회할 추첨의 drawId를 넘겨주세요. (이윤서)")
+    @GetMapping("/{drawId}/statistics")
+    public ApiResponse<DrawStatisticsResponseDTO.GetDrawStatisticsResultDTO> getDrawStatistics(@PathVariable(name = "drawId") Long drawId) {
+        return ApiResponse.onSuccess(SuccessStatus.DRAW_STATISTICS_FOUND, drawStatisticsService.getDrawStatistics(drawId));
     }
 }

@@ -1,13 +1,11 @@
 package com.cruise.parkinglotto.web.converter;
 
-import com.cruise.parkinglotto.domain.Applicant;
-import com.cruise.parkinglotto.domain.Draw;
-import com.cruise.parkinglotto.domain.DrawStatistics;
+import com.cruise.parkinglotto.domain.*;
+import com.cruise.parkinglotto.web.dto.drawStatisticsDTO.DrawStatisticsResponseDTO;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-@RequiredArgsConstructor
 public class DrawStatisticConverter {
     public static DrawStatistics toDrawStatistics(Draw draw, List<Applicant> applicants, int totalSlots) {
         DrawStatistics drawStatistics =

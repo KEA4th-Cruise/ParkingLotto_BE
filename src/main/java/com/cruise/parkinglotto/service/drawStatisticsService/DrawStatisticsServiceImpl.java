@@ -1,17 +1,14 @@
 package com.cruise.parkinglotto.service.drawStatisticsService;
 
-import com.cruise.parkinglotto.domain.Applicant;
-import com.cruise.parkinglotto.domain.Draw;
-import com.cruise.parkinglotto.domain.DrawStatistics;
-import com.cruise.parkinglotto.domain.WeightSectionStatistics;
+import com.cruise.parkinglotto.domain.*;
 import com.cruise.parkinglotto.domain.enums.DrawType;
 import com.cruise.parkinglotto.domain.enums.WeightSection;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
-import com.cruise.parkinglotto.repository.ApplicantRepository;
-import com.cruise.parkinglotto.repository.DrawRepository;
-import com.cruise.parkinglotto.repository.DrawStatisticsRepository;
+import com.cruise.parkinglotto.repository.*;
 import com.cruise.parkinglotto.web.converter.DrawStatisticConverter;
+import com.cruise.parkinglotto.web.converter.DrawStatisticsConverter;
+import com.cruise.parkinglotto.web.dto.drawStatisticsDTO.DrawStatisticsResponseDTO;
 import jakarta.persistence.Table;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,6 +26,9 @@ public class DrawStatisticsServiceImpl implements DrawStatisticsService {
     private final DrawRepository drawRepository;
     private final ApplicantRepository applicantRepository;
     private final DrawStatisticsRepository drawStatisticsRepository;
+    private final WeightSectionStatisticsRepository weightSectionStatisticsRepository;
+    private final ParkingSpaceRepository parkingSpaceRepository;
+
 
     @Override
     @Transactional(readOnly = true)
@@ -49,4 +49,16 @@ public class DrawStatisticsServiceImpl implements DrawStatisticsService {
         DrawStatistics drawStatistics = DrawStatisticConverter.toDrawStatistics(draw, applicants, totalSlots);
         drawStatisticsRepository.save(drawStatistics);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public DrawStatisticsResponseDTO.GetDrawStatisticsResultDTO getDrawStatistics(Long drawId) {
+        Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
+        List<ParkingSpace> parkingSpaceList = parkingSpaceRepository.findByDrawId(draw.getId());
+        List<WeightSectionStatistics> weightSectionStatisticsList = weightSectionStatisticsRepository.findByDrawId(draw.getId());
+        Integer applicantCount = draw.getDrawStatistics().getTotalApplicants();
+        Integer totalSlots = draw.getTotalSlots();
+        return DrawStatisticsConverter.toGetDrawStatisticsResultDTO(applicantCount, totalSlots, parkingSpaceList, weightSectionStatisticsList);
+    }
+
 }
