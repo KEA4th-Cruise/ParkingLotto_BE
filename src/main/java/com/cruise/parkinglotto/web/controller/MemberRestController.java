@@ -8,6 +8,7 @@ import com.cruise.parkinglotto.global.response.code.status.SuccessStatus;
 import com.cruise.parkinglotto.service.applicantService.ApplicantService;
 import com.cruise.parkinglotto.service.memberService.MemberService;
 import com.cruise.parkinglotto.service.parkingSpaceService.ParkingSpaceService;
+import com.cruise.parkinglotto.web.converter.ApplicantConverter;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import com.cruise.parkinglotto.web.dto.memberDTO.MemberRequestDTO;
 import com.cruise.parkinglotto.web.dto.memberDTO.MemberResponseDTO;
@@ -88,7 +89,8 @@ public class MemberRestController {
         String accountIdFromRequest = jwtUtils.getAccountIdFromRequest(httpServletRequest);
         Member memberByAccountId = memberService.getMemberByAccountId(accountIdFromRequest);
         Page<ApplicantResponseDTO.GetMyApplyResultDTO> applyResultList = applicantService.getApplyResultList(memberByAccountId.getId(), page - 1);
-        return ApiResponse.onSuccess(SuccessStatus.APPLICANT_APPLY_LIST_FOUND, applyResultList);
+        ApplicantResponseDTO.GetMyApplyResultListDTO getMyApplyResultListDTO = ApplicantConverter.toGetMyApplyResultListDTO(applyResultList);
+        return ApiResponse.onSuccess(SuccessStatus.APPLICANT_APPLY_LIST_FOUND, getMyApplyResultListDTO);
     }
 
     @Operation(summary = "특정 회차 결과 조회 API", description = "내가 신청했던 회차중 특정 회차의 결과를 조회하는 API 입니다, PathVariable 으로 drawId 를 보내주세요 ")

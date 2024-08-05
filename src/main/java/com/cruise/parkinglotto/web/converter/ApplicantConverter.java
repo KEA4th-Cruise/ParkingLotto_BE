@@ -90,4 +90,17 @@ public class ApplicantConverter {
                 .recentLossCount(recentLossCount)
                 .build();
     }
+
+    public static ApplicantResponseDTO.GetMyApplyResultListDTO toGetMyApplyResultListDTO (Page<ApplicantResponseDTO.GetMyApplyResultDTO> applyResultDTOList) {
+        List<ApplicantResponseDTO.GetMyApplyResultDTO> getApplicantResultDTOList = applyResultDTOList.stream()
+                .map((d)-> (d)).toList();
+        return ApplicantResponseDTO.GetMyApplyResultListDTO.builder()
+                .getMyApplyResultDTOList(getApplicantResultDTOList)
+                .isFirst(applyResultDTOList.isFirst())
+                .isLast(applyResultDTOList.isLast())
+                .totalElements(applyResultDTOList.getTotalElements())
+                .totalPage(applyResultDTOList.getTotalPages())
+                .listSize(applyResultDTOList.getSize())
+                .build();
+    }
 }

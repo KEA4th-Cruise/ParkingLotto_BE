@@ -71,4 +71,18 @@ public class ApplicantResponseDTO {
         private LocalDateTime endDate;
     }
 
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetMyApplyResultListDTO {
+        private List<GetMyApplyResultDTO> getMyApplyResultDTOList;
+        Integer listSize;
+        Integer totalPage;
+        Long totalElements;
+        Boolean isFirst;
+        Boolean isLast;
+
+    }
+
 }
