@@ -37,7 +37,7 @@ public class RegisterRestController {
     public ApiResponse<RegisterResponseDTO.MemberInfoResponseDTO> getMemberInfo(@PathVariable("accountId") String accountId) {
         return ApiResponse.onSuccess(SuccessStatus.REGISTER_MEMBER_INFO_FOUND, registerService.getMemberInfo(accountId));
     }
-  
+
     @Operation(summary = "관리자 등록 요청 승인 API", description = "API 요청 시 토큰에서 유저 정보를 가져오기 때문에 RequestDTO가 필요하지 않습니다. 응답 result 또한 null을 반환합니다.")
     @GetMapping("/member-info/{accountId}/approval")
     public ApiResponse<Object> approveRegister(@PathVariable("accountId") String accountId) {

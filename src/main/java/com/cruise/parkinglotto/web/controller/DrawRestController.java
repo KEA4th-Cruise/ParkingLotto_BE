@@ -202,7 +202,7 @@ public class DrawRestController {
     @Operation(summary = "관리자가 당첨자를 강제 취소시키는 API 입니다.", description = "path variable로 drawId와 취소시킬 당첨자의 applicantId를 전송해주세요.")
     @PatchMapping("/{drawId}/applicants/{applicantId}/cancel")
     public ApiResponse<Void> cancelApplicant(HttpServletRequest httpServletRequest, @PathVariable(name = "drawId") Long drawId,
-                                                                                      @PathVariable(name = "applicantId") Long applicantId) {
+                                             @PathVariable(name = "applicantId") Long applicantId) {
         drawService.adminCancelWinner(httpServletRequest, drawId, applicantId);
         return ApiResponse.onSuccess(SuccessStatus.DRAW_ADMIN_CANCEL, null);
     }
