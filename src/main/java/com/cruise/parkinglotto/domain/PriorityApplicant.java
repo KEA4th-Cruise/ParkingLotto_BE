@@ -3,10 +3,13 @@ package com.cruise.parkinglotto.domain;
 import com.cruise.parkinglotto.domain.common.BaseEntity;
 import com.cruise.parkinglotto.domain.enums.ApprovalStatus;
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "tb_priority_applicants")
 public class PriorityApplicant extends BaseEntity {
     @Id
@@ -18,6 +21,9 @@ public class PriorityApplicant extends BaseEntity {
     private ApprovalStatus approvalStatus;
 
     private Long parkingSpaceId;
+
+    @Column(length = 8)
+    private String carNum;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")

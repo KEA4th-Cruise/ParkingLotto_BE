@@ -46,7 +46,6 @@ public class ParkingSpaceServiceImpl implements ParkingSpaceService {
     public ParkingSpaceResponseDTO.ParkingSpaceInfoResponseDTO findParkingSpaceInfo(Long memberId, Long drawId) {
 
 
-
         Applicant applicant = applicantRepository.findApplicantByMemberIdAndDrawId(memberId, drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND));
         Long parkingSpaceId = applicantRepository.findParkingSpaceById(applicant.getId()).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_PARKING_SPACE_ID_NOT_FOUND));
 
