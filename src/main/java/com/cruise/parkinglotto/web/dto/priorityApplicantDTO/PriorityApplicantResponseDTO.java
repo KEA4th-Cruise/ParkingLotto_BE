@@ -73,7 +73,7 @@ public class PriorityApplicantResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class AssignPriorityResultDTO {
-        private Long priorityApplicantId;   //  수정 필요
+        private Long priorityApplicantId;
         private Long parkingSpaceId;
         private ApprovalStatus approvalStatus;
     }
