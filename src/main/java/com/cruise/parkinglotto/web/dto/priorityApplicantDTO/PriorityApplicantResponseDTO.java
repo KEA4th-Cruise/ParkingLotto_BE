@@ -22,7 +22,6 @@ public class PriorityApplicantResponseDTO {
         private ApprovalStatus approvalStatus;
     }
 
-
     @Getter
     @Builder
     @NoArgsConstructor
@@ -38,15 +37,13 @@ public class PriorityApplicantResponseDTO {
         Boolean isLast;
     }
 
-
     @Getter
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     public static class ApprovePriorityResultDTO {
-        private Long parkingSpaceId;
-        private String parkingSpaceName;
-        private Integer remainSlots;
+        private Long priorityApplicantId;
+        private ApprovalStatus approvalStatus;
     }
 
     @Getter

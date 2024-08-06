@@ -36,11 +36,10 @@ public class PriorityApplicantConverter {
                 .build();
     }
 
-    public static PriorityApplicantResponseDTO.ApprovePriorityResultDTO toApprovePriorityResultDTO(ParkingSpace parkingSpace) {
+    public static PriorityApplicantResponseDTO.ApprovePriorityResultDTO toApprovePriorityResultDTO(PriorityApplicant priorityApplicant) {
         return PriorityApplicantResponseDTO.ApprovePriorityResultDTO.builder()
-                .parkingSpaceId(parkingSpace.getId())
-                .parkingSpaceName(parkingSpace.getName())
-                .remainSlots(parkingSpace.getRemainSlots())
+                .priorityApplicantId(priorityApplicant.getId())
+                .approvalStatus(priorityApplicant.getApprovalStatus())
                 .build();
     }
 

@@ -33,8 +33,7 @@ public class PriorityApplicant extends BaseEntity {
     @JoinColumn(name = "draw_id")
     private Draw draw;
 
-    public void approveParkingSpaceToPriority(Long parkingSpaceId, ApprovalStatus approvalStatus) {
-        this.parkingSpaceId = parkingSpaceId;
+    public void approvePriority(ApprovalStatus approvalStatus) {
         this.approvalStatus = approvalStatus;
     }
 
