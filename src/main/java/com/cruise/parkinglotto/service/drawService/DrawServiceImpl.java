@@ -23,8 +23,10 @@ import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,8 +35,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.ScheduledFuture;
 import java.util.stream.Collectors;
 
 import static com.cruise.parkinglotto.web.converter.DrawConverter.toDrawResultExcelDTO;
@@ -56,6 +61,7 @@ public class DrawServiceImpl implements DrawService {
     private final FileGeneration fileGenerationService;
     private final WeightSectionStatisticsService weightSectionStatisticsService;
     private final DrawStatisticsService drawStatisticsService;
+    private final @Lazy TaskScheduler taskScheduler;
 
     //계산용 변수
     private static final int WORK_TYPE1_SCORE = 25;
@@ -382,7 +388,8 @@ public class DrawServiceImpl implements DrawService {
                 .sum();
         draw.updateConfirmed(true, totalSlots);
         deleteUnconfirmedDrawsAndParkingSpaces();
-
+        openDraw(draw);
+        closeDraw(draw);
         return DrawConverter.toConfirmDrawCreationResultDTO(draw, parkingSpaceList);
     }
 
@@ -629,6 +636,30 @@ public class DrawServiceImpl implements DrawService {
             throw new ExceptionHandler(ErrorStatus.APPLICANT_NOT_WINNING_STATUS);
         }
 
+    }
+
+    @Override
+    public void openDraw(Draw draw) {
+        Runnable task = () -> {
+            log.info("Opening draw with ID: {}", draw.getId());
+            draw.updateStatus(DrawStatus.OPEN);
+            drawRepository.save(draw);
+        };
+        LocalDateTime drawEndTime = draw.getDrawStartAt();
+        Date startTime = Date.from(drawEndTime.atZone(ZoneId.systemDefault()).toInstant());
+        taskScheduler.schedule(task, startTime);
+    }
+
+    @Override
+    public void closeDraw(Draw draw) {
+        Runnable task = () -> {
+            log.info("Closing draw with ID: {}", draw.getId());
+            draw.updateStatus(DrawStatus.CLOSED);
+            drawRepository.save(draw);
+        };
+        LocalDateTime drawEndTime = draw.getDrawEndAt();
+        Date endTime = Date.from(drawEndTime.atZone(ZoneId.systemDefault()).toInstant());
+        taskScheduler.schedule(task, endTime);
     }
 }
 
