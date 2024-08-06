@@ -57,7 +57,7 @@ public class ParkingSpaceResponseDTO {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class ParkingSpacePreviewListDTO {
-        private List<ParkingSpacePreviewDTO> parkingSpacePreviewDTOList;
+        private List<ParkingSpacePreviewDTO> parkingSpacePreviewList;
     }
 
     @Getter

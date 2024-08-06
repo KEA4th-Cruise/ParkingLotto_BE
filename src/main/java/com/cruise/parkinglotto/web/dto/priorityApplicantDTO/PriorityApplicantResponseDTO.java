@@ -1,7 +1,6 @@
 package com.cruise.parkinglotto.web.dto.priorityApplicantDTO;
 
 import com.cruise.parkinglotto.domain.enums.ApprovalStatus;
-import com.cruise.parkinglotto.domain.enums.WorkType;
 import com.cruise.parkinglotto.web.dto.CertificateDocsDTO.CertificateDocsRequestDTO;
 import lombok.*;
 
@@ -29,7 +28,7 @@ public class PriorityApplicantResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class GetPriorityApplicantListResultDTO {
-        private List<PriorityApplicantResponseDTO.GetPriorityApplicantResultDTO> getPriorityApplicantResultDTOList;
+        private List<PriorityApplicantResponseDTO.GetPriorityApplicantResultDTO> priorityApplicantList;
         Integer listSize;
         Integer totalPage;
         Long totalElements;
@@ -57,7 +56,7 @@ public class PriorityApplicantResponseDTO {
         private String employeeNo;
         private String accountId;
         private String deptPathName;
-        private List<CertificateDocsRequestDTO.CertificateFileDTO> certificateFiles;
+        private List<CertificateDocsRequestDTO.CertificateFileDTO> certificateFileList;
         private ApprovalStatus approvalStatus;
     }
 

@@ -30,7 +30,7 @@ public class DrawResponseDTO {
         private String description;
         private Integer totalSlots;
         private DrawStatus drawStatus;
-        private List<GetParkingSpaceResultDTO> getNameAndUrlParkingSpaceResultDTO;
+        private List<GetParkingSpaceResultDTO> parkingSpaceList;
     }
 
     @Getter
@@ -38,7 +38,7 @@ public class DrawResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class DrawMemberResultResponseDTO {
-        private List<ApplicantResponseDTO.ApplicantResultDTO> applicants;
+        private List<ApplicantResponseDTO.ApplicantResultDTO> applicantList;
         private Integer listSize;
         private Integer totalPage;
         private Long totalElements;
@@ -66,7 +66,7 @@ public class DrawResponseDTO {
         private String title;
         LocalDateTime usageStartAt;
         LocalDateTime usageEndAt;
-        ParkingSpaceResponseDTO.ParkingSpacePreviewListDTO parkingSpacePreviewListDTO;
+        ParkingSpaceResponseDTO.ParkingSpacePreviewListDTO parkingSpacePreviewList;
     }
 
     @Getter
@@ -76,8 +76,8 @@ public class DrawResponseDTO {
     public static class SimulateDrawResponseDTO {
         private Long drawId;
         private String seed;
-        private List<SimulateApplicantDTO> winners;
-        private int totalApplicants; // 전체 응모자 수
+        private List<SimulateApplicantDTO> winnerList;
+        private int totalApplicantCount; // 전체 응모자 수
     }
 
     @Builder
@@ -107,7 +107,7 @@ public class DrawResponseDTO {
         private LocalDateTime usageEndAt;
         private Integer applicantsCount;
         private Integer totalSlots;
-        private List<ParkingSpaceResponseDTO.ParkingSpaceCompetitionRateDTO> parkingSpaceCompetitionRateDTOList;
+        private List<ParkingSpaceResponseDTO.ParkingSpaceCompetitionRateDTO> parkingSpaceCompetitionRateList;
     }
 
     @Getter
@@ -115,7 +115,7 @@ public class DrawResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class DrawResultExcelDTO {
-        private String URL;
+        private String url;
     }
 
     @Getter
@@ -128,7 +128,7 @@ public class DrawResponseDTO {
         private Integer applicantsCount;
         private Integer totalSlots;
         private String seed;
-        private List<DrawResponseDTO.SeedDetailDTO> seedDetail;
+        private List<DrawResponseDTO.SeedDetailDTO> seedDetailList;
     }
 
     @Getter
@@ -175,6 +175,6 @@ public class DrawResponseDTO {
     public static class RealTimeDrawInfo {
         private Integer applicantsCount;
         private Integer totalSlots;
-        private List<ParkingSpaceResponseDTO.ParkingSpaceCompetitionRateDTO> parkingSpaceCompetitionRateDTOList;
+        private List<ParkingSpaceResponseDTO.ParkingSpaceCompetitionRateDTO> parkingSpaceCompetitionRateList;
     }
 }

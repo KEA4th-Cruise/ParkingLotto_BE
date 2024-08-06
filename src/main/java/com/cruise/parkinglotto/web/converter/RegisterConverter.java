@@ -5,7 +5,6 @@ import com.cruise.parkinglotto.web.dto.registerDTO.RegisterResponseDTO;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class RegisterConverter {
 
@@ -35,7 +34,7 @@ public class RegisterConverter {
                 .toList();
 
         return RegisterResponseDTO.MembersResponseDTOList.builder()
-                .memberResponseDTOList(membersResponseDTOList)
+                .memberList(membersResponseDTOList)
                 .isFirst(memberPage.isFirst())
                 .isLast(memberPage.isLast())
                 .totalElements(memberPage.getTotalElements())

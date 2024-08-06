@@ -67,7 +67,7 @@ public class ParkingSpaceConverter {
         List<ParkingSpaceResponseDTO.ParkingSpacePreviewDTO> parkingSpacePreviewDTOList = parkingSpaceList.stream()
                 .map(ParkingSpaceConverter::toParkingSpacePreviewDTO).toList();
         return ParkingSpaceResponseDTO.ParkingSpacePreviewListDTO.builder()
-                .parkingSpacePreviewDTOList(parkingSpacePreviewDTOList)
+                .parkingSpacePreviewList(parkingSpacePreviewDTOList)
                 .build();
     }
 

@@ -3,7 +3,6 @@ package com.cruise.parkinglotto.web.converter;
 import com.cruise.parkinglotto.domain.Applicant;
 import com.cruise.parkinglotto.domain.Draw;
 import com.cruise.parkinglotto.domain.Member;
-import com.cruise.parkinglotto.domain.ParkingSpace;
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import com.cruise.parkinglotto.domain.enums.WorkType;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
@@ -28,7 +27,7 @@ public class ApplicantConverter {
         List<ApplicantResponseDTO.GetApplicantResultDTO> getApplicantResultDTOList = applicantPage.stream()
                 .map(ApplicantConverter::toGetApplicantResultDTO).toList();
         return ApplicantResponseDTO.GetApplicantListResultDTO.builder()
-                .getApplicantResultDTOList(getApplicantResultDTOList)
+                .applicantList(getApplicantResultDTOList)
                 .isFirst(applicantPage.isFirst())
                 .isLast(applicantPage.isLast())
                 .totalElements(applicantPage.getTotalElements())
@@ -95,7 +94,7 @@ public class ApplicantConverter {
         List<ApplicantResponseDTO.GetMyApplyResultDTO> getApplicantResultDTOList = applyResultDTOList.stream()
                 .map((d)-> (d)).toList();
         return ApplicantResponseDTO.GetMyApplyResultListDTO.builder()
-                .getMyApplyResultDTOList(getApplicantResultDTOList)
+                .appliedDrawList(getApplicantResultDTOList)
                 .isFirst(applyResultDTOList.isFirst())
                 .isLast(applyResultDTOList.isLast())
                 .totalElements(applyResultDTOList.getTotalElements())

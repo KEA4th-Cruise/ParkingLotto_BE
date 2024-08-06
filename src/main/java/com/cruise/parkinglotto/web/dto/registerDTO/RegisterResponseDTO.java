@@ -1,6 +1,5 @@
 package com.cruise.parkinglotto.web.dto.registerDTO;
 
-import com.cruise.parkinglotto.web.dto.priorityApplicantDTO.PriorityApplicantResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,7 +38,7 @@ public class RegisterResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class MembersResponseDTOList {
-        private List<RegisterResponseDTO.MembersResponseDTO> memberResponseDTOList;
+        private List<RegisterResponseDTO.MembersResponseDTO> memberList;
         Integer listSize;
         Integer totalPage;
         Long totalElements;

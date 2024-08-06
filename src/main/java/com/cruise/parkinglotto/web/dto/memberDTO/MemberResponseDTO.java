@@ -48,7 +48,7 @@ public class MemberResponseDTO {
     @AllArgsConstructor
     public static class MyInfoResponseDTO {
         private String carNum;
-        private List<MyCertificationInfoResponseDTO> myCertificationInfos;
+        private List<MyCertificationInfoResponseDTO> certificationDocsList;
         private String address;
         private WorkType workType;
     }

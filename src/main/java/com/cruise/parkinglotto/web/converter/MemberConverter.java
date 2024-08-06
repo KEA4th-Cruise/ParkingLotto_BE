@@ -41,7 +41,7 @@ public class MemberConverter {
                 .address(member.getWeightDetails().getAddress())
                 .carNum(member.getCarNum())
                 .workType(member.getWeightDetails().getWorkType())
-                .myCertificationInfos(certificateDocs
+                .certificationDocsList(certificateDocs
                         .stream().map(c -> MemberResponseDTO.MyCertificationInfoResponseDTO.builder()
                                 .fileName(c.getFileName())
                                 .fileUrl(c.getFileUrl())

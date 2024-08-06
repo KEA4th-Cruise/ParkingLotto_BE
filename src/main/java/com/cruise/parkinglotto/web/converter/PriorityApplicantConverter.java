@@ -2,9 +2,6 @@ package com.cruise.parkinglotto.web.converter;
 
 import com.cruise.parkinglotto.domain.*;
 import com.cruise.parkinglotto.domain.enums.ApprovalStatus;
-import com.cruise.parkinglotto.domain.enums.WinningStatus;
-import com.cruise.parkinglotto.domain.enums.WorkType;
-import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import com.cruise.parkinglotto.web.dto.priorityApplicantDTO.PriorityApplicantResponseDTO;
 import org.springframework.data.domain.Page;
 
@@ -28,7 +25,7 @@ public class PriorityApplicantConverter {
         List<PriorityApplicantResponseDTO.GetPriorityApplicantResultDTO> getPriorityApplicantResultDTOList = priorityApplicantPage.stream()
                 .map(PriorityApplicantConverter::toGetPriorityApplicantResultDTO).toList();
         return PriorityApplicantResponseDTO.GetPriorityApplicantListResultDTO.builder()
-                .getPriorityApplicantResultDTOList(getPriorityApplicantResultDTOList)
+                .priorityApplicantList(getPriorityApplicantResultDTOList)
                 .isFirst(priorityApplicantPage.isFirst())
                 .isLast(priorityApplicantPage.isLast())
                 .totalElements(priorityApplicantPage.getTotalElements())
@@ -54,7 +51,7 @@ public class PriorityApplicantConverter {
                 .accountId(member.getAccountId())
                 .employeeNo(member.getEmployeeNo())
                 .deptPathName((member.getDeptPathName()))
-                .certificateFiles(certificateDocsList.stream()
+                .certificateFileList(certificateDocsList.stream()
                         .map(CertificateDocsConverter::toCertificateFileDTO)
                         .toList())
                 .approvalStatus(priorityApplicant.getApprovalStatus())

@@ -3,7 +3,6 @@ package com.cruise.parkinglotto.global.sse;
 import com.cruise.parkinglotto.domain.Draw;
 import com.cruise.parkinglotto.domain.ParkingSpace;
 import com.cruise.parkinglotto.repository.ApplicantRepository;
-import com.cruise.parkinglotto.repository.DrawRepository;
 import com.cruise.parkinglotto.repository.ParkingSpaceRepository;
 import com.cruise.parkinglotto.web.converter.ParkingSpaceConverter;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
@@ -62,7 +61,7 @@ public class SseEmitters {
         DrawResponseDTO.RealTimeDrawInfo realTimeDrawInfo = DrawResponseDTO.RealTimeDrawInfo.builder()
                 .applicantsCount(applicantsCount)
                 .totalSlots(totalSlots)
-                .parkingSpaceCompetitionRateDTOList(parkingSpaceCompetitionRateDTOList)
+                .parkingSpaceCompetitionRateList(parkingSpaceCompetitionRateDTOList)
                 .build();
         sendEvent("realTimeDrawInfo", realTimeDrawInfo);
     }

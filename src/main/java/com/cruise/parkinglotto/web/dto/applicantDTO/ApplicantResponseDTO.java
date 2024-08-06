@@ -3,7 +3,6 @@ package com.cruise.parkinglotto.web.dto.applicantDTO;
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -36,7 +35,7 @@ public class ApplicantResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class GetApplicantListResultDTO {
-        private List<GetApplicantResultDTO> getApplicantResultDTOList;
+        private List<GetApplicantResultDTO> applicantList;
         Integer listSize;
         Integer totalPage;
         Long totalElements;
@@ -73,7 +72,7 @@ public class ApplicantResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class GetMyApplyResultListDTO {
-        private List<GetMyApplyResultDTO> getMyApplyResultDTOList;
+        private List<GetMyApplyResultDTO> appliedDrawList;
         Integer listSize;
         Integer totalPage;
         Long totalElements;
