@@ -131,7 +131,7 @@ public class DrawRestController {
                                     @RequestPart(value = "applyDrawRequestDTO", required = true) @Parameter(description = "일반 추첨 신청에 필요한 요청 데이터") @Valid ApplicantRequestDTO.GeneralApplyDrawRequestDTO applyDrawRequestDTO) {
         String accountId = jwtUtils.getAccountIdFromRequest(httpServletRequest);
         applicantService.drawApply(certificateDocs, applyDrawRequestDTO, accountId, drawId);
-        return ApiResponse.onSuccess(SuccessStatus.APPLICANT_SUCCESS, null);
+        return ApiResponse.onSuccess(SuccessStatus.APPLICANT_APPLY_SUCCESS, null);
     }
 
     @Operation(summary = "우대 신청을 승인하는 API 입니다.", description = " PathVariable 으로 drawId와 priorityApplicantId 번호를 전송해주세요.(이윤서)")
@@ -226,7 +226,7 @@ public class DrawRestController {
                                             @RequestPart(value = "applyDrawRequestDTO", required = true) @Parameter(description = "우대 추첨 신청에 필요한 요청 데이터") @Valid PriorityApplicantRequestDTO.PriorityApplyDrawRequestDTO priorityApplyDrawRequestDTO) {
         String accountId = jwtUtils.getAccountIdFromRequest(httpServletRequest);
         priorityApplicantService.drawPriorityApply(GeneralCertificateDocs, priorityCertificateDocs, priorityApplyDrawRequestDTO, accountId, drawId);
-        return ApiResponse.onSuccess(SuccessStatus.APPLICANT_SUCCESS, null);
+        return ApiResponse.onSuccess(SuccessStatus.APPLICANT_APPLY_SUCCESS, null);
     }
   
     @Operation(summary = "당첨자가 당첨을 포기하는 API 입니다.", description = "pathvariable로 drawId를 넘겨주세요.(이정균)")
