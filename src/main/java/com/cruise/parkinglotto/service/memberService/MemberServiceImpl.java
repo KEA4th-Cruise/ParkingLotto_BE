@@ -173,7 +173,7 @@ public class MemberServiceImpl implements MemberService {
         findWeightDetails.updateMyInfo(myInfoRequestDTO);
         if(certificateDocs != null) {
             for(MultipartFile certificateDoc : certificateDocs) {
-                String certificateDocUrl = objectStorageService.uploadObject(objectStorageConfig.getMapImagePath(), certificateDoc.getOriginalFilename(), certificateDoc);
+                String certificateDocUrl = objectStorageService.uploadObject(objectStorageConfig.getGeneralCertificateDocument(), certificateDoc.getOriginalFilename(), certificateDoc);
                 CertificateDocs certificateDocument = CertificateDocsConverter.toCertificateDocument(certificateDocUrl, certificateDoc.getOriginalFilename(), findMember, -1L);
                 certificateDocsList.add(certificateDocument);
                 certificateDocsRepository.save(certificateDocument);
