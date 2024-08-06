@@ -267,7 +267,7 @@ public class ApplicantServiceImpl implements ApplicantService {
         if (!objectStorageService.doesObjectCertificateFileUrlsExist(certificateDocs)) {
             throw new ExceptionHandler(ErrorStatus.CERTIFICATEDOCS_NAME_NOT_FOUND);
         }
-        
+
         certificateDocsService.deleteFileIsNotInProfile(certificateDocs);
 
         //DB에서 문서정보 삭제
