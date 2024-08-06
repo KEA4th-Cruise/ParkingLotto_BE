@@ -9,6 +9,8 @@ import com.cruise.parkinglotto.service.memberService.MemberService;
 import com.cruise.parkinglotto.web.converter.RegisterConverter;
 import com.cruise.parkinglotto.web.dto.registerDTO.RegisterResponseDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,10 +62,10 @@ public class RegisterServiceImpl implements RegisterService {
     }
 
     @Override
-    public List<RegisterResponseDTO.MembersResponseDTO> getMembersByEnrollmentStatus(EnrollmentStatus enrollmentStatus) {
+    @Transactional(readOnly = true)
+    public Page<Member> getMembersByEnrollmentStatus(Integer page, EnrollmentStatus enrollmentStatus) {
         if (enrollmentStatus == EnrollmentStatus.PENDING || enrollmentStatus == EnrollmentStatus.ENROLLED) {
-            List<Member> members = memberRepository.findByEnrollmentStatus(enrollmentStatus);
-            return RegisterConverter.toMembersResponseDTOList(members);
+            return memberRepository.findByEnrollmentStatus(PageRequest.of(page, 6), enrollmentStatus);
         } else {
             throw new ExceptionHandler(ErrorStatus.REGISTER_MEMBERS_NOT_FOUND);
         }

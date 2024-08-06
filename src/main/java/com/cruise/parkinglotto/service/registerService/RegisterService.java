@@ -3,6 +3,7 @@ package com.cruise.parkinglotto.service.registerService;
 import com.cruise.parkinglotto.domain.Member;
 import com.cruise.parkinglotto.domain.enums.EnrollmentStatus;
 import com.cruise.parkinglotto.web.dto.registerDTO.RegisterResponseDTO;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -40,7 +41,7 @@ public interface RegisterService {
      * enrollmentStatus로 사용자 리스트를 가져오는 메서드
      * enrollmentStatus에 따라 리턴하는 사용자 리스트가 바뀐다.
      */
-    List<RegisterResponseDTO.MembersResponseDTO> getMembersByEnrollmentStatus(EnrollmentStatus enrollmentStatus);
+    Page<Member> getMembersByEnrollmentStatus(Integer page, EnrollmentStatus enrollmentStatus);
 
     /**
      * 검색 키워드로 사용자를 찾는 메서드
