@@ -21,10 +21,12 @@ public class PriorityApplicantConverter {
                 .build();
     }
 
-    public static PriorityApplicantResponseDTO.GetPriorityApplicantListResultDTO toGetPriorityApplicantListResultDTO(Page<PriorityApplicant> priorityApplicantPage) {
+    public static PriorityApplicantResponseDTO.GetPriorityApplicantListResultDTO toGetPriorityApplicantListResultDTO(Integer totalSlots, Page<PriorityApplicant> priorityApplicantPage) {
         List<PriorityApplicantResponseDTO.GetPriorityApplicantResultDTO> getPriorityApplicantResultDTOList = priorityApplicantPage.stream()
                 .map(PriorityApplicantConverter::toGetPriorityApplicantResultDTO).toList();
         return PriorityApplicantResponseDTO.GetPriorityApplicantListResultDTO.builder()
+                .totalSlots(totalSlots)
+                .applicantsCount(priorityApplicantPage.getSize())
                 .priorityApplicantList(getPriorityApplicantResultDTOList)
                 .isFirst(priorityApplicantPage.isFirst())
                 .isLast(priorityApplicantPage.isLast())

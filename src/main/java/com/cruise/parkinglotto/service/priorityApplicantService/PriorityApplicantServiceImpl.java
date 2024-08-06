@@ -23,6 +23,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 
 import java.util.List;
 import java.util.Objects;
@@ -40,14 +41,14 @@ public class PriorityApplicantServiceImpl implements PriorityApplicantService {
     private final CertificateDocsService certificateDocsService;
     private final ObjectStorageService objectStorageService;
     private final ObjectStorageConfig objectStorageConfig;
-    private final WeightDetailsRepository weightDetailsRepository;
 
     @Override
     @Transactional(readOnly = true)
-    public Page<PriorityApplicant> getPriorityApplicantList(Integer page, Long drawId, ApprovalStatus approvalStatus) {
-        drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
+    public PriorityApplicantResponseDTO.GetPriorityApplicantListResultDTO getPriorityApplicantList(Integer page, Long drawId, ApprovalStatus approvalStatus) {
+        Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
+        Integer totalSlots = draw.getTotalSlots();
         Page<PriorityApplicant> priorityApplicantList = priorityApplicantRepository.findByDrawIdAndApprovalStatus(PageRequest.of(page, 6), drawId, approvalStatus);
-        return priorityApplicantList;
+        return PriorityApplicantConverter.toGetPriorityApplicantListResultDTO(totalSlots, priorityApplicantList);
     }
 
     @Override

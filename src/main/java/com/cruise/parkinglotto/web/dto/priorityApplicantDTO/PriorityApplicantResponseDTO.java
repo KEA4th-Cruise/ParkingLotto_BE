@@ -28,6 +28,8 @@ public class PriorityApplicantResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class GetPriorityApplicantListResultDTO {
+        Integer applicantsCount;
+        Integer totalSlots;
         private List<PriorityApplicantResponseDTO.GetPriorityApplicantResultDTO> priorityApplicantList;
         Integer listSize;
         Integer totalPage;
