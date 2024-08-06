@@ -268,9 +268,7 @@ public class ApplicantServiceImpl implements ApplicantService {
             throw new ExceptionHandler(ErrorStatus.CERTIFICATEDOCS_NAME_NOT_FOUND);
         }
 
-        for (CertificateDocs certificateDocx : certificateDocs) {
-            objectStorageService.deleteObject(certificateDocx.getFileUrl());
-        }
+        certificateDocsService.deleteFileIsNotInProfile(certificateDocs);
 
         //DB에서 문서정보 삭제
         certificateDocsRepository.deleteAll(certificateDocs);
