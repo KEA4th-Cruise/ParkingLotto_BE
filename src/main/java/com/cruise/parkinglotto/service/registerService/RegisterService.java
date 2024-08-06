@@ -24,7 +24,7 @@ public interface RegisterService {
      * @param member
      * @return
      */
-    Object refuseRegister(Member member);
+    Object rejectRegister(Member member);
 
     /**
      * 관리자가 사용자의 등록 요청을 승인하는 메서드

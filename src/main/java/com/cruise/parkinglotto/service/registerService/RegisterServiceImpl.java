@@ -36,7 +36,7 @@ public class RegisterServiceImpl implements RegisterService {
 
     @Override
     @Transactional
-    public Object refuseRegister(Member member) {
+    public Object rejectRegister(Member member) {
         int updatedCount = memberRepository.updateEnrollmentStatusToPrepending(member.getAccountId());
         if (updatedCount == 0) { // 등록 거절을 했지만 prepending으로 바뀌지 않은 경우
             throw new ExceptionHandler(ErrorStatus.REGISTER_REFUSE_FAILED);

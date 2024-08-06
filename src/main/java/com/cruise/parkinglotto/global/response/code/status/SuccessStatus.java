@@ -27,7 +27,7 @@ public enum SuccessStatus implements BaseCode {
     REGISTER_MEMBER_INFO_FOUND(HttpStatus.OK, "REGISTER2002", "멤버 세부 정보를 조회했습니다."),
     REGISTER_MEMBERS_FOUND(HttpStatus.OK, "REGISTER2003", "사용자 목록을 조회했습니다."),
     REGISTER_REQUEST_APPROVED(HttpStatus.OK, "REGISTER2004", "등록을 승인했습니다."),
-    REGISTER_REQUEST_REFUSED(HttpStatus.OK, "REGISTER2005", "등록을 거절했습니다."),
+    REGISTER_REQUEST_REJECTED(HttpStatus.OK, "REGISTER2005", "등록을 거절했습니다."),
     REGISTER_SEARCH_FOUND(HttpStatus.OK, "REGISTER2006", "검색을 완료했습니다."),
 
     // 추첨 관련
