@@ -29,6 +29,7 @@ public class DrawResponseDTO {
         private String mapImageUrl;
         private String description;
         private Integer totalSlots;
+        private DrawStatus drawStatus;
         private List<GetParkingSpaceResultDTO> getNameAndUrlParkingSpaceResultDTO;
     }
 
