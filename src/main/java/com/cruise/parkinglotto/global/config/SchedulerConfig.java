@@ -8,9 +8,11 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
 
@@ -18,17 +20,6 @@ import java.util.List;
 @EnableScheduling
 @RequiredArgsConstructor
 public class SchedulerConfig {
-
-    private final DrawRepository drawRepository;
-    private final DrawService drawService;
-
-    @PostConstruct
-    public void scheduleDraws() {
-        List<Draw> pendedDrawList = drawRepository.findByStatus(DrawStatus.PENDING);
-        List<Draw> openedDrawList = drawRepository.findByStatus(DrawStatus.OPEN);
-        for (Draw draw : pendedDrawList)  drawService.openDraw(draw);
-        for (Draw draw : openedDrawList) drawService.closeDraw(draw);
-    }
 
     @Bean
     public TaskScheduler taskScheduler() {
@@ -38,4 +29,5 @@ public class SchedulerConfig {
         scheduler.initialize();
         return scheduler;
     }
+
 }

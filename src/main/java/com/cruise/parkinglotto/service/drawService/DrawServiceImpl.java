@@ -23,6 +23,7 @@ import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.TaskScheduler;
@@ -60,7 +61,7 @@ public class DrawServiceImpl implements DrawService {
     private final FileGeneration fileGenerationService;
     private final WeightSectionStatisticsService weightSectionStatisticsService;
     private final DrawStatisticsService drawStatisticsService;
-    private final TaskScheduler taskScheduler;
+    private final @Lazy TaskScheduler taskScheduler;
 
     //계산용 변수
     private static final int WORK_TYPE1_SCORE = 25;
@@ -387,7 +388,8 @@ public class DrawServiceImpl implements DrawService {
                 .sum();
         draw.updateConfirmed(true, totalSlots);
         deleteUnconfirmedDrawsAndParkingSpaces();
-
+        openDraw(draw);
+        closeDraw(draw);
         return DrawConverter.toConfirmDrawCreationResultDTO(draw, parkingSpaceList);
     }
 
@@ -639,23 +641,25 @@ public class DrawServiceImpl implements DrawService {
     @Override
     public void openDraw(Draw draw) {
         Runnable task = () -> {
+            log.info("Opening draw with ID: {}", draw.getId());
             draw.updateStatus(DrawStatus.OPEN);
             drawRepository.save(draw);
         };
         LocalDateTime drawEndTime = draw.getDrawStartAt();
         Date startTime = Date.from(drawEndTime.atZone(ZoneId.systemDefault()).toInstant());
-        ScheduledFuture<?> scheduledTask = taskScheduler.schedule(task, startTime);
+        taskScheduler.schedule(task, startTime);
     }
 
     @Override
     public void closeDraw(Draw draw) {
         Runnable task = () -> {
+            log.info("Closing draw with ID: {}", draw.getId());
             draw.updateStatus(DrawStatus.CLOSED);
             drawRepository.save(draw);
         };
         LocalDateTime drawEndTime = draw.getDrawEndAt();
         Date endTime = Date.from(drawEndTime.atZone(ZoneId.systemDefault()).toInstant());
-        ScheduledFuture<?> scheduledTask = taskScheduler.schedule(task, endTime);
+        taskScheduler.schedule(task, endTime);
     }
 }
 
