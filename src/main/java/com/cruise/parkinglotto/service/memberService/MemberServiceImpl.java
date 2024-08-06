@@ -135,7 +135,7 @@ public class MemberServiceImpl implements MemberService {
     public MemberResponseDTO.MyInfoResponseDTO getMyInfo(Long memberId) {
 
         Member findMember = memberRepository.findById(memberId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
-        return MemberConverter.toMyInfoResponseDTO(findMember);
+        return MemberConverter.toMyInfoResponseDTO(findMember,findMember.getCertificateDocsList());
 
     }
 
