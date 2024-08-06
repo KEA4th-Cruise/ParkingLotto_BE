@@ -232,7 +232,7 @@ public class ApplicantServiceImpl implements ApplicantService {
     }
 
     @Override
-    public void cancelApply(String accountId, Long drawId){
+    public void cancelApply(String accountId, Long drawId) {
         Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
 
         if (draw.getStatus() != DrawStatus.OPEN) {
@@ -267,7 +267,7 @@ public class ApplicantServiceImpl implements ApplicantService {
         if (!objectStorageService.doesObjectCertificateFileUrlsExist(certificateDocs)) {
             throw new ExceptionHandler(ErrorStatus.CERTIFICATEDOCS_NAME_NOT_FOUND);
         }
-
+        
         certificateDocsService.deleteFileIsNotInProfile(certificateDocs);
 
         //DB에서 문서정보 삭제
