@@ -1,11 +1,16 @@
 package com.cruise.parkinglotto.web.dto.memberDTO;
 
+import com.cruise.parkinglotto.domain.enums.WorkType;
+import com.cruise.parkinglotto.web.dto.CertificateDocsDTO.CertificateDocsRequestDTO;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import java.util.List;
 
 public class MemberRequestDTO {
 
@@ -34,5 +39,19 @@ public class MemberRequestDTO {
         private String accountId;
         private String accessToken;
         private String refreshToken;
+    }
+
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MyInfoRequestDTO{
+        @NotEmpty(message = "차량 번호를 입력해주세요")
+        private String carNum;
+        @NotEmpty(message = "주소를 입력해주세요")
+        private String address;
+        @NotNull(message = "근무 타입을 입력해주세요")
+        private WorkType workType;
     }
 }

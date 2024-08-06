@@ -37,11 +37,13 @@ public class MemberConverter {
                 .address(member.getWeightDetails().getAddress())
                 .carNum(member.getCarNum())
                 .workType(member.getWeightDetails().getWorkType())
-                .myCertificationInfoResponseDTOS(member.getCertificateDocsList()
+                .myCertificationInfoResponseDTOS(certificateDocs
                         .stream().map(c -> MemberResponseDTO.MyCertificationInfoResponseDTO.builder()
                                 .fileName(c.getFileName())
                                 .fileUrl(c.getFileUrl())
-                                .certificateDocsId(c.getId()).build())
+                                .fileType(c.getFileName().substring(c.getFileName().lastIndexOf(".")+1).toLowerCase())
+                                .certificateDocsId(c.getId())
+                                .build())
                         .collect(Collectors.toList()))
                 .build();
     }

@@ -1,6 +1,8 @@
 package com.cruise.parkinglotto.service.memberService;
 
+import com.cruise.parkinglotto.domain.CertificateDocs;
 import com.cruise.parkinglotto.domain.Member;
+import com.cruise.parkinglotto.domain.WeightDetails;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
 import com.cruise.parkinglotto.global.jwt.JwtToken;
 import com.cruise.parkinglotto.global.jwt.JwtUtils;
@@ -9,8 +11,13 @@ import com.cruise.parkinglotto.global.kc.ObjectStorageService;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
 import com.cruise.parkinglotto.repository.CertificateDocsRepository;
 import com.cruise.parkinglotto.repository.MemberRepository;
+import com.cruise.parkinglotto.repository.WeightDetailsRepository;
+import com.cruise.parkinglotto.service.certificateDocsService.CertificateDocsService;
 import com.cruise.parkinglotto.service.redisService.RedisService;
+import com.cruise.parkinglotto.web.converter.CertificateDocsConverter;
 import com.cruise.parkinglotto.web.converter.MemberConverter;
+import com.cruise.parkinglotto.web.converter.WeightDetailConverter;
+import com.cruise.parkinglotto.web.dto.CertificateDocsDTO.CertificateDocsRequestDTO;
 import com.cruise.parkinglotto.web.dto.memberDTO.MemberRequestDTO;
 import com.cruise.parkinglotto.web.dto.memberDTO.MemberResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +28,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import java.time.Duration;
-
-import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Slf4j
@@ -36,6 +44,11 @@ public class MemberServiceImpl implements MemberService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final RedisService redisService;
     private final PasswordEncoder passwordEncoder;
+    private final CertificateDocsService certificateDocsService;
+    private final ObjectStorageService objectStorageService;
+    private final ObjectStorageConfig objectStorageConfig;
+    private final WeightDetailsRepository weightDetailsRepository;
+    private final CertificateDocsRepository certificateDocsRepository;
 
     /**
      * 로그인 로직
@@ -128,6 +141,48 @@ public class MemberServiceImpl implements MemberService {
     public Member getMemberByAccountId(String accountId) {
         return memberRepository.findByAccountId(accountId)
                 .orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
+    }
+
+    @Override
+    @Transactional
+    public MemberResponseDTO.MyInfoResponseDTO saveMyInfo(Long memberId, MemberRequestDTO.MyInfoRequestDTO myInfoRequestDTO, List<MultipartFile> certificateDocs)  {
+
+        Member findMember = memberRepository.findById(memberId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+        //파일 검증 ==========
+
+        //한개의 추첨에서 들어갈 수 있는 파일 개수 세는 변수
+        Integer totalFileNumber = 0;
+
+        //업로드 할 파일 검증 (길이, 확장자 등)
+        if (certificateDocs != null) {
+            certificateDocsService.validateCertificateFiles(certificateDocs);
+            totalFileNumber += certificateDocs.size();
+        }
+
+
+        if (totalFileNumber > 5) {
+            throw new ExceptionHandler(ErrorStatus.CERTIFICATEDOCS_TOO_MANY);
+        }
+
+        //파일 검증 끝 =========
+
+        List<CertificateDocs> certificateDocsList = new ArrayList<>();
+
+        WeightDetails findWeightDetails = weightDetailsRepository.findOptionalByMemberId(memberId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.WEIGHTDETAILS_NOT_FOUND));
+        findWeightDetails.updateMyInfo(myInfoRequestDTO);
+        if(certificateDocs != null) {
+            for(MultipartFile certificateDoc : certificateDocs) {
+                String certificateDocUrl = objectStorageService.uploadObject(objectStorageConfig.getMapImagePath(), certificateDoc.getOriginalFilename(), certificateDoc);
+                CertificateDocs certificateDocument = CertificateDocsConverter.toCertificateDocument(certificateDocUrl, certificateDoc.getOriginalFilename(), findMember, -1L);
+                certificateDocsList.add(certificateDocument);
+                certificateDocsRepository.save(certificateDocument);
+            }
+        }
+
+
+        return MemberConverter.toMyInfoResponseDTO(findWeightDetails.getMember(), certificateDocsList);
+
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.cruise.parkinglotto.domain;
 
 import com.cruise.parkinglotto.domain.common.BaseEntity;
 import com.cruise.parkinglotto.domain.enums.WorkType;
+import com.cruise.parkinglotto.web.dto.memberDTO.MemberRequestDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -46,6 +47,12 @@ public class WeightDetails extends BaseEntity {
         this.trafficCommuteTime = trafficCommuteTime;
         this.carCommuteTime = carCommuteTime;
         this.distance = distance;
+    }
+
+    public void updateMyInfo(MemberRequestDTO.MyInfoRequestDTO myInfoRequestDTO) {
+        this.address = myInfoRequestDTO.getAddress();
+        this.workType = myInfoRequestDTO.getWorkType();
+        this.member.updateCarNum(myInfoRequestDTO.getCarNum());
     }
 
 }

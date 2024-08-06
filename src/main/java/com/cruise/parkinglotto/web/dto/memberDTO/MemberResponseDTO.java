@@ -59,7 +59,10 @@ public class MemberResponseDTO {
         private Long certificateDocsId;
         private String fileUrl;
         private String fileName;
-
+        private String fileType;
     }
-
 }
+
+
+
+
