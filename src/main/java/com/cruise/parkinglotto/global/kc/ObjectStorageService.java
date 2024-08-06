@@ -1,5 +1,6 @@
 package com.cruise.parkinglotto.global.kc;
 
+import com.cruise.parkinglotto.domain.CertificateDocs;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.List;
 
 
 @Slf4j
@@ -122,5 +124,14 @@ public class ObjectStorageService {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public Boolean doesObjectCertificateFileUrlsExist(List<CertificateDocs> certificateDocx) {
+        for (CertificateDocs toGetCertificateDocxUrl : certificateDocx){
+            if(!doesObjectCertificateFileUrlExist(toGetCertificateDocxUrl.getFileUrl())){
+                return false;
+            }
+        }
+        return true;
     }
 }

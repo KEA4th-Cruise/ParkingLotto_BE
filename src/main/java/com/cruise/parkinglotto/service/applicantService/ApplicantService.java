@@ -36,4 +36,7 @@ public interface ApplicantService {
      * @return
      */
     ApplicantResponseDTO.GetApplicantResultDTO searchWinnerBySearchKeyword(String searchKeyword);
+
+    void cancelApply(String accountId, Long drawId);
+
 }
