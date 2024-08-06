@@ -232,7 +232,7 @@ public class ApplicantServiceImpl implements ApplicantService {
     }
 
     @Override
-    public void cancelApply(String accountId, Long drawId) {
+    public void cancelApply(String accountId, Long drawId){
         Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
 
         if (draw.getStatus() != DrawStatus.OPEN) {
