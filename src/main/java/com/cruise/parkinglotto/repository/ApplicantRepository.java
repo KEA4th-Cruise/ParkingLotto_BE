@@ -74,5 +74,6 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
 
     List<Applicant> findByDrawIdAndReserveNumGreaterThan(Long drawId, Integer reserveNum);
 
+    @Transactional
     void deleteByDrawIdAndMember(Long drawId, Member member);
 }

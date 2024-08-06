@@ -247,6 +247,6 @@ public class DrawRestController {
     public ApiResponse<?> cancelApply(HttpServletRequest httpServletRequest, @PathVariable(name = "drawId") Long drawId) {
         String accountId = jwtUtils.getAccountIdFromRequest(httpServletRequest);
         applicantService.cancelApply(accountId, drawId);
-        return ApiResponse.onSuccess(SuccessStatus.APPLICANT_SUCCESS, null);
+        return ApiResponse.onSuccess(SuccessStatus.APPLICANT_CANCEL_SUCCESS, null);
     }
 }

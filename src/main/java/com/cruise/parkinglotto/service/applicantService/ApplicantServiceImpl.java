@@ -252,10 +252,19 @@ public class ApplicantServiceImpl implements ApplicantService {
             throw new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND);
         }
 
+        Applicant applicant = applicantOptional.get();
+        Optional<ParkingSpace> parkingSpaceOptional = parkingSpaceRepository.findById(applicant.getFirstChoice());
+        if (parkingSpaceOptional.isEmpty()) {
+            throw new ExceptionHandler(ErrorStatus.PARKING_SPACE_NOT_FOUND);
+        }
+        ParkingSpace parkingSpace = parkingSpaceOptional.get();
+
+        parkingSpace.decreaseApplicantCount();
+
         //bucket에서 문서 삭제
         List<CertificateDocs> certificateDocs = certificateDocsRepository.findByMemberAndDrawId(member, drawId);
 
-        if(objectStorageService.doesObjectCertificateFileUrlsExist(certificateDocs)){
+        if(!objectStorageService.doesObjectCertificateFileUrlsExist(certificateDocs)){
             throw new ExceptionHandler(ErrorStatus.CERTIFICATEDOCS_NAME_NOT_FOUND);
         }
 
