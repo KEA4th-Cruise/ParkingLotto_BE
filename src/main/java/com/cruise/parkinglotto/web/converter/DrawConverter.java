@@ -32,6 +32,7 @@ public class DrawConverter {
                 .mapImageUrl(draw.getMapImageUrl())
                 .description(draw.getDescription())
                 .totalSlots(draw.getTotalSlots())
+                .drawStatus(draw.getStatus())
                 .getNameAndUrlParkingSpaceResultDTO(dto)
                 .build();
     }
