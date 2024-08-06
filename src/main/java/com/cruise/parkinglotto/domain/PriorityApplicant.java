@@ -44,5 +44,6 @@ public class PriorityApplicant extends BaseEntity {
 
     public void assignParkingSpace(Long parkingSpaceId) {
         this.parkingSpaceId = parkingSpaceId;
+        this.approvalStatus = ApprovalStatus.ASSIGNED;
     }
 }
