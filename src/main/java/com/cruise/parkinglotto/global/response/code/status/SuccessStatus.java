@@ -18,7 +18,7 @@ public enum SuccessStatus implements BaseCode {
     MEMBER_LOGIN_SUCCESS(HttpStatus.OK, "MEMBER2001", "로그인에 성공했습니다."),
     MEMBER_LOGOUT_SUCCESS(HttpStatus.OK, "MEMBER2002", "로그아웃에 성공했습니다."),
     MEMBER_INFO_FOUND(HttpStatus.OK, "MEMBER2003", "맴버 정보를 조회했습니다."),
-    MEMBER_REFRESH_TOKEN_SUCCESS(HttpStatus.OK, "MEMBER2004", "토큰 재발급을 성공했습니다."),
+    MEMBER_REFRESH_TOKEN_SUCCESS(HttpStatus.CREATED, "MEMBER2004", "토큰 재발급을 성공했습니다."),
 
     // 등록 관련 응답
     REGISTER_REQUEST_SUCCESS(HttpStatus.OK, "REGISTER2001", "등록 요청을 보냈습니다."),
@@ -30,9 +30,9 @@ public enum SuccessStatus implements BaseCode {
 
     // 추첨 관련
     DRAW_INFO_FOUND(HttpStatus.OK, "DRAW2001", "추첨 정보를 조회했습니다."),
-    DRAW_EXECUTE_RESULT(HttpStatus.OK, "DRAW2002", "추첨결과가 정상적으로 저장되었습니다."),
-    DRAW_INFO_SAVED(HttpStatus.OK, "DRAW2003", "추첨 생성 정보가 저장되었습니다."),
-    DRAW_CREATION_CONFIRMED(HttpStatus.OK, "DRAW2004", "추첨 생성이 완료되었습니다."),
+    DRAW_EXECUTE_RESULT(HttpStatus.CREATED, "DRAW2002", "추첨결과가 정상적으로 저장되었습니다."),
+    DRAW_INFO_SAVED(HttpStatus.CREATED, "DRAW2003", "추첨 생성 정보가 저장되었습니다."),
+    DRAW_CREATION_CONFIRMED(HttpStatus.CREATED, "DRAW2004", "추첨 생성이 완료되었습니다."),
     CALCULATE_MEMBER_WEIGHT_COMPLETED(HttpStatus.OK, "DRAW2005", "계산이 완료되었습니다."),
     DRAW_SIMULATE_COMPLETED(HttpStatus.OK, "DRAW2006", "추첨 시뮬레이션이 완료되었습니다."),
     DRAW_OVERVIEW_FOUND(HttpStatus.OK, "DRAW2007", "추첨 개요 정보를 조회하였습니다."),
@@ -45,13 +45,13 @@ public enum SuccessStatus implements BaseCode {
     DRAW_SELF_CANCEL(HttpStatus.OK, "DRAW2014", "취소에 성공하였습니다."),
 
     //  주차 구역 관련
-    PARKING_SPACE_ADDED(HttpStatus.OK, "PARKINGSPACE2001", "해당 회차에 주차구역이 추가되었습니다."),
+    PARKING_SPACE_ADDED(HttpStatus.CREATED, "PARKINGSPACE2001", "해당 회차에 주차구역이 추가되었습니다."),
     PARKING_SPACE_INFO_FOUND(HttpStatus.OK, "PARKINGSPACE2002", "주차 공간 정보를 조회했습니다"),
 
     //  신청자 관련
     APPLICANT_LIST_FOUND(HttpStatus.OK, "APPLICANT2001", "신청자 목록을 조회하였습니다."),
-    APPLICANT_PRIORITY_APPROVED(HttpStatus.OK, "APPLICANT2002", "해당 사용자에게 우대 신청 승인 및 주차 공간 배정을 완료했습니다."),
-    APPLICANT_SUCCESS(HttpStatus.OK, "APPLICANT2003", "신청에 성공했습니다."),
+    APPLICANT_PRIORITY_APPROVED(HttpStatus.CREATED, "APPLICANT2002", "해당 사용자에게 우대 신청 승인 및 주차 공간 배정을 완료했습니다."),
+    APPLICANT_APPLY_SUCCESS(HttpStatus.CREATED, "APPLICANT2003", "신청에 성공했습니다."),
     APPLICANT_APPLY_INFO_FOUND(HttpStatus.OK, "APPLICANT2004", "해당 사용자의 특정 회차 추첨 결과 정보 조회에 성공했습니다"),
     APPLICANT_APPLY_LIST_FOUND(HttpStatus.OK, "APPLICANT2005", "사용자가 신청했던 회차 리스트 조회를 성공했습니다."),
     APPLICANT_SEARCH_FOUND(HttpStatus.OK, "APPLICANT2006", "신청자 검색을 완료했습니다."),
