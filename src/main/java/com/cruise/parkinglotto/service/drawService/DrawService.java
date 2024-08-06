@@ -60,4 +60,8 @@ public interface DrawService {
     void adminCancelWinner(HttpServletRequest httpServletRequest, Long drawId, Long applicantId);
 
     void selfCancelWinner(HttpServletRequest httpServletRequest, Long drawId);
+
+    void openDraw(Draw draw);
+
+    void closeDraw(Draw draw);
 }

@@ -96,4 +96,8 @@ public class Draw extends BaseEntity {
     public void updateResultURL(String resultURL) {
         this.resultURL = resultURL;
     }
+
+    public void updateStatus(DrawStatus status) {
+        this.status = status;
+    }
 }

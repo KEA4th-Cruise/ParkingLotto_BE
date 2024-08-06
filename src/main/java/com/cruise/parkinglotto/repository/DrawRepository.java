@@ -21,8 +21,6 @@ public interface DrawRepository extends JpaRepository<Draw, Long> {
     @Query("UPDATE Draw d SET d.status = :status WHERE d.id = :drawId")
     void updateStatus(@Param("drawId") Long drawId, @Param("status") DrawStatus status);
 
-    Optional<Draw> findByStatus(DrawStatus status);
-
     Optional<Draw> findTopByStatusNotOrderByUsageStartAtDesc(DrawStatus status);
 
     List<Draw> findTop5ByTypeOrderByUsageStartAtDesc(DrawType type);
@@ -31,5 +29,7 @@ public interface DrawRepository extends JpaRepository<Draw, Long> {
 
     @Query("SELECT DISTINCT d.year FROM Draw d  ORDER BY d.year DESC")
     List<String> findYearList();
+
+    List<Draw> findByStatus(DrawStatus status);
 }
 
