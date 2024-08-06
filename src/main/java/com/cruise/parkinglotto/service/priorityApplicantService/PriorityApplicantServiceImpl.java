@@ -46,7 +46,7 @@ public class PriorityApplicantServiceImpl implements PriorityApplicantService {
     @Transactional(readOnly = true)
     public Page<PriorityApplicant> getPriorityApplicantList(Integer page, Long drawId, ApprovalStatus approvalStatus) {
         drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
-        Page<PriorityApplicant> priorityApplicantList = priorityApplicantRepository.findByDrawIdAndApprovalStatus(PageRequest.of(page, 5), drawId, approvalStatus);
+        Page<PriorityApplicant> priorityApplicantList = priorityApplicantRepository.findByDrawIdAndApprovalStatus(PageRequest.of(page, 6), drawId, approvalStatus);
         return priorityApplicantList;
     }
 

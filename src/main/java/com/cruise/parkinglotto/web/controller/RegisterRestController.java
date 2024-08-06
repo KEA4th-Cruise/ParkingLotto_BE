@@ -7,10 +7,12 @@ import com.cruise.parkinglotto.global.response.ApiResponse;
 import com.cruise.parkinglotto.global.response.code.status.SuccessStatus;
 import com.cruise.parkinglotto.service.memberService.MemberService;
 import com.cruise.parkinglotto.service.registerService.RegisterService;
+import com.cruise.parkinglotto.web.converter.RegisterConverter;
 import com.cruise.parkinglotto.web.dto.registerDTO.RegisterResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -54,13 +56,16 @@ public class RegisterRestController {
   
     @Operation(summary = "등록 관리 페이지에서 사용자 리스트를 불러오는 API", description = "RequestParam 값에 따라 등록 신청한 사용자 목록, 기존 사용자 목록 조회가 가능합니다.(신해철)")
     @GetMapping("/members")
-    public ApiResponse<List<RegisterResponseDTO.MembersResponseDTO>> getPendingMembers(@RequestParam("enrollmentStatus") EnrollmentStatus enrollmentStatus) {
-        return ApiResponse.onSuccess(SuccessStatus.REGISTER_MEMBERS_FOUND, registerService.getMembersByEnrollmentStatus(enrollmentStatus));
+    public ApiResponse<RegisterResponseDTO.MembersResponseDTOList> getPendingMembers(@RequestParam("enrollmentStatus") EnrollmentStatus enrollmentStatus,
+                                                                                       @RequestParam(name = "page") Integer page) {
+        Page<Member> members = registerService.getMembersByEnrollmentStatus(page - 1, enrollmentStatus);
+        return ApiResponse.onSuccess(SuccessStatus.REGISTER_MEMBERS_FOUND, RegisterConverter.toMembersResponseDTOList(members));
     }
 
     @Operation(summary = "등록 관리 페이지에서 사용자를 검색하는 API", description = "RequestParam으로 enrollmentStatus와 searchKeyword를 받아서 검색합니다. searchKeyword는 사원명 혹은 사번이 들어가야 합니다.(신해철)")
     @GetMapping("/members/search")
-    public ApiResponse<RegisterResponseDTO.MembersResponseDTO> searchMember(@RequestParam("enrollmentStatus") EnrollmentStatus enrollmentStatus, @RequestParam(value = "searchKeyword") String searchKeyword) {
+    public ApiResponse<RegisterResponseDTO.MembersResponseDTO> searchMember(@RequestParam("enrollmentStatus") EnrollmentStatus enrollmentStatus,
+                                                                            @RequestParam(value = "searchKeyword") String searchKeyword) {
         return ApiResponse.onSuccess(SuccessStatus.REGISTER_SEARCH_FOUND, registerService.findMemberBySearchKeywordAndEnrollmentStatus(searchKeyword, enrollmentStatus));
     }
 }

@@ -2,6 +2,8 @@ package com.cruise.parkinglotto.repository;
 
 import com.cruise.parkinglotto.domain.Member;
 import com.cruise.parkinglotto.domain.enums.EnrollmentStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -38,7 +40,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     int updateEnrollmentStatusToEnrolled(@Param("accountId") String accountId);
 
     @Query("SELECT m FROM Member m WHERE m.enrollmentStatus = :enrollmentStatus")
-    List<Member> findByEnrollmentStatus(@Param("enrollmentStatus") EnrollmentStatus enrollmentStatus);
+    Page<Member> findByEnrollmentStatus(PageRequest pageRequest, @Param("enrollmentStatus") EnrollmentStatus enrollmentStatus);
 
     Optional<Member> findByAccountIdAndEnrollmentStatus(String accountId, EnrollmentStatus enrollmentStatus);
 
