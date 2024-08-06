@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -174,4 +175,26 @@ public class PriorityApplicantServiceImpl implements PriorityApplicantService {
 
     }
 
+    @Override
+    @Transactional
+    public PriorityApplicantResponseDTO.AssignPriorityResultListDTO assignPriority(Long drawId) {
+        List<ParkingSpace> parkingSpaceList = parkingSpaceRepository.findByDrawId(drawId);
+        List<PriorityApplicant> priorityApplicantList = priorityApplicantRepository.findApprovedApplicantsByDrawId(drawId, ApprovalStatus.APPROVED);
+        Collections.shuffle(priorityApplicantList);
+        for (PriorityApplicant applicant : priorityApplicantList) {
+            boolean assigned = false;
+            for (ParkingSpace parkingSpace : parkingSpaceList) {
+                if (parkingSpace.getRemainSlots() > 0) {
+                    applicant.assignParkingSpace(parkingSpace.getId());
+                    parkingSpace.decrementSlots();
+                    assigned = true;
+                    break;
+                }
+            }
+            if (!assigned) {
+                throw new ExceptionHandler(ErrorStatus.NO_REMAIN_SLOTS);
+            }
+        }
+        return PriorityApplicantConverter.toAssignPriorityResultListDTO(priorityApplicantList);
+    }
 }

@@ -75,4 +75,20 @@ public class PriorityApplicantConverter {
                 .draw(draw)
                 .build();
     }
+
+    public static PriorityApplicantResponseDTO.AssignPriorityResultDTO toAssignPriorityResultDTO(PriorityApplicant priorityApplicant) {
+        return PriorityApplicantResponseDTO.AssignPriorityResultDTO.builder()
+                .priorityApplicantId(priorityApplicant.getId())
+                .approvalStatus(priorityApplicant.getApprovalStatus())
+                .parkingSpaceId(priorityApplicant.getParkingSpaceId())
+                .build();
+    }
+
+    public static PriorityApplicantResponseDTO.AssignPriorityResultListDTO toAssignPriorityResultListDTO(List<PriorityApplicant> priorityApplicantList) {
+        return PriorityApplicantResponseDTO.AssignPriorityResultListDTO.builder()
+                .assignPriorityResultList(priorityApplicantList.stream()
+                        .map(PriorityApplicantConverter::toAssignPriorityResultDTO)
+                        .toList())
+                .build();
+    }
 }

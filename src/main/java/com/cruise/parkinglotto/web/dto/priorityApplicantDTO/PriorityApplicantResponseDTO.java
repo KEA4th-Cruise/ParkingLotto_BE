@@ -67,4 +67,22 @@ public class PriorityApplicantResponseDTO {
         private Long priorityApplicantId;
         private ApprovalStatus approvalStatus;
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class AssignPriorityResultDTO {
+        private Long priorityApplicantId;   //  수정 필요
+        private Long parkingSpaceId;
+        private ApprovalStatus approvalStatus;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class  AssignPriorityResultListDTO {
+        private List<AssignPriorityResultDTO> assignPriorityResultList;
+    }
 }

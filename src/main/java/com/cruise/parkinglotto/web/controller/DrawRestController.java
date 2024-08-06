@@ -241,4 +241,10 @@ public class DrawRestController {
     public ApiResponse<DrawStatisticsResponseDTO.GetDrawStatisticsResultDTO> getDrawStatistics(@PathVariable(name = "drawId") Long drawId) {
         return ApiResponse.onSuccess(SuccessStatus.DRAW_STATISTICS_FOUND, drawStatisticsService.getDrawStatistics(drawId));
     }
+
+    @Operation(summary = "승인된 우대 신청자들에게 주차 구역을 배정하는 API 입니다.", description = "PathVariable으로 우대신청의 drawId를 보내주세요.")
+    @PatchMapping("/{drawId}/priority-applicants/approved/assignment")
+    public ApiResponse<PriorityApplicantResponseDTO.AssignPriorityResultListDTO> assignPriority(@PathVariable(name = "drawId") Long drawId) {
+        return ApiResponse.onSuccess(SuccessStatus.PRIORITY_APPLICANT_ASSIGNED, priorityApplicantService.assignPriority(drawId));
+    }
 }
