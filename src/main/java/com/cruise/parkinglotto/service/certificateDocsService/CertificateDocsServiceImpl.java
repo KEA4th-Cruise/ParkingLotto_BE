@@ -91,11 +91,11 @@ public class CertificateDocsServiceImpl implements CertificateDocsService {
     }
 
     @Override
-    public void deleteFileIsNotInProfile(List<CertificateDocs> certificateDocsList){
+    public void deleteFileIsNotInProfile(List<CertificateDocs> certificateDocsList) {
         for (CertificateDocs certificateDocx : certificateDocsList) {
             String[] urlParts = certificateDocx.getFileUrl().split("/");
             String fileName = urlParts[7];
-            if (!(fileName.length()>certificateDocx.getFileName().length()+4)){
+            if (fileName.length() > certificateDocx.getFileName().length() + 4) {
                 objectStorageService.deleteObject(certificateDocx.getFileUrl());
             }
         }
