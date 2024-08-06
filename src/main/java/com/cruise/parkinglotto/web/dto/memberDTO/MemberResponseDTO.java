@@ -20,6 +20,10 @@ public class MemberResponseDTO {
     @AllArgsConstructor
     public static class LoginResponseDTO {
         private JwtToken jwtToken;
+        private String nameKo;
+        private String employeeNo;
+        private String deptPathName;
+        private String accountId;
         private EnrollmentStatus enrollmentStatus;
     }
 

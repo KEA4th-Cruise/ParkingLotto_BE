@@ -14,6 +14,10 @@ public class MemberConverter {
     public static MemberResponseDTO.LoginResponseDTO toLoginResponseDTO(Member member, JwtToken jwtToken) {
         return MemberResponseDTO.LoginResponseDTO.builder()
                 .jwtToken(jwtToken)
+                .nameKo(member.getNameKo())
+                .accountId(member.getAccountId())
+                .employeeNo(member.getEmployeeNo())
+                .deptPathName(member.getDeptPathName())
                 .enrollmentStatus(member.getEnrollmentStatus())
                 .build();
     }
