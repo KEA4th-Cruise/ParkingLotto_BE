@@ -58,6 +58,7 @@ public enum ErrorStatus implements BaseErrorCode {
 
     //사용자 가중치 관련
     WEIGHTDETAILS_TOO_LONG_USER_SEED(HttpStatus.BAD_REQUEST, "WEIGHTDETAILS4001", "유효한 신청자의 랜덤 시드는 문자 1개입니다"),
+    WEIGHTDETAILS_NOT_FOUND(HttpStatus.NOT_FOUND, "WEIGHTDETAILS4002", "가중치 정보를 찾지 못했습니다"),
 
     CERTIFICATEDOCS_NAME_NOT_FOUND(HttpStatus.BAD_REQUEST, "CERTIFICATEDOCS4001", "업로드한 문서의 이름이 없습니다."),
     CERTIFICATEDOCS_NAME_TOO_LONG(HttpStatus.BAD_REQUEST, "CERTIFICATEDOCS4002", "업로드한 문서의 이름 너무 깁니다."),

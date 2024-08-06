@@ -20,7 +20,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -41,7 +43,7 @@ public class MemberRestController {
 
         // access token과 refresh token을 각각의 쿠키에 담아서 보냄
         JwtToken jwtToken = loginResponseDTO.getJwtToken();
-        setCookie(httpServletResponse, "accessToken", jwtToken.getAccessToken(),   60 * 60 * 24); // 1일
+        setCookie(httpServletResponse, "accessToken", jwtToken.getAccessToken(), 60 * 60 * 24); // 1일
         setCookie(httpServletResponse, "refreshToken", jwtToken.getRefreshToken(), 60 * 60 * 24 * 7); // 7일
 
         return ApiResponse.onSuccess(SuccessStatus.MEMBER_LOGIN_SUCCESS, loginResponseDTO);
@@ -100,6 +102,17 @@ public class MemberRestController {
         Member memberByAccountId = memberService.getMemberByAccountId(accountIdFromRequest);
         return ApiResponse.onSuccess(SuccessStatus.APPLICANT_APPLY_INFO_FOUND, applicantService.getMyApplyInfo(memberByAccountId.getId(), drawId));
 
+    }
+
+    @Operation(summary = "내가 입력한 정보 저장 API", description = "내가 입력한 회원정보를 저장하는 API 입니다. RequestBody 에 myInfoRequestDTO 를 넣고, 보내야하는 문서들을 넣어서 보내주세요. Swagger 참고하시면 됩니다")
+    @PostMapping(value = "/info", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ApiResponse<MemberResponseDTO.MyInfoResponseDTO> saveMyInfo(HttpServletRequest httpServletRequest,
+                                                                       @RequestPart (value = "applyDrawRequestDTO", required = true) @Valid MemberRequestDTO.MyInfoRequestDTO myInfoRequestDTO,
+                                                                       @RequestPart (required = false, value = "certificateDocs") @Valid List<MultipartFile> certificateDocs) {
+        String accountIdFromRequest = jwtUtils.getAccountIdFromRequest(httpServletRequest);
+        Member memberByAccountId = memberService.getMemberByAccountId(accountIdFromRequest);
+        MemberResponseDTO.MyInfoResponseDTO myInfoResponseDTO = memberService.saveMyInfo(memberByAccountId.getId(), myInfoRequestDTO, certificateDocs);
+        return ApiResponse.onSuccess(SuccessStatus.MEMBER_INFO_SAVED, myInfoResponseDTO);
     }
 
     private void setCookie(HttpServletResponse httpServletResponse, String name, String value, int maxAge) {

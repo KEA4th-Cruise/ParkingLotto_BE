@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -49,7 +48,7 @@ public class MemberResponseDTO {
     @AllArgsConstructor
     public static class MyInfoResponseDTO {
         private String carNum;
-        private List<MyCertificationInfoResponseDTO> myCertificationInfoResponseDTOS;
+        private List<MyCertificationInfoResponseDTO> myCertificationInfos;
         private String address;
         private WorkType workType;
     }
@@ -63,7 +62,10 @@ public class MemberResponseDTO {
         private Long certificateDocsId;
         private String fileUrl;
         private String fileName;
-
+        private String fileType;
     }
-
 }
+
+
+
+

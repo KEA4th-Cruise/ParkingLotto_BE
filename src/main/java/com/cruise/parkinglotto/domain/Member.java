@@ -99,4 +99,8 @@ public class Member extends BaseEntity implements UserDetails {
 
     @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
     private WeightDetails weightDetails;
+
+    public void updateCarNum(String carNum) {
+        this.carNum = carNum;
+    }
 }
