@@ -26,7 +26,7 @@ public class DrawStatisticsResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class DrawCompetitionRateListDTO {
-        private List<DrawCompetitionRateDTO> drawCompetitionRateListDTO;
+        private List<DrawCompetitionRateDTO> drawCompetitionRateList;
     }
 
     @Getter
@@ -47,7 +47,7 @@ public class DrawStatisticsResponseDTO {
     public static class GetDrawStatisticsResultDTO {
         private Integer applicantsCount;
         private Integer totalSlots;
-        private List<ParkingSpaceResponseDTO.ParkingSpaceCompetitionRateDTO> parkingSpaceCompetitionRate;
-        private List<WinningRatePerWeightSectionDTO> winningRatePerWeightSection;
+        private List<ParkingSpaceResponseDTO.ParkingSpaceCompetitionRateDTO> parkingSpaceCompetitionRateList;
+        private List<WinningRatePerWeightSectionDTO> winningRatePerWeightSectionList;
     }
 }

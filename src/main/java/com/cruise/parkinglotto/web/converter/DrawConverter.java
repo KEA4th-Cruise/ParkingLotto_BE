@@ -33,7 +33,7 @@ public class DrawConverter {
                 .description(draw.getDescription())
                 .totalSlots(draw.getTotalSlots())
                 .drawStatus(draw.getStatus())
-                .getNameAndUrlParkingSpaceResultDTO(dto)
+                .parkingSpaceList(dto)
                 .build();
     }
 
@@ -50,7 +50,7 @@ public class DrawConverter {
                 .collect(Collectors.toList());
 
         return DrawResponseDTO.DrawMemberResultResponseDTO.builder()
-                .applicants(applicantInfoDTOList)
+                .applicantList(applicantInfoDTOList)
                 .listSize(applicantsPage.getSize())
                 .totalPage(applicantsPage.getTotalPages())
                 .totalElements(applicantsPage.getTotalElements())
@@ -91,7 +91,7 @@ public class DrawConverter {
                 .title(draw.getTitle())
                 .usageStartAt(draw.getUsageStartAt())
                 .usageEndAt(draw.getUsageEndAt())
-                .parkingSpacePreviewListDTO(ParkingSpaceConverter.toParkingSpacePreviewListDTO(parkingSpaceList))
+                .parkingSpacePreviewList(ParkingSpaceConverter.toParkingSpacePreviewListDTO(parkingSpaceList))
                 .build();
     }
 
@@ -99,9 +99,9 @@ public class DrawConverter {
         return DrawResponseDTO.SimulateDrawResponseDTO.builder()
                 .drawId(drawId)
                 .seed(seed)
-                .totalApplicants(totalApplicants)
-                .winners(pagedApplicants)
-                .totalApplicants(totalApplicants)
+                .totalApplicantCount(totalApplicants)
+                .winnerList(pagedApplicants)
+                .totalApplicantCount(totalApplicants)
                 .build();
     }
 
@@ -145,13 +145,13 @@ public class DrawConverter {
                 .usageEndAt(draw.getUsageEndAt())
                 .applicantsCount(applicantsCount)
                 .totalSlots(draw.getTotalSlots())
-                .parkingSpaceCompetitionRateDTOList(parkingSpaceCompetitionRateDTOList)
+                .parkingSpaceCompetitionRateList(parkingSpaceCompetitionRateDTOList)
                 .build();
     }
 
     public static DrawResponseDTO.DrawResultExcelDTO toDrawResultExcelDTO(String url) {
         return DrawResponseDTO.DrawResultExcelDTO.builder()
-                .URL(url)
+                .url(url)
                 .build();
     }
 
@@ -162,7 +162,7 @@ public class DrawConverter {
                 .applicantsCount(applicants.size())
                 .totalSlots(draw.getTotalSlots())
                 .seed(draw.getSeedNum())
-                .seedDetail(applicants.stream()
+                .seedDetailList(applicants.stream()
                         .map(applicant -> DrawResponseDTO.SeedDetailDTO.builder()
                                 .accountId(applicant.getMember().getAccountId())
                                 .userSeed(applicant.getUserSeed())

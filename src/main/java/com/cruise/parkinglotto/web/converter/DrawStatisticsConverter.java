@@ -23,7 +23,7 @@ public class DrawStatisticsConverter {
                 .toList();
 
         DrawStatisticsResponseDTO.DrawCompetitionRateListDTO drawCompetitionRateListDTO = DrawStatisticsResponseDTO.DrawCompetitionRateListDTO.builder()
-                .drawCompetitionRateListDTO(drawCompetitionRateDTOList)
+                .drawCompetitionRateList(drawCompetitionRateDTOList)
                 .build();
         return drawCompetitionRateListDTO;
     }
@@ -32,10 +32,10 @@ public class DrawStatisticsConverter {
         return DrawStatisticsResponseDTO.GetDrawStatisticsResultDTO.builder()
                 .applicantsCount(applicantCount)
                 .totalSlots(totalSlots)
-                .winningRatePerWeightSection(weightSectionStatisticsList.stream()
+                .winningRatePerWeightSectionList(weightSectionStatisticsList.stream()
                         .map(WeightSectionConverter::toWinningRatePerWeightSectionDTO)
                         .toList())
-                .parkingSpaceCompetitionRate(parkingSpaceList.stream()
+                .parkingSpaceCompetitionRateList(parkingSpaceList.stream()
                         .map(parkingSpace -> ParkingSpaceConverter.toParkingSpaceCompetitionRateDTO(parkingSpace, parkingSpace.getApplicantCount()))
                         .toList())
                 .build();
