@@ -232,7 +232,7 @@ public class ApplicantServiceImpl implements ApplicantService {
     }
 
     @Override
-    public void cancelApply(String accountId, Long drawId){
+    public void cancelApply(String accountId, Long drawId) {
         Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
 
         if (draw.getStatus() != DrawStatus.OPEN) {
@@ -264,11 +264,11 @@ public class ApplicantServiceImpl implements ApplicantService {
         //bucket에서 문서 삭제
         List<CertificateDocs> certificateDocs = certificateDocsRepository.findByMemberAndDrawId(member, drawId);
 
-        if(!objectStorageService.doesObjectCertificateFileUrlsExist(certificateDocs)){
+        if (!objectStorageService.doesObjectCertificateFileUrlsExist(certificateDocs)) {
             throw new ExceptionHandler(ErrorStatus.CERTIFICATEDOCS_NAME_NOT_FOUND);
         }
 
-        for(CertificateDocs certificateDocx : certificateDocs){
+        for (CertificateDocs certificateDocx : certificateDocs) {
             objectStorageService.deleteObject(certificateDocx.getFileUrl());
         }
 

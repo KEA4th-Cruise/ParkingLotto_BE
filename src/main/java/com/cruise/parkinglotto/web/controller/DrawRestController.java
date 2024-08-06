@@ -228,7 +228,7 @@ public class DrawRestController {
         priorityApplicantService.drawPriorityApply(GeneralCertificateDocs, priorityCertificateDocs, priorityApplyDrawRequestDTO, accountId, drawId);
         return ApiResponse.onSuccess(SuccessStatus.APPLICANT_APPLY_SUCCESS, null);
     }
-  
+
     @Operation(summary = "당첨자가 당첨을 포기하는 API 입니다.", description = "pathvariable로 drawId를 넘겨주세요.(이정균)")
     @PatchMapping("/{drawId}/self-cancel")
     public ApiResponse<Void> selfCancel(HttpServletRequest httpServletRequest, @PathVariable(name = "drawId") Long drawId) {
@@ -236,7 +236,7 @@ public class DrawRestController {
         return ApiResponse.onSuccess(SuccessStatus.DRAW_SELF_CANCEL, null);
     }
 
-    @Operation(summary = "추첨의 통계를 조회하는 API입니다.",description = "pathvariable로 통계를 조회할 추첨의 drawId를 넘겨주세요. (이윤서)")
+    @Operation(summary = "추첨의 통계를 조회하는 API입니다.", description = "pathvariable로 통계를 조회할 추첨의 drawId를 넘겨주세요. (이윤서)")
     @GetMapping("/{drawId}/statistics")
     public ApiResponse<DrawStatisticsResponseDTO.GetDrawStatisticsResultDTO> getDrawStatistics(@PathVariable(name = "drawId") Long drawId) {
         return ApiResponse.onSuccess(SuccessStatus.DRAW_STATISTICS_FOUND, drawStatisticsService.getDrawStatistics(drawId));
