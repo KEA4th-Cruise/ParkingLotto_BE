@@ -35,11 +35,11 @@ public class ParkingSpaceServiceImpl implements ParkingSpaceService {
     @Transactional
     public ParkingSpace addParkingSpace(Long drawId, MultipartFile floorPlanImage, ParkingSpaceRequestDTO.AddParkingSpaceDTO addParkingSpaceDTO) {
         List<String> imageTypeList = Arrays.asList("image/png", "image/jpeg", "image/jpg");
-        String mimeType = floorPlanImage.getContentType();
-        if (mimeType == null || !imageTypeList.contains(mimeType)) {
-            throw new ExceptionHandler(ErrorStatus.FORMAT_NOT_SUPPORTED);
+        String floorPlanImageMimeType = floorPlanImage.getContentType();
+        if (floorPlanImageMimeType == null || !imageTypeList.contains(floorPlanImageMimeType)) {
+            throw new ExceptionHandler(ErrorStatus.FILE_FORMAT_NOT_SUPPORTED);
         }
-        
+
         Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
 
         String drawTitle = draw.getTitle().replace(" ", "_");

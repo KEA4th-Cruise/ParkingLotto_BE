@@ -39,7 +39,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.concurrent.ScheduledFuture;
 import java.util.stream.Collectors;
 
 import static com.cruise.parkinglotto.web.converter.DrawConverter.toDrawResultExcelDTO;
@@ -364,9 +363,9 @@ public class DrawServiceImpl implements DrawService {
     @Transactional
     public Draw createDraw(MultipartFile mapImage, DrawRequestDTO.CreateDrawRequestDTO createDrawRequestDTO) {
         List<String> imageTypeList = Arrays.asList("image/png", "image/jpeg", "image/jpg");
-        String mimeType = mapImage.getContentType();
-        if (mimeType == null || !imageTypeList.contains(mimeType)) {
-            throw new ExceptionHandler(ErrorStatus.FORMAT_NOT_SUPPORTED);
+        String mapImageMimeType = mapImage.getContentType();
+        if (mapImageMimeType == null || !imageTypeList.contains(mapImageMimeType)) {
+            throw new ExceptionHandler(ErrorStatus.FILE_FORMAT_NOT_SUPPORTED);
         }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String startAt = createDrawRequestDTO.getUsageStartAt().format(formatter);
