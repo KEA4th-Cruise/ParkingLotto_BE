@@ -16,8 +16,6 @@ import com.cruise.parkinglotto.service.certificateDocsService.CertificateDocsSer
 import com.cruise.parkinglotto.service.redisService.RedisService;
 import com.cruise.parkinglotto.web.converter.CertificateDocsConverter;
 import com.cruise.parkinglotto.web.converter.MemberConverter;
-import com.cruise.parkinglotto.web.converter.WeightDetailConverter;
-import com.cruise.parkinglotto.web.dto.CertificateDocsDTO.CertificateDocsRequestDTO;
 import com.cruise.parkinglotto.web.dto.memberDTO.MemberRequestDTO;
 import com.cruise.parkinglotto.web.dto.memberDTO.MemberResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -162,7 +160,7 @@ public class MemberServiceImpl implements MemberService {
 
 
         if (totalFileNumber > 5) {
-            throw new ExceptionHandler(ErrorStatus.CERTIFICATEDOCS_TOO_MANY);
+            throw new ExceptionHandler(ErrorStatus.FILE_TOO_MANY);
         }
 
         //파일 검증 끝 =========

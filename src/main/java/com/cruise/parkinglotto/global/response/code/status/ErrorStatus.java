@@ -62,12 +62,13 @@ public enum ErrorStatus implements BaseErrorCode {
     WEIGHTDETAILS_TOO_LONG_USER_SEED(HttpStatus.BAD_REQUEST, "WEIGHTDETAILS4001", "유효한 신청자의 랜덤 시드는 문자 1개입니다"),
     WEIGHTDETAILS_NOT_FOUND(HttpStatus.NOT_FOUND, "WEIGHTDETAILS4002", "가중치 정보를 찾지 못했습니다"),
 
-    CERTIFICATEDOCS_NAME_NOT_FOUND(HttpStatus.BAD_REQUEST, "CERTIFICATEDOCS4001", "업로드한 문서의 이름이 없습니다."),
-    CERTIFICATEDOCS_NAME_TOO_LONG(HttpStatus.BAD_REQUEST, "CERTIFICATEDOCS4002", "업로드한 문서의 이름 너무 깁니다."),
-    CERTIFICATEDOCS_TOO_LARGE(HttpStatus.PAYLOAD_TOO_LARGE, "CERTIFICATEDOCS4003", "업로드한 문서의 전체 크기가 너무 큽니다."),
-    CERTIFICATEDOCS_FORMAT_NOT_SUPPORTED(HttpStatus.BAD_REQUEST, "CERTIFICATEDOCS4004", "업로드한 파일의 형식이 잘못 되었습니다."),
-    CERTIFICATEDOCS_NAME_DUPLICATED(HttpStatus.CONFLICT, "CERTIFICATEDOCS4005", "업로드한 파일 이름이 중복됩니다."),
-    CERTIFICATEDOCS_TOO_MANY(HttpStatus.PAYLOAD_TOO_LARGE, "CERTIFICATEDOCS4006", "업로드한 파일이 너무 많습니다."),
+    //  파일 업로드 관련
+    FILE_NAME_NOT_FOUND(HttpStatus.BAD_REQUEST, "FILE4001", "업로드한 문서의 이름이 없습니다."),
+    FILE_NAME_TOO_LONG(HttpStatus.BAD_REQUEST, "FILE4002", "업로드한 문서의 이름 너무 깁니다."),
+    FILE_TOO_LARGE(HttpStatus.PAYLOAD_TOO_LARGE, "FILE4003", "업로드한 문서의 전체 크기가 너무 큽니다."),
+    FILE_FORMAT_NOT_SUPPORTED(HttpStatus.BAD_REQUEST, "FILE4001", "업로드한 파일의 형식이 잘못 되었습니다."),
+    FILE_NAME_DUPLICATED(HttpStatus.CONFLICT, "FILE4005", "업로드한 파일 이름이 중복됩니다."),
+    FILE_TOO_MANY(HttpStatus.PAYLOAD_TOO_LARGE, "FILE4006", "업로드한 파일이 너무 많습니다."),
 
     // 추첨 디테일 관련 응답
     WORK_TYPE_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBERDETAIL4001", "근무타입이 입력되지 않았습니다."),

@@ -121,12 +121,12 @@ public class PriorityApplicantServiceImpl implements PriorityApplicantService {
         }
 
         if (totalGeneralFileNumber > 5) {
-            throw new ExceptionHandler(ErrorStatus.CERTIFICATEDOCS_TOO_MANY);
+            throw new ExceptionHandler(ErrorStatus.FILE_TOO_MANY);
         }
 
         //우대 서류 검증 (확장자 및 길이, 개수)
         if (priorityCertificateDocs.size() > 5) {
-            throw new ExceptionHandler(ErrorStatus.CERTIFICATEDOCS_TOO_MANY);
+            throw new ExceptionHandler(ErrorStatus.FILE_TOO_MANY);
         }
 
         certificateDocsService.validateCertificateFiles(priorityCertificateDocs);
@@ -228,7 +228,7 @@ public class PriorityApplicantServiceImpl implements PriorityApplicantService {
         List<CertificateDocs> certificateDocs = certificateDocsRepository.findByMemberAndDrawId(member, drawId);
 
         if (!objectStorageService.doesObjectCertificateFileUrlsExist(certificateDocs)) {
-            throw new ExceptionHandler(ErrorStatus.CERTIFICATEDOCS_NAME_NOT_FOUND);
+            throw new ExceptionHandler(ErrorStatus.FILE_NAME_NOT_FOUND);
         }
 
         certificateDocsService.deleteFileIsNotInProfile(certificateDocs);
