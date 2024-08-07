@@ -22,12 +22,13 @@ public class PriorityApplicantResponseDTO {
         private ApprovalStatus approvalStatus;
     }
 
-
     @Getter
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     public static class GetPriorityApplicantListResultDTO {
+        Integer applicantsCount;
+        Integer totalSlots;
         private List<PriorityApplicantResponseDTO.GetPriorityApplicantResultDTO> priorityApplicantList;
         Integer listSize;
         Integer totalPage;
@@ -36,15 +37,13 @@ public class PriorityApplicantResponseDTO {
         Boolean isLast;
     }
 
-
     @Getter
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     public static class ApprovePriorityResultDTO {
-        private Long parkingSpaceId;
-        private String parkingSpaceName;
-        private Integer remainSlots;
+        private Long priorityApplicantId;
+        private ApprovalStatus approvalStatus;
     }
 
     @Getter
@@ -67,5 +66,23 @@ public class PriorityApplicantResponseDTO {
     public static class RejectPriorityResultDTO {
         private Long priorityApplicantId;
         private ApprovalStatus approvalStatus;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class AssignPriorityResultDTO {
+        private Long priorityApplicantId;
+        private Long parkingSpaceId;
+        private ApprovalStatus approvalStatus;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class  AssignPriorityResultListDTO {
+        private List<AssignPriorityResultDTO> assignPriorityResultList;
     }
 }
