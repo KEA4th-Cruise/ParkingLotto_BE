@@ -126,9 +126,9 @@ public class ObjectStorageService {
         }
     }
 
-    public Boolean doesObjectCertificateFileUrlsExist(List<CertificateDocs> certificateDocx) {
-        for (CertificateDocs toGetCertificateDocxUrl : certificateDocx){
-            if(!doesObjectCertificateFileUrlExist(toGetCertificateDocxUrl.getFileUrl())){
+    public Boolean doesObjectCertificateFileUrlsExist(List<CertificateDocs> certificateDocs) {
+        for (CertificateDocs toGetCertificateDocsUrl : certificateDocs){
+            if(!doesObjectCertificateFileUrlExist(toGetCertificateDocsUrl.getFileUrl())){
                 return false;
             }
         }
