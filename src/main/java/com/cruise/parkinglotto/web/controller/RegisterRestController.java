@@ -53,19 +53,22 @@ public class RegisterRestController {
         Member member = memberService.getMemberByAccountId(accountId);
         return ApiResponse.onSuccess(SuccessStatus.REGISTER_REQUEST_REJECTED, registerService.rejectRegister(member));
     }
-  
+
     @Operation(summary = "등록 관리 페이지에서 사용자 리스트를 불러오는 API", description = "RequestParam 값에 따라 등록 신청한 사용자 목록, 기존 사용자 목록 조회가 가능합니다.(신해철)")
     @GetMapping("/members")
-    public ApiResponse<RegisterResponseDTO.MembersResponseDTOList> getPendingMembers(@RequestParam("enrollmentStatus") EnrollmentStatus enrollmentStatus,
-                                                                                       @RequestParam(name = "page") Integer page) {
+    public ApiResponse<RegisterResponseDTO.MembersResponseDTOList> getPendingMembers(@RequestParam(name = "enrollmentStatus") EnrollmentStatus enrollmentStatus,
+                                                                                     @RequestParam(name = "page") Integer page) {
         Page<Member> members = registerService.getMembersByEnrollmentStatus(page - 1, enrollmentStatus);
         return ApiResponse.onSuccess(SuccessStatus.REGISTER_MEMBERS_FOUND, RegisterConverter.toMembersResponseDTOList(members));
     }
 
     @Operation(summary = "등록 관리 페이지에서 사용자를 검색하는 API", description = "RequestParam으로 enrollmentStatus와 searchKeyword를 받아서 검색합니다. searchKeyword는 사원명 혹은 사번이 들어가야 합니다.(신해철)")
     @GetMapping("/members/search")
-    public ApiResponse<RegisterResponseDTO.MembersResponseDTO> searchMember(@RequestParam("enrollmentStatus") EnrollmentStatus enrollmentStatus,
-                                                                            @RequestParam(value = "searchKeyword") String searchKeyword) {
-        return ApiResponse.onSuccess(SuccessStatus.REGISTER_SEARCH_FOUND, registerService.findMemberBySearchKeywordAndEnrollmentStatus(searchKeyword, enrollmentStatus));
+    public ApiResponse<RegisterResponseDTO.MembersResponseDTOList> searchMember(@RequestParam(name = "enrollmentStatus") EnrollmentStatus enrollmentStatus,
+                                                                                @RequestParam(name = "keyword") String keyword,
+                                                                                @RequestParam(name = "page") Integer page) {
+
+        Page<Member> members = registerService.searchMemberByEnrollmentStatusAndKeyword(page - 1, keyword, enrollmentStatus);
+        return ApiResponse.onSuccess(SuccessStatus.REGISTER_SEARCH_FOUND, RegisterConverter.toMembersResponseDTOList(members));
     }
 }

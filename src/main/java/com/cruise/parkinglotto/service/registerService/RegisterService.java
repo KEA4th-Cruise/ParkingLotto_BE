@@ -46,9 +46,6 @@ public interface RegisterService {
     /**
      * 검색 키워드로 사용자를 찾는 메서드
      * 검색 키워드는 accountId 또는 employeeNo 만 가능하다.
-     * @param searchKeyword
-     * @param enrollmentStatus
-     * @return
      */
-    RegisterResponseDTO.MembersResponseDTO findMemberBySearchKeywordAndEnrollmentStatus(String searchKeyword, EnrollmentStatus enrollmentStatus);
+    Page<Member> searchMemberByEnrollmentStatusAndKeyword(Integer page, String keyword, EnrollmentStatus enrollmentStatus);
 }

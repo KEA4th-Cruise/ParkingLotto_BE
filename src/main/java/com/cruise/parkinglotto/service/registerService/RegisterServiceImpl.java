@@ -8,6 +8,8 @@ import com.cruise.parkinglotto.repository.MemberRepository;
 import com.cruise.parkinglotto.service.memberService.MemberService;
 import com.cruise.parkinglotto.web.converter.RegisterConverter;
 import com.cruise.parkinglotto.web.dto.registerDTO.RegisterResponseDTO;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +25,7 @@ public class RegisterServiceImpl implements RegisterService {
 
     private final MemberRepository memberRepository;
     private final MemberService memberService;
+    private final JPAQueryFactory queryFactory;
 
     @Override
     @Transactional
@@ -73,21 +76,12 @@ public class RegisterServiceImpl implements RegisterService {
 
     @Override
     @Transactional(readOnly = true)
-    public RegisterResponseDTO.MembersResponseDTO findMemberBySearchKeywordAndEnrollmentStatus(String searchKeyword, EnrollmentStatus enrollmentStatus) {
+    public Page<Member> searchMemberByEnrollmentStatusAndKeyword(Integer page, String keyword, EnrollmentStatus enrollmentStatus) {
         if (enrollmentStatus == EnrollmentStatus.PREPENDING || enrollmentStatus == null) {
-            throw new ExceptionHandler(ErrorStatus.REGISTER_MEMBERS_NOT_FOUND);
+            throw new ExceptionHandler(ErrorStatus.REGISTER_INVALID_ENROLLMENTSTATUS);
         }
 
-        Optional<Member> memberByAccountId = memberRepository.findByAccountIdAndEnrollmentStatus(searchKeyword, enrollmentStatus);
-        Optional<Member> memberByEmployeeNo = memberRepository.findByEmployeeNoAndEnrollmentStatus(searchKeyword, enrollmentStatus);
-
-        if (memberByAccountId.isPresent()) { // 사원명으로 검색된 경우
-            return RegisterConverter.toMembersResponseDTO(memberByAccountId.get());
-        } else if (memberByEmployeeNo.isPresent()) { // 사번으로 검색된 경우
-            return RegisterConverter.toMembersResponseDTO(memberByEmployeeNo.get());
-        } else { // 아무것도 검색되지 않은 경우
-            throw new ExceptionHandler(ErrorStatus.REGISTER_SEARCH_NOT_FOUND);
-        }
+        return memberRepository.findByEnrollmentStatusAndKeyword(PageRequest.of(page, 6), keyword, enrollmentStatus);
     }
 
 }
