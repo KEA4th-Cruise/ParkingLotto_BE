@@ -43,7 +43,9 @@ public class SecurityConfig {
                                 "/api/register/info/{accountId}/approval",
                                 "/api/register/info/{accountId}/refusal",
                                 "/api/register/members",
-                                "/api/register/members/search").hasRole("ADMIN")
+                                "/api/register/members/search",
+                                "/api/draws/{drawId}/priority-applicants/approved/assignment",
+                                "/api/draws/{drawId}/priority-applicants/assigned/{priorityApplicantId}").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtUtils), UsernamePasswordAuthenticationFilter.class)

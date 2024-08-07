@@ -44,6 +44,7 @@ public enum ErrorStatus implements BaseErrorCode {
     WINNER_SEARCH_NOT_FOUND(HttpStatus.OK, "APPLICANT4006", "당첨자 검색 결과가 없습니다."),
     APPLICANT_NOT_WINNING_STATUS(HttpStatus.FORBIDDEN, "APPLICANT4007", "당첨되지 않았습니다."),
     APPROVED_APPLICANTS_NOT_EXIST(HttpStatus.BAD_REQUEST, "APPLICANT4008", "승인된 신청자가 존재하지 않습니다."),
+    APPLICANT_NOT_ASSIGNED(HttpStatus.BAD_REQUEST,"APPLICANT4009", "배정이 완료된 신청자가 아닙니다."),
 
     // 주차 공간 관련 응답
     PARKING_SPACE_NOT_FOUND(HttpStatus.BAD_REQUEST, "PARKINGSPACE4001", "주차 공간이 존재하지 않습니다"),
