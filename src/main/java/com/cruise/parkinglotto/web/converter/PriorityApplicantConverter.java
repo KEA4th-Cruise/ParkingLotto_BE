@@ -26,7 +26,7 @@ public class PriorityApplicantConverter {
                 .map(PriorityApplicantConverter::toGetPriorityApplicantResultDTO).toList();
         return PriorityApplicantResponseDTO.GetPriorityApplicantListResultDTO.builder()
                 .totalSlots(totalSlots)
-                .applicantsCount(priorityApplicantPage.getSize())
+                .applicantsCount(getPriorityApplicantResultDTOList.size())
                 .priorityApplicantList(getPriorityApplicantResultDTOList)
                 .isFirst(priorityApplicantPage.isFirst())
                 .isLast(priorityApplicantPage.isLast())
