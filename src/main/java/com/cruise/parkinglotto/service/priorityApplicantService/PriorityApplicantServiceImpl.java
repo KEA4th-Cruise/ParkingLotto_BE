@@ -239,4 +239,16 @@ public class PriorityApplicantServiceImpl implements PriorityApplicantService {
         priorityApplicantRepository.deleteByDrawIdAndMember(drawId, member);
 
     }
+
+    @Override
+    @Transactional
+    public PriorityApplicantResponseDTO.CancelPriorityAssignResultDTO cancelPriorityAssign(Long drawId, Long priorityApplicantId) {
+        PriorityApplicant priorityApplicant = priorityApplicantRepository.findById(priorityApplicantId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND));
+        if (!priorityApplicant.getApprovalStatus().equals(ApprovalStatus.ASSIGNED)) {
+            throw new ExceptionHandler(ErrorStatus.APPLICANT_NOT_ASSIGNED);
+        } else {
+            priorityApplicant.cancelPriorityAssign();
+            return PriorityApplicantConverter.toCancelPriorityAssignmentResultDTO(priorityApplicant);
+        }
+    }
 }
