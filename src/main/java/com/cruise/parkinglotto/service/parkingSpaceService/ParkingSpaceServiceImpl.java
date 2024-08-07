@@ -18,6 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ParkingSpaceServiceImpl implements ParkingSpaceService {
@@ -31,6 +34,12 @@ public class ParkingSpaceServiceImpl implements ParkingSpaceService {
     @Override
     @Transactional
     public ParkingSpace addParkingSpace(Long drawId, MultipartFile floorPlanImage, ParkingSpaceRequestDTO.AddParkingSpaceDTO addParkingSpaceDTO) {
+        List<String> imageTypeList = Arrays.asList("image/png", "image/jpeg", "image/jpg");
+        String mimeType = floorPlanImage.getContentType();
+        if (mimeType == null || !imageTypeList.contains(mimeType)) {
+            throw new ExceptionHandler(ErrorStatus.FORMAT_NOT_SUPPORTED);
+        }
+        
         Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
 
         String drawTitle = draw.getTitle().replace(" ", "_");

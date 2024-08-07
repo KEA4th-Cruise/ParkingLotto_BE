@@ -73,6 +73,8 @@ public enum ErrorStatus implements BaseErrorCode {
     WORK_TYPE_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBERDETAIL4001", "근무타입이 입력되지 않았습니다."),
     ADDRESS_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBERDETAIL4002", "주소가 입력되지 않았습니다."),
 
+    //  공용
+    FORMAT_NOT_SUPPORTED(HttpStatus.BAD_REQUEST, "FILE4001", "업로드한 파일의 형식이 잘못 되었습니다."),
     ;
 
 

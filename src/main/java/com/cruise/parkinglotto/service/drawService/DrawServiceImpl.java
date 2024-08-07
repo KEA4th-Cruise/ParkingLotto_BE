@@ -363,6 +363,11 @@ public class DrawServiceImpl implements DrawService {
     @Override
     @Transactional
     public Draw createDraw(MultipartFile mapImage, DrawRequestDTO.CreateDrawRequestDTO createDrawRequestDTO) {
+        List<String> imageTypeList = Arrays.asList("image/png", "image/jpeg", "image/jpg");
+        String mimeType = mapImage.getContentType();
+        if (mimeType == null || !imageTypeList.contains(mimeType)) {
+            throw new ExceptionHandler(ErrorStatus.FORMAT_NOT_SUPPORTED);
+        }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String startAt = createDrawRequestDTO.getUsageStartAt().format(formatter);
         String year = startAt.substring(0, 4);
