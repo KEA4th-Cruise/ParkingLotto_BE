@@ -21,10 +21,12 @@ public class PriorityApplicantConverter {
                 .build();
     }
 
-    public static PriorityApplicantResponseDTO.GetPriorityApplicantListResultDTO toGetPriorityApplicantListResultDTO(Page<PriorityApplicant> priorityApplicantPage) {
+    public static PriorityApplicantResponseDTO.GetPriorityApplicantListResultDTO toGetPriorityApplicantListResultDTO(Integer totalSlots, Page<PriorityApplicant> priorityApplicantPage) {
         List<PriorityApplicantResponseDTO.GetPriorityApplicantResultDTO> getPriorityApplicantResultDTOList = priorityApplicantPage.stream()
                 .map(PriorityApplicantConverter::toGetPriorityApplicantResultDTO).toList();
         return PriorityApplicantResponseDTO.GetPriorityApplicantListResultDTO.builder()
+                .totalSlots(totalSlots)
+                .applicantsCount(priorityApplicantPage.getSize())
                 .priorityApplicantList(getPriorityApplicantResultDTOList)
                 .isFirst(priorityApplicantPage.isFirst())
                 .isLast(priorityApplicantPage.isLast())
@@ -34,11 +36,10 @@ public class PriorityApplicantConverter {
                 .build();
     }
 
-    public static PriorityApplicantResponseDTO.ApprovePriorityResultDTO toApprovePriorityResultDTO(ParkingSpace parkingSpace) {
+    public static PriorityApplicantResponseDTO.ApprovePriorityResultDTO toApprovePriorityResultDTO(PriorityApplicant priorityApplicant) {
         return PriorityApplicantResponseDTO.ApprovePriorityResultDTO.builder()
-                .parkingSpaceId(parkingSpace.getId())
-                .parkingSpaceName(parkingSpace.getName())
-                .remainSlots(parkingSpace.getRemainSlots())
+                .priorityApplicantId(priorityApplicant.getId())
+                .approvalStatus(priorityApplicant.getApprovalStatus())
                 .build();
     }
 
@@ -72,6 +73,22 @@ public class PriorityApplicantConverter {
                 .carNum(carNum)
                 .member(member)
                 .draw(draw)
+                .build();
+    }
+
+    public static PriorityApplicantResponseDTO.AssignPriorityResultDTO toAssignPriorityResultDTO(PriorityApplicant priorityApplicant) {
+        return PriorityApplicantResponseDTO.AssignPriorityResultDTO.builder()
+                .priorityApplicantId(priorityApplicant.getId())
+                .approvalStatus(priorityApplicant.getApprovalStatus())
+                .parkingSpaceId(priorityApplicant.getParkingSpaceId())
+                .build();
+    }
+
+    public static PriorityApplicantResponseDTO.AssignPriorityResultListDTO toAssignPriorityResultListDTO(List<PriorityApplicant> priorityApplicantList) {
+        return PriorityApplicantResponseDTO.AssignPriorityResultListDTO.builder()
+                .assignPriorityResultList(priorityApplicantList.stream()
+                        .map(PriorityApplicantConverter::toAssignPriorityResultDTO)
+                        .toList())
                 .build();
     }
 }

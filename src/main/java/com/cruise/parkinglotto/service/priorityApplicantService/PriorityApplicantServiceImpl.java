@@ -5,25 +5,22 @@ import com.cruise.parkinglotto.domain.enums.*;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
 import com.cruise.parkinglotto.global.kc.ObjectStorageConfig;
 import com.cruise.parkinglotto.global.kc.ObjectStorageService;
-import com.cruise.parkinglotto.global.response.ApiResponse;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
 import com.cruise.parkinglotto.repository.*;
 import com.cruise.parkinglotto.service.certificateDocsService.CertificateDocsService;
-import com.cruise.parkinglotto.web.converter.ApplicantConverter;
 import com.cruise.parkinglotto.web.converter.CertificateDocsConverter;
 import com.cruise.parkinglotto.web.converter.PriorityApplicantConverter;
 import com.cruise.parkinglotto.web.dto.CertificateDocsDTO.CertificateDocsRequestDTO;
-import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantRequestDTO;
 import com.cruise.parkinglotto.web.dto.priorityApplicantDTO.PriorityApplicantRequestDTO;
 import com.cruise.parkinglotto.web.dto.priorityApplicantDTO.PriorityApplicantResponseDTO;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -40,24 +37,22 @@ public class PriorityApplicantServiceImpl implements PriorityApplicantService {
     private final CertificateDocsService certificateDocsService;
     private final ObjectStorageService objectStorageService;
     private final ObjectStorageConfig objectStorageConfig;
-    private final WeightDetailsRepository weightDetailsRepository;
 
     @Override
     @Transactional(readOnly = true)
-    public Page<PriorityApplicant> getPriorityApplicantList(Integer page, Long drawId, ApprovalStatus approvalStatus) {
-        drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
+    public PriorityApplicantResponseDTO.GetPriorityApplicantListResultDTO getPriorityApplicantList(Integer page, Long drawId, ApprovalStatus approvalStatus) {
+        Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
+        Integer totalSlots = draw.getTotalSlots();
         Page<PriorityApplicant> priorityApplicantList = priorityApplicantRepository.findByDrawIdAndApprovalStatus(PageRequest.of(page, 6), drawId, approvalStatus);
-        return priorityApplicantList;
+        return PriorityApplicantConverter.toGetPriorityApplicantListResultDTO(totalSlots, priorityApplicantList);
     }
 
     @Override
     @Transactional
     public PriorityApplicantResponseDTO.ApprovePriorityResultDTO approvePriority(Long drawId, Long priorityApplicantId) {
         PriorityApplicant priorityApplicant = priorityApplicantRepository.findById(priorityApplicantId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND));
-        ParkingSpace parkingSpace = parkingSpaceRepository.findParkingSpaceByDrawId(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.PARKING_SPACE_NOT_FOUND));
-        parkingSpace.decrementSlots();
-        priorityApplicant.approveParkingSpaceToPriority(parkingSpace.getId(), ApprovalStatus.APPROVED);
-        return PriorityApplicantConverter.toApprovePriorityResultDTO(parkingSpace);
+        priorityApplicant.approvePriority(ApprovalStatus.APPROVED);
+        return PriorityApplicantConverter.toApprovePriorityResultDTO(priorityApplicant);
     }
 
     @Override
@@ -180,4 +175,26 @@ public class PriorityApplicantServiceImpl implements PriorityApplicantService {
 
     }
 
+    @Override
+    @Transactional
+    public PriorityApplicantResponseDTO.AssignPriorityResultListDTO assignPriority(Long drawId) {
+        List<ParkingSpace> parkingSpaceList = parkingSpaceRepository.findByDrawId(drawId);
+        List<PriorityApplicant> priorityApplicantList = priorityApplicantRepository.findApprovedApplicantsByDrawId(drawId, ApprovalStatus.APPROVED);
+        Collections.shuffle(priorityApplicantList);
+        for (PriorityApplicant applicant : priorityApplicantList) {
+            boolean assigned = false;
+            for (ParkingSpace parkingSpace : parkingSpaceList) {
+                if (parkingSpace.getRemainSlots() > 0) {
+                    applicant.assignParkingSpace(parkingSpace.getId());
+                    parkingSpace.decrementSlots();
+                    assigned = true;
+                    break;
+                }
+            }
+            if (!assigned) {
+                throw new ExceptionHandler(ErrorStatus.NO_REMAIN_SLOTS);
+            }
+        }
+        return PriorityApplicantConverter.toAssignPriorityResultListDTO(priorityApplicantList);
+    }
 }

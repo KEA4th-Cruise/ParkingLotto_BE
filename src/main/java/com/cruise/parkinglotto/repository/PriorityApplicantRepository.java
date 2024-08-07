@@ -6,7 +6,10 @@ import com.cruise.parkinglotto.domain.enums.ApprovalStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface PriorityApplicantRepository extends JpaRepository<PriorityApplicant, Long> {
@@ -15,4 +18,7 @@ public interface PriorityApplicantRepository extends JpaRepository<PriorityAppli
     Optional<PriorityApplicant> findById(Long priorityApplicantId);
 
     Optional<PriorityApplicant> findByDrawIdAndMemberId(Long drawId, Long memberId);
+
+    @Query("SELECT pa FROM PriorityApplicant pa WHERE pa.draw.id = :drawId AND pa.approvalStatus = :approvalStatus")
+    List<PriorityApplicant> findApprovedApplicantsByDrawId(@Param("drawId") Long drawId, @Param("approvalStatus") ApprovalStatus approvalStatus);
 }

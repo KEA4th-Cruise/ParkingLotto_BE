@@ -147,8 +147,8 @@ public class DrawRestController {
     public ApiResponse<PriorityApplicantResponseDTO.GetPriorityApplicantListResultDTO> getApplicantList(@RequestParam(name = "approvalStatus") ApprovalStatus approvalStatus,
                                                                                                         @PathVariable(name = "drawId") Long drawId,
                                                                                                         @RequestParam(name = "page") Integer page) {
-        Page<PriorityApplicant> priorityApplicantList = priorityApplicantService.getPriorityApplicantList(page - 1, drawId, approvalStatus);
-        return ApiResponse.onSuccess(SuccessStatus.PRIORITY_APPLICANT_LIST_FOUND, PriorityApplicantConverter.toGetPriorityApplicantListResultDTO(priorityApplicantList));
+        PriorityApplicantResponseDTO.GetPriorityApplicantListResultDTO getPriorityApplicantListResultDTO = priorityApplicantService.getPriorityApplicantList(page - 1, drawId, approvalStatus);
+        return ApiResponse.onSuccess(SuccessStatus.PRIORITY_APPLICANT_LIST_FOUND, getPriorityApplicantListResultDTO);
     }
 
     @Operation(summary = "일반 추첨 신청자 목록에서 검색하는 API 입니다.", description = "검색 키워드로 사원명 또는 사번을 입력해주세요.(신해철)")
@@ -241,6 +241,11 @@ public class DrawRestController {
     public ApiResponse<DrawStatisticsResponseDTO.GetDrawStatisticsResultDTO> getDrawStatistics(@PathVariable(name = "drawId") Long drawId) {
         return ApiResponse.onSuccess(SuccessStatus.DRAW_STATISTICS_FOUND, drawStatisticsService.getDrawStatistics(drawId));
     }
+
+    @Operation(summary = "승인된 우대 신청자들에게 주차 구역을 배정하는 API 입니다.", description = "PathVariable으로 우대신청의 drawId를 보내주세요.")
+    @PatchMapping("/{drawId}/priority-applicants/approved/assignment")
+    public ApiResponse<PriorityApplicantResponseDTO.AssignPriorityResultListDTO> assignPriority(@PathVariable(name = "drawId") Long drawId) {
+        return ApiResponse.onSuccess(SuccessStatus.PRIORITY_APPLICANT_ASSIGNED, priorityApplicantService.assignPriority(drawId));
 
     @Operation(summary = "사용자가 일반 추첨을(GENERAL) 취소하는 api입니다.", description = "drawId만 필요합니다. (김성호)")
     @DeleteMapping(value = "/{drawId}/general/apply")
