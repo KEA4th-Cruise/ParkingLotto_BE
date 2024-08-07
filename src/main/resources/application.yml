@@ -43,3 +43,17 @@ cloud:
         secretKey: ${KC_S3_SECRET_ACCESS_KEY}
       project-id: ${KC_PROJECT_ID}
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
