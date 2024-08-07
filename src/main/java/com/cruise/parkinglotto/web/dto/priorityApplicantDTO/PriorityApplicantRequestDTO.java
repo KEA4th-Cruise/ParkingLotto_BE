@@ -2,6 +2,7 @@ package com.cruise.parkinglotto.web.dto.priorityApplicantDTO;
 
 import com.cruise.parkinglotto.domain.enums.WorkType;
 import com.cruise.parkinglotto.web.dto.CertificateDocsDTO.CertificateDocsRequestDTO;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,6 +18,7 @@ public class PriorityApplicantRequestDTO {
     @AllArgsConstructor
     public static class PriorityApplyDrawRequestDTO {
         @NotNull
+        @Pattern(regexp = "^[가-힣0-9]{8}$", message = "한글, 숫자포함 8자로 입력해주세요.")
         private String carNum;
         private List<CertificateDocsRequestDTO.CertificateFileDTO> useProfileFileUrlDTO;
     }
