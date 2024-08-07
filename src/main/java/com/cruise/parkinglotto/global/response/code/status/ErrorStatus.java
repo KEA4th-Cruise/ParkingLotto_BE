@@ -22,7 +22,7 @@ public enum ErrorStatus implements BaseErrorCode {
     // 멤버 관련 응답
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER4001", "사용자가 존재하지 않습니다"),
     MEMBER_PASSWORD_NOT_MATCHED(HttpStatus.BAD_REQUEST, "MEMBER4002", "비밀번호가 일치하지 않습니다."),
-    MEMBER_REFRESH_TOKEN_NULL(HttpStatus.BAD_REQUEST, "MEMBER4003", "리프레시 토큰 값이 비워져 있습니다."),
+    MEMBER_REFRESH_TOKEN_NULL(HttpStatus.FORBIDDEN, "MEMBER4003", "리프레시 토큰 값이 비워져 있습니다."),
     MEMBER_REFRESH_TOKEN_BLACKLIST(HttpStatus.FORBIDDEN, "MEMBER4004", "블랙리스트로 등록된 리프레시 토큰 입니다."),
     MEMBER_REFRESH_TOKEN_FAILED(HttpStatus.FORBIDDEN, "MEMBER4005", "유효한 리프레시 토큰이 아닙니다."),
 
@@ -33,6 +33,7 @@ public enum ErrorStatus implements BaseErrorCode {
     REGISTER_APPROVE_FAILED(HttpStatus.CONFLICT, "REGISTER4003", "등록 요청 승인에 실패했습니다."),
     REGISTER_REFUSE_FAILED(HttpStatus.CONFLICT, "REGISTER4004", "등록 요청 거절에 실패했습니다."),
     REGISTER_SEARCH_NOT_FOUND(HttpStatus.OK, "REGISTER4005", "검색 결과가 없습니다."),
+    REGISTER_INVALID_ENROLLMENTSTATUS(HttpStatus.BAD_REQUEST, "REGISTER4006", "유효한 등록 상태가 아닙니다."),
 
     // 신청자 관련 응답
     APPLICANT_NOT_FOUND(HttpStatus.NOT_FOUND, "APPLICANT4001", "신청자가 존재하지 않습니다"),

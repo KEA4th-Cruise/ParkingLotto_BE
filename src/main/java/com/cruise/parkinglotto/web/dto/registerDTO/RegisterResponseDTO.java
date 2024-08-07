@@ -45,5 +45,4 @@ public class RegisterResponseDTO {
         Boolean isFirst;
         Boolean isLast;
     }
-
 }

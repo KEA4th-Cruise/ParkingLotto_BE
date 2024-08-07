@@ -4,6 +4,7 @@ import com.cruise.parkinglotto.domain.Applicant;
 import com.cruise.parkinglotto.domain.Draw;
 import com.cruise.parkinglotto.domain.Member;
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
+import com.cruise.parkinglotto.repository.querydsl.ApplicantCustomRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
+public interface ApplicantRepository extends JpaRepository<Applicant, Long>, ApplicantCustomRepository {
 
     @Query("select a.id from Applicant a where a.member.id = :memberId")
     Optional<Long> findIdByMember(@Param("memberId") Long memberId);
@@ -61,12 +62,6 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
 
     @Query("SELECT COUNT(a) FROM Applicant a WHERE a.draw.id = :drawId")
     Integer countByDrawId(@Param("drawId") Long drawId);
-
-    @Query("SELECT a FROM Applicant a JOIN a.member m WHERE m.employeeNo = :searchKeyword OR m.accountId = :searchKeyword")
-    Optional<Applicant> findByApplicantEmployeeNoOrAccountId(@Param("searchKeyword") String searchKeyword);
-
-    @Query("SELECT a FROM Applicant a JOIN a.member m WHERE a.winningStatus = com.cruise.parkinglotto.domain.enums.WinningStatus.WINNER AND (m.employeeNo = :searchKeyword OR m.accountId = :searchKeyword)")
-    Optional<Applicant> findByWinnerEmployeeNoOrAccountId(@Param("searchKeyword") String searchKeyword);
 
     Applicant findByDrawIdAndId(Long drawId, Long winnerId);
 

@@ -36,6 +36,8 @@ public class SecurityConfig {
                                 "/api/draws/{drawId}/applicants/{applicantId}/admin-cancel",
                                 "/api/draws/{drawId}/priority-applicants",
                                 "/api/draws/{drawId}/priority-applicants/{priorityApplicantId}/approval",
+                                "/api/draws/{drawId}/applicants/search",
+                                "/api/draws/{drawId}/winners/search",
                                 "/api/draws/{drawId}/execution",
                                 "/api/register/info/{accountId}",
                                 "/api/register/info/{accountId}/approval",

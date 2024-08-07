@@ -2,6 +2,7 @@ package com.cruise.parkinglotto.repository;
 
 import com.cruise.parkinglotto.domain.Member;
 import com.cruise.parkinglotto.domain.enums.EnrollmentStatus;
+import com.cruise.parkinglotto.repository.querydsl.MemberCustomRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface MemberRepository extends JpaRepository<Member, Long>, MemberCustomRepository {
 
     Optional<Member> findByAccountId(String accountId);
 

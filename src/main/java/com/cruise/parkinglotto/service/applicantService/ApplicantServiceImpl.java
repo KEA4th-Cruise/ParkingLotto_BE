@@ -1,10 +1,7 @@
 package com.cruise.parkinglotto.service.applicantService;
 
 import com.cruise.parkinglotto.domain.*;
-import com.cruise.parkinglotto.domain.enums.DrawStatus;
-import com.cruise.parkinglotto.domain.enums.DrawType;
-import com.cruise.parkinglotto.domain.enums.WinningStatus;
-import com.cruise.parkinglotto.domain.enums.WorkType;
+import com.cruise.parkinglotto.domain.enums.*;
 import com.cruise.parkinglotto.domain.Applicant;
 import com.cruise.parkinglotto.domain.ParkingSpace;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
@@ -220,15 +217,16 @@ public class ApplicantServiceImpl implements ApplicantService {
 
     @Override
     @Transactional(readOnly = true)
-    public ApplicantResponseDTO.GetApplicantResultDTO searchApplicantBySearchKeyword(String searchKeyword) {
-        Applicant applicant = applicantRepository.findByApplicantEmployeeNoOrAccountId(searchKeyword).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_SEARCH_NOT_FOUND));
-        return ApplicantConverter.toGetApplicantResultDTO(applicant);
+    public Page<Applicant> searchApplicant(Integer page, String keyword, Long drawId) {
+
+        return applicantRepository.findApplicantByDrawIdAndKeyword(PageRequest.of(page, 6), keyword, drawId);
     }
 
     @Override
-    public ApplicantResponseDTO.GetApplicantResultDTO searchWinnerBySearchKeyword(String searchKeyword) {
-        Applicant winner = applicantRepository.findByWinnerEmployeeNoOrAccountId(searchKeyword).orElseThrow(() -> new ExceptionHandler(ErrorStatus.WINNER_SEARCH_NOT_FOUND));
-        return ApplicantConverter.toGetApplicantResultDTO(winner);
+    @Transactional(readOnly = true)
+    public Page<Applicant> searchWinner(Integer page, String keyword, Long drawId) {
+
+        return applicantRepository.findWinnerByDrawIdAndKeyword(PageRequest.of(page, 6), keyword, drawId);
     }
 
     @Override
@@ -276,5 +274,4 @@ public class ApplicantServiceImpl implements ApplicantService {
         applicantRepository.deleteByDrawIdAndMember(drawId, member);
 
     }
-
 }
