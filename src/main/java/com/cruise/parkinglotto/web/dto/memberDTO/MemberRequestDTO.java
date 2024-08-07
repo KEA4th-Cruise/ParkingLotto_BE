@@ -41,7 +41,6 @@ public class MemberRequestDTO {
         private String refreshToken;
     }
 
-
     @Getter
     @Builder
     @NoArgsConstructor
@@ -53,5 +52,16 @@ public class MemberRequestDTO {
         private String address;
         @NotNull(message = "근무 타입을 입력해주세요")
         private WorkType workType;
+        private List<MyCertificationInfoRequestDTO> myCertificationInfoRequests;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MyCertificationInfoRequestDTO {
+        private Long certificateDocsId;
+        private String fileName;
+        private String fileUrl;
     }
 }

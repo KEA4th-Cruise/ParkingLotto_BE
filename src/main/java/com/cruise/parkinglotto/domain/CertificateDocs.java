@@ -28,4 +28,9 @@ public class CertificateDocs extends BaseEntity {
     private Member member;
 
     private Long drawId;
+
+    public void updateCertificateDocs(String fileUrl, String fileName) {
+        this.fileUrl = fileUrl;
+        this.fileName = fileName;
+    }
 }

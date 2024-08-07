@@ -107,12 +107,23 @@ public class MemberRestController {
     @Operation(summary = "내가 입력한 정보 저장 API", description = "내가 입력한 회원정보를 저장하는 API 입니다. RequestBody 에 myInfoRequestDTO 를 넣고, 보내야하는 문서들을 넣어서 보내주세요. Swagger 참고하시면 됩니다")
     @PostMapping(value = "/info", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<MemberResponseDTO.MyInfoResponseDTO> saveMyInfo(HttpServletRequest httpServletRequest,
-                                                                       @RequestPart (value = "applyDrawRequestDTO", required = true) @Valid MemberRequestDTO.MyInfoRequestDTO myInfoRequestDTO,
-                                                                       @RequestPart (required = false, value = "certificateDocs") @Valid List<MultipartFile> certificateDocs) {
+                                                                       @RequestPart(value = "applyDrawRequestDTO", required = true) @Valid MemberRequestDTO.MyInfoRequestDTO myInfoRequestDTO,
+                                                                       @RequestPart(required = false, value = "certificateDocs") @Valid List<MultipartFile> certificateDocs) {
         String accountIdFromRequest = jwtUtils.getAccountIdFromRequest(httpServletRequest);
         Member memberByAccountId = memberService.getMemberByAccountId(accountIdFromRequest);
         MemberResponseDTO.MyInfoResponseDTO myInfoResponseDTO = memberService.saveMyInfo(memberByAccountId.getId(), myInfoRequestDTO, certificateDocs);
         return ApiResponse.onSuccess(SuccessStatus.MEMBER_INFO_SAVED, myInfoResponseDTO);
+    }
+
+    @Operation(summary = "내가 입력한 정보 수정 API", description = "내가 입력한 회원정보를 수정하는 API 입니다. RequestBody 에 myInfoRequestDTO 를 넣고, 보내야하는 문서들을 넣어서 보내주세요. Swagger 참고하시면 됩니다")
+    @PatchMapping(value = "/info/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ApiResponse<MemberResponseDTO.MyInfoResponseDTO> updateMyInfo(HttpServletRequest httpServletRequest,
+                                                                         @RequestPart(value = "applyDrawRequestDTO", required = true) @Valid MemberRequestDTO.MyInfoRequestDTO myInfoRequestDTO,
+                                                                         @RequestPart(required = false, value = "certificateDocs") @Valid List<MultipartFile> certificateDocs) {
+        String accountIdFromRequest = jwtUtils.getAccountIdFromRequest(httpServletRequest);
+        Member memberByAccountId = memberService.getMemberByAccountId(accountIdFromRequest);
+        MemberResponseDTO.MyInfoResponseDTO myInfoResponseDTO = memberService.updateMyInfo(memberByAccountId.getId(), myInfoRequestDTO, certificateDocs);
+        return ApiResponse.onSuccess(SuccessStatus.MEMBER_INFO_UPDATED, myInfoResponseDTO);
     }
 
     private void setCookie(HttpServletResponse httpServletResponse, String name, String value, int maxAge) {

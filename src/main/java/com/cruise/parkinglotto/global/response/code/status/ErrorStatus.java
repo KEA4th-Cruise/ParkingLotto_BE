@@ -66,6 +66,7 @@ public enum ErrorStatus implements BaseErrorCode {
     CERTIFICATEDOCS_FORMAT_NOT_SUPPORTED(HttpStatus.BAD_REQUEST, "CERTIFICATEDOCS4004", "업로드한 파일의 형식이 잘못 되었습니다."),
     CERTIFICATEDOCS_NAME_DUPLICATED(HttpStatus.CONFLICT, "CERTIFICATEDOCS4005", "업로드한 파일 이름이 중복됩니다."),
     CERTIFICATEDOCS_TOO_MANY(HttpStatus.PAYLOAD_TOO_LARGE, "CERTIFICATEDOCS4006", "업로드한 파일이 너무 많습니다."),
+    CERTIFICATEDOCS_NAME_DIFFERENT(HttpStatus.BAD_REQUEST, "CERTIFICATEDOCS4007", "업로드한 파일의 이름과 DTO로 보낸 파일의 이름이 일치하지 않습니다"),
 
     // 추첨 디테일 관련 응답
     WORK_TYPE_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBERDETAIL4001", "근무타입이 입력되지 않았습니다."),

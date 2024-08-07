@@ -20,6 +20,7 @@ public enum SuccessStatus implements BaseCode {
     MEMBER_INFO_FOUND(HttpStatus.OK, "MEMBER2003", "맴버 정보를 조회했습니다."),
     MEMBER_REFRESH_TOKEN_SUCCESS(HttpStatus.CREATED, "MEMBER2004", "토큰 재발급을 성공했습니다."),
     MEMBER_INFO_SAVED(HttpStatus.CREATED, "MEMBER2005", "해당 정보를 저장했습니다"),
+    MEMBER_INFO_UPDATED(HttpStatus.OK, "MEMBER2006", "해당 정보로 수정했습니다"),
 
 
     // 등록 관련 응답
