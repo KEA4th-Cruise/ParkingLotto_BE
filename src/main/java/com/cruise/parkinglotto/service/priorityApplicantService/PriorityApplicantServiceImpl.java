@@ -204,7 +204,7 @@ public class PriorityApplicantServiceImpl implements PriorityApplicantService {
 
     @Override
     @Transactional
-    public void cancelPriorityApply(String accountId, Long drawId){
+    public void cancelPriorityApply(String accountId, Long drawId) {
         Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
 
         if (draw.getStatus() != DrawStatus.OPEN) {

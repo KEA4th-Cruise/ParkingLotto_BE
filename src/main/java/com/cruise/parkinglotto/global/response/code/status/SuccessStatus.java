@@ -66,7 +66,7 @@ public enum SuccessStatus implements BaseCode {
     PRIORITY_APPLICANT_DETAILS_FOUND(HttpStatus.OK, "PRIORITY2003", "해당 우대 신청자의 신청 정보를 조회하였습니다."),
     PRIORITY_APPLICANT_REJECTED(HttpStatus.OK, "PRIORITY2004", "해당 사용자의 우대신청을 거절하였습니다."),
     PRIORITY_APPLICANT_ASSIGNED(HttpStatus.OK, "PRIORITY2005", "승인 목록의 신청자들에게 주차구역 배정을 완료했습니다."),
-    PRIORITY_APPLICANT_CANCEL_SUCCESS(HttpStatus.OK, "APPLICANT2008", "우대 취소 신청에 성공했습니다."),
+    PRIORITY_APPLICANT_CANCEL_SUCCESS(HttpStatus.OK, "PRIORITY2006", "우대 취소 신청에 성공했습니다."),
 
 
     //  가중치정보 관련
