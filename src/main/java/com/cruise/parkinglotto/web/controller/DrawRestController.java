@@ -246,7 +246,8 @@ public class DrawRestController {
     @PatchMapping("/{drawId}/priority-applicants/approved/assignment")
     public ApiResponse<PriorityApplicantResponseDTO.AssignPriorityResultListDTO> assignPriority(@PathVariable(name = "drawId") Long drawId) {
         return ApiResponse.onSuccess(SuccessStatus.PRIORITY_APPLICANT_ASSIGNED, priorityApplicantService.assignPriority(drawId));
-
+    }
+    
     @Operation(summary = "사용자가 일반 추첨을(GENERAL) 취소하는 api입니다.", description = "drawId만 필요합니다. (김성호)")
     @DeleteMapping(value = "/{drawId}/general/apply")
     public ApiResponse<?> cancelApply(HttpServletRequest httpServletRequest, @PathVariable(name = "drawId") Long drawId) {
