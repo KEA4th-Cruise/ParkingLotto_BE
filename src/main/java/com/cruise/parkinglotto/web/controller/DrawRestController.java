@@ -153,20 +153,20 @@ public class DrawRestController {
 
     @Operation(summary = "일반 추첨 신청자 목록에서 검색하는 API 입니다.", description = "검색 키워드로 사원명 또는 사번을 입력해주세요.(신해철)")
     @GetMapping("/{drawId}/applicants/search")
-    public ApiResponse<ApplicantResponseDTO.GetApplicantResultDTO> searchApplicant(@PathVariable(name = "drawId") Long drawId,
-                                                                                   @RequestParam(name = "searchKeyword") String keyword,
-                                                                                   @RequestParam(name = "page") Integer page) {
-        Page<Applicant> applicants = applicantService.searchApplicant(page, keyword, drawId);
-        return ApiResponse.onSuccess(SuccessStatus.APPLICANT_SEARCH_FOUND, );
+    public ApiResponse<ApplicantResponseDTO.GetApplicantListResultDTO> searchApplicant(@PathVariable(name = "drawId") Long drawId,
+                                                                                       @RequestParam(name = "keyword") String keyword,
+                                                                                       @RequestParam(name = "page") Integer page) {
+        Page<Applicant> applicants = applicantService.searchApplicant(page - 1, keyword, drawId);
+        return ApiResponse.onSuccess(SuccessStatus.APPLICANT_SEARCH_FOUND, ApplicantConverter.toGetApplicantListResultDTO(applicants));
     }
 
     @Operation(summary = "일반 추첨 당첨자 목록에서 검색하는 API 입니다.", description = "검색 키워드로 사원명 또는 사번을 입력해주세요.(신해철)")
     @GetMapping("/{drawId}/winners/search")
-    public ApiResponse<ApplicantResponseDTO.GetApplicantResultDTO> searchWinner(@PathVariable(name = "drawId") Long drawId,
-                                                                                @RequestParam(name = "searchKeyword") String keyword,
-                                                                                @RequestParam(name = "page") Integer page) {
-
-        return ApiResponse.onSuccess(SuccessStatus.WINNER_SEARCH_FOUND, applicantService.searchWinnerBySearchKeyword(drawId, keyword));
+    public ApiResponse<ApplicantResponseDTO.GetApplicantListResultDTO> searchWinner(@PathVariable(name = "drawId") Long drawId,
+                                                                                    @RequestParam(name = "keyword") String keyword,
+                                                                                    @RequestParam(name = "page") Integer page) {
+        Page<Applicant> winners = applicantService.searchWinner(page - 1, keyword, drawId);
+        return ApiResponse.onSuccess(SuccessStatus.WINNER_SEARCH_FOUND, ApplicantConverter.toGetApplicantListResultDTO(winners));
     }
 
     @Operation(summary = "추첨 결과 엑셀 저장 API", description = "추첨의 최초 결과를 엑셀로 저장할 수 있는 API 입니다. drawId를 넘겨주면 해당 추첨의 결과를 엑셀로 저장합니다.(이정균)")

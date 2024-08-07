@@ -34,7 +34,7 @@ public class RegisterConverter {
                 .toList();
 
         return RegisterResponseDTO.MembersResponseDTOList.builder()
-                .memberResponseDTOList(membersResponseDTOList)
+                .memberList(membersResponseDTOList)
                 .isFirst(memberPage.isFirst())
                 .isLast(memberPage.isLast())
                 .totalElements(memberPage.getTotalElements())
