@@ -1,5 +1,6 @@
 package com.cruise.parkinglotto.service.certificateDocsService;
 
+import com.cruise.parkinglotto.domain.CertificateDocs;
 import com.cruise.parkinglotto.domain.enums.DrawType;
 import com.cruise.parkinglotto.web.dto.CertificateDocsDTO.CertificateDocsRequestDTO;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,4 +18,6 @@ public interface CertificateDocsService {
     void prohibitSameFileNamesBetweenProfileFileUrlsAndMultiPartFiles(List<MultipartFile> certificateFiles, List<CertificateDocsRequestDTO.CertificateFileDTO> certifiCateFileDTO);
 
     String makeCertificateFileUrl(Long memberId, Long drawId, DrawType drawType, String fileName);
+
+    void deleteFileIsNotInProfile(List<CertificateDocs> certificateDocsList);
 }

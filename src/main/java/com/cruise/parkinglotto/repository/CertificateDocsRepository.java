@@ -3,6 +3,7 @@ package com.cruise.parkinglotto.repository;
 
 import com.cruise.parkinglotto.domain.CertificateDocs;
 import com.cruise.parkinglotto.domain.Member;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,6 +18,7 @@ public interface CertificateDocsRepository extends JpaRepository<CertificateDocs
 
     void deleteAllByFileUrlIn(List<String> fileUrls);
 
+    @Transactional
     void deleteByFileUrl(String fileUrl);
 
     @Query("select c from CertificateDocs c where c.member.id = :memberId and c.drawId = :drawId")

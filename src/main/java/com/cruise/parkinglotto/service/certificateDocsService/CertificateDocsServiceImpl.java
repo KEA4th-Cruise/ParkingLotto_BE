@@ -1,5 +1,6 @@
 package com.cruise.parkinglotto.service.certificateDocsService;
 
+import com.cruise.parkinglotto.domain.CertificateDocs;
 import com.cruise.parkinglotto.domain.enums.DrawType;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
 import com.cruise.parkinglotto.global.kc.ObjectStorageService;
@@ -87,6 +88,17 @@ public class CertificateDocsServiceImpl implements CertificateDocsService {
     @Override
     public String makeCertificateFileUrl(Long memberId, Long drawId, DrawType drawType, String fileName) {
         return memberId.toString() + '_' + drawId.toString() + '_' + drawType.toString() + '_' + fileName;
+    }
+
+    @Override
+    public void deleteFileIsNotInProfile(List<CertificateDocs> certificateDocsList) {
+        for (CertificateDocs certificateDocs : certificateDocsList) {
+            String[] urlParts = certificateDocs.getFileUrl().split("/");
+            String fileName = urlParts[7];
+            if (fileName.length() > certificateDocs.getFileName().length() + 4) {
+                objectStorageService.deleteObject(certificateDocs.getFileUrl());
+            }
+        }
     }
 
 }
