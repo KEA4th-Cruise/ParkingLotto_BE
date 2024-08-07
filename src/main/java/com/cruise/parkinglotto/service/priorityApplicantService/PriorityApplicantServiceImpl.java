@@ -180,6 +180,9 @@ public class PriorityApplicantServiceImpl implements PriorityApplicantService {
     public PriorityApplicantResponseDTO.AssignPriorityResultListDTO assignPriority(Long drawId) {
         List<ParkingSpace> parkingSpaceList = parkingSpaceRepository.findByDrawId(drawId);
         List<PriorityApplicant> priorityApplicantList = priorityApplicantRepository.findApprovedApplicantsByDrawId(drawId, ApprovalStatus.APPROVED);
+        if (priorityApplicantList.isEmpty()) {
+            throw new ExceptionHandler(ErrorStatus.APPROVED_APPLICANTS_NOT_EXIST);
+        }
         Collections.shuffle(priorityApplicantList);
         for (PriorityApplicant applicant : priorityApplicantList) {
             boolean assigned = false;
@@ -195,6 +198,7 @@ public class PriorityApplicantServiceImpl implements PriorityApplicantService {
                 throw new ExceptionHandler(ErrorStatus.NO_REMAIN_SLOTS);
             }
         }
+        drawRepository.updateStatus(drawId, DrawStatus.COMPLETED);
         return PriorityApplicantConverter.toAssignPriorityResultListDTO(priorityApplicantList);
     }
 }
