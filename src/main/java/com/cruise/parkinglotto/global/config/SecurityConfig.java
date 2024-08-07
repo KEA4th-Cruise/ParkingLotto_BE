@@ -6,6 +6,7 @@ import com.cruise.parkinglotto.global.jwt.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -30,8 +31,9 @@ public class SecurityConfig {
                         .requestMatchers("/", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll()
                         .requestMatchers("/api/members/login", "/api/members/logout", "/api/members/refresh").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
-                        .requestMatchers("/api/draws",
-                                "/api/draws/{drawId}",
+                        .requestMatchers(HttpMethod.POST, "/api/draws").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/draws/{drawId}").hasRole("ADMIN")
+                        .requestMatchers(
                                 "/api/draws/{drawId}/parking-spaces",
                                 "/api/draws/{drawId}/applicants",
                                 "/api/draws/{drawId}/applicants/{applicantId}/admin-cancel",
@@ -54,7 +56,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public BCryptPasswordEncoder passwordEncoder(){
+    public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }
