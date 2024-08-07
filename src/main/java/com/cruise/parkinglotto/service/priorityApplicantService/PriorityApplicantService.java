@@ -20,4 +20,6 @@ public interface PriorityApplicantService {
     void drawPriorityApply(List<MultipartFile> GeneralCertificateDocs, List<MultipartFile> priorityCertificateDocs, PriorityApplicantRequestDTO.PriorityApplyDrawRequestDTO priorityApplyDrawRequestDTO, String accountId, Long drawId);
 
     PriorityApplicantResponseDTO.AssignPriorityResultListDTO assignPriority(Long drawId);
+
+    void cancelPriorityApply(String accountId, Long drawId);
 }

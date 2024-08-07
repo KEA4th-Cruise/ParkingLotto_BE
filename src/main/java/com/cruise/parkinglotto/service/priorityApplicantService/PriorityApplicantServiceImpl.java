@@ -201,4 +201,42 @@ public class PriorityApplicantServiceImpl implements PriorityApplicantService {
         drawRepository.updateStatus(drawId, DrawStatus.COMPLETED);
         return PriorityApplicantConverter.toAssignPriorityResultListDTO(priorityApplicantList);
     }
+
+    @Override
+    @Transactional
+    public void cancelPriorityApply(String accountId, Long drawId) {
+        Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
+
+        if (draw.getStatus() != DrawStatus.OPEN) {
+            throw new ExceptionHandler(ErrorStatus.DRAW_NOT_IN_APPLY_PERIOD);
+        }
+
+        Optional<Member> memberLoginOptional = memberRepository.findByAccountId(accountId);
+        if (memberLoginOptional.isEmpty()) {
+            throw new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND);
+        }
+
+        Member member = memberLoginOptional.get();
+
+        //Handle PriorityApplicant is present
+        Optional<PriorityApplicant> priorityApplicantOptional = priorityApplicantRepository.findByDrawIdAndMemberId(draw.getId(), member.getId());
+        if (priorityApplicantOptional.isEmpty()) {
+            throw new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND);
+        }
+
+        //bucket에서 문서 삭제
+        List<CertificateDocs> certificateDocs = certificateDocsRepository.findByMemberAndDrawId(member, drawId);
+
+        if (!objectStorageService.doesObjectCertificateFileUrlsExist(certificateDocs)) {
+            throw new ExceptionHandler(ErrorStatus.CERTIFICATEDOCS_NAME_NOT_FOUND);
+        }
+
+        certificateDocsService.deleteFileIsNotInProfile(certificateDocs);
+
+        //DB에서 문서정보 삭제
+        certificateDocsRepository.deleteAll(certificateDocs);
+
+        priorityApplicantRepository.deleteByDrawIdAndMember(drawId, member);
+
+    }
 }

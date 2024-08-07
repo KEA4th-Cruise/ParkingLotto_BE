@@ -255,4 +255,12 @@ public class DrawRestController {
         applicantService.cancelApply(accountId, drawId);
         return ApiResponse.onSuccess(SuccessStatus.APPLICANT_CANCEL_SUCCESS, null);
     }
+
+    @Operation(summary = "사용자가 우대 추첨을(priority) 취소하는 api입니다.", description = "drawId만 필요합니다. (김성호)")
+    @DeleteMapping(value = "/{drawId}/priority/apply")
+    public ApiResponse<?> cancelPriorityApply(HttpServletRequest httpServletRequest, @PathVariable(name = "drawId") Long drawId) {
+        String accountId = jwtUtils.getAccountIdFromRequest(httpServletRequest);
+        priorityApplicantService.cancelPriorityApply(accountId, drawId);
+        return ApiResponse.onSuccess(SuccessStatus.PRIORITY_APPLICANT_CANCEL_SUCCESS, null);
+    }
 }
