@@ -268,7 +268,7 @@ public class DrawRestController {
     }
 
     @Operation(summary = "관리자가 우대 배정을 취소하는 API 입니다.", description = " PathVariable 으로 drawId와 배정을 취소할 신청자의 priorityApplicantId 번호를 전송해주세요.(이윤서)")
-    @PatchMapping("/{drawId}/priority-applicants/{priorityApplicantId}/cancel")
+    @PatchMapping("/{drawId}/priority-applicants/assigned/{priorityApplicantId}")
     public ApiResponse<PriorityApplicantResponseDTO.CancelPriorityAssignResultDTO> cancelPriorityAssign(@PathVariable(name = "drawId") Long drawId,
                                                                                                         @PathVariable(name = "priorityApplicantId") Long priorityApplicantId) {
         PriorityApplicantResponseDTO.CancelPriorityAssignResultDTO cancelPriorityAssignResultDTO = priorityApplicantService.cancelPriorityAssign(drawId, priorityApplicantId);
