@@ -28,7 +28,7 @@ public class SecurityConfig {
                 .sessionManagement(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll()
-                        .requestMatchers("/api/members/login", "/api/members/logout", "/api/members/refresh").permitAll()
+                        .requestMatchers("/api/members/login", "/api/members/logout").permitAll()
                         .requestMatchers("/api/draws",
                                 "/api/draws/{drawId}",
                                 "/api/draws/{drawId}/parking-spaces",

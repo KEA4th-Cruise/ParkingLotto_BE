@@ -63,7 +63,6 @@ public class MemberServiceImpl implements MemberService {
     @Transactional(readOnly = true)
     public MemberResponseDTO.LoginResponseDTO login(MemberRequestDTO.LoginRequestDTO loginRequestDTO) {
 
-
         Member member = getMemberByAccountId(loginRequestDTO.getAccountId());
 
         // 비밀번호 일치 검증
@@ -79,13 +78,10 @@ public class MemberServiceImpl implements MemberService {
         JwtToken jwtToken = jwtUtils.generateToken(authentication);
 
         // 7일간 refresh token을 redis에 저장
-        redisService.setValues(loginRequestDTO.getAccountId(), jwtToken.getRefreshToken(), Duration.ofDays(7));
-
-        // 등록이 된 사용자인지 아닌지 여부 넘겨줌
+        redisService.setValues(jwtToken.getRefreshToken(), loginRequestDTO.getAccountId() , Duration.ofDays(7));
 
         return MemberConverter.toLoginResponseDTO(member, jwtToken);
     }
-
 
     /**
      * 로그아웃 로직
@@ -105,9 +101,8 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberResponseDTO.RefreshResponseDTO refreshToken(JwtToken jwtToken) {
+    public MemberResponseDTO.RefreshResponseDTO recreateToken(String refreshToken) {
 
-        String refreshToken = jwtToken.getRefreshToken();
         if (refreshToken == null) {
             throw new ExceptionHandler(ErrorStatus.MEMBER_REFRESH_TOKEN_NULL);
         }
@@ -117,23 +112,20 @@ public class MemberServiceImpl implements MemberService {
             throw new ExceptionHandler(ErrorStatus.MEMBER_REFRESH_TOKEN_BLACKLIST);
         }
 
-        // 만료된 access token을 활용하여 authentication을 가져옴
-        Authentication authentication = jwtUtils.getAuthentication(jwtToken.getAccessToken());
+        String accountIdFromRedis = redisService.getValues(refreshToken);
+        String accountIdFromRequest = jwtUtils.parseClaims(refreshToken).getSubject();
 
-        // accountId 필요함 -> redis에 있는 Refresh token이 유효한지 확인하기 위해서
-        String accountId = authentication.getName();
-
-        // 유효하다면, authentication으로 새로운 토큰을 발급
-        String values = redisService.getValues(accountId);
-        if (values != null) { // redis에 값이 있다면
-            if (values.equals(jwtToken.getRefreshToken())) { // redis 값과 refresh token 값이 일치하는 경우
+        if (accountIdFromRedis != null) { // redis에 값이 있다면
+            if (accountIdFromRedis.equals(accountIdFromRequest)) { // redis 값과 refresh token의 accountId가 일치하는 경우
+                // redis에 저장되어 있는 accountId를 가져와서 authentication를 생성
+                Authentication authentication = jwtUtils.getAuthentication(refreshToken);
                 return MemberConverter.toRefreshResponseDTO(jwtUtils.generateAccessToken(authentication));
             } else {
-                throw new ExceptionHandler(ErrorStatus.MEMBER_REFRESH_TOKEN_FAILED);
+                throw new ExceptionHandler(ErrorStatus.MEMBER_REFRESH_TOKEN_INVALID);
             }
+        } else {
+            throw new ExceptionHandler(ErrorStatus.MEMBER_REFRESH_TOKEN_EXPIRED);
         }
-
-        throw new ExceptionHandler(ErrorStatus.MEMBER_REFRESH_TOKEN_FAILED);
     }
 
     @Override
