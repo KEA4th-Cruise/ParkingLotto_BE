@@ -63,4 +63,8 @@ public class ParkingSpace extends BaseEntity {
             throw new ExceptionHandler(ErrorStatus.NO_REMAIN_SLOTS);
         }
     }
+
+    public void confirmParkingSpace() {
+        this.confirmed = true;
+    }
 }

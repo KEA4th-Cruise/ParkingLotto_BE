@@ -3,6 +3,7 @@ package com.cruise.parkinglotto.service.parkingSpaceService;
 import com.cruise.parkinglotto.domain.Applicant;
 import com.cruise.parkinglotto.domain.Draw;
 import com.cruise.parkinglotto.domain.ParkingSpace;
+import com.cruise.parkinglotto.domain.enums.DrawStatus;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
 import com.cruise.parkinglotto.global.kc.ObjectStorageConfig;
 import com.cruise.parkinglotto.global.kc.ObjectStorageService;
@@ -39,16 +40,15 @@ public class ParkingSpaceServiceImpl implements ParkingSpaceService {
         if (floorPlanImageMimeType == null || !imageTypeList.contains(floorPlanImageMimeType)) {
             throw new ExceptionHandler(ErrorStatus.FILE_FORMAT_NOT_SUPPORTED);
         }
-
         Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
-
         String drawTitle = draw.getTitle().replace(" ", "_");
         String parkingSpaceName = addParkingSpaceDTO.getName().replace(" ", "_");
-        String floorPlanImageUrl = objectStorageService.uploadObject(objectStorageConfig.getParkingSpaceImagePath(),
-
-                drawTitle + "_" + parkingSpaceName,
-                floorPlanImage);
+        String floorPlanImageUrl = objectStorageService.uploadObject(objectStorageConfig.getParkingSpaceImagePath(), drawTitle + "_" + parkingSpaceName, floorPlanImage);
         ParkingSpace parkingSpace = ParkingSpaceConverter.toParkingSpace(addParkingSpaceDTO, floorPlanImageUrl, draw);
+        if (draw.getConfirmed()) {
+            draw.incrementTotalSlots(addParkingSpaceDTO.getSlots());
+            parkingSpace.confirmParkingSpace();
+        }
         return parkingSpaceRepository.save(parkingSpace);
     }
 
