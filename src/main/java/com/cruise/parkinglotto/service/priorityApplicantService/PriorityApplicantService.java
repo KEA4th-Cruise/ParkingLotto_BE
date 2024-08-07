@@ -22,4 +22,6 @@ public interface PriorityApplicantService {
     PriorityApplicantResponseDTO.AssignPriorityResultListDTO assignPriority(Long drawId);
 
     void cancelPriorityApply(String accountId, Long drawId);
+
+    PriorityApplicantResponseDTO.CancelPriorityAssignResultDTO cancelPriorityAssign(Long drawId, Long priorityApplicantId);
 }

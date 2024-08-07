@@ -91,4 +91,12 @@ public class PriorityApplicantConverter {
                         .toList())
                 .build();
     }
+
+    public static PriorityApplicantResponseDTO.CancelPriorityAssignResultDTO toCancelPriorityAssignmentResultDTO(PriorityApplicant priorityApplicant) {
+        return PriorityApplicantResponseDTO.CancelPriorityAssignResultDTO.builder()
+                .priorityApplicantId(priorityApplicant.getId())
+                .parkingSpaceId(priorityApplicant.getParkingSpaceId())
+                .approvalStatus(priorityApplicant.getApprovalStatus())
+                .build();
+    }
 }

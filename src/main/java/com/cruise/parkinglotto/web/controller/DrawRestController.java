@@ -14,7 +14,6 @@ import com.cruise.parkinglotto.service.priorityApplicantService.PriorityApplican
 import com.cruise.parkinglotto.web.converter.ApplicantConverter;
 import com.cruise.parkinglotto.web.converter.DrawConverter;
 import com.cruise.parkinglotto.web.converter.ParkingSpaceConverter;
-import com.cruise.parkinglotto.web.converter.PriorityApplicantConverter;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantRequestDTO;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
@@ -266,5 +265,13 @@ public class DrawRestController {
         String accountId = jwtUtils.getAccountIdFromRequest(httpServletRequest);
         priorityApplicantService.cancelPriorityApply(accountId, drawId);
         return ApiResponse.onSuccess(SuccessStatus.PRIORITY_APPLICANT_CANCEL_SUCCESS, null);
+    }
+
+    @Operation(summary = "관리자가 우대 배정을 취소하는 API 입니다.", description = " PathVariable 으로 drawId와 배정을 취소할 신청자의 priorityApplicantId 번호를 전송해주세요.(이윤서)")
+    @PatchMapping("/{drawId}/priority-applicants/{priorityApplicantId}/cancel")
+    public ApiResponse<PriorityApplicantResponseDTO.CancelPriorityAssignResultDTO> cancelPriorityAssign(@PathVariable(name = "drawId") Long drawId,
+                                                                                                        @PathVariable(name = "priorityApplicantId") Long priorityApplicantId) {
+        PriorityApplicantResponseDTO.CancelPriorityAssignResultDTO cancelPriorityAssignResultDTO = priorityApplicantService.cancelPriorityAssign(drawId, priorityApplicantId);
+        return ApiResponse.onSuccess(SuccessStatus.PRIORITY_APPLICANT_ASSIGN_CANCELED, cancelPriorityAssignResultDTO);
     }
 }
