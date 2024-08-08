@@ -162,7 +162,7 @@ public class DrawRestController {
     @Operation(summary = "일반 추첨 당첨자 목록에서 검색하는 API 입니다.", description = "검색 키워드로 사원명 또는 사번을 입력해주세요.(신해철)")
     @GetMapping("/{drawId}/winners/search")
     public ApiResponse<ApplicantResponseDTO.GetApplicantListResultDTO> searchWinner(@PathVariable(name = "drawId") Long drawId,
-                                                                                    @RequestParam(name = "keyword") String keyword,
+                                                                                    @RequestParam(name = "keyword", required = false) String keyword,
                                                                                     @RequestParam(name = "page") Integer page) {
         Page<Applicant> winners = applicantService.searchWinner(page - 1, keyword, drawId);
         return ApiResponse.onSuccess(SuccessStatus.WINNER_SEARCH_FOUND, ApplicantConverter.toGetApplicantListResultDTO(winners));
