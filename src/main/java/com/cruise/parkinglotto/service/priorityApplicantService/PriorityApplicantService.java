@@ -1,6 +1,8 @@
 package com.cruise.parkinglotto.service.priorityApplicantService;
 
 import com.cruise.parkinglotto.domain.enums.ApprovalStatus;
+import com.cruise.parkinglotto.web.dto.CertificateDocsDTO.CertificateDocsResponseDTO;
+import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import com.cruise.parkinglotto.web.dto.priorityApplicantDTO.PriorityApplicantRequestDTO;
 import com.cruise.parkinglotto.web.dto.priorityApplicantDTO.PriorityApplicantResponseDTO;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,4 +26,7 @@ public interface PriorityApplicantService {
     void cancelPriorityApply(String accountId, Long drawId);
 
     PriorityApplicantResponseDTO.CancelPriorityAssignResultDTO cancelPriorityAssign(Long drawId, Long priorityApplicantId);
+
+    PriorityApplicantResponseDTO.getMyPriorityApplyInformationDTO getMyPriorityApplyInformation(Long drawId, String accountId);
+    
 }

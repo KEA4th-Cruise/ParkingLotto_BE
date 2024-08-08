@@ -82,7 +82,7 @@ public class PriorityApplicantResponseDTO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class  AssignPriorityResultListDTO {
+    public static class AssignPriorityResultListDTO {
         private List<AssignPriorityResultDTO> assignPriorityResultList;
     }
 
@@ -94,5 +94,15 @@ public class PriorityApplicantResponseDTO {
         private Long priorityApplicantId;
         private Long parkingSpaceId;
         private ApprovalStatus approvalStatus;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class getMyPriorityApplyInformationDTO {
+        private String carNum;
+        List<CertificateDocsRequestDTO.CertificateFileDTO> generalCertificateFiles;
+        List<CertificateDocsRequestDTO.CertificateFileDTO> priorityCertificateFiles;
     }
 }

@@ -279,7 +279,15 @@ public class DrawRestController {
     @GetMapping(value = "/{drawId}/general/apply")
     public ApiResponse<ApplicantResponseDTO.getMyApplyInformationDTO> getApplyInformation(HttpServletRequest httpServletRequest, @PathVariable(name = "drawId") Long drawId) {
         String accountId = jwtUtils.getAccountIdFromRequest(httpServletRequest);
-        ApplicantResponseDTO.getMyApplyInformationDTO applyInformationDTO =applicantService.getMyApplyInformation(drawId, accountId);
+        ApplicantResponseDTO.getMyApplyInformationDTO applyInformationDTO = applicantService.getMyApplyInformation(drawId, accountId);
         return ApiResponse.onSuccess(SuccessStatus.APPLICANT_CURRENT_APPLY_INFO_FOUND, applyInformationDTO);
+    }
+
+    @Operation(summary = "사용자가 신청한 우대 추첨을 정보를 조회하는 api입니다.", description = "drawId만 필요합니다. (김성호)")
+    @GetMapping(value = "/{drawId}/priority/apply")
+    public ApiResponse<PriorityApplicantResponseDTO.getMyPriorityApplyInformationDTO> getPriorityApplyInformation(HttpServletRequest httpServletRequest, @PathVariable(name = "drawId") Long drawId) {
+        String accountId = jwtUtils.getAccountIdFromRequest(httpServletRequest);
+        PriorityApplicantResponseDTO.getMyPriorityApplyInformationDTO priorityApplyInformationDTO = priorityApplicantService.getMyPriorityApplyInformation(drawId, accountId);
+        return ApiResponse.onSuccess(SuccessStatus.PRIORITY_APPLICANT_DETAILS_FOUND, priorityApplyInformationDTO);
     }
 }

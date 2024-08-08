@@ -2,6 +2,7 @@ package com.cruise.parkinglotto.web.converter;
 
 import com.cruise.parkinglotto.domain.*;
 import com.cruise.parkinglotto.domain.enums.ApprovalStatus;
+import com.cruise.parkinglotto.web.dto.CertificateDocsDTO.CertificateDocsRequestDTO;
 import com.cruise.parkinglotto.web.dto.priorityApplicantDTO.PriorityApplicantResponseDTO;
 import org.springframework.data.domain.Page;
 
@@ -97,6 +98,14 @@ public class PriorityApplicantConverter {
                 .priorityApplicantId(priorityApplicant.getId())
                 .parkingSpaceId(priorityApplicant.getParkingSpaceId())
                 .approvalStatus(priorityApplicant.getApprovalStatus())
+                .build();
+    }
+
+    public static PriorityApplicantResponseDTO.getMyPriorityApplyInformationDTO toGetMyPriorityApplyInformation(String carNum, List<CertificateDocsRequestDTO.CertificateFileDTO> generalCertificateFilesDTO, List<CertificateDocsRequestDTO.CertificateFileDTO> priorityCertificateFilesDTO) {
+        return PriorityApplicantResponseDTO.getMyPriorityApplyInformationDTO.builder()
+                .carNum(carNum)
+                .generalCertificateFiles(generalCertificateFilesDTO)
+                .priorityCertificateFiles(priorityCertificateFilesDTO)
                 .build();
     }
 }
