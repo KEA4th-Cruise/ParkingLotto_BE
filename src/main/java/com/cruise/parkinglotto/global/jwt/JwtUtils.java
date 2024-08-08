@@ -40,8 +40,7 @@ public class JwtUtils {
                 .collect(Collectors.joining(","));
 
         Long now = new Date().getTime();
-        // Date accessTokenExpiresIn = new Date(now + 60 * 60 * 24 * 1000); // 1일
-        Date accessTokenExpiresIn = new Date(now + 3000); // 테스트를 위한 코드
+        Date accessTokenExpiresIn = new Date(now + 60 * 60 * 24 * 1000); // 1일
 
         return Jwts.builder()
                 .setSubject(authentication.getName())
