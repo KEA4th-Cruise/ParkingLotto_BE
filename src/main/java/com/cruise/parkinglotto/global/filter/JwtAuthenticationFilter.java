@@ -9,6 +9,7 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
@@ -16,6 +17,7 @@ import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;
 
+@Slf4j
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends GenericFilterBean {
 
@@ -30,6 +32,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
         // 요청으로부터 JWT 토큰을 추출
         String token = jwtUtils.resolveToken(httpRequest);
+        log.info("token: {}", token);
 
         if (token != null) {
             // JWT 토큰의 유효성을 검증
@@ -41,12 +44,13 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } else {
                 // 토큰이 유효하지 않은 경우, 401 Unauthorized 응답을 반환
+                log.info("test filter if invalid token");
                 httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, validationResult.getErrorMessage());
                 return;
             }
         }
 
-        chain.doFilter(request, response);
+        chain.doFilter(httpRequest, httpResponse);
     }
 
 }
