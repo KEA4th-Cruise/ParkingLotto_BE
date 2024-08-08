@@ -54,10 +54,11 @@ public class MemberRestController {
         return ApiResponse.onSuccess(SuccessStatus.MEMBER_LOGIN_SUCCESS, loginResponseDTO);
     }
 
-    @Operation(summary = "로그아웃 API", description = "accountId, accessToken, refreshToken을 logoutRequestDTO에 담아 요청을 보내면 로그아웃 시간을 반환합니다.(신해철)")
-    @PostMapping("/logout")
-    public ApiResponse<MemberResponseDTO.LogoutResponseDTO> logout(@RequestBody MemberRequestDTO.LogoutRequestDTO logoutRequestDTO) {
-        return ApiResponse.onSuccess(SuccessStatus.MEMBER_LOGOUT_SUCCESS, memberService.logout(logoutRequestDTO));
+    @Operation(summary = "로그아웃 API", description = "요청을 보내면 로그아웃 시간을 반환합니다. 쿠키에 있는 리프레시 토큰을 블랙리스트에 저장합니다. (신해철)")
+    @GetMapping("/logout")
+    public ApiResponse<MemberResponseDTO.LogoutResponseDTO> logout(HttpServletRequest httpServletRequest) {
+        String refreshToken = jwtUtils.getTokenInCookie(httpServletRequest, "refreshToken");
+        return ApiResponse.onSuccess(SuccessStatus.MEMBER_LOGOUT_SUCCESS, memberService.logout(refreshToken));
     }
 
     @Operation(summary = "토큰 재발급 API", description = "access token이 만료된 경우 refresh token을 사용하여 자동 로그인을 해주는 API 입니다.(신해철)")

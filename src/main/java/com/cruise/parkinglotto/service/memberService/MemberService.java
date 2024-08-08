@@ -19,7 +19,7 @@ public interface MemberService {
     MemberResponseDTO.LoginResponseDTO login(MemberRequestDTO.LoginRequestDTO loginRequestDTO);
 
     // 로그아웃
-    MemberResponseDTO.LogoutResponseDTO logout(MemberRequestDTO.LogoutRequestDTO logoutRequestDTO);
+    MemberResponseDTO.LogoutResponseDTO logout(String refreshToken);
 
     // 리프레시 토큰을 이용하여 로그인을 유지하는 메서드
     MemberResponseDTO.RefreshResponseDTO recreateToken(String refreshToken);

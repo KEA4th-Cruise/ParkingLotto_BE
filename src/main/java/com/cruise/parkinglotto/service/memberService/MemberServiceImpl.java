@@ -87,13 +87,13 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     @Transactional(readOnly = true)
-    public MemberResponseDTO.LogoutResponseDTO logout(MemberRequestDTO.LogoutRequestDTO logoutRequestDTO) {
+    public MemberResponseDTO.LogoutResponseDTO logout(String refreshToken) {
 
         // redis에서 refresh token 삭제
-        redisService.deleteValues(logoutRequestDTO.getAccountId());
+        redisService.deleteValues(refreshToken);
 
         // 블랙리스트에 저장
-        redisService.setBlackList(logoutRequestDTO.getRefreshToken(), logoutRequestDTO.getRefreshToken());
+        redisService.setBlackList(refreshToken, refreshToken);
 
         return MemberConverter.toLogoutResponseDTO();
     }
