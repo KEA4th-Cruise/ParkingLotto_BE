@@ -33,4 +33,8 @@ public class CertificateDocs extends BaseEntity {
         this.fileUrl = fileUrl;
         this.fileName = fileName;
     }
+
+    public void updateMember(Member member) {
+        this.member = member;
+    }
 }
