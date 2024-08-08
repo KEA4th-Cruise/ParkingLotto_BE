@@ -48,10 +48,17 @@ public class ApplicantCustomRepositoryImpl implements ApplicantCustomRepository{
     public Page<Applicant> findWinnerByDrawIdAndKeyword(PageRequest pageRequest, String keyword, Long drawId) {
         QApplicant applicant = QApplicant.applicant;
         QMember member = QMember.member;
+        BooleanExpression predicate;
 
-        BooleanExpression predicate = applicant.winningStatus.eq(WinningStatus.WINNER)
-                .and(member.employeeNo.contains(keyword).or(member.accountId.contains(keyword)))
-                .and(applicant.draw.id.eq(drawId));
+        if(keyword == null) {
+            predicate = applicant.winningStatus.eq(WinningStatus.WINNER)
+                    .and(applicant.draw.id.eq(drawId));
+        } else {
+            predicate = applicant.winningStatus.eq(WinningStatus.WINNER)
+                    .and(member.employeeNo.contains(keyword).or(member.accountId.contains(keyword)))
+                    .and(applicant.draw.id.eq(drawId));
+        }
+
 
         List<Applicant> applicants = jpaQueryFactory.selectFrom(applicant)
                 .join(applicant.member, member)
