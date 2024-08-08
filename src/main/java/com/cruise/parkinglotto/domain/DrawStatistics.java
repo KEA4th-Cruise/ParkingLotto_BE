@@ -29,4 +29,16 @@ public class DrawStatistics extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "draw_id")
     private Draw draw;
+
+    @Column(nullable = false)
+    private Double trafficCommuteTimeAvg;
+
+    @Column(nullable = false)
+    private Double carCommuteTimeAvg;
+
+    @Column(nullable = false)
+    private Double distanceAvg;
+
+    @Column(nullable = false)
+    private Double recentLossCountAvg;
 }
