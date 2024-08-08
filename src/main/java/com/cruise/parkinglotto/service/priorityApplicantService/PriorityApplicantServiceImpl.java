@@ -24,6 +24,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.ArrayList;
 
 @Service
 @RequiredArgsConstructor
@@ -250,5 +252,50 @@ public class PriorityApplicantServiceImpl implements PriorityApplicantService {
             priorityApplicant.cancelPriorityAssign();
             return PriorityApplicantConverter.toCancelPriorityAssignmentResultDTO(priorityApplicant);
         }
+    }
+
+    @Override
+    @Transactional
+    public PriorityApplicantResponseDTO.getMyPriorityApplyInformationDTO getMyPriorityApplyInformation(Long drawId, String accountId) {
+
+        Optional<Member> memberOptional = memberRepository.findByAccountId(accountId);
+        Member member = memberOptional.get();
+
+        //신청자 존재 확인
+        Optional<PriorityApplicant> priorityApplicantOptional = priorityApplicantRepository.findByDrawIdAndMemberId(drawId, member.getId());
+        if (priorityApplicantOptional.isEmpty()) {
+            throw new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND);
+        }
+        PriorityApplicant priorityApplicant = priorityApplicantOptional.get();
+
+        List<CertificateDocs> totalCertificateFileList = certificateDocsRepository.findByMemberAndDrawId(member, drawId);
+
+        // Lists to hold separated URLs
+        List<CertificateDocsRequestDTO.CertificateFileDTO> generalFileDTOList = new ArrayList<>();
+        List<CertificateDocsRequestDTO.CertificateFileDTO> priorityFileDTOList = new ArrayList<>();
+
+        // Process the certfile list
+        for (CertificateDocs certificate : totalCertificateFileList) {
+            String url = certificate.getFileUrl();
+
+            CertificateDocsRequestDTO.CertificateFileDTO certificateFileDTO = CertificateDocsConverter.toCertificateFileDTO(certificate);
+
+            String[] urlParts = url.split("/");
+
+            if (urlParts.length > 7) {
+                String category = urlParts[6];
+
+                if (objectStorageConfig.getGeneralCertificateDocument().equals(category)) {
+                    generalFileDTOList.add(certificateFileDTO);
+                } else if (objectStorageConfig.getPriorityCertificateDocument().equals(category)) {
+                    priorityFileDTOList.add(certificateFileDTO);
+                }
+
+            } else {
+                throw new ExceptionHandler(ErrorStatus._BAD_REQUEST);
+            }
+        }
+
+        return PriorityApplicantConverter.toGetMyPriorityApplyInformation(member.getCarNum(), generalFileDTOList, priorityFileDTOList);
     }
 }
