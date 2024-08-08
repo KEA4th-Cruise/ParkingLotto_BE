@@ -28,10 +28,15 @@ public class DrawStatisticsConverter {
         return drawCompetitionRateListDTO;
     }
 
-    public static DrawStatisticsResponseDTO.GetDrawStatisticsResultDTO toGetDrawStatisticsResultDTO(Integer applicantCount, Integer totalSlots, List<ParkingSpace> parkingSpaceList, List<WeightSectionStatistics> weightSectionStatisticsList) {
+    public static DrawStatisticsResponseDTO.GetDrawStatisticsResultDTO toGetDrawStatisticsResultDTO(String drawTitle, DrawStatistics drawStatistics, Integer totalSlots, List<ParkingSpace> parkingSpaceList, List<WeightSectionStatistics> weightSectionStatisticsList) {
         return DrawStatisticsResponseDTO.GetDrawStatisticsResultDTO.builder()
-                .applicantsCount(applicantCount)
+                .drawTitle(drawTitle)
+                .applicantsCount(drawStatistics.getTotalApplicants())
                 .totalSlots(totalSlots)
+                .distanceAvg(drawStatistics.getDistanceAvg())
+                .carCommuteTimeAvg(drawStatistics.getCarCommuteTimeAvg())
+                .trafficCommuteTimeAvg(drawStatistics.getTrafficCommuteTimeAvg())
+                .recentLossCountAvg(drawStatistics.getRecentLossCountAvg())
                 .winningRatePerWeightSectionList(weightSectionStatisticsList.stream()
                         .map(WeightSectionConverter::toWinningRatePerWeightSectionDTO)
                         .toList())
