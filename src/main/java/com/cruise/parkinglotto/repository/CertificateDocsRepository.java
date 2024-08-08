@@ -18,7 +18,8 @@ public interface CertificateDocsRepository extends JpaRepository<CertificateDocs
 
     void deleteAllByFileUrlIn(List<String> fileUrls);
 
-    @Transactional
+    void deleteAllByMemberIdAndDrawId(Long memberId, Long drawId);
+
     void deleteByFileUrl(String fileUrl);
 
     @Query("select c from CertificateDocs c where c.member.id = :memberId and c.drawId = :drawId")

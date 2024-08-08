@@ -26,6 +26,8 @@ public interface MemberService {
 
 
     MemberResponseDTO.MyInfoResponseDTO saveMyInfo(Long memberId, MemberRequestDTO.MyInfoRequestDTO myInfoRequestDTO, List<MultipartFile> certificateDocs);
+    // 내가 입력한 정보 업데이트
+    MemberResponseDTO.MyInfoResponseDTO updateMyInfo(Long memberId, MemberRequestDTO.MyInfoRequestDTO myInfoRequestDTO, List<MultipartFile> certificateDocs);
 
     // 내가 입력한 정보 불러오기
     MemberResponseDTO.MyInfoResponseDTO getMyInfo(Long memberId);
