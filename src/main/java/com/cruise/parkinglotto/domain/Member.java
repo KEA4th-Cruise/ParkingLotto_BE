@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -56,7 +57,8 @@ public class Member extends BaseEntity implements UserDetails {
     private LocalDate deletedAt;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CertificateDocs> certificateDocsList;
+    @Builder.Default
+    private List<CertificateDocs> certificateDocsList = new ArrayList<>();
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
@@ -102,5 +104,17 @@ public class Member extends BaseEntity implements UserDetails {
 
     public void updateCarNum(String carNum) {
         this.carNum = carNum;
+    }
+
+    public void updateCertificationDocs(List<CertificateDocs> certificateDocsList) {
+        this.certificateDocsList.clear();
+        for (CertificateDocs doc : certificateDocsList) {
+            addCertificateDoc(doc);
+        }
+    }
+
+    public void addCertificateDoc(CertificateDocs doc) {
+        this.certificateDocsList.add(doc);
+        doc.updateMember(this);
     }
 }
