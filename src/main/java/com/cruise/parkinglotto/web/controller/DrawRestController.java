@@ -279,7 +279,7 @@ public class DrawRestController {
     @GetMapping(value = "/{drawId}/general/apply")
     public ApiResponse<ApplicantResponseDTO.getMyApplyInformationDTO> getApplyInformation(HttpServletRequest httpServletRequest, @PathVariable(name = "drawId") Long drawId) {
         String accountId = jwtUtils.getAccountIdFromRequest(httpServletRequest);
-        ApplicantResponseDTO.getMyApplyInformationDTO applyInfomationDTO =applicantService.getMyApplyInfomation(drawId, accountId);
-        return ApiResponse.onSuccess(SuccessStatus.APPLICANT_CURRENT_APPLY_INFO_FOUND, applyInfomationDTO);
+        ApplicantResponseDTO.getMyApplyInformationDTO applyInformationDTO =applicantService.getMyApplyInformation(drawId, accountId);
+        return ApiResponse.onSuccess(SuccessStatus.APPLICANT_CURRENT_APPLY_INFO_FOUND, applyInformationDTO);
     }
 }

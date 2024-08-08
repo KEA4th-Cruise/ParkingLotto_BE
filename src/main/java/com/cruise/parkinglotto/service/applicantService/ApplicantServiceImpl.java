@@ -278,7 +278,7 @@ public class ApplicantServiceImpl implements ApplicantService {
 
     @Override
     @Transactional
-    public ApplicantResponseDTO.getMyApplyInformationDTO getMyApplyInfomation(Long drawId, String accountId){
+    public ApplicantResponseDTO.getMyApplyInformationDTO getMyApplyInformation(Long drawId, String accountId) {
         Optional<Member> memberOptional = memberRepository.findByAccountId(accountId);
         Member member = memberOptional.get();
 

@@ -25,6 +25,6 @@ public interface ApplicantService {
 
     Page<Applicant> searchWinner(Integer page, String keyword, Long drawId);
 
-    ApplicantResponseDTO.getMyApplyInformationDTO getMyApplyInfomation(Long drawId, String accountId);
+    ApplicantResponseDTO.getMyApplyInformationDTO getMyApplyInformation(Long drawId, String accountId);
 
 }

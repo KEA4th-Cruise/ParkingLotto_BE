@@ -50,7 +50,7 @@ public class ApplicantConverter {
     }
 
 
-    public static ApplicantResponseDTO.MyApplyInfoDTO toMyApplyInfoDTO(Applicant applicant ) {
+    public static ApplicantResponseDTO.MyApplyInfoDTO toMyApplyInfoDTO(Applicant applicant) {
 
         return ApplicantResponseDTO.MyApplyInfoDTO.builder()
                 .parkingSpaceId(applicant.getParkingSpaceId())
@@ -92,9 +92,9 @@ public class ApplicantConverter {
                 .build();
     }
 
-    public static ApplicantResponseDTO.GetMyApplyResultListDTO toGetMyApplyResultListDTO (Page<ApplicantResponseDTO.GetMyApplyResultDTO> applyResultDTOList) {
+    public static ApplicantResponseDTO.GetMyApplyResultListDTO toGetMyApplyResultListDTO(Page<ApplicantResponseDTO.GetMyApplyResultDTO> applyResultDTOList) {
         List<ApplicantResponseDTO.GetMyApplyResultDTO> getApplicantResultDTOList = applyResultDTOList.stream()
-                .map((d)-> (d)).toList();
+                .map((d) -> (d)).toList();
         return ApplicantResponseDTO.GetMyApplyResultListDTO.builder()
                 .appliedDrawList(getApplicantResultDTOList)
                 .isFirst(applyResultDTOList.isFirst())
@@ -105,7 +105,7 @@ public class ApplicantConverter {
                 .build();
     }
 
-    public static ApplicantResponseDTO.getMyApplyInformationDTO toGetMyApplyInformationDTO(Applicant applicant, String carNum, String address, List<CertificateDocsRequestDTO.CertificateFileDTO> certificateFilesDTO){
+    public static ApplicantResponseDTO.getMyApplyInformationDTO toGetMyApplyInformationDTO(Applicant applicant, String carNum, String address, List<CertificateDocsRequestDTO.CertificateFileDTO> certificateFilesDTO) {
         return ApplicantResponseDTO.getMyApplyInformationDTO.builder()
                 .carNum(carNum)
                 .address(address)

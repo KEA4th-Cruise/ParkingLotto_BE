@@ -88,7 +88,7 @@ public class ApplicantResponseDTO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class getMyApplyInformationDTO{
+    public static class getMyApplyInformationDTO {
         String carNum;
         String address;
         WorkType workType;
