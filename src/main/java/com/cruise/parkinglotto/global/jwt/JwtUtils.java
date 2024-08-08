@@ -3,6 +3,7 @@ package com.cruise.parkinglotto.global.jwt;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -131,7 +132,8 @@ public class JwtUtils {
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {
             return bearerToken.substring(7);
         }
-        return null;
+
+        return getTokenInCookie(request, "accessToken");
     }
 
     // 토큰에서 claim을 뽑는 메서드
@@ -152,6 +154,18 @@ public class JwtUtils {
         String token = resolveToken(httpServletRequest);
         Authentication authentication = getAuthentication(token);
         return authentication.getName();
+    }
+
+    public String getTokenInCookie(HttpServletRequest request, String cookieName) {
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if (cookie.getName().equals(cookieName)) {
+                    return cookie.getValue();
+                }
+            }
+        }
+
+        return null;
     }
 
 }

@@ -16,8 +16,6 @@ import com.cruise.parkinglotto.service.certificateDocsService.CertificateDocsSer
 import com.cruise.parkinglotto.service.redisService.RedisService;
 import com.cruise.parkinglotto.web.converter.CertificateDocsConverter;
 import com.cruise.parkinglotto.web.converter.MemberConverter;
-import com.cruise.parkinglotto.web.converter.WeightDetailConverter;
-import com.cruise.parkinglotto.web.dto.CertificateDocsDTO.CertificateDocsRequestDTO;
 import com.cruise.parkinglotto.web.dto.memberDTO.MemberRequestDTO;
 import com.cruise.parkinglotto.web.dto.memberDTO.MemberResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -107,8 +105,11 @@ public class MemberServiceImpl implements MemberService {
             throw new ExceptionHandler(ErrorStatus.MEMBER_REFRESH_TOKEN_NULL);
         }
 
+        log.info("refreshToken: {}", refreshToken);
+
         String blacklistValue = redisService.getBlackList(refreshToken);
-        if (!blacklistValue.equals("false")) {
+        if (!(blacklistValue == null)) {
+            log.info("blacklistValue: {}", blacklistValue);
             throw new ExceptionHandler(ErrorStatus.MEMBER_REFRESH_TOKEN_BLACKLIST);
         }
 
