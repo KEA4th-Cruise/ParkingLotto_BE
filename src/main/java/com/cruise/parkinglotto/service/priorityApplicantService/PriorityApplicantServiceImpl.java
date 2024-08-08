@@ -283,20 +283,14 @@ public class PriorityApplicantServiceImpl implements PriorityApplicantService {
             String[] urlParts = url.split("/");
 
             if (urlParts.length > 7) {
-                // Step 2: Get the 8th part (index 7) and split by '_'
-                String[] categoryParts = urlParts[7].split("_");
+                String category = urlParts[6];
 
-                // Check if the 3rd part (index 2) exists
-                if (categoryParts.length > 2) {
-                    String category = categoryParts[2];
-
-                    // Step 3: Check if the category is GENERAL or PRIORITY
-                    if ("GENERAL".equals(category)) {
-                        generalFileDTOList.add(certificateFileDTO);
-                    } else if ("PRIORITY".equals(category)) {
-                        priorityFileDTOList.add(certificateFileDTO);
-                    }
+                if (objectStorageConfig.getGeneralCertificateDocument().equals(category)) {
+                    generalFileDTOList.add(certificateFileDTO);
+                } else if (objectStorageConfig.getPriorityCertificateDocument().equals(category)) {
+                    priorityFileDTOList.add(certificateFileDTO);
                 }
+
             } else {
                 throw new ExceptionHandler(ErrorStatus._BAD_REQUEST);
             }
