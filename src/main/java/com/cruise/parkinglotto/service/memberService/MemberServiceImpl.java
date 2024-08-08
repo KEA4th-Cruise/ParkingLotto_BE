@@ -179,6 +179,50 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    @Transactional
+    public MemberResponseDTO.MyInfoResponseDTO updateMyInfo(Long memberId, MemberRequestDTO.MyInfoRequestDTO myInfoRequestDTO, List<MultipartFile> certificateDocs) {
+
+        Member findMember = memberRepository.findById(memberId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+        //파일 검증 ==========
+
+        //한개의 추첨에서 들어갈 수 있는 파일 개수 세는 변수
+        Integer totalFileNumber = 0;
+
+        //업로드 할 파일 검증 (길이, 확장자 등)
+        if (certificateDocs != null) {
+            certificateDocsService.validateCertificateFiles(certificateDocs);
+            totalFileNumber += certificateDocs.size();
+        }
+
+        if (totalFileNumber > 5) {
+            throw new ExceptionHandler(ErrorStatus.FILE_TOO_MANY);
+        }
+
+        //파일 검증 끝 =========
+
+        List<CertificateDocs> certificateDocsList = new ArrayList<>();
+
+        certificateDocsRepository.deleteAllByMemberIdAndDrawId(memberId,-1L);
+
+        WeightDetails findWeightDetails = weightDetailsRepository.findOptionalByMemberId(memberId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.WEIGHTDETAILS_NOT_FOUND));
+        findWeightDetails.updateMyInfo(myInfoRequestDTO);
+
+        if (certificateDocs != null) {
+            for (MultipartFile certificateDoc : certificateDocs) {
+                if(certificateDoc != null) {
+                    String certificateDocUrl = objectStorageService.uploadObject(objectStorageConfig.getGeneralCertificateDocument(), findMember.getId() + "_" + certificateDoc.getOriginalFilename(), certificateDoc);
+                    CertificateDocs certificateDocument = CertificateDocsConverter.toCertificateDocument(certificateDocUrl, certificateDoc.getOriginalFilename(), findMember, -1L);
+                    certificateDocsList.add(certificateDocument);
+                    certificateDocsRepository.save(certificateDocument);
+                }
+            }
+        }
+
+        return MemberConverter.toMyInfoResponseDTO(findMember, certificateDocsList);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public MemberResponseDTO.MyInfoResponseDTO getMyInfo(Long memberId) {
 

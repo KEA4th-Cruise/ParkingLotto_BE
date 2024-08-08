@@ -75,6 +75,17 @@ public class MemberRestController {
 
     }
 
+    @Operation(summary = "내가 입력한 정보 수정 API", description = "내가 입력한 회원정보를 수정하는 API 입니다. RequestPart 에 myInfoRequestDTO 를 넣고, 보내야하는 문서들을 넣어서 보내주세요. Swagger 참고하시면 됩니다 (최준범)")
+    @PatchMapping(value = "/info", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ApiResponse<MemberResponseDTO.MyInfoResponseDTO> updateMyInfo(HttpServletRequest httpServletRequest,
+                                                                         @RequestPart(value = "applyDrawRequestDTO", required = true) @Valid MemberRequestDTO.MyInfoRequestDTO myInfoRequestDTO,
+                                                                         @RequestPart(required = false, value = "certificateDocs") @Valid List<MultipartFile> certificateDocs) {
+        String accountIdFromRequest = jwtUtils.getAccountIdFromRequest(httpServletRequest);
+        Member memberByAccountId = memberService.getMemberByAccountId(accountIdFromRequest);
+        MemberResponseDTO.MyInfoResponseDTO myInfoResponseDTO = memberService.updateMyInfo(memberByAccountId.getId(), myInfoRequestDTO, certificateDocs);
+        return ApiResponse.onSuccess(SuccessStatus.MEMBER_INFO_UPDATED, myInfoResponseDTO);
+    }
+
     @Operation(summary = "내가 배정받은 주차공간 정보를 조회하는 API 입니다.", description = " Pathvariable 로 drawId 를 보내주면 해당 회차에 내 주차공간 정보를 보내줍니다. 주요 정보는 주차공간 주소, 구역이름, 이미지입니다.(최준범)")
     @GetMapping("/{drawId}/my-space")
     public ApiResponse<ParkingSpaceResponseDTO.ParkingSpaceInfoResponseDTO> getParkingSpaceInfo(@PathVariable("drawId") Long drawId, HttpServletRequest httpServletRequest) {
