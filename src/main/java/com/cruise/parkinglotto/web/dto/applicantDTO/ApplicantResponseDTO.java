@@ -50,38 +50,12 @@ public class ApplicantResponseDTO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetMyApplyResultDTO {
-        private String drawTitle; // 추첨 제목
-        private WinningStatus winningStatus; // 그 추첨의 상태
-        private Long drawStatisticsId; // 추첨 통계
-        private Integer reserveNum; // 예비번호
-        private Long parkingSpaceId; // 주차 공간 정보 id
-    }
-
-    @Getter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
     public static class MyApplyInfoDTO {
         private Long parkingSpaceId;
         private String drawTitle;
         private WinningStatus winningStatus;
         private LocalDateTime startDate;
         private LocalDateTime endDate;
-    }
-
-    @Getter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class GetMyApplyResultListDTO {
-        private List<GetMyApplyResultDTO> appliedDrawList;
-        Integer listSize;
-        Integer totalPage;
-        Long totalElements;
-        Boolean isFirst;
-        Boolean isLast;
-
     }
 
     @Getter

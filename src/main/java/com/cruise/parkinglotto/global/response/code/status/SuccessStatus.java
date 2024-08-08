@@ -56,7 +56,7 @@ public enum SuccessStatus implements BaseCode {
     APPLICANT_PRIORITY_APPROVED(HttpStatus.CREATED, "APPLICANT2002", "해당 사용자에게 우대 신청 승인 및 주차 공간 배정을 완료했습니다."),
     APPLICANT_APPLY_SUCCESS(HttpStatus.CREATED, "APPLICANT2003", "신청에 성공했습니다."),
     APPLICANT_APPLY_INFO_FOUND(HttpStatus.OK, "APPLICANT2004", "해당 사용자의 특정 회차 추첨 결과 정보 조회에 성공했습니다"),
-    APPLICANT_APPLY_LIST_FOUND(HttpStatus.OK, "APPLICANT2005", "사용자가 신청했던 회차 리스트 조회를 성공했습니다."),
+    APPLICANT_APPLY_LIST_FOUND(HttpStatus.OK, "APPLICANT2005", "사용자가 신청한 추첨 목록 조회를 성공했습니다."),
     APPLICANT_SEARCH_FOUND(HttpStatus.OK, "APPLICANT2006", "신청자 검색을 완료했습니다."),
     WINNER_SEARCH_FOUND(HttpStatus.OK, "APPLICANT2007", "당첨자 검색을 완료했습니다."),
     APPLICANT_CANCEL_SUCCESS(HttpStatus.OK, "APPLICANT2008", "일반 취소 신청에 성공했습니다."),

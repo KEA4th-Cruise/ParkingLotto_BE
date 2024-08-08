@@ -1,10 +1,12 @@
 package com.cruise.parkinglotto.web.dto.drawDTO;
 
+import com.cruise.parkinglotto.domain.Draw;
 import com.cruise.parkinglotto.domain.enums.DrawType;
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import com.cruise.parkinglotto.domain.enums.DrawStatus;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
+import com.cruise.parkinglotto.web.dto.priorityApplicantDTO.PriorityApplicantResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -176,5 +178,33 @@ public class DrawResponseDTO {
         private Integer applicantsCount;
         private Integer totalSlots;
         private List<ParkingSpaceResponseDTO.ParkingSpaceCompetitionRateDTO> parkingSpaceCompetitionRateList;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetAppliedDrawResultDTO {
+        private Long drawId;
+        private String drawTitle; // 추첨 제목
+        private DrawType drawType;  // 추첨 유형 (일반, 우대)
+        private WinningStatus winningStatus; // 해당 추첨의 당첨 여부
+        private Long drawStatisticsId; // 추첨 통계
+        private Integer reserveNum; // 예비번호
+        private Long parkingSpaceId; // 주차 공간 정보 id
+        private LocalDateTime usageStartAt;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetAppliedDrawListResultDTO {
+        private List<DrawResponseDTO.GetAppliedDrawResultDTO> appliedDrawList;
+        private Integer listSize;
+        private Integer totalPage;
+        private Long totalElements;
+        private Boolean isFirst;
+        private Boolean isLast;
     }
 }

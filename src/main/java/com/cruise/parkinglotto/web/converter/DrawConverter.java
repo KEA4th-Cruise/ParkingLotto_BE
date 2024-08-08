@@ -3,6 +3,8 @@ package com.cruise.parkinglotto.web.converter;
 import com.cruise.parkinglotto.domain.Applicant;
 import com.cruise.parkinglotto.domain.Draw;
 import com.cruise.parkinglotto.domain.ParkingSpace;
+import com.cruise.parkinglotto.domain.enums.DrawType;
+import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import com.cruise.parkinglotto.domain.enums.DrawStatus;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawRequestDTO;
@@ -12,6 +14,7 @@ import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
 import com.cruise.parkinglotto.web.dto.drawDTO.SimulationData;
 import org.springframework.data.domain.Page;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -195,4 +198,35 @@ public class DrawConverter {
                 .build();
     }
 
+    public static DrawResponseDTO.GetAppliedDrawResultDTO toGetAppliedDrawResultDTO(Long appliedDrawId,
+                                                                                    Integer reserveNum,
+                                                                                    String drawTitle,
+                                                                                    DrawType drawType,
+                                                                                    Long drawStatisticsId,
+                                                                                    Long parkingSpaceId,
+                                                                                    LocalDateTime usageStartAt,
+                                                                                    WinningStatus winningStatus) {
+
+        return DrawResponseDTO.GetAppliedDrawResultDTO.builder()
+                .drawId(appliedDrawId)
+                .winningStatus(winningStatus)
+                .reserveNum(reserveNum)
+                .drawStatisticsId(drawStatisticsId)
+                .drawTitle(drawTitle)
+                .drawType(drawType)
+                .parkingSpaceId(parkingSpaceId)
+                .usageStartAt(usageStartAt).build();
+    }
+
+    public static DrawResponseDTO.GetAppliedDrawListResultDTO toGetAppliedDrawListResultDTO(Page<DrawResponseDTO.GetAppliedDrawResultDTO> appliedDrawResultPage) {
+        List<DrawResponseDTO.GetAppliedDrawResultDTO> getAppliedDrawResultDTOList = appliedDrawResultPage.toList();
+        return DrawResponseDTO.GetAppliedDrawListResultDTO.builder()
+                .appliedDrawList(getAppliedDrawResultDTOList)
+                .isFirst(appliedDrawResultPage.isFirst())
+                .isLast(appliedDrawResultPage.isLast())
+                .totalElements(appliedDrawResultPage.getTotalElements())
+                .totalPage(appliedDrawResultPage.getTotalPages())
+                .listSize(appliedDrawResultPage.getSize())
+                .build();
+    }
 }

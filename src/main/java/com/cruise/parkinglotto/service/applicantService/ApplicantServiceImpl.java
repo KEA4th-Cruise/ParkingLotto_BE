@@ -61,24 +61,6 @@ public class ApplicantServiceImpl implements ApplicantService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<ApplicantResponseDTO.GetMyApplyResultDTO> getApplyResultList(Long memberId, Integer page) {
-
-        List<Applicant> findApplicants = applicantRepository.findApplicantListByMemberId(memberId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND));
-        List<ApplicantResponseDTO.GetMyApplyResultDTO> applyResultDTOList = findApplicants.stream()
-                .map(a -> ApplicantConverter.toGetMyApplyResultDTO(a))
-                .collect(Collectors.toList());
-
-        PageRequest pageRequest = PageRequest.of(page, 4);
-        int start = (int) pageRequest.getOffset();
-        int end = Math.min((start + pageRequest.getPageSize()), applyResultDTOList.size());
-        Page<ApplicantResponseDTO.GetMyApplyResultDTO> result = new PageImpl<ApplicantResponseDTO.GetMyApplyResultDTO>(applyResultDTOList.subList(start, end), pageRequest, applyResultDTOList.size());
-
-        return result;
-
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public ApplicantResponseDTO.MyApplyInfoDTO getMyApplyInfo(Long memberId, Long drawId) {
 
         Applicant findApplicant = applicantRepository.findApplicantByMemberIdAndDrawId(memberId, drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND));

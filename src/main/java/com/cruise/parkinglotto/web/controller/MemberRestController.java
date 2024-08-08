@@ -6,10 +6,13 @@ import com.cruise.parkinglotto.global.jwt.JwtUtils;
 import com.cruise.parkinglotto.global.response.ApiResponse;
 import com.cruise.parkinglotto.global.response.code.status.SuccessStatus;
 import com.cruise.parkinglotto.service.applicantService.ApplicantService;
+import com.cruise.parkinglotto.service.drawService.DrawService;
 import com.cruise.parkinglotto.service.memberService.MemberService;
 import com.cruise.parkinglotto.service.parkingSpaceService.ParkingSpaceService;
 import com.cruise.parkinglotto.web.converter.ApplicantConverter;
+import com.cruise.parkinglotto.web.converter.DrawConverter;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
+import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
 import com.cruise.parkinglotto.web.dto.memberDTO.MemberRequestDTO;
 import com.cruise.parkinglotto.web.dto.memberDTO.MemberResponseDTO;
 import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
@@ -36,6 +39,7 @@ public class MemberRestController {
     private final JwtUtils jwtUtils;
     private final ParkingSpaceService parkingSpaceService;
     private final ApplicantService applicantService;
+    private final DrawService drawService;
 
     @Operation(summary = "로그인 API", description = "accountId, password를 loginRequestDTO에 담아 요청을 보내면 등록 여부와 토큰을 반환합니다(신해철).")
     @PostMapping("/login")
@@ -97,14 +101,12 @@ public class MemberRestController {
     }
 
 
-    @Operation(summary = "내가 신청했던 추첨 목록을 조회하는 API 입니다. 페이징을 포함합니다", description = " RequestParam 으로 조회하고 싶은 page 번호를 전송해 주세요.(최준범)")
+    @Operation(summary = "내가 신청했던 추첨 목록을 조회하는 API 입니다. 페이징을 포함합니다", description = " RequestParam 으로 조회하고 싶은 page 번호를 전송해 주세요.(최준범, 이윤서(수정자)) ")
     @GetMapping("/applied/draws")
-    public ApiResponse<ApplicantResponseDTO.GetMyApplyResultListDTO> getMyApplyList(HttpServletRequest httpServletRequest, @RequestParam(name = "page") Integer page) {
+    public ApiResponse<DrawResponseDTO.GetAppliedDrawListResultDTO> getMyApplyList(HttpServletRequest httpServletRequest, @RequestParam(name = "page") Integer page) {
         String accountIdFromRequest = jwtUtils.getAccountIdFromRequest(httpServletRequest);
-        Member memberByAccountId = memberService.getMemberByAccountId(accountIdFromRequest);
-        Page<ApplicantResponseDTO.GetMyApplyResultDTO> applyResultList = applicantService.getApplyResultList(memberByAccountId.getId(), page - 1);
-        ApplicantResponseDTO.GetMyApplyResultListDTO getMyApplyResultListDTO = ApplicantConverter.toGetMyApplyResultListDTO(applyResultList);
-        return ApiResponse.onSuccess(SuccessStatus.APPLICANT_APPLY_LIST_FOUND, getMyApplyResultListDTO);
+        Page<DrawResponseDTO.GetAppliedDrawResultDTO> appliedDrawList = drawService.getAppliedDrawList(accountIdFromRequest, page - 1);
+        return ApiResponse.onSuccess(SuccessStatus.APPLICANT_APPLY_LIST_FOUND, DrawConverter.toGetAppliedDrawListResultDTO(appliedDrawList));
     }
 
     @Operation(summary = "특정 회차 결과 조회 API", description = "내가 신청했던 회차중 특정 회차의 결과를 조회하는 API 입니다, PathVariable 으로 drawId 를 보내주세요.(최준범)")
@@ -120,8 +122,8 @@ public class MemberRestController {
     @Operation(summary = "내가 입력한 정보 저장 API", description = "내가 입력한 회원정보를 저장하는 API 입니다. RequestBody 에 myInfoRequestDTO 를 넣고, 보내야하는 문서들을 넣어서 보내주세요. Swagger 참고하시면 됩니다")
     @PostMapping(value = "/info", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<MemberResponseDTO.MyInfoResponseDTO> saveMyInfo(HttpServletRequest httpServletRequest,
-                                                                       @RequestPart (value = "applyDrawRequestDTO", required = true) @Valid MemberRequestDTO.MyInfoRequestDTO myInfoRequestDTO,
-                                                                       @RequestPart (required = false, value = "certificateDocs") @Valid List<MultipartFile> certificateDocs) {
+                                                                       @RequestPart(value = "applyDrawRequestDTO", required = true) @Valid MemberRequestDTO.MyInfoRequestDTO myInfoRequestDTO,
+                                                                       @RequestPart(required = false, value = "certificateDocs") @Valid List<MultipartFile> certificateDocs) {
         String accountIdFromRequest = jwtUtils.getAccountIdFromRequest(httpServletRequest);
         Member memberByAccountId = memberService.getMemberByAccountId(accountIdFromRequest);
         MemberResponseDTO.MyInfoResponseDTO myInfoResponseDTO = memberService.saveMyInfo(memberByAccountId.getId(), myInfoRequestDTO, certificateDocs);

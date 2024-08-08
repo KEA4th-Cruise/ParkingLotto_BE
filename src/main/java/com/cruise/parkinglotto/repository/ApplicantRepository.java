@@ -67,4 +67,7 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long>, App
 
     @Transactional
     void deleteByDrawIdAndMember(Long drawId, Member member);
+
+    @Query("SELECT a FROM Applicant a WHERE a.member.id = :memberId")
+    List<Applicant> findByMemberId(@Param("memberId") Long memberId);
 }

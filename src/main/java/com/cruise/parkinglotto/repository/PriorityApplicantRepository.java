@@ -1,6 +1,7 @@
 package com.cruise.parkinglotto.repository;
 
 import com.cruise.parkinglotto.domain.Applicant;
+import com.cruise.parkinglotto.domain.Draw;
 import com.cruise.parkinglotto.domain.Member;
 import com.cruise.parkinglotto.domain.PriorityApplicant;
 import com.cruise.parkinglotto.domain.enums.ApprovalStatus;
@@ -26,4 +27,7 @@ public interface PriorityApplicantRepository extends JpaRepository<PriorityAppli
 
     @Transactional
     void deleteByDrawIdAndMember(Long drawId, Member member);
+
+    @Query("SELECT pa FROM PriorityApplicant pa WHERE pa.member.id = :memberId")
+    List<PriorityApplicant> findByMemberId(@Param("memberId") Long memberId);
 }
