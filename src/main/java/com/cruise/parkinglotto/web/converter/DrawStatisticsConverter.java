@@ -28,8 +28,9 @@ public class DrawStatisticsConverter {
         return drawCompetitionRateListDTO;
     }
 
-    public static DrawStatisticsResponseDTO.GetDrawStatisticsResultDTO toGetDrawStatisticsResultDTO(Integer applicantCount, Integer totalSlots, List<ParkingSpace> parkingSpaceList, List<WeightSectionStatistics> weightSectionStatisticsList) {
+    public static DrawStatisticsResponseDTO.GetDrawStatisticsResultDTO toGetDrawStatisticsResultDTO(String drawTitle, Integer applicantCount, Integer totalSlots, List<ParkingSpace> parkingSpaceList, List<WeightSectionStatistics> weightSectionStatisticsList) {
         return DrawStatisticsResponseDTO.GetDrawStatisticsResultDTO.builder()
+                .drawTitle(drawTitle)
                 .applicantsCount(applicantCount)
                 .totalSlots(totalSlots)
                 .winningRatePerWeightSectionList(weightSectionStatisticsList.stream()

@@ -57,7 +57,7 @@ public class DrawStatisticsServiceImpl implements DrawStatisticsService {
         List<WeightSectionStatistics> weightSectionStatisticsList = weightSectionStatisticsRepository.findByDrawId(draw.getId());
         Integer applicantCount = draw.getDrawStatistics().getTotalApplicants();
         Integer totalSlots = draw.getTotalSlots();
-        return DrawStatisticsConverter.toGetDrawStatisticsResultDTO(applicantCount, totalSlots, parkingSpaceList, weightSectionStatisticsList);
+        return DrawStatisticsConverter.toGetDrawStatisticsResultDTO(draw.getTitle(), applicantCount, totalSlots, parkingSpaceList, weightSectionStatisticsList);
     }
 
 }

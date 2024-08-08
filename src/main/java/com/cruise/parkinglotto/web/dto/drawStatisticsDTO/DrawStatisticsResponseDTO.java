@@ -46,6 +46,7 @@ public class DrawStatisticsResponseDTO {
     @AllArgsConstructor
     public static class GetDrawStatisticsResultDTO {
         private Integer applicantsCount;
+        private String drawTitle;
         private Integer totalSlots;
         private List<ParkingSpaceResponseDTO.ParkingSpaceCompetitionRateDTO> parkingSpaceCompetitionRateList;
         private List<WinningRatePerWeightSectionDTO> winningRatePerWeightSectionList;
