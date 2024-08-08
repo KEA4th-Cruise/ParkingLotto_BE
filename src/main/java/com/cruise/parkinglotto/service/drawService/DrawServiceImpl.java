@@ -685,11 +685,17 @@ public class DrawServiceImpl implements DrawService {
 
         List<DrawResponseDTO.GetAppliedDrawResultDTO> generalDrawList = applicantRepository.findByMemberId(memberId)
                 .stream()
-                .map(applicant -> DrawConverter.toGetAppliedDrawResultDTO(applicant.getDraw().getId(), applicant.getReserveNum(), applicant.getDraw().getTitle(), applicant.getDraw().getType(), applicant.getDraw().getDrawStatistics().getId(), applicant.getParkingSpaceId(), applicant.getDraw().getUsageStartAt(), applicant.getWinningStatus()))
+                .map(applicant -> {
+                    Long drawStatisticsId;
+                    if(!applicant.getDraw().getStatus().equals(DrawStatus.COMPLETED)){
+                        drawStatisticsId = null;
+                    } else drawStatisticsId = applicant.getDraw().getDrawStatistics().getId();
+                    return DrawConverter.toGetAppliedDrawResultDTO(applicant.getDraw().getId(), applicant.getReserveNum(), applicant.getDraw().getTitle(), applicant.getDraw().getType(), drawStatisticsId, applicant.getParkingSpaceId(), applicant.getDraw().getUsageStartAt(), applicant.getWinningStatus());
+                })
                 .toList();
         List<DrawResponseDTO.GetAppliedDrawResultDTO> priorityDrawList = priorityApplicantRepository.findByMemberId(memberId)
                 .stream()
-                .map(priorityApplicant -> DrawConverter.toGetAppliedDrawResultDTO(priorityApplicant.getDraw().getId(), -1, priorityApplicant.getDraw().getTitle(), priorityApplicant.getDraw().getType(), priorityApplicant.getDraw().getDrawStatistics().getId(), priorityApplicant.getParkingSpaceId(), priorityApplicant.getDraw().getUsageStartAt(), null))
+                .map(priorityApplicant -> DrawConverter.toGetAppliedDrawResultDTO(priorityApplicant.getDraw().getId(), -1, priorityApplicant.getDraw().getTitle(), priorityApplicant.getDraw().getType(), null, priorityApplicant.getParkingSpaceId(), priorityApplicant.getDraw().getUsageStartAt(), null))
                 .toList();
         List<DrawResponseDTO.GetAppliedDrawResultDTO> appliedDrawList = Stream.concat(generalDrawList.stream(), priorityDrawList.stream())
                 .distinct()
