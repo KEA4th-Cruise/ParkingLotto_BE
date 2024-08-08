@@ -55,9 +55,10 @@ public class DrawStatisticsServiceImpl implements DrawStatisticsService {
         Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
         List<ParkingSpace> parkingSpaceList = parkingSpaceRepository.findByDrawId(draw.getId());
         List<WeightSectionStatistics> weightSectionStatisticsList = weightSectionStatisticsRepository.findByDrawId(draw.getId());
-        Integer applicantCount = draw.getDrawStatistics().getTotalApplicants();
+        String drawTitle = draw.getTitle();
         Integer totalSlots = draw.getTotalSlots();
-        return DrawStatisticsConverter.toGetDrawStatisticsResultDTO(draw.getTitle(), applicantCount, totalSlots, parkingSpaceList, weightSectionStatisticsList);
+        DrawStatistics drawStatistics = draw.getDrawStatistics();
+        return DrawStatisticsConverter.toGetDrawStatisticsResultDTO(drawTitle, drawStatistics, totalSlots, parkingSpaceList, weightSectionStatisticsList);
     }
 
 }

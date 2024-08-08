@@ -48,6 +48,10 @@ public class DrawStatisticsResponseDTO {
         private Integer applicantsCount;
         private String drawTitle;
         private Integer totalSlots;
+        private Double trafficCommuteTimeAvg;
+        private Double carCommuteTimeAvg;
+        private Double distanceAvg;
+        private Double recentLossCountAvg;
         private List<ParkingSpaceResponseDTO.ParkingSpaceCompetitionRateDTO> parkingSpaceCompetitionRateList;
         private List<WinningRatePerWeightSectionDTO> winningRatePerWeightSectionList;
     }
