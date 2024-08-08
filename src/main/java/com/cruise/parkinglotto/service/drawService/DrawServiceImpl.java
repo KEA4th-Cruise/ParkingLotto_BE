@@ -25,8 +25,10 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.TaskScheduler;
+import org.springframework.security.core.parameters.P;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,6 +42,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.cruise.parkinglotto.web.converter.DrawConverter.toDrawResultExcelDTO;
 import static com.cruise.parkinglotto.web.converter.DrawConverter.toGetCurrentDrawInfo;
@@ -61,6 +64,7 @@ public class DrawServiceImpl implements DrawService {
     private final WeightSectionStatisticsService weightSectionStatisticsService;
     private final DrawStatisticsService drawStatisticsService;
     private final @Lazy TaskScheduler taskScheduler;
+    private final PriorityApplicantRepository priorityApplicantRepository;
 
     //계산용 변수
     private static final int WORK_TYPE1_SCORE = 25;
@@ -671,5 +675,33 @@ public class DrawServiceImpl implements DrawService {
         Date endTime = Date.from(drawEndTime.atZone(ZoneId.systemDefault()).toInstant());
         taskScheduler.schedule(task, endTime);
     }
-}
 
+    @Override
+    @Transactional(readOnly = true)
+    public Page<DrawResponseDTO.GetAppliedDrawResultDTO> getAppliedDrawList(String accountId, Integer page) {
+
+        Member member = memberRepository.findByAccountId(accountId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
+        Long memberId = member.getId();
+
+        List<DrawResponseDTO.GetAppliedDrawResultDTO> generalDrawList = applicantRepository.findByMemberId(memberId)
+                .stream()
+                .map(applicant -> DrawConverter.toGetAppliedDrawResultDTO(applicant.getDraw().getId(), applicant.getReserveNum(), applicant.getDraw().getTitle(), applicant.getDraw().getType(), applicant.getDraw().getDrawStatistics().getId(), applicant.getParkingSpaceId(), applicant.getDraw().getUsageStartAt(), applicant.getWinningStatus()))
+                .toList();
+        List<DrawResponseDTO.GetAppliedDrawResultDTO> priorityDrawList = priorityApplicantRepository.findByMemberId(memberId)
+                .stream()
+                .map(priorityApplicant -> DrawConverter.toGetAppliedDrawResultDTO(priorityApplicant.getDraw().getId(), -1, priorityApplicant.getDraw().getTitle(), priorityApplicant.getDraw().getType(), priorityApplicant.getDraw().getDrawStatistics().getId(), priorityApplicant.getParkingSpaceId(), priorityApplicant.getDraw().getUsageStartAt(), null))
+                .toList();
+        List<DrawResponseDTO.GetAppliedDrawResultDTO> appliedDrawList = Stream.concat(generalDrawList.stream(), priorityDrawList.stream())
+                .distinct()
+                .sorted((general, priority) -> priority.getUsageStartAt().compareTo(general.getUsageStartAt()))
+                .toList();
+
+        PageRequest pageRequest = PageRequest.of(page, 4);
+        int total = appliedDrawList.size();
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min((start + pageRequest.getPageSize()), total);
+
+        List<DrawResponseDTO.GetAppliedDrawResultDTO> subList = appliedDrawList.subList(start, end);
+        return new PageImpl<>(subList, pageRequest, total);
+    }
+}

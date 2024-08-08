@@ -64,4 +64,7 @@ public interface DrawService {
     void openDraw(Draw draw);
 
     void closeDraw(Draw draw);
+
+    Page<DrawResponseDTO.GetAppliedDrawResultDTO> getAppliedDrawList(String memberId, Integer page);
+
 }
