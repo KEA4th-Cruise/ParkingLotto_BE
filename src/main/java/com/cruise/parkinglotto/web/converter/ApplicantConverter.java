@@ -5,6 +5,8 @@ import com.cruise.parkinglotto.domain.Draw;
 import com.cruise.parkinglotto.domain.Member;
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import com.cruise.parkinglotto.domain.enums.WorkType;
+import com.cruise.parkinglotto.web.dto.CertificateDocsDTO.CertificateDocsRequestDTO;
+import com.cruise.parkinglotto.web.dto.CertificateDocsDTO.CertificateDocsResponseDTO;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import org.springframework.data.domain.Page;
 
@@ -48,7 +50,7 @@ public class ApplicantConverter {
     }
 
 
-    public static ApplicantResponseDTO.MyApplyInfoDTO toMyApplyInfoDTO(Applicant applicant ) {
+    public static ApplicantResponseDTO.MyApplyInfoDTO toMyApplyInfoDTO(Applicant applicant) {
 
         return ApplicantResponseDTO.MyApplyInfoDTO.builder()
                 .parkingSpaceId(applicant.getParkingSpaceId())
@@ -90,9 +92,9 @@ public class ApplicantConverter {
                 .build();
     }
 
-    public static ApplicantResponseDTO.GetMyApplyResultListDTO toGetMyApplyResultListDTO (Page<ApplicantResponseDTO.GetMyApplyResultDTO> applyResultDTOList) {
+    public static ApplicantResponseDTO.GetMyApplyResultListDTO toGetMyApplyResultListDTO(Page<ApplicantResponseDTO.GetMyApplyResultDTO> applyResultDTOList) {
         List<ApplicantResponseDTO.GetMyApplyResultDTO> getApplicantResultDTOList = applyResultDTOList.stream()
-                .map((d)-> (d)).toList();
+                .map((d) -> (d)).toList();
         return ApplicantResponseDTO.GetMyApplyResultListDTO.builder()
                 .appliedDrawList(getApplicantResultDTOList)
                 .isFirst(applyResultDTOList.isFirst())
@@ -100,6 +102,19 @@ public class ApplicantConverter {
                 .totalElements(applyResultDTOList.getTotalElements())
                 .totalPage(applyResultDTOList.getTotalPages())
                 .listSize(applyResultDTOList.getSize())
+                .build();
+    }
+
+    public static ApplicantResponseDTO.getMyApplyInformationDTO toGetMyApplyInformationDTO(Applicant applicant, String carNum, String address, List<CertificateDocsRequestDTO.CertificateFileDTO> certificateFilesDTO) {
+        return ApplicantResponseDTO.getMyApplyInformationDTO.builder()
+                .carNum(carNum)
+                .address(address)
+                .workType(applicant.getWorkType())
+                .firstChoice(applicant.getFirstChoice())
+                .secondChoice(applicant.getSecondChoice())
+                .userSeed(applicant.getUserSeed())
+                .recentLossCount(applicant.getRecentLossCount())
+                .certificateFiles(certificateFilesDTO)
                 .build();
     }
 }

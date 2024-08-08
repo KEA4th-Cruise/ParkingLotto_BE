@@ -1,6 +1,9 @@
 package com.cruise.parkinglotto.web.dto.applicantDTO;
 
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
+import com.cruise.parkinglotto.domain.enums.WorkType;
+import com.cruise.parkinglotto.web.dto.CertificateDocsDTO.CertificateDocsRequestDTO;
+import com.cruise.parkinglotto.web.dto.CertificateDocsDTO.CertificateDocsResponseDTO;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -79,6 +82,21 @@ public class ApplicantResponseDTO {
         Boolean isFirst;
         Boolean isLast;
 
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class getMyApplyInformationDTO {
+        String carNum;
+        String address;
+        WorkType workType;
+        Long firstChoice;
+        Long secondChoice;
+        String userSeed;
+        Integer recentLossCount;
+        List<CertificateDocsRequestDTO.CertificateFileDTO> certificateFiles;
     }
 
 }

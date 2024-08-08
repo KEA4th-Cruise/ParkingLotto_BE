@@ -16,6 +16,7 @@ import com.cruise.parkinglotto.repository.DrawRepository;
 import com.cruise.parkinglotto.repository.ParkingSpaceRepository;
 import com.cruise.parkinglotto.web.converter.ApplicantConverter;
 import com.cruise.parkinglotto.web.converter.CertificateDocsConverter;
+import com.cruise.parkinglotto.web.dto.CertificateDocsDTO.CertificateDocsResponseDTO;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantRequestDTO;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import com.cruise.parkinglotto.web.dto.CertificateDocsDTO.CertificateDocsRequestDTO;
@@ -272,5 +273,28 @@ public class ApplicantServiceImpl implements ApplicantService {
 
         applicantRepository.deleteByDrawIdAndMember(drawId, member);
 
+    }
+
+
+    @Override
+    @Transactional
+    public ApplicantResponseDTO.getMyApplyInformationDTO getMyApplyInformation(Long drawId, String accountId) {
+        Optional<Member> memberOptional = memberRepository.findByAccountId(accountId);
+        Member member = memberOptional.get();
+
+        //신청자 존재 확인
+        Optional<Applicant> applicantOptional = applicantRepository.findByDrawIdAndMemberId(drawId, member.getId());
+        if (applicantOptional.isEmpty()) {
+            throw new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND);
+        }
+        Applicant applicant = applicantOptional.get();
+
+        WeightDetails weightDetails = weightDetailsRepository.findByMemberId(member.getId());
+
+        List<CertificateDocs> fileDTOList = certificateDocsRepository.findByMemberAndDrawId(member, drawId);
+        List<CertificateDocsRequestDTO.CertificateFileDTO> certificateFileDTOS = fileDTOList.stream()
+                .map(CertificateDocsConverter::toCertificateFileDTO)
+                .collect(Collectors.toList());
+        return ApplicantConverter.toGetMyApplyInformationDTO(applicant, weightDetails.getAddress(), member.getCarNum(), certificateFileDTOS);
     }
 }

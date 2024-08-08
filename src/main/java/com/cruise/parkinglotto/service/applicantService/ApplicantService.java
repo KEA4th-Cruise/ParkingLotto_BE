@@ -24,4 +24,7 @@ public interface ApplicantService {
     void cancelApply(String accountId, Long drawId);
 
     Page<Applicant> searchWinner(Integer page, String keyword, Long drawId);
+
+    ApplicantResponseDTO.getMyApplyInformationDTO getMyApplyInformation(Long drawId, String accountId);
+
 }
