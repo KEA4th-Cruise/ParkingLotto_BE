@@ -33,10 +33,6 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long>, App
     List<Applicant> findByDrawId(Long drawId);
 
     @Modifying
-    @Query("UPDATE Applicant a SET a.randomNumber = :randomNumber WHERE a.id = :applicantId")
-    void assignRandomNumber(@Param("applicantId") Long applicantId, @Param("randomNumber") Double randomNumber);
-
-    @Modifying
     @Query("UPDATE Applicant a SET a.parkingSpaceId = :parkingSpaceId WHERE a.id = :winnerId")
     void updateParkingSpaceId(@Param("winnerId") Long winnerId, @Param("parkingSpaceId") Long parkingSpaceId);
 
