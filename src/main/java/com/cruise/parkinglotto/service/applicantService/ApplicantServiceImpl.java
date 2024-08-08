@@ -19,7 +19,6 @@ import com.cruise.parkinglotto.web.converter.CertificateDocsConverter;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantRequestDTO;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import com.cruise.parkinglotto.web.dto.CertificateDocsDTO.CertificateDocsRequestDTO;
-import com.cruise.parkinglotto.domain.ParkingSpace;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -139,7 +138,7 @@ public class ApplicantServiceImpl implements ApplicantService {
         }
 
         if (totalFileNumber > 5) {
-            throw new ExceptionHandler(ErrorStatus.CERTIFICATEDOCS_TOO_MANY);
+            throw new ExceptionHandler(ErrorStatus.FILE_TOO_MANY);
         }
 
         //파일 검증 끝 =========
@@ -263,7 +262,7 @@ public class ApplicantServiceImpl implements ApplicantService {
         List<CertificateDocs> certificateDocs = certificateDocsRepository.findByMemberAndDrawId(member, drawId);
 
         if (!objectStorageService.doesObjectCertificateFileUrlsExist(certificateDocs)) {
-            throw new ExceptionHandler(ErrorStatus.CERTIFICATEDOCS_NAME_NOT_FOUND);
+            throw new ExceptionHandler(ErrorStatus.FILE_NAME_NOT_FOUND);
         }
 
         certificateDocsService.deleteFileIsNotInProfile(certificateDocs);

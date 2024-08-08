@@ -26,7 +26,7 @@ public class PriorityApplicantConverter {
                 .map(PriorityApplicantConverter::toGetPriorityApplicantResultDTO).toList();
         return PriorityApplicantResponseDTO.GetPriorityApplicantListResultDTO.builder()
                 .totalSlots(totalSlots)
-                .applicantsCount(priorityApplicantPage.getSize())
+                .applicantsCount(getPriorityApplicantResultDTOList.size())
                 .priorityApplicantList(getPriorityApplicantResultDTOList)
                 .isFirst(priorityApplicantPage.isFirst())
                 .isLast(priorityApplicantPage.isLast())
@@ -89,6 +89,14 @@ public class PriorityApplicantConverter {
                 .assignPriorityResultList(priorityApplicantList.stream()
                         .map(PriorityApplicantConverter::toAssignPriorityResultDTO)
                         .toList())
+                .build();
+    }
+
+    public static PriorityApplicantResponseDTO.CancelPriorityAssignResultDTO toCancelPriorityAssignmentResultDTO(PriorityApplicant priorityApplicant) {
+        return PriorityApplicantResponseDTO.CancelPriorityAssignResultDTO.builder()
+                .priorityApplicantId(priorityApplicant.getId())
+                .parkingSpaceId(priorityApplicant.getParkingSpaceId())
+                .approvalStatus(priorityApplicant.getApprovalStatus())
                 .build();
     }
 }

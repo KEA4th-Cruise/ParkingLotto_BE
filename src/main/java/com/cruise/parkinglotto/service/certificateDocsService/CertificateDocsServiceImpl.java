@@ -35,23 +35,23 @@ public class CertificateDocsServiceImpl implements CertificateDocsService {
 
             //파일 이름 검증
             if (fileName == null) {
-                throw new ExceptionHandler(ErrorStatus.CERTIFICATEDOCS_NAME_NOT_FOUND);
+                throw new ExceptionHandler(ErrorStatus.FILE_NAME_NOT_FOUND);
             } else if (fileName.length() > MAX_CERTIFICATE_FILE_LENGTH) {
-                throw new ExceptionHandler(ErrorStatus.CERTIFICATEDOCS_NAME_TOO_LONG);
+                throw new ExceptionHandler(ErrorStatus.FILE_NAME_TOO_LONG);
             } else {
                 String fileExtension = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
                 totalCertificateFileSize += certificateFile.getSize();
 
                 //확장자 검증
                 if (!ALLOWED_CERTIFICATE_FILE_EXTENSIONS.contains(fileExtension)) {
-                    throw new ExceptionHandler(ErrorStatus.CERTIFICATEDOCS_FORMAT_NOT_SUPPORTED);
+                    throw new ExceptionHandler(ErrorStatus.FILE_FORMAT_NOT_SUPPORTED);
                 }
             }
         }
 
         //모든 파일의 전체 크기 검증
         if (totalCertificateFileSize > MAX_TOTAL_CERTIFICATE_FILE_SIZE) {
-            throw new ExceptionHandler(ErrorStatus.CERTIFICATEDOCS_TOO_LARGE);
+            throw new ExceptionHandler(ErrorStatus.FILE_TOO_LARGE);
         }
     }
 
@@ -78,7 +78,7 @@ public class CertificateDocsServiceImpl implements CertificateDocsService {
         for (MultipartFile multipartFile : certificateFiles) {
             for (CertificateDocsRequestDTO.CertificateFileDTO fileDTO : certificateFileDTO) {
                 if (Objects.equals(multipartFile.getOriginalFilename(), fileDTO.getFileName())) {
-                    throw new ExceptionHandler(ErrorStatus.CERTIFICATEDOCS_NAME_DUPLICATED);
+                    throw new ExceptionHandler(ErrorStatus.FILE_NAME_DUPLICATED);
                 }
 
             }

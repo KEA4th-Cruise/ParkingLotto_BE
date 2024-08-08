@@ -100,4 +100,8 @@ public class Draw extends BaseEntity {
     public void updateStatus(DrawStatus status) {
         this.status = status;
     }
+
+    public void incrementTotalSlots(int increment) {
+        this.totalSlots += increment;
+    }
 }

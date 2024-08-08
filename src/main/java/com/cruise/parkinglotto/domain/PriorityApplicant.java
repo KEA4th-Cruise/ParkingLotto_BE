@@ -46,4 +46,9 @@ public class PriorityApplicant extends BaseEntity {
         this.parkingSpaceId = parkingSpaceId;
         this.approvalStatus = ApprovalStatus.ASSIGNED;
     }
+
+    public void cancelPriorityAssign() {
+        this.approvalStatus = ApprovalStatus.CANCELED;
+        this.parkingSpaceId = -1L;
+    }
 }

@@ -155,7 +155,7 @@ public class MemberServiceImpl implements MemberService {
 
 
         if (totalFileNumber > 5) {
-            throw new ExceptionHandler(ErrorStatus.CERTIFICATEDOCS_TOO_MANY);
+            throw new ExceptionHandler(ErrorStatus.FILE_TOO_MANY);
         }
 
         //파일 검증 끝 =========
