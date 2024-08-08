@@ -24,6 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -43,8 +44,8 @@ public class MemberRestController {
 
         // access token과 refresh token을 각각의 쿠키에 담아서 보냄
         JwtToken jwtToken = loginResponseDTO.getJwtToken();
-        setCookie(httpServletResponse, "accessToken", jwtToken.getAccessToken(), 60 * 60 * 24); // 1일
-        setCookie(httpServletResponse, "refreshToken", jwtToken.getRefreshToken(), 60 * 60 * 24 * 7); // 7일
+        setCookie(httpServletResponse, "accessToken", jwtToken.getAccessToken(), 60 * 60 * 24); // 1일 (초, 분, 시)
+        setCookie(httpServletResponse, "refreshToken", jwtToken.getRefreshToken(), 60 * 60 * 24 * 7); // 7일 (초, 분, 시, 일)
 
         return ApiResponse.onSuccess(SuccessStatus.MEMBER_LOGIN_SUCCESS, loginResponseDTO);
     }
@@ -56,10 +57,11 @@ public class MemberRestController {
     }
 
     @Operation(summary = "토큰 재발급 API", description = "access token이 만료된 경우 refresh token을 사용하여 자동 로그인을 해주는 API 입니다.(신해철)")
-    @PostMapping("/refresh")
-    public ApiResponse<MemberResponseDTO.RefreshResponseDTO> refreshAccessToken(@RequestBody JwtToken jwtToken, HttpServletResponse httpServletResponse) {
-        MemberResponseDTO.RefreshResponseDTO refreshResponseDTO = memberService.refreshToken(jwtToken);
-        setCookie(httpServletResponse, "accessToken", refreshResponseDTO.getAccessToken(), 60 * 60 * 24); // 1일
+    @GetMapping("/refresh")
+    public ApiResponse<MemberResponseDTO.RefreshResponseDTO> refreshAccessToken(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+        String refreshToken = jwtUtils.getTokenInCookie(httpServletRequest, "refreshToken");
+        MemberResponseDTO.RefreshResponseDTO refreshResponseDTO = memberService.recreateToken(refreshToken);
+        setCookie(httpServletResponse, "accessToken", refreshResponseDTO.getAccessToken(), 60 * 60 * 24); // 1일 (초, 분, 시)
         return ApiResponse.onSuccess(SuccessStatus.MEMBER_REFRESH_TOKEN_SUCCESS, refreshResponseDTO);
     }
 

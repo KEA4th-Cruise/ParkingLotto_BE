@@ -2,6 +2,7 @@ package com.cruise.parkinglotto.web.converter;
 
 import com.cruise.parkinglotto.domain.CertificateDocs;
 import com.cruise.parkinglotto.domain.Member;
+import com.cruise.parkinglotto.domain.enums.AccountType;
 import com.cruise.parkinglotto.global.jwt.JwtToken;
 import com.cruise.parkinglotto.web.dto.memberDTO.MemberResponseDTO;
 
@@ -19,6 +20,7 @@ public class MemberConverter {
                 .employeeNo(member.getEmployeeNo())
                 .deptPathName(member.getDeptPathName())
                 .enrollmentStatus(member.getEnrollmentStatus())
+                .accountType(member.getAccountType())
                 .build();
     }
 

@@ -22,7 +22,7 @@ public interface MemberService {
     MemberResponseDTO.LogoutResponseDTO logout(MemberRequestDTO.LogoutRequestDTO logoutRequestDTO);
 
     // 리프레시 토큰을 이용하여 로그인을 유지하는 메서드
-    MemberResponseDTO.RefreshResponseDTO refreshToken(JwtToken jwtToken);
+    MemberResponseDTO.RefreshResponseDTO recreateToken(String refreshToken);
 
 
     MemberResponseDTO.MyInfoResponseDTO saveMyInfo(Long memberId, MemberRequestDTO.MyInfoRequestDTO myInfoRequestDTO, List<MultipartFile> certificateDocs);

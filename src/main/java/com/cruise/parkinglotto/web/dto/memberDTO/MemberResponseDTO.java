@@ -1,5 +1,6 @@
 package com.cruise.parkinglotto.web.dto.memberDTO;
 
+import com.cruise.parkinglotto.domain.enums.AccountType;
 import com.cruise.parkinglotto.domain.enums.EnrollmentStatus;
 import com.cruise.parkinglotto.domain.enums.WorkType;
 import com.cruise.parkinglotto.global.jwt.JwtToken;
@@ -24,6 +25,7 @@ public class MemberResponseDTO {
         private String deptPathName;
         private String accountId;
         private EnrollmentStatus enrollmentStatus;
+        private AccountType accountType;
     }
 
     @Getter
