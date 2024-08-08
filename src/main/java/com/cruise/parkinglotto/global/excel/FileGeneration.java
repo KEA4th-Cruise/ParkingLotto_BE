@@ -48,7 +48,7 @@ public class FileGeneration {
             cellStyle.setAlignment(HorizontalAlignment.CENTER); // 가운데 정렬
 
             Row headerRow = sheet.createRow(1);
-            String[] headers = {"순번", "이름", "직종", "가중치", "당첨여부", "주차구역"};
+            String[] headers = {"순번", "이름", "직종", "가중치", "당첨여부"};
             for (int i = 0; i < headers.length; i++) {
                 headerRow.createCell(i).setCellValue(headers[i]);
             }
@@ -67,11 +67,6 @@ public class FileGeneration {
                 cell3.setCellStyle(cellStyle);
 
                 row.createCell(4).setCellValue(applicant.getWinningStatus().toString());
-                if (applicant.getParkingSpaceId() != null) {
-                    row.createCell(5).setCellValue(parkingSpaceRepository.findById(applicant.getParkingSpaceId()).get().getName());
-                } else {
-                    row.createCell(5).setCellValue("예비번호: " + applicant.getReserveNum());
-                }
                 i++;
             }
 
