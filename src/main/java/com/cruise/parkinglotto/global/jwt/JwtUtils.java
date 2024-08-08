@@ -40,13 +40,12 @@ public class JwtUtils {
                 .collect(Collectors.joining(","));
 
         Long now = new Date().getTime();
-        Date accessTokenExpiresIn = new Date(now + 60 * 60 * 24 * 1000); // 1일
+        // Date accessTokenExpiresIn = new Date(now + 60 * 60 * 24 * 1000); // 1일
+        Date accessTokenExpiresIn = new Date(now + 3000); // 테스트를 위한 코드
 
         return Jwts.builder()
                 .setSubject(authentication.getName())
-                .setAudience("domain.com")
                 .setIssuedAt(new Date())
-                .setIssuer("parkinglotto")
                 .setExpiration(accessTokenExpiresIn)
                 .claim("auth", authorities)
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -131,9 +130,9 @@ public class JwtUtils {
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {
             return bearerToken.substring(7);
+        } else {
+            return getTokenInCookie(request, "accessToken");
         }
-
-        return getTokenInCookie(request, "accessToken");
     }
 
     // 토큰에서 claim을 뽑는 메서드

@@ -3,18 +3,23 @@ package com.cruise.parkinglotto.web.controller;
 import com.cruise.parkinglotto.domain.Member;
 import com.cruise.parkinglotto.domain.enums.EnrollmentStatus;
 import com.cruise.parkinglotto.global.jwt.JwtUtils;
+import com.cruise.parkinglotto.global.mail.MailType;
 import com.cruise.parkinglotto.global.response.ApiResponse;
 import com.cruise.parkinglotto.global.response.code.status.SuccessStatus;
+import com.cruise.parkinglotto.service.mailService.MailService;
 import com.cruise.parkinglotto.service.memberService.MemberService;
 import com.cruise.parkinglotto.service.registerService.RegisterService;
+import com.cruise.parkinglotto.web.converter.MailInfoConverter;
 import com.cruise.parkinglotto.web.converter.RegisterConverter;
 import com.cruise.parkinglotto.web.dto.registerDTO.RegisterResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @RestController
@@ -25,6 +30,7 @@ public class RegisterRestController {
     private final MemberService memberService;
     private final RegisterService registerService;
     private final JwtUtils jwtUtils;
+    private final MailService mailService;
 
     @Operation(summary = "사용자 등록 요청 API", description = "API 요청 시 토큰에서 유저 정보를 가져오기 때문에 RequestDTO가 필요하지 않습니다. 응답 result 또한 null을 반환합니다.(신해철)")
     @GetMapping("/request")
@@ -42,15 +48,17 @@ public class RegisterRestController {
 
     @Operation(summary = "관리자 등록 요청 승인 API", description = "API 요청 시 토큰에서 유저 정보를 가져오기 때문에 RequestDTO가 필요하지 않습니다. 응답 result 또한 null을 반환합니다.(신해철)")
     @GetMapping("/info/{accountId}/approval")
-    public ApiResponse<Object> approveRegister(@PathVariable("accountId") String accountId) {
+    public ApiResponse<Object> approveRegister(@PathVariable("accountId") String accountId) throws MessagingException, NoSuchAlgorithmException {
         Member member = memberService.getMemberByAccountId(accountId);
+        mailService.sendEmailForCertification(MailInfoConverter.toMailInfo(member.getEmail(), member.getNameKo(), MailType.REGISTER_APPROVAL));
         return ApiResponse.onSuccess(SuccessStatus.REGISTER_REQUEST_APPROVED, registerService.approveRegister(member));
     }
 
     @Operation(summary = "관리자 등록 요청 거절 + 등록된 사용자 삭제 API", description = "등록 요청을 거절하는 API와 등록된 사용자를 삭제하는 API가 똑같습니다.(신해철)")
     @GetMapping("/info/{accountId}/rejection")
-    public ApiResponse<Object> rejectRegister(@PathVariable("accountId") String accountId) {
+    public ApiResponse<Object> rejectRegister(@PathVariable("accountId") String accountId) throws MessagingException, NoSuchAlgorithmException {
         Member member = memberService.getMemberByAccountId(accountId);
+        mailService.sendEmailForCertification(MailInfoConverter.toMailInfo(member.getEmail(), member.getNameKo(), MailType.REGISTER_REJECTION));
         return ApiResponse.onSuccess(SuccessStatus.REGISTER_REQUEST_REJECTED, registerService.rejectRegister(member));
     }
 

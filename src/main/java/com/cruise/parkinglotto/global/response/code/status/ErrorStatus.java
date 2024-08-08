@@ -76,6 +76,9 @@ public enum ErrorStatus implements BaseErrorCode {
     WORK_TYPE_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBERDETAIL4001", "근무타입이 입력되지 않았습니다."),
     ADDRESS_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBERDETAIL4002", "주소가 입력되지 않았습니다."),
 
+    // 메일 관련 응답
+    MAIL_INVALID_ADDRESS(HttpStatus.BAD_REQUEST, "MAIL4001", "유효하지 않은 이메일 주소입니다."),
+
     ;
 
 

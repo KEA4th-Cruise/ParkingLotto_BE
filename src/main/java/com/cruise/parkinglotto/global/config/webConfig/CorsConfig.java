@@ -19,6 +19,7 @@ public class CorsConfig {
         ArrayList<String> allowedOriginPatterns = new ArrayList<>();
         allowedOriginPatterns.add("http://localhost:3000");
         allowedOriginPatterns.add("http://127.0.0.1:3000");
+        allowedOriginPatterns.add("http://172.16.3.5:3000");
         allowedOriginPatterns.add("http://210.109.53.79:9090"); // prometheus
         configuration.setAllowedOrigins(allowedOriginPatterns);
 
