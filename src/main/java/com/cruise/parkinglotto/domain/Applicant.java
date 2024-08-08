@@ -85,6 +85,10 @@ public class Applicant extends BaseEntity {
         this.reserveNum = reserveNum;
     }
 
+    public void updateParkingSpaceId(Long parkingSpaceId) {
+        this.parkingSpaceId = parkingSpaceId;
+    }
+
     public void updateReserve(Long parkingSpaceId, Integer reserveNum, WinningStatus winningStatus) {
         this.parkingSpaceId = parkingSpaceId;
         this.reserveNum = reserveNum;

@@ -113,6 +113,12 @@ public class DrawServiceImpl implements DrawService {
                 }
             });
 
+            for (Applicant orderedApplicant : orderedApplicants) {
+                if (orderedApplicant.getWinningStatus() == WinningStatus.RESERVE) {
+                    orderedApplicant.updateParkingSpaceId(-1L);
+                }
+            }
+
         } catch (Exception e) {
             log.error("Error occurred during executeDraw for drawId: {}", drawId, e);
             throw e;
@@ -608,7 +614,7 @@ public class DrawServiceImpl implements DrawService {
         for (Applicant applicant : reservedApplicants) {
             applicant.updateReserveNum(applicant.getReserveNum() - 1);
         }
-        currentWinner.updateReserve(null, reservedApplicants.size() + 1, WinningStatus.CANCELED);
+        currentWinner.updateReserve(-1L, reservedApplicants.size() + 1, WinningStatus.CANCELED);
     }
 
     @Override
