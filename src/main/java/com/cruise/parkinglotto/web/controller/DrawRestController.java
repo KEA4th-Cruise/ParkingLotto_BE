@@ -274,4 +274,12 @@ public class DrawRestController {
         PriorityApplicantResponseDTO.CancelPriorityAssignResultDTO cancelPriorityAssignResultDTO = priorityApplicantService.cancelPriorityAssign(drawId, priorityApplicantId);
         return ApiResponse.onSuccess(SuccessStatus.PRIORITY_APPLICANT_ASSIGN_CANCELED, cancelPriorityAssignResultDTO);
     }
+
+    @Operation(summary = "사용자가 신청한 일반 추첨을 정보를 조회하는 api입니다.", description = "drawId만 필요합니다. (김성호)")
+    @GetMapping(value = "/{drawId}/general/apply")
+    public ApiResponse<ApplicantResponseDTO.getMyApplyInformationDTO> getApplyInformation(HttpServletRequest httpServletRequest, @PathVariable(name = "drawId") Long drawId) {
+        String accountId = jwtUtils.getAccountIdFromRequest(httpServletRequest);
+        ApplicantResponseDTO.getMyApplyInformationDTO applyInfomationDTO =applicantService.getMyApplyInfomation(drawId, accountId);
+        return ApiResponse.onSuccess(SuccessStatus.APPLICANT_CURRENT_APPLY_INFO_FOUND, applyInfomationDTO);
+    }
 }
