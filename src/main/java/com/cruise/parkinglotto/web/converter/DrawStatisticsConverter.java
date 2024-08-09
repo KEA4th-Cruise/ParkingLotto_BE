@@ -1,6 +1,7 @@
 package com.cruise.parkinglotto.web.converter;
 
 import com.cruise.parkinglotto.domain.*;
+import com.cruise.parkinglotto.domain.enums.WorkType;
 import com.cruise.parkinglotto.web.dto.drawStatisticsDTO.DrawStatisticsResponseDTO;
 
 import java.util.List;
@@ -46,12 +47,18 @@ public class DrawStatisticsConverter {
                 .build();
     }
 
-    public static DrawStatistics toDrawStatistics(Draw draw, List<Applicant> applicants, int totalSlots) {
+    public static DrawStatistics toDrawStatistics(Draw draw, List<Applicant> applicants, int totalSlots, Double trafficCommuteTimeAvg, Double carCommuteTimeAvg, Double distanceAvg, Double recentLossCountAvg, Double winnersWeightedTotalScoreAvg, WorkType dominantWorkType) {
         DrawStatistics drawStatistics =
                 DrawStatistics.builder()
                         .competitionRate((double) applicants.size() / totalSlots)
                         .totalApplicants(applicants.size())
                         .applicantsWeightAvg(applicants.stream().mapToDouble(Applicant::getWeightedTotalScore).average().orElse(0))
+                        .trafficCommuteTimeAvg(trafficCommuteTimeAvg)
+                        .carCommuteTimeAvg(carCommuteTimeAvg)
+                        .recentLossCountAvg(recentLossCountAvg)
+                        .distanceAvg(distanceAvg)
+                        .winnersWeightAvg(winnersWeightedTotalScoreAvg)
+                        .dominantWorkType(dominantWorkType)
                         .draw(draw)
                         .build();
         return drawStatistics;

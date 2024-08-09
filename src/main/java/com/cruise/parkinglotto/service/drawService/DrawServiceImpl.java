@@ -107,7 +107,7 @@ public class DrawServiceImpl implements DrawService {
 
             weightSectionStatisticsService.updateWeightSectionStatistics(drawId);
 
-            drawStatisticsService.updateDrawStatistics(drawId);
+            drawStatisticsService.updateDrawStatistics(drawId, orderedApplicants);
 
             // 트랜잭션이 성공적으로 커밋된 후 엑셀 파일을 생성하도록 작업 예약
             TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {

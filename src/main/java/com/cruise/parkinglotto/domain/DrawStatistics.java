@@ -1,6 +1,7 @@
 package com.cruise.parkinglotto.domain;
 
 import com.cruise.parkinglotto.domain.common.BaseEntity;
+import com.cruise.parkinglotto.domain.enums.WorkType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -41,4 +42,11 @@ public class DrawStatistics extends BaseEntity {
 
     @Column(nullable = false)
     private Double recentLossCountAvg;
+
+    @Column(nullable = false)
+    private Double winnersWeightAvg;
+
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private WorkType dominantWorkType;
 }
