@@ -3,6 +3,8 @@ package com.cruise.parkinglotto.service.drawStatisticsService;
 import com.cruise.parkinglotto.domain.*;
 import com.cruise.parkinglotto.domain.enums.DrawType;
 import com.cruise.parkinglotto.domain.enums.WeightSection;
+import com.cruise.parkinglotto.domain.enums.WinningStatus;
+import com.cruise.parkinglotto.domain.enums.WorkType;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
 import com.cruise.parkinglotto.repository.*;
@@ -41,11 +43,50 @@ public class DrawStatisticsServiceImpl implements DrawStatisticsService {
 
     @Override
     @Transactional
-    public void updateDrawStatistics(Long drawId) {
+    public void updateDrawStatistics(Long drawId, List<Applicant> applicants) {
         Draw draw = drawRepository.findById(drawId).orElseThrow();
         int totalSlots = draw.getTotalSlots();
-        List<Applicant> applicants = applicantRepository.findByDrawId(drawId);
-        DrawStatistics drawStatistics = DrawStatisticsConverter.toDrawStatistics(draw, applicants, totalSlots);
+        List<Applicant> winners = applicants.stream()
+                .filter(applicant -> applicant.getWinningStatus() == WinningStatus.WINNER)
+                .toList();
+        // 당첨자 평균값 계산
+        double trafficCommuteTimeAvg = winners.stream()
+                .mapToDouble(Applicant::getTrafficCommuteTime)
+                .average()
+                .orElse(0.0);
+
+        double carCommuteTimeAvg = winners.stream()
+                .mapToDouble(Applicant::getCarCommuteTime)
+                .average()
+                .orElse(0.0);
+
+        double distanceAvg = winners.stream()
+                .mapToDouble(Applicant::getDistance)
+                .average()
+                .orElse(0.0);
+
+        double recentLossCountAvg = winners.stream()
+                .mapToDouble(Applicant::getRecentLossCount)
+                .average()
+                .orElse(0.0);
+
+        double winnersWeightAvg = winners.stream()
+                .mapToDouble(Applicant::getWeightedTotalScore)
+                .average()
+                .orElse(0.0);
+
+        // WORKTYPE 개수 세기
+        long type1Count = winners.stream()
+                .filter(applicant -> applicant.getWorkType() == WorkType.TYPE1)
+                .count();
+
+        long type2Count = winners.stream()
+                .filter(applicant -> applicant.getWorkType() == WorkType.TYPE2)
+                .count();
+
+        WorkType dominantWorkType = (type1Count >= type2Count) ? WorkType.TYPE1 : WorkType.TYPE2;
+
+        DrawStatistics drawStatistics = DrawStatisticsConverter.toDrawStatistics(draw, applicants, totalSlots, trafficCommuteTimeAvg, carCommuteTimeAvg, distanceAvg, recentLossCountAvg, winnersWeightAvg, dominantWorkType);
         drawStatisticsRepository.save(drawStatistics);
     }
 
