@@ -15,6 +15,7 @@ public class ParkingSpaceConverter {
     public static List<ParkingSpaceResponseDTO.GetParkingSpaceResultDTO> toGetNameAndUrlParkingResponse(List<ParkingSpace> parkingSpaces) {
         return parkingSpaces.stream()
                 .map(parkingSpace -> ParkingSpaceResponseDTO.GetParkingSpaceResultDTO.builder()
+                        .id(parkingSpace.getId())
                         .name(parkingSpace.getName())
                         .floorPlanImageUrl(parkingSpace.getFloorPlanImageUrl())
                         .slots(parkingSpace.getSlots())
