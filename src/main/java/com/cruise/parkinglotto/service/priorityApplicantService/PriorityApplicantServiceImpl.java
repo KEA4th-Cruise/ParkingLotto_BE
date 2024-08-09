@@ -254,12 +254,14 @@ public class PriorityApplicantServiceImpl implements PriorityApplicantService {
 
     @Override
     @Transactional
-    public PriorityApplicantResponseDTO.CancelPriorityAssignResultDTO cancelPriorityAssign(Long drawId, Long priorityApplicantId) {
+    public PriorityApplicantResponseDTO.CancelPriorityAssignResultDTO cancelPriorityAssign(Long drawId, Long priorityApplicantId) throws MessagingException, NoSuchAlgorithmException {
         PriorityApplicant priorityApplicant = priorityApplicantRepository.findById(priorityApplicantId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND));
         if (!priorityApplicant.getApprovalStatus().equals(ApprovalStatus.ASSIGNED)) {
             throw new ExceptionHandler(ErrorStatus.APPLICANT_NOT_ASSIGNED);
         } else {
             priorityApplicant.cancelPriorityAssign();
+            Member member = priorityApplicant.getMember();
+            mailService.sendEmailForCertification(MailInfoConverter.toMailInfo(member.getEmail(), member.getNameKo(), MailType.PRIORITY_CANCEL));
             return PriorityApplicantConverter.toCancelPriorityAssignmentResultDTO(priorityApplicant);
         }
     }

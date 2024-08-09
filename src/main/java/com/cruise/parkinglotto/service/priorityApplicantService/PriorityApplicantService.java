@@ -27,7 +27,7 @@ public interface PriorityApplicantService {
 
     void cancelPriorityApply(String accountId, Long drawId);
 
-    PriorityApplicantResponseDTO.CancelPriorityAssignResultDTO cancelPriorityAssign(Long drawId, Long priorityApplicantId);
+    PriorityApplicantResponseDTO.CancelPriorityAssignResultDTO cancelPriorityAssign(Long drawId, Long priorityApplicantId) throws MessagingException, NoSuchAlgorithmException;
 
     PriorityApplicantResponseDTO.getMyPriorityApplyInformationDTO getMyPriorityApplyInformation(Long drawId, String accountId);
     
