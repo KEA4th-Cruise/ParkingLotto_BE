@@ -25,16 +25,12 @@ public class WeightDetails extends BaseEntity {
     @Enumerated(value = EnumType.STRING)
     private WorkType workType;
 
-    @Column(nullable = false)
     private Integer trafficCommuteTime;
 
-    @Column(nullable = false)
     private Integer carCommuteTime;
 
-    @Column(nullable = false)
     private Double distance;
 
-    @Column(nullable = false)
     private Integer recentLossCount;
 
     @OneToOne(fetch = FetchType.LAZY)
