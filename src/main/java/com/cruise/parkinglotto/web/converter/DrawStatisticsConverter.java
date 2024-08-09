@@ -38,6 +38,8 @@ public class DrawStatisticsConverter {
                 .carCommuteTimeAvg(drawStatistics.getCarCommuteTimeAvg())
                 .trafficCommuteTimeAvg(drawStatistics.getTrafficCommuteTimeAvg())
                 .recentLossCountAvg(drawStatistics.getRecentLossCountAvg())
+                .winnersWeightAvg(drawStatistics.getWinnersWeightAvg())
+                .dominantWorkType(drawStatistics.getDominantWorkType())
                 .winningRatePerWeightSectionList(weightSectionStatisticsList.stream()
                         .map(WeightSectionConverter::toWinningRatePerWeightSectionDTO)
                         .toList())
