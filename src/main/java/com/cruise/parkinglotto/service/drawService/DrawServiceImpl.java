@@ -636,8 +636,13 @@ public class DrawServiceImpl implements DrawService {
     public void adminCancelWinner(HttpServletRequest httpServletRequest, Long drawId, Long winnerId) throws MessagingException, NoSuchAlgorithmException {
         String accountIdFromRequest = jwtUtils.getAccountIdFromRequest(httpServletRequest);
         Member member = memberRepository.findByAccountId(accountIdFromRequest).orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
+        Applicant cancelApplicant = applicantRepository.findByDrawIdAndId(drawId, winnerId);
         if (member.getAccountType() == AccountType.ADMIN) {
-            assignReservedApplicant(drawId, winnerId);
+            if (cancelApplicant.getWinningStatus() == WinningStatus.WINNER) {
+                assignReservedApplicant(drawId, winnerId);
+            } else {
+                throw new ExceptionHandler(ErrorStatus.APPLICANT_NOT_WINNING_STATUS);
+            }
         } else {
             throw new ExceptionHandler(ErrorStatus._UNAUTHORIZED_ACCESS);
         }
