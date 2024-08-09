@@ -55,7 +55,7 @@ public class ApplicantServiceImpl implements ApplicantService {
     @Transactional(readOnly = true)
     public Page<Applicant> getApplicantList(Integer page, Long drawId) {
         drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
-        Page<Applicant> applicantList = applicantRepository.findByDrawId(PageRequest.of(page, 5), drawId);
+        Page<Applicant> applicantList = applicantRepository.findByDrawId(PageRequest.of(page, 6), drawId);
         return applicantList;
     }
 
