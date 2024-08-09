@@ -1,10 +1,12 @@
 package com.cruise.parkinglotto.service.registerService;
 
 import com.cruise.parkinglotto.domain.Member;
+import com.cruise.parkinglotto.domain.WeightDetails;
 import com.cruise.parkinglotto.domain.enums.EnrollmentStatus;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
 import com.cruise.parkinglotto.repository.MemberRepository;
+import com.cruise.parkinglotto.repository.WeightDetailsRepository;
 import com.cruise.parkinglotto.service.memberService.MemberService;
 import com.cruise.parkinglotto.web.converter.RegisterConverter;
 import com.cruise.parkinglotto.web.dto.registerDTO.RegisterResponseDTO;
@@ -25,7 +27,7 @@ public class RegisterServiceImpl implements RegisterService {
 
     private final MemberRepository memberRepository;
     private final MemberService memberService;
-    private final JPAQueryFactory queryFactory;
+    private final WeightDetailsRepository weightDetailsRepository;
 
     @Override
     @Transactional
@@ -51,6 +53,13 @@ public class RegisterServiceImpl implements RegisterService {
     @Transactional
     public Object approveRegister(Member member) {
         int updatedCount = memberRepository.updateEnrollmentStatusToEnrolled(member.getAccountId());
+        WeightDetails weightDetails = WeightDetails.builder()
+                .member(member)
+                .address(member.getAddress())
+                .recentLossCount(0)
+                .workType(member.getWorkType())
+                .build();
+        weightDetailsRepository.save(weightDetails);
         if (updatedCount == 0) { // 관리자가 승인을 했는데 ENROLLED로 바뀌지 않은 경우
             throw new ExceptionHandler(ErrorStatus.REGISTER_APPROVE_FAILED);
         }
