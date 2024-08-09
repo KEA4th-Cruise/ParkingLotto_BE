@@ -196,7 +196,7 @@ public class DrawRestController {
     @Operation(summary = "우대 신청을 거절하는 API 입니다.", description = " PathVariable 으로 drawId와 priorityApplicantId 번호를 전송해주세요.(이윤서)")
     @PatchMapping("/{drawId}/priority-applicants/{priorityApplicantId}/rejection")
     public ApiResponse<PriorityApplicantResponseDTO.RejectPriorityResultDTO> rejectPriority(@PathVariable(name = "drawId") Long drawId,
-                                                                                            @PathVariable(name = "priorityApplicantId") Long priorityApplicantId) {
+                                                                                            @PathVariable(name = "priorityApplicantId") Long priorityApplicantId) throws MessagingException, NoSuchAlgorithmException {
         PriorityApplicantResponseDTO.RejectPriorityResultDTO rejectPriorityResultDTO = priorityApplicantService.rejectPriority(drawId, priorityApplicantId);
         return ApiResponse.onSuccess(SuccessStatus.PRIORITY_APPLICANT_REJECTED, rejectPriorityResultDTO);
     }
@@ -249,7 +249,7 @@ public class DrawRestController {
 
     @Operation(summary = "승인된 우대 신청자들에게 주차 구역을 배정하는 API 입니다.", description = "PathVariable으로 우대신청의 drawId를 보내주세요.")
     @PatchMapping("/{drawId}/priority-applicants/approved/assignment")
-    public ApiResponse<PriorityApplicantResponseDTO.AssignPriorityResultListDTO> assignPriority(@PathVariable(name = "drawId") Long drawId) {
+    public ApiResponse<PriorityApplicantResponseDTO.AssignPriorityResultListDTO> assignPriority(@PathVariable(name = "drawId") Long drawId) throws MessagingException, NoSuchAlgorithmException {
         return ApiResponse.onSuccess(SuccessStatus.PRIORITY_APPLICANT_ASSIGNED, priorityApplicantService.assignPriority(drawId));
     }
 
