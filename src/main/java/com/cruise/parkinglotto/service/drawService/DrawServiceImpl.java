@@ -187,7 +187,7 @@ public class DrawServiceImpl implements DrawService {
                 // 당첨 처리
                 selectedWinners.add(applicant);
                 mailService.sendEmailForCertification(MailInfoConverter.toMailInfo(applicant.getMember().getEmail(), applicant.getMember().getNameKo(), MailType.WINNER));
-                applicantRepository.updateReserveNum(applicant.getId(), 0);
+                applicant.updateReserveNum(0);
                 applicant.updateWinningStatus(WinningStatus.WINNER);
                 weightDetailsRepository.resetRecentLossCount(applicant.getMember());
             } else {
@@ -298,7 +298,7 @@ public class DrawServiceImpl implements DrawService {
         int waitListNumber = 1;
         for (Applicant applicant : applicants) {
             if (applicant.getReserveNum() != 0) {
-                applicantRepository.updateReserveNum(applicant.getId(), waitListNumber++);
+                applicant.updateReserveNum(waitListNumber++);
                 weightDetailsRepository.increaseRecentLossCount(applicant.getMember());
             }
         }
