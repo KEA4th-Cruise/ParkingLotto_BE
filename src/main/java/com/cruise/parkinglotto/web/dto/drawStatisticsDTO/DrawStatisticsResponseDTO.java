@@ -1,6 +1,7 @@
 package com.cruise.parkinglotto.web.dto.drawStatisticsDTO;
 
 import com.cruise.parkinglotto.domain.enums.WeightSection;
+import com.cruise.parkinglotto.domain.enums.WorkType;
 import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,12 +47,14 @@ public class DrawStatisticsResponseDTO {
     @AllArgsConstructor
     public static class GetDrawStatisticsResultDTO {
         private Integer applicantsCount;
+        private Double winnersWeightAvg;
         private String drawTitle;
         private Integer totalSlots;
         private Double trafficCommuteTimeAvg;
         private Double carCommuteTimeAvg;
         private Double distanceAvg;
         private Double recentLossCountAvg;
+        private WorkType dominantWorkType;
         private List<ParkingSpaceResponseDTO.ParkingSpaceCompetitionRateDTO> parkingSpaceCompetitionRateList;
         private List<WinningRatePerWeightSectionDTO> winningRatePerWeightSectionList;
     }

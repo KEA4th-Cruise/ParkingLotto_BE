@@ -10,16 +10,20 @@ import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
 import com.cruise.parkinglotto.global.jwt.JwtUtils;
 import com.cruise.parkinglotto.global.kc.ObjectStorageConfig;
 import com.cruise.parkinglotto.global.kc.ObjectStorageService;
+import com.cruise.parkinglotto.global.mail.MailType;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
 import com.cruise.parkinglotto.repository.*;
 import com.cruise.parkinglotto.service.drawStatisticsService.DrawStatisticsService;
+import com.cruise.parkinglotto.service.mailService.MailService;
 import com.cruise.parkinglotto.service.weightSectionStatisticsService.WeightSectionStatisticsService;
 import com.cruise.parkinglotto.web.converter.DrawConverter;
+import com.cruise.parkinglotto.web.converter.MailInfoConverter;
 import com.cruise.parkinglotto.web.converter.ParkingSpaceConverter;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawRequestDTO;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
 import com.cruise.parkinglotto.web.dto.drawDTO.SimulationData;
 import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +41,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -65,6 +70,7 @@ public class DrawServiceImpl implements DrawService {
     private final DrawStatisticsService drawStatisticsService;
     private final @Lazy TaskScheduler taskScheduler;
     private final PriorityApplicantRepository priorityApplicantRepository;
+    private final MailService mailService;
 
     //계산용 변수
     private static final int WORK_TYPE1_SCORE = 25;
@@ -79,7 +85,7 @@ public class DrawServiceImpl implements DrawService {
 
     @Override
     @Transactional
-    public void executeDraw(Long drawId) throws IOException {
+    public void executeDraw(Long drawId) throws IOException, MessagingException, NoSuchAlgorithmException {
         try {
             Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
 
@@ -107,7 +113,7 @@ public class DrawServiceImpl implements DrawService {
 
             weightSectionStatisticsService.updateWeightSectionStatistics(drawId);
 
-            drawStatisticsService.updateDrawStatistics(drawId);
+            drawStatisticsService.updateDrawStatistics(drawId, orderedApplicants);
 
             // 트랜잭션이 성공적으로 커밋된 후 엑셀 파일을 생성하도록 작업 예약
             TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
@@ -173,7 +179,7 @@ public class DrawServiceImpl implements DrawService {
 
     @Override
     @Transactional
-    public void handleDrawResults(Long drawId, List<Applicant> orderedApplicants) {
+    public void handleDrawResults(Long drawId, List<Applicant> orderedApplicants) throws MessagingException, NoSuchAlgorithmException {
         List<ParkingSpace> parkingSpaces = parkingSpaceRepository.findByDrawId(drawId);
         int totalSlots = parkingSpaces.stream().mapToInt(ParkingSpace::getSlots).sum();
         //당첨자 리스트
@@ -186,12 +192,14 @@ public class DrawServiceImpl implements DrawService {
             if (i < totalSlots) {
                 // 당첨 처리
                 selectedWinners.add(applicant);
+                mailService.sendEmailForCertification(MailInfoConverter.toMailInfo(applicant.getMember().getEmail(), applicant.getMember().getNameKo(), MailType.WINNER));
                 applicantRepository.updateReserveNum(applicant.getId(), 0);
                 applicant.updateWinningStatus(WinningStatus.WINNER);
                 weightDetailsRepository.resetRecentLossCount(applicant.getMember());
             } else {
                 // 예비자 처리
                 reserveApplicants.add(applicant);
+                mailService.sendEmailForCertification(MailInfoConverter.toMailInfo(applicant.getMember().getEmail(), applicant.getMember().getNameKo(), MailType.RESERVE));
                 applicant.updateWinningStatus(WinningStatus.RESERVE);
             }
         }
@@ -605,13 +613,15 @@ public class DrawServiceImpl implements DrawService {
     }
 
     @Transactional
-    public void assignReservedApplicant(Long drawId, Long winnerId) {
+    public void assignReservedApplicant(Long drawId, Long winnerId) throws MessagingException, NoSuchAlgorithmException {
         Applicant currentWinner = applicantRepository.findByDrawIdAndId(drawId, winnerId);
 
         Long parkingSpaceId = currentWinner.getParkingSpaceId();
         Applicant nextWinner = applicantRepository.findByDrawIdAndReserveNum(drawId, 1);
 
         nextWinner.updateReserve(parkingSpaceId, 0, WinningStatus.WINNER);
+
+        mailService.sendEmailForCertification(MailInfoConverter.toMailInfo(nextWinner.getMember().getEmail(), nextWinner.getMember().getNameKo(), MailType.RESERVE_WINNER));
 
         List<Applicant> reservedApplicants = applicantRepository.findByDrawIdAndReserveNumGreaterThan(drawId, 1);
 
@@ -629,7 +639,7 @@ public class DrawServiceImpl implements DrawService {
     }
 
     @Transactional
-    public void adminCancelWinner(HttpServletRequest httpServletRequest, Long drawId, Long winnerId) {
+    public void adminCancelWinner(HttpServletRequest httpServletRequest, Long drawId, Long winnerId) throws MessagingException, NoSuchAlgorithmException {
         String accountIdFromRequest = jwtUtils.getAccountIdFromRequest(httpServletRequest);
         Member member = memberRepository.findByAccountId(accountIdFromRequest).orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
         if (member.getAccountType() == AccountType.ADMIN) {
@@ -640,7 +650,7 @@ public class DrawServiceImpl implements DrawService {
     }
 
     @Transactional
-    public void selfCancelWinner(HttpServletRequest httpServletRequest, Long drawId) {
+    public void selfCancelWinner(HttpServletRequest httpServletRequest, Long drawId) throws MessagingException, NoSuchAlgorithmException {
         String accountIdFromRequest = jwtUtils.getAccountIdFromRequest(httpServletRequest);
         Member member = memberRepository.findByAccountId(accountIdFromRequest).orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
         Applicant winner = applicantRepository.findByDrawIdAndMemberId(drawId, member.getId()).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND));

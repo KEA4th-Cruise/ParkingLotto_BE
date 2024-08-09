@@ -2,7 +2,7 @@ package com.cruise.parkinglotto.web.converter;
 
 import com.cruise.parkinglotto.domain.*;
 import com.cruise.parkinglotto.domain.enums.ApprovalStatus;
-import com.cruise.parkinglotto.web.dto.CertificateDocsDTO.CertificateDocsRequestDTO;
+import com.cruise.parkinglotto.web.dto.certificateDocsDTO.CertificateDocsRequestDTO;
 import com.cruise.parkinglotto.web.dto.priorityApplicantDTO.PriorityApplicantResponseDTO;
 import org.springframework.data.domain.Page;
 

@@ -1,7 +1,7 @@
 package com.cruise.parkinglotto.web.dto.priorityApplicantDTO;
 
 import com.cruise.parkinglotto.domain.enums.ApprovalStatus;
-import com.cruise.parkinglotto.web.dto.CertificateDocsDTO.CertificateDocsRequestDTO;
+import com.cruise.parkinglotto.web.dto.certificateDocsDTO.CertificateDocsRequestDTO;
 import lombok.*;
 
 import java.util.List;
