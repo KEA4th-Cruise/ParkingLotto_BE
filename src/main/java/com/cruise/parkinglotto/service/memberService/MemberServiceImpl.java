@@ -227,7 +227,23 @@ public class MemberServiceImpl implements MemberService {
     public MemberResponseDTO.MyInfoResponseDTO getMyInfo(Long memberId) {
 
         Member findMember = memberRepository.findById(memberId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
-        return MemberConverter.toMyInfoResponseDTO(findMember,findMember.getWeightDetails(), findMember.getCertificateDocsList());
+        WeightDetails weightDetails;
+        List<CertificateDocs> certificateDocs;
+
+        if( findMember.getWeightDetails() == null) {
+            throw new ExceptionHandler(ErrorStatus.WEIGHTDETAILS_NOT_FOUND);
+        } else {
+            weightDetails  = findMember.getWeightDetails();
+        }
+
+        if ( findMember.getCertificateDocsList().isEmpty()) {
+            throw new ExceptionHandler(ErrorStatus.APPLICANT_CERT_DOCUMENT_NOT_FOUND);
+        } else {
+            certificateDocs = findMember.getCertificateDocsList();
+        }
+
+
+        return MemberConverter.toMyInfoResponseDTO(findMember, weightDetails, certificateDocs);
 
     }
 
