@@ -138,24 +138,18 @@ public class DrawServiceImpl implements DrawService {
     @Override
     @Transactional
     public void updateSeedNum(Long drawId) {
-        try {
-            //추첨에 대한 예외처리
-            Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
+        //추첨에 대한 예외처리
+        Draw draw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
 
-            List<Applicant> applicants = applicantRepository.findByDrawId(drawId);
+        List<Applicant> applicants = applicantRepository.findByDrawId(drawId);
 
-            if (applicants == null || applicants.isEmpty()) {
-                throw new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND);
-            }
-            String seed = applicants.stream()
-                    .map(Applicant::getUserSeed)
-                    .collect(Collectors.joining());
-            draw.updateSeedNum(seed);
-        } catch (IllegalArgumentException e) {
-            System.err.println("Error : " + e.getMessage());
-        } catch (Exception e) {
-            System.err.println("An error occurred while retrieving applicants for draw ID: " + drawId);
+        if (applicants == null || applicants.isEmpty()) {
+            throw new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND);
         }
+        String seed = applicants.stream()
+                .map(Applicant::getUserSeed)
+                .collect(Collectors.joining());
+        draw.updateSeedNum(seed);
     }
 
     @Override
@@ -697,7 +691,7 @@ public class DrawServiceImpl implements DrawService {
                 .stream()
                 .map(applicant -> {
                     Long drawStatisticsId;
-                    if(!applicant.getDraw().getStatus().equals(DrawStatus.COMPLETED)){
+                    if (!applicant.getDraw().getStatus().equals(DrawStatus.COMPLETED)) {
                         drawStatisticsId = null;
                     } else drawStatisticsId = applicant.getDraw().getDrawStatistics().getId();
                     return DrawConverter.toGetAppliedDrawResultDTO(applicant.getDraw().getId(), applicant.getReserveNum(), applicant.getDraw().getTitle(), applicant.getDraw().getType(), drawStatisticsId, applicant.getParkingSpaceId(), applicant.getDraw().getUsageStartAt(), applicant.getWinningStatus());
