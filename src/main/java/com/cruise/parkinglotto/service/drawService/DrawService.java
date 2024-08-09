@@ -5,17 +5,19 @@ import com.cruise.parkinglotto.domain.Draw;
 import com.cruise.parkinglotto.domain.enums.DrawType;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawRequestDTO;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Random;
 
 public interface DrawService {
     //추첨을 실행
-    void executeDraw(Long drawId) throws IOException;
+    void executeDraw(Long drawId) throws IOException, MessagingException, NoSuchAlgorithmException;
 
     //추첨의 시드 번호를 저장
     void updateSeedNum(Long drawId);
@@ -23,7 +25,7 @@ public interface DrawService {
     //신청자들의 난수 생성 및 할당
     void assignRandomNumber(Long drawId, String seed);
 
-    void handleDrawResults(Long drawId, List<Applicant> orderedApplicants);
+    void handleDrawResults(Long drawId, List<Applicant> orderedApplicants) throws MessagingException, NoSuchAlgorithmException;
 
     void assignZones(Long drawId, List<Applicant> selectedWinners);
 
@@ -53,13 +55,13 @@ public interface DrawService {
 
     DrawResponseDTO.GetDrawListResultDTO getDrawList(String year, DrawType drawType);
 
-    void assignReservedApplicant(Long drawId, Long winnerId);
+    void assignReservedApplicant(Long drawId, Long winnerId) throws MessagingException, NoSuchAlgorithmException;
 
     DrawResponseDTO.GetYearsFromDrawListDTO getYearsFromDrawList();
 
-    void adminCancelWinner(HttpServletRequest httpServletRequest, Long drawId, Long applicantId);
+    void adminCancelWinner(HttpServletRequest httpServletRequest, Long drawId, Long applicantId) throws MessagingException, NoSuchAlgorithmException;
 
-    void selfCancelWinner(HttpServletRequest httpServletRequest, Long drawId);
+    void selfCancelWinner(HttpServletRequest httpServletRequest, Long drawId) throws MessagingException, NoSuchAlgorithmException;
 
     void openDraw(Draw draw);
 

@@ -25,6 +25,7 @@ import com.cruise.parkinglotto.web.dto.priorityApplicantDTO.PriorityApplicantReq
 import com.cruise.parkinglotto.web.dto.priorityApplicantDTO.PriorityApplicantResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.io.IOException;
 
@@ -51,7 +53,7 @@ public class DrawRestController {
     //추첨 실행 후 결과 저장하는 API
     @Operation(summary = "추첨 실행 API", description = "path variable로 추첨 ID를 넘겨주면 해당 추첨을 실행합니다.(이정균)")
     @PostMapping("/{drawId}/execution")
-    public ApiResponse<Void> executeDraw(@PathVariable("drawId") Long drawId) throws IOException {
+    public ApiResponse<Void> executeDraw(@PathVariable("drawId") Long drawId) throws IOException, MessagingException, NoSuchAlgorithmException {
         drawService.executeDraw(drawId);
 
         return ApiResponse.onSuccess(SuccessStatus.DRAW_EXECUTE_RESULT, null);
@@ -216,7 +218,7 @@ public class DrawRestController {
     @Operation(summary = "관리자가 당첨자를 강제 취소시키는 API 입니다.", description = "path variable로 drawId와 취소시킬 당첨자의 applicantId를 전송해주세요.(이정균)")
     @PatchMapping("/{drawId}/applicants/{applicantId}/admin-cancel")
     public ApiResponse<Void> cancelApplicant(HttpServletRequest httpServletRequest, @PathVariable(name = "drawId") Long drawId,
-                                             @PathVariable(name = "applicantId") Long applicantId) {
+                                             @PathVariable(name = "applicantId") Long applicantId) throws MessagingException, NoSuchAlgorithmException {
         drawService.adminCancelWinner(httpServletRequest, drawId, applicantId);
         return ApiResponse.onSuccess(SuccessStatus.DRAW_ADMIN_CANCEL, null);
     }
@@ -234,7 +236,7 @@ public class DrawRestController {
 
     @Operation(summary = "당첨자가 당첨을 포기하는 API 입니다.", description = "pathvariable로 drawId를 넘겨주세요.(이정균)")
     @PatchMapping("/{drawId}/self-cancel")
-    public ApiResponse<Void> selfCancel(HttpServletRequest httpServletRequest, @PathVariable(name = "drawId") Long drawId) {
+    public ApiResponse<Void> selfCancel(HttpServletRequest httpServletRequest, @PathVariable(name = "drawId") Long drawId) throws MessagingException, NoSuchAlgorithmException {
         drawService.selfCancelWinner(httpServletRequest, drawId);
         return ApiResponse.onSuccess(SuccessStatus.DRAW_SELF_CANCEL, null);
     }
