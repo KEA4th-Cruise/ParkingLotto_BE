@@ -16,6 +16,7 @@ import com.cruise.parkinglotto.service.certificateDocsService.CertificateDocsSer
 import com.cruise.parkinglotto.service.redisService.RedisService;
 import com.cruise.parkinglotto.web.converter.CertificateDocsConverter;
 import com.cruise.parkinglotto.web.converter.MemberConverter;
+import com.cruise.parkinglotto.web.converter.WeightDetailConverter;
 import com.cruise.parkinglotto.web.dto.memberDTO.MemberRequestDTO;
 import com.cruise.parkinglotto.web.dto.memberDTO.MemberResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -138,12 +139,11 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public MemberResponseDTO.MyInfoResponseDTO saveMyInfo(Long memberId, MemberRequestDTO.MyInfoRequestDTO myInfoRequestDTO, List<MultipartFile> certificateDocs)  {
+    public MemberResponseDTO.MyInfoResponseDTO saveMyInfo(Long memberId, MemberRequestDTO.MyInfoRequestDTO myInfoRequestDTO, List<MultipartFile> certificateDocs) {
 
         Member findMember = memberRepository.findById(memberId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
         //파일 검증 ==========
-
         //한개의 추첨에서 들어갈 수 있는 파일 개수 세는 변수
         Integer totalFileNumber = 0;
 
@@ -162,11 +162,11 @@ public class MemberServiceImpl implements MemberService {
 
         List<CertificateDocs> certificateDocsList = new ArrayList<>();
 
-        WeightDetails findWeightDetails = weightDetailsRepository.findOptionalByMemberId(memberId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.WEIGHTDETAILS_NOT_FOUND));
-        findWeightDetails.updateMyInfo(myInfoRequestDTO);
-        if(certificateDocs != null) {
-            for(MultipartFile certificateDoc : certificateDocs) {
-                String certificateDocUrl = objectStorageService.uploadObject(objectStorageConfig.getGeneralCertificateDocument(), findMember.getId()+"_"+certificateDoc.getOriginalFilename(), certificateDoc);
+        WeightDetails weightDetails = WeightDetailConverter.toWeightDetails(myInfoRequestDTO, findMember);
+        weightDetailsRepository.save(weightDetails);
+        if (certificateDocs != null) {
+            for (MultipartFile certificateDoc : certificateDocs) {
+                String certificateDocUrl = objectStorageService.uploadObject(objectStorageConfig.getGeneralCertificateDocument(), findMember.getId() + "_" + certificateDoc.getOriginalFilename(), certificateDoc);
                 CertificateDocs certificateDocument = CertificateDocsConverter.toCertificateDocument(certificateDocUrl, certificateDoc.getOriginalFilename(), findMember, -1L);
                 certificateDocsList.add(certificateDocument);
                 certificateDocsRepository.save(certificateDocument);
@@ -174,7 +174,7 @@ public class MemberServiceImpl implements MemberService {
         }
 
 
-        return MemberConverter.toMyInfoResponseDTO(findWeightDetails.getMember(), certificateDocsList);
+        return MemberConverter.toMyInfoResponseDTO(findMember, weightDetails, certificateDocsList);
 
     }
 
@@ -227,7 +227,7 @@ public class MemberServiceImpl implements MemberService {
     public MemberResponseDTO.MyInfoResponseDTO getMyInfo(Long memberId) {
 
         Member findMember = memberRepository.findById(memberId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
-        return MemberConverter.toMyInfoResponseDTO(findMember,findMember.getCertificateDocsList());
+        return MemberConverter.toMyInfoResponseDTO(findMember,findMember.getWeightDetails(), findMember.getCertificateDocsList());
 
     }
 

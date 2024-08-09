@@ -30,6 +30,10 @@ public class WeightDetailConverter {
                 .member(findMember)
                 .address(myInfoRequestDTO.getAddress())
                 .workType(myInfoRequestDTO.getWorkType())
+                .carCommuteTime(0)
+                .recentLossCount(0)
+                .trafficCommuteTime(0)
+                .distance(0.00)
                 .build();
         return weightDetails;
     }
