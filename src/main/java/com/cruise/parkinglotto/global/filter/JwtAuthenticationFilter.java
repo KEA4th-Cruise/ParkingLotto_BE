@@ -31,7 +31,11 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         // 요청으로부터 JWT 토큰을 추출
-        String token = jwtUtils.resolveToken(httpRequest);
+        String token = jwtUtils.resolveToken(httpRequest); // acccess token 검사
+
+        if (token == null) {
+            token = jwtUtils.getTokenInCookie(httpRequest, "refreshToken");
+        }
         log.info("token: {}", token);
 
         if (token != null) {
