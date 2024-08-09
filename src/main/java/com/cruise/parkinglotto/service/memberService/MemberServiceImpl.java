@@ -219,7 +219,7 @@ public class MemberServiceImpl implements MemberService {
             }
         }
 
-        return MemberConverter.toMyInfoResponseDTO(findMember, certificateDocsList);
+        return MemberConverter.toMyInfoResponseDTO(findMember, findWeightDetails, certificateDocsList);
     }
 
     @Override
