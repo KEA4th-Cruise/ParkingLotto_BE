@@ -13,7 +13,7 @@ import com.cruise.parkinglotto.service.mailService.MailService;
 import com.cruise.parkinglotto.web.converter.CertificateDocsConverter;
 import com.cruise.parkinglotto.web.converter.MailInfoConverter;
 import com.cruise.parkinglotto.web.converter.PriorityApplicantConverter;
-import com.cruise.parkinglotto.web.dto.CertificateDocsDTO.CertificateDocsRequestDTO;
+import com.cruise.parkinglotto.web.dto.certificateDocsDTO.CertificateDocsRequestDTO;
 import com.cruise.parkinglotto.web.dto.priorityApplicantDTO.PriorityApplicantRequestDTO;
 import com.cruise.parkinglotto.web.dto.priorityApplicantDTO.PriorityApplicantResponseDTO;
 import jakarta.mail.MessagingException;
@@ -29,7 +29,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.ArrayList;
 
 @Service

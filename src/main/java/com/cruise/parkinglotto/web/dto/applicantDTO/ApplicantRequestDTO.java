@@ -1,8 +1,7 @@
 package com.cruise.parkinglotto.web.dto.applicantDTO;
 
-import com.cruise.parkinglotto.domain.enums.DrawType;
 import com.cruise.parkinglotto.domain.enums.WorkType;
-import com.cruise.parkinglotto.web.dto.CertificateDocsDTO.CertificateDocsRequestDTO;
+import com.cruise.parkinglotto.web.dto.certificateDocsDTO.CertificateDocsRequestDTO;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

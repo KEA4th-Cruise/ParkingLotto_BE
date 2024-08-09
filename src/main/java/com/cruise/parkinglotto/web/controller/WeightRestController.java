@@ -2,7 +2,7 @@ package com.cruise.parkinglotto.web.controller;
 
 import com.cruise.parkinglotto.global.response.ApiResponse;
 import com.cruise.parkinglotto.global.response.code.status.SuccessStatus;
-import com.cruise.parkinglotto.service.WeightDetailService.WeightDetailService;
+import com.cruise.parkinglotto.service.weightDetailService.WeightDetailService;
 import com.cruise.parkinglotto.web.dto.weightDetailDTO.WeightDetailRequestDTO;
 import com.cruise.parkinglotto.web.dto.weightDetailDTO.WeightDetailResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;

@@ -1,7 +1,6 @@
 package com.cruise.parkinglotto.web.dto.priorityApplicantDTO;
 
-import com.cruise.parkinglotto.domain.enums.WorkType;
-import com.cruise.parkinglotto.web.dto.CertificateDocsDTO.CertificateDocsRequestDTO;
+import com.cruise.parkinglotto.web.dto.certificateDocsDTO.CertificateDocsRequestDTO;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

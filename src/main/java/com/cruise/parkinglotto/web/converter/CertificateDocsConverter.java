@@ -2,7 +2,7 @@ package com.cruise.parkinglotto.web.converter;
 
 import com.cruise.parkinglotto.domain.CertificateDocs;
 import com.cruise.parkinglotto.domain.Member;
-import com.cruise.parkinglotto.web.dto.CertificateDocsDTO.CertificateDocsRequestDTO;
+import com.cruise.parkinglotto.web.dto.certificateDocsDTO.CertificateDocsRequestDTO;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;

@@ -1,6 +1,5 @@
-package com.cruise.parkinglotto.service.WeightDetailService;
+package com.cruise.parkinglotto.service.weightDetailService;
 
-import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
 import com.cruise.parkinglotto.web.dto.weightDetailDTO.WeightDetailRequestDTO;
 import com.cruise.parkinglotto.web.dto.weightDetailDTO.WeightDetailResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;

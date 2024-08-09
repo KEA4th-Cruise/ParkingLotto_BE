@@ -2,7 +2,7 @@ package com.cruise.parkinglotto.service.certificateDocsService;
 
 import com.cruise.parkinglotto.domain.CertificateDocs;
 import com.cruise.parkinglotto.domain.enums.DrawType;
-import com.cruise.parkinglotto.web.dto.CertificateDocsDTO.CertificateDocsRequestDTO;
+import com.cruise.parkinglotto.web.dto.certificateDocsDTO.CertificateDocsRequestDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;

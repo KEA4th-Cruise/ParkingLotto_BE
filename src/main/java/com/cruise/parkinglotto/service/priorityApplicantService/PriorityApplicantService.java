@@ -1,8 +1,6 @@
 package com.cruise.parkinglotto.service.priorityApplicantService;
 
 import com.cruise.parkinglotto.domain.enums.ApprovalStatus;
-import com.cruise.parkinglotto.web.dto.CertificateDocsDTO.CertificateDocsResponseDTO;
-import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import com.cruise.parkinglotto.web.dto.priorityApplicantDTO.PriorityApplicantRequestDTO;
 import com.cruise.parkinglotto.web.dto.priorityApplicantDTO.PriorityApplicantResponseDTO;
 import jakarta.mail.MessagingException;

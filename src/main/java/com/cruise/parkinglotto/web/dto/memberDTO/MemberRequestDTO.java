@@ -1,7 +1,6 @@
 package com.cruise.parkinglotto.web.dto.memberDTO;
 
 import com.cruise.parkinglotto.domain.enums.WorkType;
-import com.cruise.parkinglotto.web.dto.CertificateDocsDTO.CertificateDocsRequestDTO;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -10,7 +9,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import java.util.List;
 
 public class MemberRequestDTO {
 
