@@ -16,6 +16,7 @@ import com.cruise.parkinglotto.repository.DrawRepository;
 import com.cruise.parkinglotto.repository.ParkingSpaceRepository;
 import com.cruise.parkinglotto.web.converter.ApplicantConverter;
 import com.cruise.parkinglotto.web.converter.CertificateDocsConverter;
+import com.cruise.parkinglotto.web.converter.WeightDetailConverter;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantRequestDTO;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import com.cruise.parkinglotto.web.dto.certificateDocsDTO.CertificateDocsRequestDTO;
@@ -157,8 +158,6 @@ public class ApplicantServiceImpl implements ApplicantService {
         Integer carCommuteTime = applyDrawRequestDTO.getCarCommuteTime();
         Integer trafficCommuteTime = applyDrawRequestDTO.getTrafficCommuteTime();
         Double distance = applyDrawRequestDTO.getDistance();
-        WeightDetails weightDetails = weightDetailsRepository.findByMemberId(member.getId());
-        weightDetails.updateWeightDetailsInApply(address, applyDrawRequestDTO.getWorkType(), trafficCommuteTime, carCommuteTime, distance);
 
         //Handling workType
         WorkType workType = applyDrawRequestDTO.getWorkType();
@@ -166,11 +165,15 @@ public class ApplicantServiceImpl implements ApplicantService {
         //recentLossCount
         Optional<WeightDetails> weightDetailsOptional = weightDetailsRepository.findOptionalByMemberId(member.getId());
 
-        Integer recentLossCount;
+        Integer recentLossCount = 0;
+
         if (weightDetailsOptional.isEmpty()) {
-            recentLossCount = 0;
+            WeightDetails weightDetails = WeightDetailConverter.makeWeightDetails(member, address, workType, trafficCommuteTime, carCommuteTime, distance);
+            weightDetailsRepository.save(weightDetails);
         } else {
+            WeightDetails weightDetails = weightDetailsOptional.get();
             recentLossCount = weightDetails.getRecentLossCount();
+            weightDetails.updateWeightDetailsInApply(address, applyDrawRequestDTO.getWorkType(), trafficCommuteTime, carCommuteTime, distance);
         }
 
         WinningStatus winningStatus = WinningStatus.PENDING;
