@@ -5,14 +5,18 @@ import com.cruise.parkinglotto.domain.enums.*;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
 import com.cruise.parkinglotto.global.kc.ObjectStorageConfig;
 import com.cruise.parkinglotto.global.kc.ObjectStorageService;
+import com.cruise.parkinglotto.global.mail.MailType;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
 import com.cruise.parkinglotto.repository.*;
 import com.cruise.parkinglotto.service.certificateDocsService.CertificateDocsService;
+import com.cruise.parkinglotto.service.mailService.MailService;
 import com.cruise.parkinglotto.web.converter.CertificateDocsConverter;
+import com.cruise.parkinglotto.web.converter.MailInfoConverter;
 import com.cruise.parkinglotto.web.converter.PriorityApplicantConverter;
 import com.cruise.parkinglotto.web.dto.CertificateDocsDTO.CertificateDocsRequestDTO;
 import com.cruise.parkinglotto.web.dto.priorityApplicantDTO.PriorityApplicantRequestDTO;
 import com.cruise.parkinglotto.web.dto.priorityApplicantDTO.PriorityApplicantResponseDTO;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -39,6 +44,7 @@ public class PriorityApplicantServiceImpl implements PriorityApplicantService {
     private final CertificateDocsService certificateDocsService;
     private final ObjectStorageService objectStorageService;
     private final ObjectStorageConfig objectStorageConfig;
+    private final MailService mailService;
 
     @Override
     @Transactional(readOnly = true)
@@ -71,8 +77,10 @@ public class PriorityApplicantServiceImpl implements PriorityApplicantService {
 
     @Override
     @Transactional
-    public PriorityApplicantResponseDTO.RejectPriorityResultDTO rejectPriority(Long drawId, Long priorityApplicantId) {
+    public PriorityApplicantResponseDTO.RejectPriorityResultDTO rejectPriority(Long drawId, Long priorityApplicantId) throws MessagingException, NoSuchAlgorithmException {
         PriorityApplicant priorityApplicant = priorityApplicantRepository.findById(priorityApplicantId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND));
+        Member member = priorityApplicant.getMember();
+        mailService.sendEmailForCertification(MailInfoConverter.toMailInfo(member.getEmail(), member.getNameKo(), MailType.PRIORITY_REJECTION));
         priorityApplicant.rejectPriorityApply(ApprovalStatus.REJECTED);
         return PriorityApplicantConverter.toRejectPriorityResultDTO(priorityApplicant);
     }
@@ -179,7 +187,7 @@ public class PriorityApplicantServiceImpl implements PriorityApplicantService {
 
     @Override
     @Transactional
-    public PriorityApplicantResponseDTO.AssignPriorityResultListDTO assignPriority(Long drawId) {
+    public PriorityApplicantResponseDTO.AssignPriorityResultListDTO assignPriority(Long drawId) throws MessagingException, NoSuchAlgorithmException {
         List<ParkingSpace> parkingSpaceList = parkingSpaceRepository.findByDrawId(drawId);
         List<PriorityApplicant> priorityApplicantList = priorityApplicantRepository.findApprovedApplicantsByDrawId(drawId, ApprovalStatus.APPROVED);
         if (priorityApplicantList.isEmpty()) {
@@ -188,11 +196,13 @@ public class PriorityApplicantServiceImpl implements PriorityApplicantService {
         Collections.shuffle(priorityApplicantList);
         for (PriorityApplicant applicant : priorityApplicantList) {
             boolean assigned = false;
+            Member member = applicant.getMember();
             for (ParkingSpace parkingSpace : parkingSpaceList) {
                 if (parkingSpace.getRemainSlots() > 0) {
                     applicant.assignParkingSpace(parkingSpace.getId());
                     parkingSpace.decrementSlots();
                     assigned = true;
+                    mailService.sendEmailForCertification(MailInfoConverter.toMailInfo(member.getEmail(), member.getNameKo(), MailType.PRIORITY_APPROVAL));
                     break;
                 }
             }
@@ -244,12 +254,14 @@ public class PriorityApplicantServiceImpl implements PriorityApplicantService {
 
     @Override
     @Transactional
-    public PriorityApplicantResponseDTO.CancelPriorityAssignResultDTO cancelPriorityAssign(Long drawId, Long priorityApplicantId) {
+    public PriorityApplicantResponseDTO.CancelPriorityAssignResultDTO cancelPriorityAssign(Long drawId, Long priorityApplicantId) throws MessagingException, NoSuchAlgorithmException {
         PriorityApplicant priorityApplicant = priorityApplicantRepository.findById(priorityApplicantId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND));
         if (!priorityApplicant.getApprovalStatus().equals(ApprovalStatus.ASSIGNED)) {
             throw new ExceptionHandler(ErrorStatus.APPLICANT_NOT_ASSIGNED);
         } else {
             priorityApplicant.cancelPriorityAssign();
+            Member member = priorityApplicant.getMember();
+            mailService.sendEmailForCertification(MailInfoConverter.toMailInfo(member.getEmail(), member.getNameKo(), MailType.PRIORITY_CANCEL));
             return PriorityApplicantConverter.toCancelPriorityAssignmentResultDTO(priorityApplicant);
         }
     }
