@@ -19,9 +19,10 @@ public class WeightDetails extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 50)
+    @Column(nullable = false, length = 50)
     private String address;
 
+    @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private WorkType workType;
 
@@ -31,6 +32,7 @@ public class WeightDetails extends BaseEntity {
 
     private Double distance;
 
+    @Column(nullable = false)
     private Integer recentLossCount;
 
     @OneToOne(fetch = FetchType.LAZY)
