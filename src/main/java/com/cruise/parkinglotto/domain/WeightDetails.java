@@ -19,19 +19,17 @@ public class WeightDetails extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 50)
+    @Column(nullable = false, length = 50)
     private String address;
 
+    @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private WorkType workType;
 
-    @Column(nullable = false)
     private Integer trafficCommuteTime;
 
-    @Column(nullable = false)
     private Integer carCommuteTime;
 
-    @Column(nullable = false)
     private Double distance;
 
     @Column(nullable = false)

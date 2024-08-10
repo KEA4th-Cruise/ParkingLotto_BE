@@ -18,8 +18,9 @@ import com.cruise.parkinglotto.web.converter.ApplicantConverter;
 import com.cruise.parkinglotto.web.converter.CertificateDocsConverter;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantRequestDTO;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
-import com.cruise.parkinglotto.web.dto.certificateDocsDTO.CertificateDocsRequestDTO;
 
+
+import com.cruise.parkinglotto.web.dto.certificateDocsDTO.CertificateDocsRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

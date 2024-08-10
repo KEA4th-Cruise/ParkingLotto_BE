@@ -22,10 +22,11 @@ public class ParkingSpaceResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class GetParkingSpaceResultDTO {
-        String name;
-        String floorPlanImageUrl;
-        String parkingSpaceAddress;
-        Integer slots;
+        private Long id;
+        private String name;
+        private String floorPlanImageUrl;
+        private String parkingSpaceAddress;
+        private Integer slots;
     }
 
     @Getter
