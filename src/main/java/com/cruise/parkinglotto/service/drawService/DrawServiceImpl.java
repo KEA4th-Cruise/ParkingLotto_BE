@@ -1,9 +1,6 @@
 package com.cruise.parkinglotto.service.drawService;
 
-import com.cruise.parkinglotto.domain.Applicant;
-import com.cruise.parkinglotto.domain.Draw;
-import com.cruise.parkinglotto.domain.Member;
-import com.cruise.parkinglotto.domain.ParkingSpace;
+import com.cruise.parkinglotto.domain.*;
 import com.cruise.parkinglotto.domain.enums.*;
 import com.cruise.parkinglotto.global.excel.FileGeneration;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
@@ -423,11 +420,13 @@ public class DrawServiceImpl implements DrawService {
         if (latestDraw.isEmpty()) {  //  PENDING이 아닌 추첨이 없을 경우 (최초의 상태: 진행된 추첨이 아직 존재하지 않음)
             throw new ExceptionHandler(ErrorStatus.DRAW_STATISTICS_NOT_EXIST);
         } else {
-            Optional<Applicant> applicant = applicantRepository.findByDrawIdAndMemberId(latestDraw.get().getId(), loginMember.getId());
-            isApplied = applicant.isPresent();
             if (latestDraw.get().getType() == DrawType.PRIORITY) {   // 가장 최근 추첨이 우대 신청일 경우
+                Optional<PriorityApplicant> priorityApplicant = priorityApplicantRepository.findByDrawIdAndMemberId(latestDraw.get().getId(), loginMember.getId());
+                isApplied = priorityApplicant.isPresent();
                 return DrawConverter.toGetDrawOverviewResultDTO(isApplied, null, latestDraw.get(), null);
             } else {    //  일반 추첨일 경우
+                Optional<Applicant> applicant = applicantRepository.findByDrawIdAndMemberId(latestDraw.get().getId(), loginMember.getId());
+                isApplied = applicant.isPresent();
                 parkingSpaceList = parkingSpaceRepository.findByDrawId(latestDraw.get().getId());
                 if (latestDraw.get().getStatus() == DrawStatus.OPEN) {  //   신청 기간인 경우 신청자 테이블에서 구역별 신청자 수를 계산한다.
                     applicantsCount = applicantRepository.countByDrawId(latestDraw.get().getId());
