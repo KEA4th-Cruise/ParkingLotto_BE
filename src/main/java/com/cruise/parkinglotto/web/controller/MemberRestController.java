@@ -56,14 +56,21 @@ public class MemberRestController {
 
     @Operation(summary = "로그아웃 API", description = "요청을 보내면 로그아웃 시간을 반환합니다. 쿠키에 있는 리프레시 토큰을 블랙리스트에 저장합니다. (신해철)")
     @GetMapping("/logout")
-    public ApiResponse<MemberResponseDTO.LogoutResponseDTO> logout(HttpServletRequest httpServletRequest) {
+    public ApiResponse<MemberResponseDTO.LogoutResponseDTO> logout(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+        String accessToken = jwtUtils.getTokenInCookie(httpServletRequest, "accessToken");
         String refreshToken = jwtUtils.getTokenInCookie(httpServletRequest, "refreshToken");
+
+        setCookie(httpServletResponse, "accessToken", accessToken, 0); // 쿠키 만료
+        setCookie(httpServletResponse, "refreshToken", refreshToken, 0); // 쿠키 만료
+
         return ApiResponse.onSuccess(SuccessStatus.MEMBER_LOGOUT_SUCCESS, memberService.logout(refreshToken));
     }
 
     @Operation(summary = "토큰 재발급 API", description = "access token이 만료된 경우 refresh token을 사용하여 자동 로그인을 해주는 API 입니다.(신해철)")
     @GetMapping("/refresh")
     public ApiResponse<MemberResponseDTO.RefreshResponseDTO> refreshAccessToken(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+        System.out.println("MemberRestController.refreshAccessToken");
+
         String refreshToken = jwtUtils.getTokenInCookie(httpServletRequest, "refreshToken");
         MemberResponseDTO.RefreshResponseDTO refreshResponseDTO = memberService.recreateToken(refreshToken);
         setCookie(httpServletResponse, "accessToken", refreshResponseDTO.getAccessToken(), 60 * 60 * 24); // 1일 (초, 분, 시)
