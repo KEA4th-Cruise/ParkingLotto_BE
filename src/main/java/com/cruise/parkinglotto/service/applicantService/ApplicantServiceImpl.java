@@ -164,15 +164,7 @@ public class ApplicantServiceImpl implements ApplicantService {
         //Handling workType
         WorkType workType = applyDrawRequestDTO.getWorkType();
 
-        //recentLossCount
-        Optional<WeightDetails> weightDetailsOptional = weightDetailsRepository.findOptionalByMemberId(member.getId());
-
-        Integer recentLossCount;
-        if (weightDetailsOptional.isEmpty()) {
-            recentLossCount = 0;
-        } else {
-            recentLossCount = weightDetails.getRecentLossCount();
-        }
+        Integer recentLossCount = weightDetails.getRecentLossCount();
 
         WinningStatus winningStatus = WinningStatus.PENDING;
 
@@ -188,9 +180,6 @@ public class ApplicantServiceImpl implements ApplicantService {
         //주차장 자리 업데이트
         ParkingSpace parkingSpace = parkingSpaceRepository.findUserCountWithDrawAndFirstChoice(applyDrawRequestDTO.getFirstChoice(), drawId);
         parkingSpace.updateApplicantCount();
-
-        //weight 계산 및 입력
-        drawService.calculateWeight(applicant);
 
         //  SSE로 실시간 데이터 전송 (비동기)
         sseEmitters.realTimeDrawInfo(draw);
