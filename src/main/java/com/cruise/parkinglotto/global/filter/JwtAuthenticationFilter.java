@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 import org.springframework.web.util.UrlPathHelper;
@@ -34,14 +35,17 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         // 현재 요청의 경로를 얻어온다.
         String path = new UrlPathHelper().getPathWithinApplication(httpRequest);
 
+        // 경로 매칭을 위한 AntPathMatcher 사용
+        AntPathMatcher pathMatcher = new AntPathMatcher();
+
         // 인증이 필요하지 않은 경로에 대해 필터를 건너뛴다.
-        if ("/api/members/login".equals(path) ||
-                "/api/members/logout".equals(path) ||
-                "/api/members/refresh".equals(path) ||
-                "/".equals(path) ||
-                "/v3/api-docs/**".equals(path) ||
-                "/swagger-ui/**".equals(path) ||
-                "/swagger-resources/**".equals(path)) {
+        if (pathMatcher.match("/api/members/login", path) ||
+                pathMatcher.match("/api/members/logout", path) ||
+                pathMatcher.match("/api/members/refresh", path) ||
+                pathMatcher.match("/", path) ||
+                pathMatcher.match("/v3/api-docs/**", path) ||
+                pathMatcher.match("/swagger-ui/**", path) ||
+                pathMatcher.match("/swagger-resources/**", path)) {
 
             chain.doFilter(request, response);
             return;
