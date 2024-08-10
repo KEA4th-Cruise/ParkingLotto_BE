@@ -189,9 +189,6 @@ public class ApplicantServiceImpl implements ApplicantService {
         ParkingSpace parkingSpace = parkingSpaceRepository.findUserCountWithDrawAndFirstChoice(applyDrawRequestDTO.getFirstChoice(), drawId);
         parkingSpace.updateApplicantCount();
 
-        //weight 계산 및 입력
-        drawService.calculateWeight(applicant);
-
         //  SSE로 실시간 데이터 전송 (비동기)
         sseEmitters.realTimeDrawInfo(draw);
     }
