@@ -164,15 +164,7 @@ public class ApplicantServiceImpl implements ApplicantService {
         //Handling workType
         WorkType workType = applyDrawRequestDTO.getWorkType();
 
-        //recentLossCount
-        Optional<WeightDetails> weightDetailsOptional = weightDetailsRepository.findOptionalByMemberId(member.getId());
-
-        Integer recentLossCount;
-        if (weightDetailsOptional.isEmpty()) {
-            recentLossCount = 0;
-        } else {
-            recentLossCount = weightDetails.getRecentLossCount();
-        }
+        Integer recentLossCount = weightDetails.getRecentLossCount();
 
         WinningStatus winningStatus = WinningStatus.PENDING;
 
