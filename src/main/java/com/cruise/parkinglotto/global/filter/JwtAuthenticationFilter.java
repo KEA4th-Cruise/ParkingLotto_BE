@@ -37,7 +37,12 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         // 인증이 필요하지 않은 경로에 대해 필터를 건너뛴다.
         if ("/api/members/login".equals(path) ||
                 "/api/members/logout".equals(path) ||
-                "/api/members/refresh".equals(path)) {
+                "/api/members/refresh".equals(path) ||
+                "/".equals(path) ||
+                "/v3/api-docs/**".equals(path) ||
+                "/swagger-ui/**".equals(path) ||
+                "/swagger-resources/**".equals(path)) {
+
             chain.doFilter(request, response);
             return;
         }
