@@ -33,22 +33,24 @@ public class SecurityConfig {
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/draws").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/api/draws/{drawId}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/draws/{drawId}/result").hasRole("ADMIN")
                         .requestMatchers(
                                 "/api/draws/{drawId}/parking-spaces",
-                                "/api/draws/{drawId}/applicants",
-                                "/api/draws/{drawId}/applicants/{applicantId}/admin-cancel",
-                                "/api/draws/{drawId}/priority-applicants",
-                                "/api/draws/{drawId}/priority-applicants/{priorityApplicantId}/approval",
-                                "/api/draws/{drawId}/applicants/search",
                                 "/api/draws/{drawId}/winners/search",
                                 "/api/draws/{drawId}/execution",
+                                "/api/draws/{drawId}/applicants",
+                                "/api/draws/{drawId}/applicants/{applicantId}/admin-cancel",
+                                "/api/draws/{drawId}/applicants/search",
+                                "/api/draws/{drawId}/priority-applicants",
+                                "/api/draws/{drawId}/priority-applicants/{priorityApplicantId}/approval",
+                                "/api/draws/{drawId}/priority-applicants/approved/assignment",
+                                "/api/draws/{drawId}/priority-applicants/assigned/{priorityApplicantId}",
                                 "/api/register/info/{accountId}",
                                 "/api/register/info/{accountId}/approval",
                                 "/api/register/info/{accountId}/refusal",
                                 "/api/register/members",
-                                "/api/register/members/search",
-                                "/api/draws/{drawId}/priority-applicants/approved/assignment",
-                                "/api/draws/{drawId}/priority-applicants/assigned/{priorityApplicantId}").hasRole("ADMIN")
+                                "/api/register/members/search"
+                                ).hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtUtils), UsernamePasswordAuthenticationFilter.class)
