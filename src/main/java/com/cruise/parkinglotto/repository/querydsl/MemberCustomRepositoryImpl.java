@@ -24,7 +24,10 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
         QMember member = QMember.member;
 
         BooleanExpression predicate = member.enrollmentStatus.eq(enrollmentStatus)
-                .and(member.accountId.contains(keyword).or(member.employeeNo.contains(keyword)));
+                        .and(member.accountId.contains(keyword)
+                        .or(member.employeeNo.contains(keyword))
+                        .or(member.nameKo.contains(keyword))
+                        .or(member.deptPathName.contains(keyword)));
 
         List<Member> members = jpaQueryFactory.selectFrom(member)
                 .where(predicate)
