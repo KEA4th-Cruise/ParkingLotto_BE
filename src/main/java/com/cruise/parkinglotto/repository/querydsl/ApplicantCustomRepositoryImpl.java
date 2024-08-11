@@ -27,6 +27,8 @@ public class ApplicantCustomRepositoryImpl implements ApplicantCustomRepository{
 
         BooleanExpression predicate = member.employeeNo.contains(keyword)
                 .or(member.accountId.contains(keyword))
+                .or(member.nameKo.contains(keyword))
+                .or(member.deptPathName.contains(keyword))
                 .and(applicant.draw.id.eq(drawId));
 
         List<Applicant> applicants = jpaQueryFactory.selectFrom(applicant)
@@ -55,7 +57,12 @@ public class ApplicantCustomRepositoryImpl implements ApplicantCustomRepository{
                     .and(applicant.draw.id.eq(drawId));
         } else {
             predicate = applicant.winningStatus.eq(WinningStatus.WINNER)
-                    .and(member.employeeNo.contains(keyword).or(member.accountId.contains(keyword)))
+                    .and(
+                            member.employeeNo.contains(keyword)
+                                    .or(member.accountId.contains(keyword))
+                                    .or(member.nameKo.contains(keyword))
+                                    .or(member.deptPathName.contains(keyword))
+                    )
                     .and(applicant.draw.id.eq(drawId));
         }
 

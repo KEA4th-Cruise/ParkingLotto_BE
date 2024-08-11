@@ -152,7 +152,7 @@ public class DrawRestController {
         return ApiResponse.onSuccess(SuccessStatus.PRIORITY_APPLICANT_LIST_FOUND, getPriorityApplicantListResultDTO);
     }
 
-    @Operation(summary = "일반 추첨 신청자 목록에서 검색하는 API 입니다.", description = "검색 키워드로 사원명 또는 사번을 입력해주세요.(신해철)")
+    @Operation(summary = "일반 추첨 신청자 목록에서 검색하는 API 입니다.", description = "keyword로 이름, 사번, 사원명, 부서가 가능합니다.(신해철)")
     @GetMapping("/{drawId}/applicants/search")
     public ApiResponse<ApplicantResponseDTO.GetApplicantListResultDTO> searchApplicant(@PathVariable(name = "drawId") Long drawId,
                                                                                        @RequestParam(name = "keyword") String keyword,
@@ -161,7 +161,7 @@ public class DrawRestController {
         return ApiResponse.onSuccess(SuccessStatus.APPLICANT_SEARCH_FOUND, ApplicantConverter.toGetApplicantListResultDTO(applicants));
     }
 
-    @Operation(summary = "일반 추첨 당첨자 목록에서 검색하는 API 입니다.", description = "검색 키워드로 사원명 또는 사번을 입력해주세요.(신해철)")
+    @Operation(summary = "일반 추첨 당첨자 목록 조회 + 검색하는 API 입니다.", description = "keyword로 이름, 사번, 사원명, 부서가 가능합니다. (신해철-검색), (최준범-조회)")
     @GetMapping("/{drawId}/winners/search")
     public ApiResponse<ApplicantResponseDTO.GetApplicantListResultDTO> searchWinner(@PathVariable(name = "drawId") Long drawId,
                                                                                     @RequestParam(name = "keyword", required = false) String keyword,

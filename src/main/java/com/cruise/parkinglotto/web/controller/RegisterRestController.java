@@ -70,7 +70,7 @@ public class RegisterRestController {
         return ApiResponse.onSuccess(SuccessStatus.REGISTER_MEMBERS_FOUND, RegisterConverter.toMembersResponseDTOList(members));
     }
 
-    @Operation(summary = "등록 관리 페이지에서 사용자를 검색하는 API", description = "RequestParam으로 enrollmentStatus와 searchKeyword를 받아서 검색합니다. searchKeyword는 사원명 혹은 사번이 들어가야 합니다.(신해철)")
+    @Operation(summary = "등록 관리 페이지에서 사용자를 검색하는 API", description = "RequestParam으로 enrollmentStatus와 keyword를 받아서 검색합니다. keyword로 이름, 사번, 사원명, 부서가 가능합니다.(신해철)")
     @GetMapping("/members/search")
     public ApiResponse<RegisterResponseDTO.MembersResponseDTOList> searchMember(@RequestParam(name = "enrollmentStatus") EnrollmentStatus enrollmentStatus,
                                                                                 @RequestParam(name = "keyword") String keyword,
