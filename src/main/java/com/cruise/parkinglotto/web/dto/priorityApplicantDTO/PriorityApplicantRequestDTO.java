@@ -19,6 +19,5 @@ public class PriorityApplicantRequestDTO {
         @NotNull
         @Pattern(regexp = "^[가-힣0-9]{8}$", message = "한글, 숫자포함 8자로 입력해주세요.")
         private String carNum;
-        private List<CertificateDocsRequestDTO.CertificateFileDTO> useProfileFileUrlDTO;
     }
 }

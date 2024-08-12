@@ -107,12 +107,6 @@ public class PriorityApplicantServiceImpl implements PriorityApplicantService {
         }
 
         //파일 검증 ==========
-        List<CertificateDocsRequestDTO.CertificateFileDTO> useProfileFileUrlDTO = priorityApplyDrawRequestDTO.getUseProfileFileUrlDTO();
-
-        //프로파일에 있는 이름과 업로드할 파일의 이름이 동일하면 예외처리
-        if (generalCertificateDocs != null && priorityApplyDrawRequestDTO.getUseProfileFileUrlDTO() != null) {
-            certificateDocsService.prohibitSameFileNamesBetweenProfileFileUrlsAndMultiPartFiles(generalCertificateDocs, priorityApplyDrawRequestDTO.getUseProfileFileUrlDTO());
-        }
 
         //한개의 추첨에서 들어갈 수 있는 파일 개수 세는 변수
         Integer totalGeneralFileNumber = 0;
@@ -123,11 +117,6 @@ public class PriorityApplicantServiceImpl implements PriorityApplicantService {
             totalGeneralFileNumber += generalCertificateDocs.size();
         }
 
-        //쓸 유저 프로파일 파일의 url이 유효한지 확인
-        if (useProfileFileUrlDTO != null) {
-            certificateDocsService.checkCertificateFileUrlsInBucket(useProfileFileUrlDTO);
-            totalGeneralFileNumber += useProfileFileUrlDTO.size();
-        }
 
         if (totalGeneralFileNumber > 5) {
             throw new ExceptionHandler(ErrorStatus.FILE_TOO_MANY);
@@ -140,6 +129,17 @@ public class PriorityApplicantServiceImpl implements PriorityApplicantService {
 
         certificateDocsService.validateCertificateFiles(priorityCertificateDocs);
 
+        //기존 파일 삭제 (User profile)
+        //bucket에서 문서 삭제
+        List<CertificateDocs> deleteCertificateDocs = certificateDocsRepository.findByMemberAndDrawId(member, -1L);
+
+        if (!objectStorageService.doesObjectCertificateFileUrlsExist(deleteCertificateDocs)) {
+            throw new ExceptionHandler(ErrorStatus.FILE_NAME_NOT_FOUND);
+        }
+        certificateDocsService.deleteFileIsNotInProfile(deleteCertificateDocs);
+
+        certificateDocsRepository.deleteAllByMemberIdAndDrawId(member.getId(), -1L);
+
         //파일 검증 끝 =========
 
 
@@ -150,23 +150,15 @@ public class PriorityApplicantServiceImpl implements PriorityApplicantService {
         //Handling CertFile
 
         //uploadCertFiles
-        if (generalCertificateDocs != null) {
-            for (MultipartFile certificateDocument : generalCertificateDocs) {
-                String fileName = certificateDocument.getOriginalFilename();
-                String addMemberIdAndDrawIdFileUrl = certificateDocsService.makeCertificateFileUrl(member.getId(), draw.getId(), DrawType.GENERAL, fileName);
-                String fileUrl = objectStorageService.uploadObject(objectStorageConfig.getGeneralCertificateDocument(), addMemberIdAndDrawIdFileUrl, certificateDocument);
-                CertificateDocs certificateDocs = CertificateDocsConverter.toCertificateDocument(fileUrl, fileName, member, draw.getId());
-                certificateDocsRepository.save(certificateDocs);
-            }
-        }
+        for (MultipartFile certificateDocument : generalCertificateDocs) {
+            String fileName = certificateDocument.getOriginalFilename();
+            String addMemberIdAndDrawIdFileUrl = certificateDocsService.makeCertificateFileUrl(member.getId(), draw.getId(), DrawType.GENERAL, fileName);
+            String fileUrl = objectStorageService.uploadObject(objectStorageConfig.getGeneralCertificateDocument(), addMemberIdAndDrawIdFileUrl, certificateDocument);
+            CertificateDocs certificateDocs = CertificateDocsConverter.toCertificateDocument(fileUrl, fileName, member, draw.getId());
+            CertificateDocs userProfileCertificateDocs = CertificateDocsConverter.toCertificateDocument(fileUrl, fileName, member, -1L);
 
-        if (useProfileFileUrlDTO != null) {
-            for (CertificateDocsRequestDTO.CertificateFileDTO certificateFileDTO : useProfileFileUrlDTO) {
-                String fileName = certificateFileDTO.getFileName();
-                String fileUrl = certificateFileDTO.getFileUrl();
-                CertificateDocs certificateDocs = CertificateDocsConverter.toCertificateDocument(fileUrl, fileName, member, draw.getId());
-                certificateDocsRepository.save(certificateDocs);
-            }
+            certificateDocsRepository.save(certificateDocs);
+            certificateDocsRepository.save(userProfileCertificateDocs);
         }
 
         //Priority
