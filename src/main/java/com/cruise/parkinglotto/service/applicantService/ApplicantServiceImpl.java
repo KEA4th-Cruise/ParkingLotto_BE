@@ -248,6 +248,6 @@ public class ApplicantServiceImpl implements ApplicantService {
         List<CertificateDocsRequestDTO.CertificateFileDTO> certificateFileDTOS = fileDTOList.stream()
                 .map(CertificateDocsConverter::toCertificateFileDTO)
                 .collect(Collectors.toList());
-        return ApplicantConverter.toGetMyApplyInformationDTO(applicant, weightDetails.getAddress(), member.getCarNum(), certificateFileDTOS);
+        return ApplicantConverter.toGetMyApplyInformationDTO(applicant, member.getCarNum(), weightDetails.getAddress(), certificateFileDTOS);
     }
 }
