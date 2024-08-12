@@ -31,7 +31,7 @@ public class RedisConfig {
 
     @Bean
     public RedisConnectionFactory redisBlackListConnectionFactory() {
-        LettuceConnectionFactory factory = new LettuceConnectionFactory();
+        LettuceConnectionFactory factory = new LettuceConnectionFactory(host, port);
         factory.setDatabase(1);  // 데이터베이스 1
         return factory;
     }
