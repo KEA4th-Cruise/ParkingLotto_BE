@@ -13,7 +13,7 @@ public class DrawStatisticsConverter {
         return DrawStatisticsResponseDTO.DrawCompetitionRateDTO.builder()
                 .competitionRate(drawStatistics.getCompetitionRate())
                 .drawId(drawStatistics.getDraw().getId())
-                .drawTitle(drawStatistics.getDraw().getTitle())
+                .drawTitle(drawStatistics.getDraw().getYear() + "-" + drawStatistics.getDraw().getQuarter())
                 .build();
     }
 
