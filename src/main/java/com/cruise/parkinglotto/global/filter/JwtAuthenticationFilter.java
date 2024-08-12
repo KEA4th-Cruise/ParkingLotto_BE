@@ -45,7 +45,8 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 pathMatcher.match("/", path) ||
                 pathMatcher.match("/v3/api-docs/**", path) ||
                 pathMatcher.match("/swagger-ui/**", path) ||
-                pathMatcher.match("/swagger-resources/**", path)) {
+                pathMatcher.match("/swagger-resources/**", path) ||
+                pathMatcher.match("/actuator/**", path)) {
 
             chain.doFilter(request, response);
             return;
