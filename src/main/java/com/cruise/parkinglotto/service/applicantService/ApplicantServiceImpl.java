@@ -96,34 +96,26 @@ public class ApplicantServiceImpl implements ApplicantService {
             throw new ExceptionHandler(ErrorStatus.WEIGHTDETAILS_TOO_LONG_USER_SEED);
         }
 
-        //파일 검증 ==========
-        List<CertificateDocsRequestDTO.CertificateFileDTO> useProfileFileUrlDTO = applyDrawRequestDTO.getUseProfileFileUrlDTO();
-
-        //프로파일에 있는 이름과 업로드할 파일의 이름이 동일하면 예외처리
-        if (certificateDocuments != null && applyDrawRequestDTO.getUseProfileFileUrlDTO() != null) {
-            certificateDocsService.prohibitSameFileNamesBetweenProfileFileUrlsAndMultiPartFiles(certificateDocuments, applyDrawRequestDTO.getUseProfileFileUrlDTO());
-        }
-
-        //한개의 추첨에서 들어갈 수 있는 파일 개수 세는 변수
-        Integer totalFileNumber = 0;
 
         //업로드 할 파일 검증 (길이, 확장자 등)
-        if (certificateDocuments != null) {
-            certificateDocsService.validateCertificateFiles(certificateDocuments);
-            totalFileNumber += certificateDocuments.size();
-        }
+        certificateDocsService.validateCertificateFiles(certificateDocuments);
 
-        //쓸 유저 프로파일 파일의 url이 유효한지 확인
-        if (useProfileFileUrlDTO != null) {
-            certificateDocsService.checkCertificateFileUrlsInBucket(useProfileFileUrlDTO);
-            totalFileNumber += useProfileFileUrlDTO.size();
-        }
-
-        if (totalFileNumber > 5) {
+        if (certificateDocuments.size() > 5) {
             throw new ExceptionHandler(ErrorStatus.FILE_TOO_MANY);
         }
 
-        //파일 검증 끝 =========
+        //기존 파일 삭제 (User profile)
+        //bucket에서 문서 삭제
+        List<CertificateDocs> deleteCertificateDocs = certificateDocsRepository.findByMemberAndDrawId(member, -1L);
+
+        if (!objectStorageService.doesObjectCertificateFileUrlsExist(deleteCertificateDocs)) {
+            throw new ExceptionHandler(ErrorStatus.FILE_NAME_NOT_FOUND);
+        }
+        certificateDocsService.deleteFileIsNotInProfile(deleteCertificateDocs);
+
+        certificateDocsRepository.deleteAllByMemberIdAndDrawId(member.getId(), -1L);
+
+        //파일 검증 및 삭제 끝 =========
 
 
         //Handling carNum
@@ -133,24 +125,15 @@ public class ApplicantServiceImpl implements ApplicantService {
         //Handling CertFile
 
         //uploadCertFiles
-        if (certificateDocuments != null) {
-            for (MultipartFile certificateDocument : certificateDocuments) {
-                String fileName = certificateDocument.getOriginalFilename();
-                String addMemberIdAndDrawIdFileUrl = certificateDocsService.makeCertificateFileUrl(member.getId(), draw.getId(), DrawType.GENERAL, fileName);
-                String fileUrl = objectStorageService.uploadObject(objectStorageConfig.getGeneralCertificateDocument(), addMemberIdAndDrawIdFileUrl, certificateDocument);
-                CertificateDocs certificateDocs = CertificateDocsConverter.toCertificateDocument(fileUrl, fileName, member, draw.getId());
-                certificateDocsRepository.save(certificateDocs);
-            }
-        }
+        for (MultipartFile certificateDocument : certificateDocuments) {
+            String fileName = certificateDocument.getOriginalFilename();
+            String addMemberIdAndDrawIdFileUrl = certificateDocsService.makeCertificateFileUrl(member.getId(), draw.getId(), DrawType.GENERAL, fileName);
+            String fileUrl = objectStorageService.uploadObject(objectStorageConfig.getGeneralCertificateDocument(), addMemberIdAndDrawIdFileUrl, certificateDocument);
+            CertificateDocs certificateDocs = CertificateDocsConverter.toCertificateDocument(fileUrl, fileName, member, draw.getId());
+            CertificateDocs userProfileCertificateDocs = CertificateDocsConverter.toCertificateDocument(fileUrl, fileName, member, -1L);
 
-
-        if (useProfileFileUrlDTO != null) {
-            for (CertificateDocsRequestDTO.CertificateFileDTO certificateFileDTO : useProfileFileUrlDTO) {
-                String fileName = certificateFileDTO.getFileName();
-                String fileUrl = certificateFileDTO.getFileUrl();
-                CertificateDocs certificateDocs = CertificateDocsConverter.toCertificateDocument(fileUrl, fileName, member, draw.getId());
-                certificateDocsRepository.save(certificateDocs);
-            }
+            certificateDocsRepository.save(certificateDocs);
+            certificateDocsRepository.save(userProfileCertificateDocs);
         }
 
         //Handling weightDetails
