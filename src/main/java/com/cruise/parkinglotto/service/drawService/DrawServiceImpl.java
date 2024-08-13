@@ -29,8 +29,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.TaskScheduler;
-import org.springframework.transaction.support.TransactionSynchronizationAdapter;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -599,7 +597,7 @@ public class DrawServiceImpl implements DrawService {
     @Override
     @Transactional(readOnly = true)
     public DrawResponseDTO.GetDrawListResultDTO getDrawList(String year, DrawType drawType) {
-        List<Draw> drawList = drawRepository.findByYearAndType(year, drawType);
+        List<Draw> drawList = drawRepository.findByYearAndTypeOrderByUsageStartAtDesc(year, drawType);
         List<String> yearList = drawRepository.findYearList();
         return DrawConverter.toGetDrawListResultDTO(yearList, drawList);
     }
