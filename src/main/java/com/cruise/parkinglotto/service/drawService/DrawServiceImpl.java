@@ -107,7 +107,7 @@ public class DrawServiceImpl implements DrawService {
 
             handleDrawResults(drawId, orderedApplicants);
 
-            drawRepository.updateStatus(drawId, DrawStatus.COMPLETED);
+            draw.updateStatus(DrawStatus.COMPLETED);
 
             weightSectionStatisticsService.updateWeightSectionStatistics(drawId);
 
@@ -116,6 +116,7 @@ public class DrawServiceImpl implements DrawService {
             String url = fileGenerationService.generateAndUploadExcel(draw, orderedApplicants);
 
             draw.updateResultURL(url);
+
             drawRepository.save(draw);
 
             for (Applicant orderedApplicant : orderedApplicants) {
