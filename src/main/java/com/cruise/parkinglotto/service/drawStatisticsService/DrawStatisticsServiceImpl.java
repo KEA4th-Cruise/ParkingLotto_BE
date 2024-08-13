@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,7 @@ public class DrawStatisticsServiceImpl implements DrawStatisticsService {
     @Transactional(readOnly = true)
     public List<DrawStatistics> getRecentDrawStatistics() {
         List<Draw> drawList = drawRepository.findTop5ByTypeAndStatusOrderByUsageStartAtDesc(DrawType.GENERAL, DrawStatus.COMPLETED);
+        drawList.sort(Comparator.comparing(Draw::getUsageStartAt));
         List<DrawStatistics> drawStatisticsList = drawList.stream()
                 .map(Draw::getDrawStatistics)
                 .toList();
