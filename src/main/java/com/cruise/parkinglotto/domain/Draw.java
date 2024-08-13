@@ -42,6 +42,7 @@ public class Draw extends BaseEntity {
     private LocalDateTime usageEndAt;
 
     @Column(columnDefinition = "TEXT")
+    @ColumnDefault("defaultSeed")
     private String seedNum;
 
     @Column(columnDefinition = "TEXT")
@@ -81,7 +82,7 @@ public class Draw extends BaseEntity {
     @OneToMany(mappedBy = "draw", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ParkingSpace> parkingSpaceList;
 
-    @Column
+    @ColumnDefault("defaultUrl")
     private String resultURL;
 
     public void updateConfirmed(Boolean confirmed, Integer totalSlots) {
