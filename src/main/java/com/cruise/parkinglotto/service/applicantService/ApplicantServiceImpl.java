@@ -1,25 +1,22 @@
 package com.cruise.parkinglotto.service.applicantService;
 
 import com.cruise.parkinglotto.domain.*;
-import com.cruise.parkinglotto.domain.enums.*;
-import com.cruise.parkinglotto.domain.Applicant;
-import com.cruise.parkinglotto.domain.ParkingSpace;
+import com.cruise.parkinglotto.domain.enums.DrawStatus;
+import com.cruise.parkinglotto.domain.enums.DrawType;
+import com.cruise.parkinglotto.domain.enums.WinningStatus;
+import com.cruise.parkinglotto.domain.enums.WorkType;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
 import com.cruise.parkinglotto.global.kc.ObjectStorageConfig;
+import com.cruise.parkinglotto.global.kc.ObjectStorageService;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
 import com.cruise.parkinglotto.global.sse.SseEmitters;
 import com.cruise.parkinglotto.repository.*;
 import com.cruise.parkinglotto.service.certificateDocsService.CertificateDocsService;
 import com.cruise.parkinglotto.service.drawService.DrawService;
-import com.cruise.parkinglotto.repository.ApplicantRepository;
-import com.cruise.parkinglotto.repository.DrawRepository;
-import com.cruise.parkinglotto.repository.ParkingSpaceRepository;
 import com.cruise.parkinglotto.web.converter.ApplicantConverter;
 import com.cruise.parkinglotto.web.converter.CertificateDocsConverter;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantRequestDTO;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
-
-
 import com.cruise.parkinglotto.web.dto.certificateDocsDTO.CertificateDocsRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,7 +24,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import com.cruise.parkinglotto.global.kc.ObjectStorageService;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,7 +39,6 @@ public class ApplicantServiceImpl implements ApplicantService {
     private final MemberRepository memberRepository;
     private final CertificateDocsRepository certificateDocsRepository;
     private final WeightDetailsRepository weightDetailsRepository;
-    private final DrawService drawService;
     private final ObjectStorageService objectStorageService;
     private final ObjectStorageConfig objectStorageConfig;
     private final CertificateDocsService certificateDocsService;

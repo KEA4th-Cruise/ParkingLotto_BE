@@ -5,14 +5,11 @@ import com.cruise.parkinglotto.domain.enums.DrawType;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
 import com.cruise.parkinglotto.global.kc.ObjectStorageService;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
-import com.cruise.parkinglotto.repository.CertificateDocsRepository;
-import com.cruise.parkinglotto.web.dto.certificateDocsDTO.CertificateDocsRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 @Service
@@ -20,7 +17,6 @@ import java.util.Set;
 public class CertificateDocsServiceImpl implements CertificateDocsService {
 
     private final ObjectStorageService objectStorageService;
-    private final CertificateDocsRepository certificateDocsRepository;
 
     // 100MB
     private static final long MAX_TOTAL_CERTIFICATE_FILE_SIZE = 104857600L;
@@ -52,36 +48,6 @@ public class CertificateDocsServiceImpl implements CertificateDocsService {
         //모든 파일의 전체 크기 검증
         if (totalCertificateFileSize > MAX_TOTAL_CERTIFICATE_FILE_SIZE) {
             throw new ExceptionHandler(ErrorStatus.FILE_TOO_LARGE);
-        }
-    }
-
-    @Override
-    public void checkCertificateFileUrlsInBucket(List<CertificateDocsRequestDTO.CertificateFileDTO> certificateFileDTOs) throws ExceptionHandler {
-        for (CertificateDocsRequestDTO.CertificateFileDTO fileDTO : certificateFileDTOs) {
-            String fileUrl = fileDTO.getFileUrl();
-            if (!objectStorageService.doesObjectCertificateFileUrlExist(fileUrl)) {
-                throw new ExceptionHandler(ErrorStatus.APPLICANT_CERT_DOCUMENT_NOT_FOUND);
-            }
-        }
-    }
-
-    @Override
-    public void deleteCertificateDocsInMySql(List<CertificateDocsRequestDTO.CertificateFileDTO> certificateFileDTOs) throws ExceptionHandler {
-        for (CertificateDocsRequestDTO.CertificateFileDTO fileDTO : certificateFileDTOs) {
-            String fileUrl = fileDTO.getFileUrl();
-            certificateDocsRepository.deleteByFileUrl(fileUrl);
-        }
-    }
-
-    @Override
-    public void prohibitSameFileNamesBetweenProfileFileUrlsAndMultiPartFiles(List<MultipartFile> certificateFiles, List<CertificateDocsRequestDTO.CertificateFileDTO> certificateFileDTO) throws ExceptionHandler {
-        for (MultipartFile multipartFile : certificateFiles) {
-            for (CertificateDocsRequestDTO.CertificateFileDTO fileDTO : certificateFileDTO) {
-                if (Objects.equals(multipartFile.getOriginalFilename(), fileDTO.getFileName())) {
-                    throw new ExceptionHandler(ErrorStatus.FILE_NAME_DUPLICATED);
-                }
-
-            }
         }
     }
 

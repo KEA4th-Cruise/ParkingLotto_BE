@@ -1,6 +1,9 @@
 package com.cruise.parkinglotto.web.dto.parkingSpaceDTO;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -11,12 +11,6 @@ public interface CertificateDocsService {
 
     void validateCertificateFiles(List<MultipartFile> files);
 
-    void checkCertificateFileUrlsInBucket(List<CertificateDocsRequestDTO.CertificateFileDTO> certifiCateFileDTO);
-
-    void deleteCertificateDocsInMySql(List<CertificateDocsRequestDTO.CertificateFileDTO> certifiCateFileDTO);
-
-    void prohibitSameFileNamesBetweenProfileFileUrlsAndMultiPartFiles(List<MultipartFile> certificateFiles, List<CertificateDocsRequestDTO.CertificateFileDTO> certifiCateFileDTO);
-
     String makeCertificateFileUrl(Long memberId, Long drawId, DrawType drawType, String fileName);
 
     void deleteFileIsNotInProfile(List<CertificateDocs> certificateDocsList);

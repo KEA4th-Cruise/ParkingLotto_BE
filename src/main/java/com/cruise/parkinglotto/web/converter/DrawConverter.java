@@ -3,15 +3,15 @@ package com.cruise.parkinglotto.web.converter;
 import com.cruise.parkinglotto.domain.Applicant;
 import com.cruise.parkinglotto.domain.Draw;
 import com.cruise.parkinglotto.domain.ParkingSpace;
+import com.cruise.parkinglotto.domain.enums.DrawStatus;
 import com.cruise.parkinglotto.domain.enums.DrawType;
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
-import com.cruise.parkinglotto.domain.enums.DrawStatus;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawRequestDTO;
-import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
-import lombok.RequiredArgsConstructor;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
 import com.cruise.parkinglotto.web.dto.drawDTO.SimulationData;
+import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
@@ -40,7 +40,7 @@ public class DrawConverter {
                 .build();
     }
 
-    public static DrawResponseDTO.DrawMemberResultResponseDTO toDrawResultResponseDTO (Page<Applicant> applicantsPage) {
+    public static DrawResponseDTO.DrawMemberResultResponseDTO toDrawResultResponseDTO(Page<Applicant> applicantsPage) {
         List<ApplicantResponseDTO.ApplicantResultDTO> applicantInfoDTOList = applicantsPage.stream()
                 .map(applicant -> ApplicantResponseDTO.ApplicantResultDTO.builder()
                         .weightedTotalScore(applicant.getWeightedTotalScore())

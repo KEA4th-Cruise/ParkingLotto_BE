@@ -1,29 +1,30 @@
 package com.cruise.parkinglotto.service.drawStatisticsService;
 
 import com.cruise.parkinglotto.domain.*;
-import com.cruise.parkinglotto.domain.enums.*;
+import com.cruise.parkinglotto.domain.enums.DrawStatus;
+import com.cruise.parkinglotto.domain.enums.DrawType;
+import com.cruise.parkinglotto.domain.enums.WinningStatus;
+import com.cruise.parkinglotto.domain.enums.WorkType;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
-import com.cruise.parkinglotto.repository.*;
+import com.cruise.parkinglotto.repository.DrawRepository;
+import com.cruise.parkinglotto.repository.DrawStatisticsRepository;
+import com.cruise.parkinglotto.repository.ParkingSpaceRepository;
+import com.cruise.parkinglotto.repository.WeightSectionStatisticsRepository;
 import com.cruise.parkinglotto.web.converter.DrawStatisticsConverter;
 import com.cruise.parkinglotto.web.dto.drawStatisticsDTO.DrawStatisticsResponseDTO;
-import jakarta.persistence.Table;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
-import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class DrawStatisticsServiceImpl implements DrawStatisticsService {
 
     private final DrawRepository drawRepository;
-    private final ApplicantRepository applicantRepository;
     private final DrawStatisticsRepository drawStatisticsRepository;
     private final WeightSectionStatisticsRepository weightSectionStatisticsRepository;
     private final ParkingSpaceRepository parkingSpaceRepository;

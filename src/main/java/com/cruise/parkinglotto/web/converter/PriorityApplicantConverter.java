@@ -1,6 +1,9 @@
 package com.cruise.parkinglotto.web.converter;
 
-import com.cruise.parkinglotto.domain.*;
+import com.cruise.parkinglotto.domain.CertificateDocs;
+import com.cruise.parkinglotto.domain.Draw;
+import com.cruise.parkinglotto.domain.Member;
+import com.cruise.parkinglotto.domain.PriorityApplicant;
 import com.cruise.parkinglotto.domain.enums.ApprovalStatus;
 import com.cruise.parkinglotto.web.dto.certificateDocsDTO.CertificateDocsRequestDTO;
 import com.cruise.parkinglotto.web.dto.priorityApplicantDTO.PriorityApplicantResponseDTO;

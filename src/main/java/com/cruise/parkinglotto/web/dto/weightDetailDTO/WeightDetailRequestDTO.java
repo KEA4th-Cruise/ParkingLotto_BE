@@ -1,14 +1,11 @@
 package com.cruise.parkinglotto.web.dto.weightDetailDTO;
 
-import com.cruise.parkinglotto.domain.enums.DrawType;
 import com.cruise.parkinglotto.domain.enums.WorkType;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 public class WeightDetailRequestDTO {
     @Getter

@@ -5,8 +5,6 @@ import com.cruise.parkinglotto.domain.enums.EnrollmentStatus;
 import com.cruise.parkinglotto.web.dto.registerDTO.RegisterResponseDTO;
 import org.springframework.data.domain.Page;
 
-import java.util.List;
-
 public interface RegisterService {
 
     /**

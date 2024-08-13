@@ -9,7 +9,6 @@ import com.cruise.parkinglotto.service.applicantService.ApplicantService;
 import com.cruise.parkinglotto.service.drawService.DrawService;
 import com.cruise.parkinglotto.service.memberService.MemberService;
 import com.cruise.parkinglotto.service.parkingSpaceService.ParkingSpaceService;
-import com.cruise.parkinglotto.web.converter.ApplicantConverter;
 import com.cruise.parkinglotto.web.converter.DrawConverter;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
@@ -27,7 +26,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Arrays;
 import java.util.List;
 
 @RestController

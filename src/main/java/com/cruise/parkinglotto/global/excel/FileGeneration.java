@@ -25,7 +25,6 @@ public class FileGeneration {
     private final ObjectStorageService objectStorageService;
     private final ObjectStorageConfig objectStorageConfig;
     private final DrawRepository drawRepository;
-    private final ParkingSpaceRepository parkingSpaceRepository;
 
     public String generateAndUploadExcel(Draw draw, List<Applicant> orderedApplicants) {
         try {

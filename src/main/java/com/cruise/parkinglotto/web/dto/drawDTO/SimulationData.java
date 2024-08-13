@@ -1,7 +1,10 @@
 package com.cruise.parkinglotto.web.dto.drawDTO;
 
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter

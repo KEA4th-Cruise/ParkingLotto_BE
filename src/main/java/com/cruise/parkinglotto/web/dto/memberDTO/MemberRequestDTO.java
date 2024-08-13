@@ -19,12 +19,12 @@ public class MemberRequestDTO {
     public static class LoginRequestDTO {
 
         @NotBlank(message = "사원명은 필수 입력 값 입니다.")
-        @Pattern(regexp="^(?=.*[a-z])[a-zA-Z\\d.]{3,15}$",
+        @Pattern(regexp = "^(?=.*[a-z])[a-zA-Z\\d.]{3,15}$",
                 message = "영문 소문자와 숫자가 적어도 1개 이상씩 포함된 3자 ~ 15자의 사원명을 입력해주세요.")
         private String accountId;
 
         @NotBlank(message = "비밀번호는 필수 입력 값 입니다.")
-        @Pattern(regexp="^(?=.*[a-z])(?=.*\\d)[a-zA-Z\\d]{9,16}$",
+        @Pattern(regexp = "^(?=.*[a-z])(?=.*\\d)[a-zA-Z\\d]{9,16}$",
                 message = "영문 소문자와 숫자가 적어도 1개 이상씩 포함된 9자 ~ 16자의 비밀번호를 입력해주세요.")
         private String password;
     }
@@ -44,7 +44,7 @@ public class MemberRequestDTO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class MyInfoRequestDTO{
+    public static class MyInfoRequestDTO {
         @NotEmpty(message = "차량 번호를 입력해주세요")
         private String carNum;
         @NotEmpty(message = "주소를 입력해주세요")

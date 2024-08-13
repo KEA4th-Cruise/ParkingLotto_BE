@@ -22,17 +22,17 @@ import com.cruise.parkinglotto.web.dto.drawDTO.SimulationData;
 import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.*;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.TaskScheduler;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -65,7 +65,6 @@ public class DrawServiceImpl implements DrawService {
     private final @Lazy TaskScheduler taskScheduler;
     private final PriorityApplicantRepository priorityApplicantRepository;
     private final MailService mailService;
-    private final DrawStatisticsRepository drawStatisticsRepository;
     private final CertificateDocsRepository certificateDocsRepository;
 
     //계산용 변수

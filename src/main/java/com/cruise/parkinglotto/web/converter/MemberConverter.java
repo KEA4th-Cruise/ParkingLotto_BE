@@ -3,7 +3,6 @@ package com.cruise.parkinglotto.web.converter;
 import com.cruise.parkinglotto.domain.CertificateDocs;
 import com.cruise.parkinglotto.domain.Member;
 import com.cruise.parkinglotto.domain.WeightDetails;
-import com.cruise.parkinglotto.domain.enums.AccountType;
 import com.cruise.parkinglotto.global.jwt.JwtToken;
 import com.cruise.parkinglotto.web.dto.memberDTO.MemberResponseDTO;
 
@@ -48,7 +47,7 @@ public class MemberConverter {
                         .stream().map(c -> MemberResponseDTO.MyCertificationInfoResponseDTO.builder()
                                 .fileName(c.getFileName())
                                 .fileUrl(c.getFileUrl())
-                                .fileType(c.getFileName().substring(c.getFileName().lastIndexOf(".")+1).toLowerCase())
+                                .fileType(c.getFileName().substring(c.getFileName().lastIndexOf(".") + 1).toLowerCase())
                                 .certificateDocsId(c.getId())
                                 .build())
                         .collect(Collectors.toList()))

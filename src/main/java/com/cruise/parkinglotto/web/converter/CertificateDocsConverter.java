@@ -10,15 +10,6 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class CertificateDocsConverter {
-    public static List<CertificateDocs> toCertificateDocs(List<CertificateDocsRequestDTO.CertificateFileDTO> certFileDTOList, Member member) {
-        return certFileDTOList.stream()
-                .map(certFileDTO -> CertificateDocs.builder()
-                        .fileUrl(certFileDTO.getFileUrl())
-                        .fileName(certFileDTO.getFileName())
-                        .member(member)
-                        .build())
-                .collect(Collectors.toList());
-    }
 
     public static CertificateDocs toCertificateDocument(String fileUrl, String fileName, Member member, Long drawId) {
         return CertificateDocs.builder()

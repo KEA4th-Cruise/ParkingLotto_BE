@@ -1,7 +1,9 @@
 package com.cruise.parkinglotto.service.priorityApplicantService;
 
 import com.cruise.parkinglotto.domain.*;
-import com.cruise.parkinglotto.domain.enums.*;
+import com.cruise.parkinglotto.domain.enums.ApprovalStatus;
+import com.cruise.parkinglotto.domain.enums.DrawStatus;
+import com.cruise.parkinglotto.domain.enums.DrawType;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
 import com.cruise.parkinglotto.global.kc.ObjectStorageConfig;
 import com.cruise.parkinglotto.global.kc.ObjectStorageService;
@@ -25,11 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.ArrayList;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
