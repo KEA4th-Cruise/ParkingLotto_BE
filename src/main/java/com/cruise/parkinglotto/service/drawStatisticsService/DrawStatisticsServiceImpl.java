@@ -1,10 +1,7 @@
 package com.cruise.parkinglotto.service.drawStatisticsService;
 
 import com.cruise.parkinglotto.domain.*;
-import com.cruise.parkinglotto.domain.enums.DrawType;
-import com.cruise.parkinglotto.domain.enums.WeightSection;
-import com.cruise.parkinglotto.domain.enums.WinningStatus;
-import com.cruise.parkinglotto.domain.enums.WorkType;
+import com.cruise.parkinglotto.domain.enums.*;
 import com.cruise.parkinglotto.global.exception.handler.ExceptionHandler;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
 import com.cruise.parkinglotto.repository.*;
@@ -34,7 +31,7 @@ public class DrawStatisticsServiceImpl implements DrawStatisticsService {
     @Override
     @Transactional(readOnly = true)
     public List<DrawStatistics> getRecentDrawStatistics() {
-        List<Draw> drawList = drawRepository.findTop5ByTypeOrderByUsageStartAtDesc(DrawType.GENERAL);
+        List<Draw> drawList = drawRepository.findTop5ByTypeAndStatusOrderByUsageStartAtDesc(DrawType.GENERAL, DrawStatus.COMPLETED);
         List<DrawStatistics> drawStatisticsList = drawList.stream()
                 .map(Draw::getDrawStatistics)
                 .toList();
