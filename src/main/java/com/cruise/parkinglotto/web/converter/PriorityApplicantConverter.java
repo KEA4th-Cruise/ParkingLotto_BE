@@ -49,6 +49,7 @@ public class PriorityApplicantConverter {
 
         Member member = priorityApplicant.getMember();
         return PriorityApplicantResponseDTO.GetPriorityApplicantDetailsResultDTO.builder()
+                .priorityApplicantId(priorityApplicant.getId())
                 .nameKo(member.getNameKo())
                 .accountId(member.getAccountId())
                 .employeeNo(member.getEmployeeNo())

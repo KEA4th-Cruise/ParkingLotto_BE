@@ -51,6 +51,7 @@ public class PriorityApplicantResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class GetPriorityApplicantDetailsResultDTO {  //  우대 신청자의 신청내역 확인용
+        private Long priorityApplicantId;
         private String nameKo;
         private String employeeNo;
         private String accountId;
