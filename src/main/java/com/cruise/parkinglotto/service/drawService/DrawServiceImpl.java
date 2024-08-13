@@ -732,9 +732,6 @@ public class DrawServiceImpl implements DrawService {
             // 추첨이 완료되었는지 확인
             if (findDraw.getStatus() != DrawStatus.COMPLETED) {
 
-                // drawStatistics 테이블에서 추첨 통계 삭제( cascade 안되어 있음 )
-                drawStatisticsRepository.delete(findDraw.getDrawStatistics());
-
                 // draws 테이블에서 추첨 삭제
                 drawRepository.delete(findDraw);
 
