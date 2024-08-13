@@ -29,7 +29,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.TaskScheduler;
-import org.springframework.security.core.parameters.P;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.multipart.MultipartFile;
@@ -68,6 +67,8 @@ public class DrawServiceImpl implements DrawService {
     private final @Lazy TaskScheduler taskScheduler;
     private final PriorityApplicantRepository priorityApplicantRepository;
     private final MailService mailService;
+    private final DrawStatisticsRepository drawStatisticsRepository;
+    private final CertificateDocsRepository certificateDocsRepository;
 
     //계산용 변수
     private static final int WORK_TYPE1_SCORE = 25;
@@ -717,5 +718,39 @@ public class DrawServiceImpl implements DrawService {
 
         List<DrawResponseDTO.GetAppliedDrawResultDTO> subList = appliedDrawList.subList(start, end);
         return new PageImpl<>(subList, pageRequest, total);
+    }
+
+    @Override
+    @Transactional
+    public void deleteDraw(Long drawId, String accountId) {
+
+        Draw findDraw = drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
+        Member findMember = memberRepository.findByAccountId(accountId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
+        // 관리자인지 확인
+        if (findMember.getAccountType() == AccountType.ADMIN) {
+
+            // 추첨이 완료되었는지 확인
+            if (findDraw.getStatus() != DrawStatus.COMPLETED) {
+
+                // drawStatistics 테이블에서 추첨 통계 삭제( cascade 안되어 있음 )
+                drawStatisticsRepository.delete(findDraw.getDrawStatistics());
+
+                // draws 테이블에서 추첨 삭제
+                drawRepository.delete(findDraw);
+
+                List<CertificateDocs> certificateDocs = certificateDocsRepository.findByMemberAndDrawId(findMember, drawId);
+
+                // 사용자가 추첨 신청할 때 제출했던 문서들도 제거
+                for (CertificateDocs certificateDocument : certificateDocs) {
+                    objectStorageService.deleteObject(certificateDocument.getFileUrl());
+                }
+                certificateDocsRepository.deleteAll(certificateDocs);
+
+            } else {
+                throw new ExceptionHandler((ErrorStatus.DRAW_STATUS_IS_COMPLETED));
+            }
+        } else {
+            throw new ExceptionHandler((ErrorStatus._UNAUTHORIZED_ACCESS));
+        }
     }
 }

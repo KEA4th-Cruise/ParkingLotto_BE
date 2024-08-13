@@ -292,4 +292,12 @@ public class DrawRestController {
         PriorityApplicantResponseDTO.getMyPriorityApplyInformationDTO priorityApplyInformationDTO = priorityApplicantService.getMyPriorityApplyInformation(drawId, accountId);
         return ApiResponse.onSuccess(SuccessStatus.PRIORITY_APPLICANT_DETAILS_FOUND, priorityApplyInformationDTO);
     }
+
+    @Operation(summary = "관리자가 추첨을 삭제하는 API", description = "PathVariable 로 drawId 를 보내주면 해당하는 추첨을 삭제해 줍니다. (최준범)")
+    @DeleteMapping(value = "{drawId}/delete")
+    public ApiResponse<?> cancelDraw(@PathVariable("drawId") Long drawId, HttpServletRequest httpServletRequest) {
+        String accountIdFromRequest = jwtUtils.getAccountIdFromRequest(httpServletRequest);
+        drawService.deleteDraw(drawId, accountIdFromRequest);
+        return ApiResponse.onSuccess(SuccessStatus.DRAW_DELETE_SUCCESS,null);
+    }
 }
