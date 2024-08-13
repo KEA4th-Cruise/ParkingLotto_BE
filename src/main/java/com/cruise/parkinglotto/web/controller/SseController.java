@@ -1,15 +1,14 @@
 package com.cruise.parkinglotto.web.controller;
 
+import com.cruise.parkinglotto.global.response.ApiResponse;
+import com.cruise.parkinglotto.global.response.code.status.SuccessStatus;
 import com.cruise.parkinglotto.global.sse.SseEmitters;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
@@ -37,5 +36,12 @@ public class SseController {
         return ResponseEntity.ok()
                 .header("X-Accel-Buffering", "no") // Nginx 사용 시 버퍼링 방지
                 .body(emitter);
+    }
+
+    @Operation(summary = "SSE 연결 테스트를 위한 API", description = "테스트로 보낼 String을 전송해주세요.")
+    @GetMapping("/test/{testString}")
+    public ApiResponse<String> sseTest(@PathVariable(name = "testString") String testString) {
+        sseEmitters.sendEvent("testData", testString);
+        return ApiResponse.onSuccess(SuccessStatus._OK, "Test SSE Successfully sent.");
     }
 }
