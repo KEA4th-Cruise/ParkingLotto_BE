@@ -69,3 +69,9 @@ management:
     export:
       prometheus:
         enabled: true
+
+server:
+  servlet:
+    session:
+      cookie:
+        same-site: none
