@@ -33,7 +33,6 @@ public class SecurityConfig {
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/draws").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/api/draws/{drawId}").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/draws/{drawId}/result").hasRole("ADMIN")
                         .requestMatchers(
                                 "/api/draws/{drawId}/parking-spaces",
                                 "/api/draws/{drawId}/winners/search",
