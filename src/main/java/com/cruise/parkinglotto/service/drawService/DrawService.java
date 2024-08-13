@@ -69,4 +69,5 @@ public interface DrawService {
 
     Page<DrawResponseDTO.GetAppliedDrawResultDTO> getAppliedDrawList(String memberId, Integer page);
 
+    void deleteDraw(Long drawId, String accountId);
 }
