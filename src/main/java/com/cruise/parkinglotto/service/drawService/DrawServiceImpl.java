@@ -112,13 +112,10 @@ public class DrawServiceImpl implements DrawService {
 
             drawStatisticsService.updateDrawStatistics(drawId, orderedApplicants);
 
-            // 트랜잭션이 성공적으로 커밋된 후 엑셀 파일을 생성하도록 작업 예약
-            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
-                @Override
-                public void afterCommit() {
-                    fileGenerationService.generateAndUploadExcel(draw, orderedApplicants);
-                }
-            });
+            String url = fileGenerationService.generateAndUploadExcel(draw, orderedApplicants);
+
+            draw.updateResultURL(url);
+            drawRepository.save(draw);
 
             for (Applicant orderedApplicant : orderedApplicants) {
                 if (orderedApplicant.getWinningStatus() == WinningStatus.RESERVE) {

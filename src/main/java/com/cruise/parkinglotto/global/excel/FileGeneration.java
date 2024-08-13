@@ -27,14 +27,16 @@ public class FileGeneration {
     private final DrawRepository drawRepository;
     private final ParkingSpaceRepository parkingSpaceRepository;
 
-    public void generateAndUploadExcel(Draw draw, List<Applicant> orderedApplicants) {
+    public String generateAndUploadExcel(Draw draw, List<Applicant> orderedApplicants) {
         try {
             String url = generateDrawResultExcel(draw, orderedApplicants);
             draw.updateResultURL(url);
             drawRepository.save(draw);
+            return url;
         } catch (IOException e) {
             log.error("Error occurred while generating or uploading Excel file for drawId: {}", draw.getId(), e);
         }
+        return null;
     }
 
     private String generateDrawResultExcel(Draw draw, List<Applicant> orderedApplicants) throws IOException {
