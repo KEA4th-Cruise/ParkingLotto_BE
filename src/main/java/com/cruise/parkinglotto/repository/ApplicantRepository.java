@@ -3,7 +3,6 @@ package com.cruise.parkinglotto.repository;
 import com.cruise.parkinglotto.domain.Applicant;
 import com.cruise.parkinglotto.domain.Draw;
 import com.cruise.parkinglotto.domain.Member;
-import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import com.cruise.parkinglotto.repository.querydsl.ApplicantCustomRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
