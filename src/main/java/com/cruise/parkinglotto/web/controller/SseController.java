@@ -1,8 +1,12 @@
 package com.cruise.parkinglotto.web.controller;
 
+import com.cruise.parkinglotto.domain.Draw;
+import com.cruise.parkinglotto.domain.ParkingSpace;
 import com.cruise.parkinglotto.global.response.ApiResponse;
 import com.cruise.parkinglotto.global.response.code.status.SuccessStatus;
 import com.cruise.parkinglotto.global.sse.SseEmitters;
+import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
+import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -42,9 +48,23 @@ public class SseController {
     }
 
     @Operation(summary = "SSE 연결 테스트를 위한 API", description = "테스트로 보낼 String을 전송해주세요.")
-    @GetMapping("/test/{testString}")
-    public ApiResponse<String> sseTest(@PathVariable(name = "testString") String testString) {
-        sseEmitters.sendEvent("testData", testString);
+    @GetMapping("/test")
+    public ApiResponse<String> sseTest() {
+        List<ParkingSpaceResponseDTO.ParkingSpaceCompetitionRateDTO> dtoList = new ArrayList<>();
+        for (int i = 1; i <= 3; i++) {
+            ParkingSpaceResponseDTO.ParkingSpaceCompetitionRateDTO dto = ParkingSpaceResponseDTO.ParkingSpaceCompetitionRateDTO.builder()
+                    .parkingSpaceId((long) i)
+                    .name("Parking Space " + (char) ('A' + (i - 1)))
+                    .slots(10 + i * 2)
+                    .applicantsCount(20 + i * 5)
+                    .build();
+            dtoList.add(dto);
+        }
+        DrawResponseDTO.RealTimeDrawInfo testRealTimeDrawInfo = DrawResponseDTO.RealTimeDrawInfo.builder()
+                .totalSlots(30)
+                .applicantsCount(100)
+                .parkingSpaceCompetitionRateList(dtoList).build();
+        sseEmitters.sendEvent("testData", testRealTimeDrawInfo);
         return ApiResponse.onSuccess(SuccessStatus._OK, "Test SSE Successfully sent.");
     }
 }
