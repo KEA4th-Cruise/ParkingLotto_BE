@@ -12,15 +12,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CertificateDocsRepository extends JpaRepository<CertificateDocs, Long> {
-    List<CertificateDocs> findByMemberId(Long memberId);
-
-    void deleteByMember(Member member);
-
-    void deleteAllByFileUrlIn(List<String> fileUrls);
 
     void deleteAllByMemberIdAndDrawId(Long memberId, Long drawId);
-
-    void deleteByFileUrl(String fileUrl);
 
     @Query("select c from CertificateDocs c where c.member.id = :memberId and c.drawId = :drawId")
     Optional<List<CertificateDocs>> findCertificateDocsByMemberIdAndDrawId(@Param("memberId") Long memberId, @Param("drawId") Long drawId);

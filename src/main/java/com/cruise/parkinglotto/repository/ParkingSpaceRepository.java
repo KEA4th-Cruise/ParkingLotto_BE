@@ -18,8 +18,6 @@ public interface ParkingSpaceRepository extends JpaRepository<ParkingSpace, Long
 
     List<ParkingSpace> findByConfirmed(boolean confirmed);
 
-    Optional<ParkingSpace> findParkingSpaceByDrawId(Long drawId);
-
     @Query("SELECT p FROM ParkingSpace p WHERE p.id = :firstChoice AND p.draw.id = :drawId")
     ParkingSpace findUserCountWithDrawAndFirstChoice(
             @Param("firstChoice") Long firstChoice,

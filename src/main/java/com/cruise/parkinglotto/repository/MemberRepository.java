@@ -20,9 +20,6 @@ public interface MemberRepository extends JpaRepository<Member, Long>, MemberCus
 
     Optional<Member> findById(Long memberId);
 
-    @Query("select m.id from Member m where m.accountId = :accountId")
-    Optional<Long> findIdByAccountId(@Param("accountId") String accountId);
-
     @Modifying
     @Transactional
     @Query("UPDATE Member m SET m.carNum = :carNum WHERE m.id = :memberId")
@@ -42,10 +39,5 @@ public interface MemberRepository extends JpaRepository<Member, Long>, MemberCus
 
     @Query("SELECT m FROM Member m WHERE m.enrollmentStatus = :enrollmentStatus")
     Page<Member> findByEnrollmentStatus(PageRequest pageRequest, @Param("enrollmentStatus") EnrollmentStatus enrollmentStatus);
-
-    Optional<Member> findByAccountIdAndEnrollmentStatus(String accountId, EnrollmentStatus enrollmentStatus);
-
-    Optional<Member> findByEmployeeNoAndEnrollmentStatus(String employeeNo, EnrollmentStatus enrollmentStatus);
-
 
 }

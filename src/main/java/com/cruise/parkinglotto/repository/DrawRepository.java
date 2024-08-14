@@ -29,7 +29,5 @@ public interface DrawRepository extends JpaRepository<Draw, Long> {
 
     @Query("SELECT DISTINCT d.year FROM Draw d  ORDER BY d.year DESC")
     List<String> findYearList();
-
-    List<Draw> findByStatus(DrawStatus status);
 }
 
