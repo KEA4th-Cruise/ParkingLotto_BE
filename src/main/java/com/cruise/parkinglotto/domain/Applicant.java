@@ -59,16 +59,6 @@ public class Applicant extends BaseEntity {
     @JoinColumn(name = "draw_id")
     private Draw draw;
 
-    public void cancelWinningStatus() {
-        this.winningStatus = WinningStatus.CANCELED;
-    }
-
-    public void approveParkingSpaceToPriority(Long parkingSpaceId, WinningStatus winningStatus, Integer reserveNum) {
-        this.parkingSpaceId = parkingSpaceId;
-        this.winningStatus = winningStatus;
-        this.reserveNum = reserveNum;
-    }
-
     public void assignRandomNumber(double randomNumber) {
         this.randomNumber = randomNumber;
     }
