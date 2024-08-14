@@ -167,7 +167,7 @@ public class DrawConverter {
                 .seed(draw.getSeedNum())
                 .seedDetailList(applicants.stream()
                         .map(applicant -> DrawResponseDTO.SeedDetailDTO.builder()
-                                .accountId(applicant.getMember().getAccountId())
+                                .accountId(maskName(applicant.getMember().getNameKo()))
                                 .userSeed(applicant.getUserSeed())
                                 .build())
                         .collect(Collectors.toList()))
