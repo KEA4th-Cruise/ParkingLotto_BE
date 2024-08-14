@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "tb_applicants")
+@Table(name = "tb_applicants", uniqueConstraints = @UniqueConstraint(columnNames = {"member_id", "draw_id"}))
 @Getter
 @Builder
 @AllArgsConstructor
