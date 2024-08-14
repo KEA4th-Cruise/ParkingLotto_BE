@@ -3,7 +3,6 @@ package com.cruise.parkinglotto.repository;
 import com.cruise.parkinglotto.domain.Applicant;
 import com.cruise.parkinglotto.domain.Draw;
 import com.cruise.parkinglotto.domain.Member;
-import com.cruise.parkinglotto.domain.enums.WinningStatus;
 import com.cruise.parkinglotto.repository.querydsl.ApplicantCustomRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,12 +17,6 @@ import java.util.Optional;
 
 public interface ApplicantRepository extends JpaRepository<Applicant, Long>, ApplicantCustomRepository {
 
-    @Query("select a.id from Applicant a where a.member.id = :memberId")
-    Optional<Long> findIdByMember(@Param("memberId") Long memberId);
-
-    @Query("select a from Applicant a where a.member.id = :memberId")
-    Optional<List<Applicant>> findApplicantListByMemberId(@Param("memberId") Long memberId);
-
     @Query("select a.parkingSpaceId from Applicant a where a.id =:applicantId")
     Optional<Long> findParkingSpaceById(@Param("applicantId") Long applicantId);
 
@@ -36,20 +29,12 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long>, App
     @Query("UPDATE Applicant a SET a.parkingSpaceId = :parkingSpaceId WHERE a.id = :winnerId")
     void updateParkingSpaceId(@Param("winnerId") Long winnerId, @Param("parkingSpaceId") Long parkingSpaceId);
 
-    @Modifying
-    @Query("UPDATE Applicant a SET a.reserveNum = :reserveNum WHERE a.id = :applicantId")
-    void updateReserveNum(@Param("applicantId") Long applicantId, @Param("reserveNum") Integer reserveNum);
-
     Page<Applicant> findByDrawId(PageRequest pageRequest, Long drawId);
 
     Optional<Applicant> findById(Long applicantId);
 
     @Query("SELECT COALESCE(MAX(a.userSeedIndex), 0) FROM Applicant a WHERE a.draw = :draw")
     Integer findMaxUserSeedIndexByDraw(@Param("draw") Draw draw);
-
-    @Query("UPDATE Applicant a SET a.userSeedIndex = :userSeedIndex WHERE a.id = :applicantId")
-    @Modifying
-    void updateUserSeedIndex(@Param("applicantId") Long applicantId, @Param("userSeedIndex") Integer userSeedIndex);
 
     Optional<Applicant> findByDrawIdAndMemberId(Long drawId, Long memberId);
 

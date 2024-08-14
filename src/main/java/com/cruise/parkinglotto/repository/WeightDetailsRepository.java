@@ -21,11 +21,6 @@ public interface WeightDetailsRepository extends JpaRepository<WeightDetails, Lo
 
     Optional<WeightDetails> findOptionalByMemberId(Long memberId);
 
-    @Modifying
-    @Transactional
-    @Query("UPDATE WeightDetails w SET w.address = :address WHERE w.member = :member")
-    void updateAddress(@Param("member") Member member, @Param("address") String address);
-
     WeightDetails findByMemberId(Long memberId);
 
 }

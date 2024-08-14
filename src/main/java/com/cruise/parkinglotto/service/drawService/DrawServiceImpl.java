@@ -28,6 +28,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -338,7 +339,8 @@ public class DrawServiceImpl implements DrawService {
     @Override
     @Transactional(readOnly = true)
     public Page<Applicant> getDrawResult(HttpServletRequest httpServletRequest, Long drawId, Integer page) {
-        PageRequest pageRequest = PageRequest.of(page, 15);
+        PageRequest pageRequest = PageRequest.of(page, 15, Sort.by(
+                Sort.Order.asc("reserveNum").with(Sort.NullHandling.NATIVE)));
 
         drawRepository.findById(drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.DRAW_NOT_FOUND));
         Page<Applicant> applicantsPage = applicantRepository.findByDrawId(pageRequest, drawId);
