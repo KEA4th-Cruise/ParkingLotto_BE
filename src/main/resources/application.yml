@@ -75,3 +75,4 @@ server:
     session:
       cookie:
         same-site: none
+  forward-headers-strategy: FRAMEWORK
