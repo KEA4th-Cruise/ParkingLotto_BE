@@ -2,6 +2,7 @@ package com.cruise.parkinglotto.web.controller;
 
 import com.cruise.parkinglotto.domain.Applicant;
 import com.cruise.parkinglotto.domain.Draw;
+import com.cruise.parkinglotto.domain.Member;
 import com.cruise.parkinglotto.domain.ParkingSpace;
 import com.cruise.parkinglotto.domain.enums.ApprovalStatus;
 import com.cruise.parkinglotto.domain.enums.DrawType;
@@ -11,6 +12,7 @@ import com.cruise.parkinglotto.global.response.code.status.SuccessStatus;
 import com.cruise.parkinglotto.service.applicantService.ApplicantService;
 import com.cruise.parkinglotto.service.drawService.DrawService;
 import com.cruise.parkinglotto.service.drawStatisticsService.DrawStatisticsService;
+import com.cruise.parkinglotto.service.memberService.MemberService;
 import com.cruise.parkinglotto.service.parkingSpaceService.ParkingSpaceService;
 import com.cruise.parkinglotto.service.priorityApplicantService.PriorityApplicantService;
 import com.cruise.parkinglotto.web.converter.ApplicantConverter;
@@ -50,6 +52,7 @@ public class DrawRestController {
     private final ApplicantService applicantService;
     private final PriorityApplicantService priorityApplicantService;
     private final DrawStatisticsService drawStatisticsService;
+    private final MemberService memberService;
 
 
     //추첨 실행 후 결과 저장하는 API
@@ -301,5 +304,15 @@ public class DrawRestController {
         String accountIdFromRequest = jwtUtils.getAccountIdFromRequest(httpServletRequest);
         drawService.deleteDraw(drawId, accountIdFromRequest);
         return ApiResponse.onSuccess(SuccessStatus.DRAW_DELETE_SUCCESS,null);
+    }
+
+    @Operation(summary = "내가 배정받은 주차공간 정보를 조회하는 API 입니다.", description = " Pathvariable 로 drawId 를 보내주면 해당 회차에 내 주차공간 정보를 보내줍니다. 주요 정보는 주차공간 주소, 구역이름, 이미지입니다.(최준범)")
+    @GetMapping("/{drawId}/my-space")
+    public ApiResponse<ParkingSpaceResponseDTO.ParkingSpaceInfoResponseDTO> getParkingSpaceInfo(@PathVariable("drawId") Long drawId, HttpServletRequest httpServletRequest) {
+
+        String accountIdFromRequest = jwtUtils.getAccountIdFromRequest(httpServletRequest);
+        Member findMember = memberService.getMemberByAccountId(accountIdFromRequest);
+
+        return ApiResponse.onSuccess(SuccessStatus.PARKING_SPACE_INFO_FOUND, parkingSpaceService.getParkingSpaceInfo(findMember.getId(), drawId));
     }
 }

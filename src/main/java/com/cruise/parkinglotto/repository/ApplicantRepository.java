@@ -20,7 +20,7 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long>, App
     @Query("select a.parkingSpaceId from Applicant a where a.id =:applicantId")
     Optional<Long> findParkingSpaceById(@Param("applicantId") Long applicantId);
 
-    @Query("select a from Applicant a where a.member.id = :memberId and a.draw.id = :drawId ")
+    @Query("SELECT a FROM Applicant a WHERE a.member.id = :memberId AND a.draw.id = :drawId ")
     Optional<Applicant> findApplicantByMemberIdAndDrawId(@Param("memberId") Long memberId, @Param("drawId") Long drawId);
 
     List<Applicant> findByDrawId(Long drawId);
