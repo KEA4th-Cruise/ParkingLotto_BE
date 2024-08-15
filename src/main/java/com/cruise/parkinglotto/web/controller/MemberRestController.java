@@ -96,16 +96,6 @@ public class MemberRestController {
         return ApiResponse.onSuccess(SuccessStatus.MEMBER_INFO_UPDATED, myInfoResponseDTO);
     }
 
-    @Operation(summary = "내가 배정받은 주차공간 정보를 조회하는 API 입니다.", description = " Pathvariable 로 drawId 를 보내주면 해당 회차에 내 주차공간 정보를 보내줍니다. 주요 정보는 주차공간 주소, 구역이름, 이미지입니다.(최준범)")
-    @GetMapping("/{drawId}/my-space")
-    public ApiResponse<ParkingSpaceResponseDTO.ParkingSpaceInfoResponseDTO> getParkingSpaceInfo(@PathVariable("drawId") Long drawId, HttpServletRequest httpServletRequest) {
-
-        String accountIdFromRequest = jwtUtils.getAccountIdFromRequest(httpServletRequest);
-        Member findMember = memberService.getMemberByAccountId(accountIdFromRequest);
-
-        return ApiResponse.onSuccess(SuccessStatus.PARKING_SPACE_INFO_FOUND, parkingSpaceService.findParkingSpaceInfo(findMember.getId(), drawId));
-    }
-
 
     @Operation(summary = "내가 신청했던 추첨 목록을 조회하는 API 입니다. 페이징을 포함합니다", description = " RequestParam 으로 조회하고 싶은 page 번호를 전송해 주세요.(최준범, 이윤서(수정자)) ")
     @GetMapping("/applied/draws")

@@ -56,19 +56,6 @@ public class ParkingSpaceServiceImpl implements ParkingSpaceService {
     }
 
     @Override
-    @Transactional
-    public ParkingSpaceResponseDTO.ParkingSpaceInfoResponseDTO findParkingSpaceInfo(Long memberId, Long drawId) {
-
-
-        Applicant applicant = applicantRepository.findApplicantByMemberIdAndDrawId(memberId, drawId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_NOT_FOUND));
-        Long parkingSpaceId = applicantRepository.findParkingSpaceById(applicant.getId()).orElseThrow(() -> new ExceptionHandler(ErrorStatus.APPLICANT_PARKING_SPACE_ID_NOT_FOUND));
-
-        ParkingSpace findParkingSpace = parkingSpaceRepository.findById(parkingSpaceId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.PARKING_SPACE_NOT_FOUND));
-
-        return ParkingSpaceConverter.toParkingSpaceInfoResponseDTO(findParkingSpace);
-    }
-
-    @Override
     @Transactional(readOnly = true)
     public ParkingSpaceResponseDTO.ParkingSpaceInfoResponseDTO getParkingSpaceInfo(Long memberId, Long drawId) {
 
@@ -80,7 +67,7 @@ public class ParkingSpaceServiceImpl implements ParkingSpaceService {
             findParkingSpace = parkingSpaceRepository.findById(parkingSpaceId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.PARKING_SPACE_NOT_FOUND));
         } else {
             PriorityApplicant findPriorityApplicant = priorityApplicantRepository.findByDrawIdAndMemberId(drawId, memberId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.PRIORITY_APPLICANT_NOT_FOUND));
-            Long parkingSpaceId = priorityApplicantRepository.findParkingSpaceById(findPriorityApplicant.getId()).orElseThrow(() -> new ExceptionHandler(ErrorStatus.PRIORITY_APPLICANT_PARKING_SPACE_ID_NOT_FOUND));
+            Long parkingSpaceId = priorityApplicantRepository.findParkingSpaceById(findPriorityApplicant.getId()).orElseThrow(() -> new ExceptionHandler(ErrorStatus.PARKING_SPACE_NOT_FOUND));
             findParkingSpace = parkingSpaceRepository.findById(parkingSpaceId).orElseThrow(() -> new ExceptionHandler(ErrorStatus.PARKING_SPACE_NOT_FOUND));
         }
 
