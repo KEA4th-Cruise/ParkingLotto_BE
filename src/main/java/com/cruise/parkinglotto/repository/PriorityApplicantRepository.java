@@ -30,4 +30,7 @@ public interface PriorityApplicantRepository extends JpaRepository<PriorityAppli
 
     @Query("SELECT pa FROM PriorityApplicant pa WHERE pa.member.id = :memberId")
     List<PriorityApplicant> findByMemberId(@Param("memberId") Long memberId);
+
+    @Query("select p.parkingSpaceId from PriorityApplicant p where p.id = :priorityApplicantId")
+    Optional<Long> findParkingSpaceById(@Param("priorityApplicantId") Long priorityApplicantId);
 }
