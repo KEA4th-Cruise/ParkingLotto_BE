@@ -82,7 +82,7 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 우대 신청자 관련 응답
     PRIORITY_APPLICANT_NOT_FOUND(HttpStatus.NOT_FOUND, "PRIORITYAPPLICANT4001", "우대 신청자를 찾지 못했습니다."),
-    PRIORITY_APPLICANT_PARKING_SPACE_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "PRIORITYAPPLICANT4002", "우대 신청자의 주차공간 테이블 id 를 찾지 못했습니다"),
+    PRIORITY_APPLICANT_PARKING_SPACE_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "PRIORITYAPPLICANT4002", "우대 신청자의 주차공간 id 를 찾지 못했습니다"),
 
     ;
 
