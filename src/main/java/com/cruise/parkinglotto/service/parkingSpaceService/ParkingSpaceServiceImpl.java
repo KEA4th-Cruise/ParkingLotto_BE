@@ -69,7 +69,7 @@ public class ParkingSpaceServiceImpl implements ParkingSpaceService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public ParkingSpaceResponseDTO.ParkingSpaceInfoResponseDTO getParkingSpaceInfo(Long memberId, Long drawId) {
 
         ParkingSpace findParkingSpace;
