@@ -52,6 +52,7 @@ public enum ErrorStatus implements BaseErrorCode {
     // 주차 공간 관련 응답
     PARKING_SPACE_NOT_FOUND(HttpStatus.BAD_REQUEST, "PARKINGSPACE4001", "주차 공간이 존재하지 않습니다"),
     NO_REMAIN_SLOTS(HttpStatus.BAD_REQUEST, "PARKINGSPACE4002", "남은 주차공간이 없습니다."),
+    PARKING_SPACE_ALREADY_EXIST(HttpStatus.CONFLICT, "PARKINGSPACE4003", "해당 추첨에 같은 이름의 주차구역이 이미 존재합니다."),
 
     // 추첨 관련 응답
     DRAW_NOT_FOUND(HttpStatus.NOT_FOUND, "DRAW4001", "추첨이 존재하지 않습니다."),

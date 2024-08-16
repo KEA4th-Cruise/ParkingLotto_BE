@@ -8,7 +8,7 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 @Entity
-@Table(name = "tb_parking_spaces")
+@Table(name = "tb_parking_spaces", uniqueConstraints = @UniqueConstraint(columnNames = {"draw_id", "name"}))
 @Getter
 @Builder
 @AllArgsConstructor
