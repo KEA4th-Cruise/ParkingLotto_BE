@@ -20,6 +20,8 @@ import com.cruise.parkinglotto.web.dto.priorityApplicantDTO.PriorityApplicantReq
 import com.cruise.parkinglotto.web.dto.priorityApplicantDTO.PriorityApplicantResponseDTO;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -170,8 +172,11 @@ public class PriorityApplicantServiceImpl implements PriorityApplicantService {
 
         //applicant 저장
         PriorityApplicant priorityApplicant = PriorityApplicantConverter.makeInitialPriorityApplicantObject(member, draw, carNum);
-        priorityApplicantRepository.save(priorityApplicant);
-
+        try {
+            priorityApplicantRepository.save(priorityApplicant);
+        } catch (DataIntegrityViolationException e) {
+            throw new ExceptionHandler(ErrorStatus.APPLICANT_DUPLICATED_APPLY);
+        }
     }
 
     @Override

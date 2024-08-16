@@ -11,6 +11,7 @@ import com.cruise.parkinglotto.service.memberService.MemberService;
 import com.cruise.parkinglotto.web.converter.RegisterConverter;
 import com.cruise.parkinglotto.web.dto.registerDTO.RegisterResponseDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -54,7 +55,12 @@ public class RegisterServiceImpl implements RegisterService {
                 .recentLossCount(0)
                 .workType(member.getWorkType())
                 .build();
-        weightDetailsRepository.save(weightDetails);
+        try {
+            weightDetailsRepository.save(weightDetails);
+        } catch (DataIntegrityViolationException e) {
+            throw new ExceptionHandler(ErrorStatus.APPLICANT_DUPLICATED_APPLY);
+        }
+
         if (updatedCount == 0) { // 관리자가 승인을 했는데 ENROLLED로 바뀌지 않은 경우
             throw new ExceptionHandler(ErrorStatus.REGISTER_APPROVE_FAILED);
         }

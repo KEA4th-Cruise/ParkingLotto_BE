@@ -19,12 +19,15 @@ import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantRequestDTO;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import com.cruise.parkinglotto.web.dto.certificateDocsDTO.CertificateDocsRequestDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -148,7 +151,12 @@ public class ApplicantServiceImpl implements ApplicantService {
 
         //applicant 저장
         Applicant applicant = ApplicantConverter.makeInitialApplicantObject(member, draw, winningStatus, userSeed, applyDrawRequestDTO.getFirstChoice(), applyDrawRequestDTO.getSecondChoice(), distance, workType, trafficCommuteTime, carCommuteTime, recentLossCount);
-        Applicant toGetApplicantId = applicantRepository.save(applicant);
+        Applicant toGetApplicantId;
+        try {
+            toGetApplicantId = applicantRepository.save(applicant);
+        } catch (DataIntegrityViolationException e) {
+            throw new ExceptionHandler(ErrorStatus.APPLICANT_DUPLICATED_APPLY);
+        }
 
         //userSeedIndex 배정
         Integer maxUserSeedIndex = applicantRepository.findMaxUserSeedIndexByDraw(draw);

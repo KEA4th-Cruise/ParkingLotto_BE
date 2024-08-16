@@ -5,6 +5,7 @@ import com.cruise.parkinglotto.global.response.code.BaseErrorCode;
 import com.cruise.parkinglotto.global.response.code.ErrorReasonDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties;
 import org.springframework.http.HttpStatus;
 
 @Getter
@@ -35,6 +36,7 @@ public enum ErrorStatus implements BaseErrorCode {
     REGISTER_REFUSE_FAILED(HttpStatus.CONFLICT, "REGISTER4004", "등록 요청 거절에 실패했습니다."),
     REGISTER_SEARCH_NOT_FOUND(HttpStatus.OK, "REGISTER4005", "검색 결과가 없습니다."),
     REGISTER_INVALID_ENROLLMENTSTATUS(HttpStatus.BAD_REQUEST, "REGISTER4006", "유효한 등록 상태가 아닙니다."),
+    REGISTER_DUPLICATED(HttpStatus.CONFLICT, "REGISTER4007", "이미 등록된 사용자입니다."),
 
     // 신청자 관련 응답
     APPLICANT_NOT_FOUND(HttpStatus.NOT_FOUND, "APPLICANT4001", "신청자가 존재하지 않습니다"),
@@ -50,6 +52,7 @@ public enum ErrorStatus implements BaseErrorCode {
     // 주차 공간 관련 응답
     PARKING_SPACE_NOT_FOUND(HttpStatus.BAD_REQUEST, "PARKINGSPACE4001", "주차 공간이 존재하지 않습니다"),
     NO_REMAIN_SLOTS(HttpStatus.BAD_REQUEST, "PARKINGSPACE4002", "남은 주차공간이 없습니다."),
+    PARKING_SPACE_ALREADY_EXIST(HttpStatus.CONFLICT, "PARKINGSPACE4003", "해당 추첨에 같은 이름의 주차구역이 이미 존재합니다."),
 
     // 추첨 관련 응답
     DRAW_NOT_FOUND(HttpStatus.NOT_FOUND, "DRAW4001", "추첨이 존재하지 않습니다."),
@@ -60,6 +63,7 @@ public enum ErrorStatus implements BaseErrorCode {
     DRAW_SEED_NOT_FOUND(HttpStatus.NOT_FOUND, "DRAW4006", "생성된 시드가 없습니다."),
     DRAW_MISMATCH(HttpStatus.BAD_REQUEST,"DRAW4007","알맞은 drawId를 전송해주세요."),
     DRAW_STATUS_IS_COMPLETED(HttpStatus.BAD_REQUEST, "DRAW4008", "추첨이 이미 완료된 상태입니다. "),
+    DRAW_ALREADY_EXIST(HttpStatus.CONFLICT, "DRAW4009", "같은 이름으로 생성된 추첨이 존재합니다."),
 
     //사용자 가중치 관련
     WEIGHTDETAILS_TOO_LONG_USER_SEED(HttpStatus.BAD_REQUEST, "WEIGHTDETAILS4001", "유효한 신청자의 랜덤 시드는 문자 1개입니다"),

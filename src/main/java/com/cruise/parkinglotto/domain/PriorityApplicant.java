@@ -10,7 +10,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "tb_priority_applicants")
+@Table(name = "tb_priority_applicants", uniqueConstraints = @UniqueConstraint(columnNames = {"member_id", "draw_id"}))
 public class PriorityApplicant extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
