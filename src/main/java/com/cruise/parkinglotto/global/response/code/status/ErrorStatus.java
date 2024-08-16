@@ -5,6 +5,7 @@ import com.cruise.parkinglotto.global.response.code.BaseErrorCode;
 import com.cruise.parkinglotto.global.response.code.ErrorReasonDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties;
 import org.springframework.http.HttpStatus;
 
 @Getter
@@ -35,6 +36,7 @@ public enum ErrorStatus implements BaseErrorCode {
     REGISTER_REFUSE_FAILED(HttpStatus.CONFLICT, "REGISTER4004", "등록 요청 거절에 실패했습니다."),
     REGISTER_SEARCH_NOT_FOUND(HttpStatus.OK, "REGISTER4005", "검색 결과가 없습니다."),
     REGISTER_INVALID_ENROLLMENTSTATUS(HttpStatus.BAD_REQUEST, "REGISTER4006", "유효한 등록 상태가 아닙니다."),
+    REGISTER_DUPLICATED(HttpStatus.CONFLICT, "REGISTER4007", "이미 등록된 사용자입니다."),
 
     // 신청자 관련 응답
     APPLICANT_NOT_FOUND(HttpStatus.NOT_FOUND, "APPLICANT4001", "신청자가 존재하지 않습니다"),

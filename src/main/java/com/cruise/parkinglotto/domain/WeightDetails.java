@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "tb_weight_details")
+@Table(name = "tb_weight_details", uniqueConstraints = @UniqueConstraint(columnNames = {"member_id", "weight_details_id"}))
 @Getter
 @Builder
 @AllArgsConstructor
@@ -39,7 +39,7 @@ public class WeightDetails extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public void updateWeightDetailsInApply(String address, WorkType workType, Integer trafficCommuteTime, Integer carCommuteTime, Double distance){
+    public void updateWeightDetailsInApply(String address, WorkType workType, Integer trafficCommuteTime, Integer carCommuteTime, Double distance) {
         this.address = address;
         this.workType = workType;
         this.trafficCommuteTime = trafficCommuteTime;
