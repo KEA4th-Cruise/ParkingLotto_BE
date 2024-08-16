@@ -62,6 +62,7 @@ public enum ErrorStatus implements BaseErrorCode {
     DRAW_SEED_NOT_FOUND(HttpStatus.NOT_FOUND, "DRAW4006", "생성된 시드가 없습니다."),
     DRAW_MISMATCH(HttpStatus.BAD_REQUEST,"DRAW4007","알맞은 drawId를 전송해주세요."),
     DRAW_STATUS_IS_COMPLETED(HttpStatus.BAD_REQUEST, "DRAW4008", "추첨이 이미 완료된 상태입니다. "),
+    DRAW_ALREADY_EXIST(HttpStatus.CONFLICT, "DRAW4009", "같은 이름으로 생성된 추첨이 존재합니다."),
 
     //사용자 가중치 관련
     WEIGHTDETAILS_TOO_LONG_USER_SEED(HttpStatus.BAD_REQUEST, "WEIGHTDETAILS4001", "유효한 신청자의 랜덤 시드는 문자 1개입니다"),

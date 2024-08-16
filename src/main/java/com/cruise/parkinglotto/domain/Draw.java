@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "tb_draws")
+@Table(name = "tb_draws", uniqueConstraints = @UniqueConstraint(columnNames = {"title"}))
 @Getter
 @Builder
 @AllArgsConstructor

@@ -25,6 +25,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -382,7 +383,11 @@ public class DrawServiceImpl implements DrawService {
         String title = year + "년도 " + quarter + "분기 " + drawType;
         String mapImageUrl = objectStorageService.uploadObject(objectStorageConfig.getMapImagePath(), title.replace(" ", "_"), mapImage);
         Draw draw = DrawConverter.toDraw(createDrawRequestDTO, title, mapImageUrl, year, quarter);
-        return drawRepository.save(draw);
+        try {
+            return drawRepository.save(draw);
+        } catch (DataIntegrityViolationException ignored) {
+            throw new ExceptionHandler(ErrorStatus.DRAW_ALREADY_EXIST);
+        }
     }
 
     @Override
