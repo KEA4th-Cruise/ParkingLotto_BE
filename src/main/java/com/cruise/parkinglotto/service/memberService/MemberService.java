@@ -20,7 +20,7 @@ public interface MemberService {
     MemberResponseDTO.LogoutResponseDTO logout(String refreshToken);
 
     // 리프레시 토큰을 이용하여 로그인을 유지하는 메서드
-    MemberResponseDTO.RefreshResponseDTO recreateToken(String refreshToken);
+    MemberResponseDTO.RefreshResponseDTO recreateToken(String accessToken, String refreshToken);
 
     MemberResponseDTO.MyInfoResponseDTO saveMyInfo(Long memberId, MemberRequestDTO.MyInfoRequestDTO myInfoRequestDTO, List<MultipartFile> certificateDocs);
     // 내가 입력한 정보 업데이트
