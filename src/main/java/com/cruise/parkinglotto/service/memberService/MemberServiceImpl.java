@@ -78,7 +78,7 @@ public class MemberServiceImpl implements MemberService {
         JwtToken jwtToken = jwtUtils.generateToken(authentication);
 
         // 7일간 refresh token을 redis에 저장
-        redisService.setValues(jwtToken.getRefreshToken(), loginRequestDTO.getAccountId() , Duration.ofDays(7));
+        redisService.setValues(jwtToken.getRefreshToken(), jwtToken.getAccessToken(), Duration.ofDays(7));
 
         return MemberConverter.toLoginResponseDTO(member, jwtToken);
     }
@@ -101,10 +101,10 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberResponseDTO.RefreshResponseDTO recreateToken(String refreshToken) {
+    public MemberResponseDTO.RefreshResponseDTO recreateToken(String accessToken, String refreshToken) {
 
-        if (refreshToken == null) {
-            throw new ExceptionHandler(ErrorStatus.MEMBER_REFRESH_TOKEN_NULL);
+        if (accessToken == null || refreshToken == null) {
+            throw new ExceptionHandler(ErrorStatus.MEMBER_TOKEN_NULL);
         }
 
         log.info("refreshToken: {}", refreshToken);
@@ -115,12 +115,11 @@ public class MemberServiceImpl implements MemberService {
             throw new ExceptionHandler(ErrorStatus.MEMBER_REFRESH_TOKEN_BLACKLIST);
         }
 
-        String accountIdFromRedis = redisService.getValues(refreshToken);
-        String accountIdFromRequest = jwtUtils.parseClaims(refreshToken).getSubject();
+        String accessTokenFromRedis = redisService.getValues(refreshToken);
 
-        if (accountIdFromRedis != null) { // redis에 값이 있다면
-            if (accountIdFromRedis.equals(accountIdFromRequest)) { // redis 값과 refresh token의 accountId가 일치하는 경우
-                // redis에 저장되어 있는 accountId를 가져와서 authentication를 생성
+        if (accessTokenFromRedis != null) { // redis에 값이 있다면
+            if (accessTokenFromRedis.equals(accessToken)) { // redis 값과 넘겨받은 accessToken 값이 일치하는 경우
+                // authentication  생성
                 Authentication authentication = jwtUtils.getAuthentication(refreshToken);
                 return MemberConverter.toRefreshResponseDTO(jwtUtils.generateAccessToken(authentication));
             } else {

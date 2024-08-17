@@ -46,7 +46,7 @@ public class MemberRestController {
 
         // access token과 refresh token을 각각의 쿠키에 담아서 보냄
         JwtToken jwtToken = loginResponseDTO.getJwtToken();
-        setCookie(httpServletResponse, "accessToken", jwtToken.getAccessToken(), 60 * 60 * 24); // 1일 (초, 분, 시)
+        setCookie(httpServletResponse, "accessToken", jwtToken.getAccessToken(), 60 * 60 * 24 * 7); // 7일 (초, 분, 시)
         setCookie(httpServletResponse, "refreshToken", jwtToken.getRefreshToken(), 60 * 60 * 24 * 7); // 7일 (초, 분, 시, 일)
 
         return ApiResponse.onSuccess(SuccessStatus.MEMBER_LOGIN_SUCCESS, loginResponseDTO);
@@ -67,11 +67,11 @@ public class MemberRestController {
     @Operation(summary = "토큰 재발급 API", description = "access token이 만료된 경우 refresh token을 사용하여 자동 로그인을 해주는 API 입니다.(신해철)")
     @GetMapping("/refresh")
     public ApiResponse<MemberResponseDTO.RefreshResponseDTO> refreshAccessToken(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-        System.out.println("MemberRestController.refreshAccessToken");
 
+        String accessToken = jwtUtils.getTokenInCookie(httpServletRequest, "accessToken");
         String refreshToken = jwtUtils.getTokenInCookie(httpServletRequest, "refreshToken");
-        MemberResponseDTO.RefreshResponseDTO refreshResponseDTO = memberService.recreateToken(refreshToken);
-        setCookie(httpServletResponse, "accessToken", refreshResponseDTO.getAccessToken(), 60 * 60 * 24); // 1일 (초, 분, 시)
+        MemberResponseDTO.RefreshResponseDTO refreshResponseDTO = memberService.recreateToken(accessToken, refreshToken);
+        updateCookieValue(httpServletRequest, httpServletResponse, "accessToken", refreshResponseDTO.getAccessToken());
         return ApiResponse.onSuccess(SuccessStatus.MEMBER_REFRESH_TOKEN_SUCCESS, refreshResponseDTO);
     }
 
@@ -126,12 +126,37 @@ public class MemberRestController {
         return ApiResponse.onSuccess(SuccessStatus.MEMBER_INFO_SAVED, myInfoResponseDTO);
     }
 
-    private void setCookie(HttpServletResponse httpServletResponse, String name, String value, int maxAge) {
-        Cookie cookie = new Cookie(name, value);
+    private void setCookie(HttpServletResponse httpServletResponse, String cookieName, String value, int maxAge) {
+        Cookie cookie = new Cookie(cookieName, value);
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setPath("/");
         cookie.setMaxAge(maxAge);
         httpServletResponse.addCookie(cookie);
+    }
+
+    private void updateCookieValue(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, String cookieName, String newValue) {
+        // 요청에 포함된 쿠키 배열에서 쿠키를 찾아 값을 업데이트
+        Cookie[] cookies = httpServletRequest.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(cookieName)) {
+                    // 동일한 쿠키를 삭제하여 중복 생성 방지
+                    cookie.setMaxAge(0); // 쿠키 삭제
+                    httpServletResponse.addCookie(cookie);
+
+                    // 새 값으로 쿠키 생성
+                    Cookie newCookie = new Cookie(cookieName, newValue);
+                    newCookie.setPath(cookie.getPath()); // 경로 설정
+                    newCookie.setMaxAge(cookie.getMaxAge()); // 만료 시간 설정
+                    newCookie.setHttpOnly(cookie.isHttpOnly()); // HttpOnly 설정
+                    newCookie.setSecure(cookie.getSecure()); // Secure 설정
+
+                    // 새로운 쿠키를 추가
+                    httpServletResponse.addCookie(newCookie);
+                    break;
+                }
+            }
+        }
     }
 }
