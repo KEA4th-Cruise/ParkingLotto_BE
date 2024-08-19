@@ -1,6 +1,9 @@
 package com.cruise.parkinglotto.web.converter;
 
+import com.cruise.parkinglotto.domain.Member;
+import com.cruise.parkinglotto.domain.WeightDetails;
 import com.cruise.parkinglotto.domain.enums.WorkType;
+import com.cruise.parkinglotto.web.dto.memberDTO.MemberRequestDTO;
 import com.cruise.parkinglotto.web.dto.weightDetailDTO.WeightDetailResponseDTO;
 
 public class WeightDetailConverter {
@@ -21,4 +24,18 @@ public class WeightDetailConverter {
                 .calculateResult(result)
                 .build();
     }
+
+    public static WeightDetails toWeightDetails(MemberRequestDTO.MyInfoRequestDTO myInfoRequestDTO, Member findMember) {
+        WeightDetails weightDetails = WeightDetails.builder()
+                .member(findMember)
+                .address(myInfoRequestDTO.getAddress())
+                .workType(myInfoRequestDTO.getWorkType())
+                .carCommuteTime(0)
+                .recentLossCount(0)
+                .trafficCommuteTime(0)
+                .distance(0.00)
+                .build();
+        return weightDetails;
+    }
+
 }

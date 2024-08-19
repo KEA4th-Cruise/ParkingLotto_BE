@@ -2,6 +2,9 @@ package com.cruise.parkinglotto.repository;
 
 import com.cruise.parkinglotto.domain.Member;
 import com.cruise.parkinglotto.domain.enums.EnrollmentStatus;
+import com.cruise.parkinglotto.repository.querydsl.MemberCustomRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -11,14 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface MemberRepository extends JpaRepository<Member, Long>, MemberCustomRepository {
 
     Optional<Member> findByAccountId(String accountId);
 
     Optional<Member> findById(Long memberId);
-
-    @Query("select m.id from Member m where m.accountId = :accountId")
-    Optional<Long> findIdByAccountId(@Param("accountId") String accountId);
 
     @Modifying
     @Transactional
@@ -38,11 +38,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     int updateEnrollmentStatusToEnrolled(@Param("accountId") String accountId);
 
     @Query("SELECT m FROM Member m WHERE m.enrollmentStatus = :enrollmentStatus")
-    List<Member> findByEnrollmentStatus(@Param("enrollmentStatus") EnrollmentStatus enrollmentStatus);
-
-    Optional<Member> findByAccountIdAndEnrollmentStatus(String accountId, EnrollmentStatus enrollmentStatus);
-
-    Optional<Member> findByEmployeeNoAndEnrollmentStatus(String employeeNo, EnrollmentStatus enrollmentStatus);
-
+    Page<Member> findByEnrollmentStatus(PageRequest pageRequest, @Param("enrollmentStatus") EnrollmentStatus enrollmentStatus);
 
 }

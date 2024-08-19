@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 public class RegisterResponseDTO {
 
     @Getter
@@ -29,5 +31,18 @@ public class RegisterResponseDTO {
         private String employeeNo;
         private String deptPathName;
         private String accountId;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MembersResponseDTOList {
+        private List<RegisterResponseDTO.MembersResponseDTO> memberList;
+        Integer listSize;
+        Integer totalPage;
+        Long totalElements;
+        Boolean isFirst;
+        Boolean isLast;
     }
 }

@@ -8,7 +8,7 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 @Entity
-@Table(name = "tb_parking_spaces")
+@Table(name = "tb_parking_spaces", uniqueConstraints = @UniqueConstraint(columnNames = {"draw_id", "name"}))
 @Getter
 @Builder
 @AllArgsConstructor
@@ -48,11 +48,23 @@ public class ParkingSpace extends BaseEntity {
         this.confirmed = confirmed;
     }
 
+    public void updateApplicantCount() {
+        this.applicantCount = this.applicantCount + 1;
+    }
+
+    public void decreaseApplicantCount() {
+        this.applicantCount = this.applicantCount - 1;
+    }
+
     public void decrementSlots() {
         if (this.remainSlots > 0) {
             this.remainSlots--;
         } else {
             throw new ExceptionHandler(ErrorStatus.NO_REMAIN_SLOTS);
         }
+    }
+
+    public void confirmParkingSpace() {
+        this.confirmed = true;
     }
 }

@@ -5,25 +5,22 @@ import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantRequestDTO;
 import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ApplicantService {
     Page<Applicant> getApplicantList(Integer page, Long drawId);
-  
+
     ApplicantResponseDTO.MyApplyInfoDTO getMyApplyInfo(Long memberId, Long drawId);
 
-    List<ApplicantResponseDTO.GetMyApplyResultDTO> getApplyResultList(Long memberId);
-    
-    void drawApply(List<MultipartFile> certificateDocs, ApplicantRequestDTO.GeneralApplyDrawRequestDTO applyDrawRequestDTO, String accountId);
+    void drawApply(List<MultipartFile> certificateDocs, ApplicantRequestDTO.GeneralApplyDrawRequestDTO applyDrawRequestDTO, String accountId, Long drawId);
 
-    /**
-     * 검색 키워드로 신청자 목록에서 신청자를 검색하는 메서드
-     * 검색 키워드는 employeeNo 또는 accountId를 받을 수 있고 필터링을 사용하지 않는다.
-     * @param searchKeyword
-     * @return
-     */
-    ApplicantResponseDTO.GetApplicantResultDTO searchApplicantBySearchKeyword(String searchKeyword);
+    Page<Applicant> searchApplicant(Integer page, String keyword, Long drawId);
+
+    void cancelApply(String accountId, Long drawId);
+
+    Page<Applicant> searchWinner(Integer page, String keyword, Long drawId);
+
+    ApplicantResponseDTO.getMyApplyInformationDTO getMyApplyInformation(Long drawId, String accountId);
+
 }

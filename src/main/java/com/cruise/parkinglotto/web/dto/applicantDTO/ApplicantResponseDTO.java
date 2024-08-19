@@ -1,9 +1,10 @@
 package com.cruise.parkinglotto.web.dto.applicantDTO;
 
 import com.cruise.parkinglotto.domain.enums.WinningStatus;
+import com.cruise.parkinglotto.domain.enums.WorkType;
+import com.cruise.parkinglotto.web.dto.certificateDocsDTO.CertificateDocsRequestDTO;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -13,12 +14,9 @@ public class ApplicantResponseDTO {
     public static class ApplicantResultDTO {
         private Double weightedTotalScore;
         private WinningStatus winningStatus;
-        private String parkingSpaceName;
         private Integer reserveNum;
         private Integer userSeedIndex;
         private String userSeed;
-        private String firstChoice;
-        private String secondChoice;
         private String userName;
     }
 
@@ -39,7 +37,7 @@ public class ApplicantResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class GetApplicantListResultDTO {
-        private List<GetApplicantResultDTO> getApplicantResultDTOList;
+        private List<GetApplicantResultDTO> applicantList;
         Integer listSize;
         Integer totalPage;
         Long totalElements;
@@ -51,26 +49,27 @@ public class ApplicantResponseDTO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetMyApplyResultDTO {
-        private String drawTitle; // 추첨 제목
-        private WinningStatus winningStatus; // 그 추첨의 상태
-        private Long drawStatisticsId; // 추첨 통계
-        private Integer reserveNum; // 예비번호
-        private Long parkingSpaceId; // 주차 공간 정보 API
+    public static class MyApplyInfoDTO {
+        private Long parkingSpaceId;
+        private String drawTitle;
+        private WinningStatus winningStatus;
+        private LocalDateTime startDate;
+        private LocalDateTime endDate;
     }
 
     @Getter
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class MyApplyInfoDTO {
-        private Long parkingSpaceId;
-        private String drawTitle;
-        private WinningStatus winningStatus;
-        private String parkingSpaceName;
-        private String parkingSpaceAddress;
-        private LocalDateTime startDate;
-        private LocalDateTime endDate;
+    public static class getMyApplyInformationDTO {
+        String carNum;
+        String address;
+        WorkType workType;
+        Long firstChoice;
+        Long secondChoice;
+        String userSeed;
+        Integer recentLossCount;
+        List<CertificateDocsRequestDTO.CertificateFileDTO> certificateFiles;
     }
 
 }

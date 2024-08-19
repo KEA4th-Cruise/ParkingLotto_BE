@@ -21,6 +21,18 @@ spring:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        debug: true
+        smtp.auth: true
+        smtp.timeout: 60000 # 60000ms
+        smtp.starttls.enable: true
+
 jwt:
   secret: ${JWT_SECRET}
 
@@ -34,6 +46,7 @@ cloud:
         map-image: ${MAP_IMAGE}
         general-certificate-docs: ${GENERAL_CERTIFICATE_DOCS}
         priority-certificate-docs: ${PRIORITY_CERTIFICATE_DOCS}
+        draw-result-docs: ${DRAW_RESULT_DOCS}
 
       region:
         static: ${KC_REGION}
@@ -42,3 +55,24 @@ cloud:
         secretKey: ${KC_S3_SECRET_ACCESS_KEY}
       project-id: ${KC_PROJECT_ID}
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+server:
+  servlet:
+    session:
+      cookie:
+        same-site: none
+  forward-headers-strategy: FRAMEWORK

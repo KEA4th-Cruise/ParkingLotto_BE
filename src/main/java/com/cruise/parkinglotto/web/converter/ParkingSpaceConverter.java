@@ -1,22 +1,25 @@
 package com.cruise.parkinglotto.web.converter;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.cruise.parkinglotto.domain.Draw;
 import com.cruise.parkinglotto.domain.ParkingSpace;
 import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceRequestDTO;
 import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 public class ParkingSpaceConverter {
 
-    public static List<ParkingSpaceResponseDTO.GetNameAndUrlParkingSpaceResultDTO> toGetNameAndUrlParkingResponse(List<ParkingSpace> parkingSpaces) {
+    public static List<ParkingSpaceResponseDTO.GetParkingSpaceResultDTO> toGetNameAndUrlParkingResponse(List<ParkingSpace> parkingSpaces) {
         return parkingSpaces.stream()
-                .map(parkingSpace -> ParkingSpaceResponseDTO.GetNameAndUrlParkingSpaceResultDTO.builder()
+                .map(parkingSpace -> ParkingSpaceResponseDTO.GetParkingSpaceResultDTO.builder()
+                        .id(parkingSpace.getId())
                         .name(parkingSpace.getName())
                         .floorPlanImageUrl(parkingSpace.getFloorPlanImageUrl())
+                        .slots(parkingSpace.getSlots())
+                        .parkingSpaceAddress(parkingSpace.getAddress())
                         .build())
                 .collect(Collectors.toList());
     }
@@ -65,7 +68,7 @@ public class ParkingSpaceConverter {
         List<ParkingSpaceResponseDTO.ParkingSpacePreviewDTO> parkingSpacePreviewDTOList = parkingSpaceList.stream()
                 .map(ParkingSpaceConverter::toParkingSpacePreviewDTO).toList();
         return ParkingSpaceResponseDTO.ParkingSpacePreviewListDTO.builder()
-                .parkingSpacePreviewDTOList(parkingSpacePreviewDTOList)
+                .parkingSpacePreviewList(parkingSpacePreviewDTOList)
                 .build();
     }
 

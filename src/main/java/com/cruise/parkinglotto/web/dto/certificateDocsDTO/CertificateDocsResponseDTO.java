@@ -1,11 +1,11 @@
-package com.cruise.parkinglotto.web.dto.CertificateDocsDTO;
+package com.cruise.parkinglotto.web.dto.certificateDocsDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-public class CertificateDocsRequestDTO {
+public class CertificateDocsResponseDTO {
 
     @Getter
     @Builder
@@ -15,4 +15,5 @@ public class CertificateDocsRequestDTO {
         private String fileUrl;
         private String fileName;
     }
+
 }

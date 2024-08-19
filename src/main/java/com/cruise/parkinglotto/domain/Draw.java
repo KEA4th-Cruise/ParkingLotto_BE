@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "tb_draws")
+@Table(name = "tb_draws", uniqueConstraints = @UniqueConstraint(columnNames = {"title"}))
 @Getter
 @Builder
 @AllArgsConstructor
@@ -42,6 +42,7 @@ public class Draw extends BaseEntity {
     private LocalDateTime usageEndAt;
 
     @Column(columnDefinition = "TEXT")
+    @ColumnDefault("defaultSeed")
     private String seedNum;
 
     @Column(columnDefinition = "TEXT")
@@ -81,6 +82,9 @@ public class Draw extends BaseEntity {
     @OneToMany(mappedBy = "draw", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ParkingSpace> parkingSpaceList;
 
+    @ColumnDefault("defaultUrl")
+    private String resultURL;
+
     public void updateConfirmed(Boolean confirmed, Integer totalSlots) {
         this.confirmed = confirmed;
         this.totalSlots = totalSlots;
@@ -88,5 +92,17 @@ public class Draw extends BaseEntity {
 
     public void updateSeedNum(String seedNum) {
         this.seedNum = seedNum;
+    }
+
+    public void updateResultURL(String resultURL) {
+        this.resultURL = resultURL;
+    }
+
+    public void updateStatus(DrawStatus status) {
+        this.status = status;
+    }
+
+    public void incrementTotalSlots(int increment) {
+        this.totalSlots += increment;
     }
 }
