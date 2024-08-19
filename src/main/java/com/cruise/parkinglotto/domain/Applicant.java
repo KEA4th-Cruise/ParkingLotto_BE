@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "tb_applicants")
+@Table(name = "tb_applicants", uniqueConstraints = @UniqueConstraint(columnNames = {"member_id", "draw_id"}))
 @Getter
 @Builder
 @AllArgsConstructor
@@ -59,16 +59,6 @@ public class Applicant extends BaseEntity {
     @JoinColumn(name = "draw_id")
     private Draw draw;
 
-    public void cancelWinningStatus() {
-        this.winningStatus = WinningStatus.CANCELED;
-    }
-
-    public void approveParkingSpaceToPriority(Long parkingSpaceId, WinningStatus winningStatus, Integer reserveNum) {
-        this.parkingSpaceId = parkingSpaceId;
-        this.winningStatus = winningStatus;
-        this.reserveNum = reserveNum;
-    }
-
     public void assignRandomNumber(double randomNumber) {
         this.randomNumber = randomNumber;
     }
@@ -79,5 +69,23 @@ public class Applicant extends BaseEntity {
 
     public void updateUserSeedIndex(Integer userSeedIndex) {
         this.userSeedIndex = userSeedIndex;
+    }
+
+    public void updateReserveNum(Integer reserveNum) {
+        this.reserveNum = reserveNum;
+    }
+
+    public void updateParkingSpaceId(Long parkingSpaceId) {
+        this.parkingSpaceId = parkingSpaceId;
+    }
+
+    public void updateReserve(Long parkingSpaceId, Integer reserveNum, WinningStatus winningStatus) {
+        this.parkingSpaceId = parkingSpaceId;
+        this.reserveNum = reserveNum;
+        this.winningStatus = winningStatus;
+    }
+
+    public void updateWinningStatus(WinningStatus winningStatus) {
+        this.winningStatus = winningStatus;
     }
 }

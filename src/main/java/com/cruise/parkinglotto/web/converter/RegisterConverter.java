@@ -2,9 +2,9 @@ package com.cruise.parkinglotto.web.converter;
 
 import com.cruise.parkinglotto.domain.Member;
 import com.cruise.parkinglotto.web.dto.registerDTO.RegisterResponseDTO;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class RegisterConverter {
 
@@ -28,9 +28,20 @@ public class RegisterConverter {
                 .build();
     }
 
-    public static List<RegisterResponseDTO.MembersResponseDTO> toMembersResponseDTOList(List<Member> members) {
-        return members.stream()
+    public static RegisterResponseDTO.MembersResponseDTOList toMembersResponseDTOList(Page<Member> memberPage) {
+        List<RegisterResponseDTO.MembersResponseDTO> membersResponseDTOList = memberPage.stream()
                 .map(RegisterConverter::toMembersResponseDTO)
-                .collect(Collectors.toList());
+                .toList();
+
+        return RegisterResponseDTO.MembersResponseDTOList.builder()
+                .memberList(membersResponseDTOList)
+                .isFirst(memberPage.isFirst())
+                .isLast(memberPage.isLast())
+                .totalElements(memberPage.getTotalElements())
+                .totalPage(memberPage.getTotalPages())
+                .listSize(memberPage.getSize())
+                .build();
     }
+
+
 }

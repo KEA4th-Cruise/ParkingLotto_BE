@@ -3,6 +3,7 @@ package com.cruise.parkinglotto.domain;
 import com.cruise.parkinglotto.domain.common.BaseEntity;
 import com.cruise.parkinglotto.domain.enums.AccountType;
 import com.cruise.parkinglotto.domain.enums.EnrollmentStatus;
+import com.cruise.parkinglotto.domain.enums.WorkType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -34,7 +35,7 @@ public class Member extends BaseEntity implements UserDetails {
     @Column(nullable = false, length = 20)
     private String accountId;
 
-    @Column(nullable = false,  length = 10)
+    @Column(nullable = false, length = 10)
     private String employeeNo;
 
     @Column(nullable = false, length = 15)
@@ -61,6 +62,13 @@ public class Member extends BaseEntity implements UserDetails {
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private AccountType accountType;
+
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private WorkType workType;
+
+    @Column(nullable = false, length = 50)
+    private String address;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -96,6 +104,11 @@ public class Member extends BaseEntity implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
     @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
     private WeightDetails weightDetails;
+
+    public void updateCarNum(String carNum) {
+        this.carNum = carNum;
+    }
 }

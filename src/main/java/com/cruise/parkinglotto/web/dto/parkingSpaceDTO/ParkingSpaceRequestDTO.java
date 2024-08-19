@@ -1,4 +1,5 @@
 package com.cruise.parkinglotto.web.dto.parkingSpaceDTO;
+
 import lombok.Builder;
 import lombok.Getter;
 

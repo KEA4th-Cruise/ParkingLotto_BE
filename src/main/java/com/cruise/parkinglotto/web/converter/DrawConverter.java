@@ -3,17 +3,18 @@ package com.cruise.parkinglotto.web.converter;
 import com.cruise.parkinglotto.domain.Applicant;
 import com.cruise.parkinglotto.domain.Draw;
 import com.cruise.parkinglotto.domain.ParkingSpace;
-import com.cruise.parkinglotto.domain.enums.WorkType;
-import com.cruise.parkinglotto.service.drawService.DrawServiceImpl;
-import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import com.cruise.parkinglotto.domain.enums.DrawStatus;
+import com.cruise.parkinglotto.domain.enums.DrawType;
+import com.cruise.parkinglotto.domain.enums.WinningStatus;
+import com.cruise.parkinglotto.web.dto.applicantDTO.ApplicantResponseDTO;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawRequestDTO;
-import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
-import lombok.RequiredArgsConstructor;
 import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
 import com.cruise.parkinglotto.web.dto.drawDTO.SimulationData;
+import com.cruise.parkinglotto.web.dto.parkingSpaceDTO.ParkingSpaceResponseDTO;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 
-import java.text.DecimalFormat;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -23,43 +24,41 @@ import java.util.stream.Collectors;
 public class DrawConverter {
     public static DrawResponseDTO.GetCurrentDrawInfoDTO toGetCurrentDrawInfo(Draw draw, List<ParkingSpace> parkingSpace) {
 
-        List<ParkingSpaceResponseDTO.GetNameAndUrlParkingSpaceResultDTO> dto = ParkingSpaceConverter.toGetNameAndUrlParkingResponse(parkingSpace);
+        List<ParkingSpaceResponseDTO.GetParkingSpaceResultDTO> dto = ParkingSpaceConverter.toGetNameAndUrlParkingResponse(parkingSpace);
 
         return DrawResponseDTO.GetCurrentDrawInfoDTO.builder()
+                .title(draw.getTitle())
                 .drawStartAt(draw.getDrawStartAt())
                 .drawEndAt(draw.getDrawEndAt())
                 .usageStartAt(draw.getUsageStartAt())
                 .usageEndAt(draw.getUsageEndAt())
                 .mapImageUrl(draw.getMapImageUrl())
-                .getNameAndUrlParkingSpaceResultDTO(dto)
+                .description(draw.getDescription())
+                .totalSlots(draw.getTotalSlots())
+                .drawStatus(draw.getStatus())
+                .parkingSpaceList(dto)
                 .build();
     }
 
-    public static DrawResponseDTO.DrawResultResponseDTO toDrawResultResponseDTO(Draw draw, List<Applicant> applicants, Map<Long, String> parkingSpaceNames, Integer totalApplicants) {
-        List<ApplicantResponseDTO.ApplicantResultDTO> applicantInfoDTOList = applicants.stream()
+    public static DrawResponseDTO.DrawMemberResultResponseDTO toDrawResultResponseDTO(Page<Applicant> applicantsPage) {
+        List<ApplicantResponseDTO.ApplicantResultDTO> applicantInfoDTOList = applicantsPage.stream()
                 .map(applicant -> ApplicantResponseDTO.ApplicantResultDTO.builder()
                         .weightedTotalScore(applicant.getWeightedTotalScore())
                         .winningStatus(applicant.getWinningStatus())
-                        .parkingSpaceName(parkingSpaceNames.get(applicant.getParkingSpaceId()))
                         .reserveNum(applicant.getReserveNum())
                         .userSeedIndex(applicant.getUserSeedIndex())
                         .userSeed(applicant.getUserSeed())
-                        .firstChoice(parkingSpaceNames.get(applicant.getFirstChoice()))
-                        .secondChoice(parkingSpaceNames.get(applicant.getSecondChoice()))
-                        .userName(applicant.getMember().getNameKo())
+                        .userName(maskName(applicant.getMember().getNameKo()))
                         .build())
                 .collect(Collectors.toList());
 
-        return DrawResponseDTO.DrawResultResponseDTO.builder()
-                .drawId(draw.getId())
-                .drawType(draw.getType().name())
-                .title(draw.getTitle())
-                .seedNum(draw.getSeedNum())
-                .totalSlots(draw.getTotalSlots())
-                .year(draw.getYear())
-                .quarter(draw.getQuarter())
-                .totalApplicants(totalApplicants) // 전체 응모자 수 추가
-                .applicants(applicantInfoDTOList)
+        return DrawResponseDTO.DrawMemberResultResponseDTO.builder()
+                .applicantList(applicantInfoDTOList)
+                .listSize(applicantsPage.getSize())
+                .totalPage(applicantsPage.getTotalPages())
+                .totalElements(applicantsPage.getTotalElements())
+                .isFirst(applicantsPage.isFirst())
+                .isLast(applicantsPage.isLast())
                 .build();
     }
 
@@ -95,7 +94,7 @@ public class DrawConverter {
                 .title(draw.getTitle())
                 .usageStartAt(draw.getUsageStartAt())
                 .usageEndAt(draw.getUsageEndAt())
-                .parkingSpacePreviewListDTO(ParkingSpaceConverter.toParkingSpacePreviewListDTO(parkingSpaceList))
+                .parkingSpacePreviewList(ParkingSpaceConverter.toParkingSpacePreviewListDTO(parkingSpaceList))
                 .build();
     }
 
@@ -103,9 +102,9 @@ public class DrawConverter {
         return DrawResponseDTO.SimulateDrawResponseDTO.builder()
                 .drawId(drawId)
                 .seed(seed)
-                .totalApplicants(totalApplicants)
-                .winners(pagedApplicants)
-                .totalApplicants(totalApplicants)
+                .totalApplicantCount(totalApplicants)
+                .winnerList(pagedApplicants)
+                .totalApplicantCount(totalApplicants)
                 .build();
     }
 
@@ -149,7 +148,85 @@ public class DrawConverter {
                 .usageEndAt(draw.getUsageEndAt())
                 .applicantsCount(applicantsCount)
                 .totalSlots(draw.getTotalSlots())
-                .parkingSpaceCompetitionRateDTOList(parkingSpaceCompetitionRateDTOList)
+                .parkingSpaceCompetitionRateList(parkingSpaceCompetitionRateDTOList)
+                .build();
+    }
+
+    public static DrawResponseDTO.DrawResultExcelDTO toDrawResultExcelDTO(String url) {
+        return DrawResponseDTO.DrawResultExcelDTO.builder()
+                .url(url)
+                .build();
+    }
+
+    public static DrawResponseDTO.GetDrawInfoDetailDTO toGetDrawInfoDetail(Draw draw, List<Applicant> applicants) {
+        return DrawResponseDTO.GetDrawInfoDetailDTO.builder()
+                .drawId(draw.getId())
+                .title(draw.getTitle())
+                .applicantsCount(applicants.size())
+                .totalSlots(draw.getTotalSlots())
+                .seed(draw.getSeedNum())
+                .seedDetailList(applicants.stream()
+                        .map(applicant -> DrawResponseDTO.SeedDetailDTO.builder()
+                                .accountId(maskName(applicant.getMember().getNameKo()))
+                                .userSeed(applicant.getUserSeed())
+                                .build())
+                        .collect(Collectors.toList()))
+                .build();
+    }
+
+    public static DrawResponseDTO.DrawPreviewDTO toDrawPreviewDTO(Draw draw) {
+        return DrawResponseDTO.DrawPreviewDTO.builder()
+                .drawId(draw.getId())
+                .drawType(draw.getType())
+                .drawStatus(draw.getStatus())
+                .drawTitle(draw.getTitle())
+                .build();
+    }
+
+    public static DrawResponseDTO.GetDrawListResultDTO toGetDrawListResultDTO(List<String> yearList, List<Draw> drawList) {
+        return DrawResponseDTO.GetDrawListResultDTO.builder()
+                .yearList(yearList)
+                .drawList(drawList.stream()
+                        .map(DrawConverter::toDrawPreviewDTO)
+                        .toList())
+                .build();
+    }
+
+    public static DrawResponseDTO.GetYearsFromDrawListDTO toGetYearsFromDrawListDTO(List<String> yearList) {
+        return DrawResponseDTO.GetYearsFromDrawListDTO.builder()
+                .yearList(yearList)
+                .build();
+    }
+
+    public static DrawResponseDTO.GetAppliedDrawResultDTO toGetAppliedDrawResultDTO(Long appliedDrawId,
+                                                                                    Integer reserveNum,
+                                                                                    String drawTitle,
+                                                                                    DrawType drawType,
+                                                                                    Long drawStatisticsId,
+                                                                                    Long parkingSpaceId,
+                                                                                    LocalDateTime usageStartAt,
+                                                                                    WinningStatus winningStatus) {
+
+        return DrawResponseDTO.GetAppliedDrawResultDTO.builder()
+                .drawId(appliedDrawId)
+                .winningStatus(winningStatus)
+                .reserveNum(reserveNum)
+                .drawStatisticsId(drawStatisticsId)
+                .drawTitle(drawTitle)
+                .drawType(drawType)
+                .parkingSpaceId(parkingSpaceId)
+                .usageStartAt(usageStartAt).build();
+    }
+
+    public static DrawResponseDTO.GetAppliedDrawListResultDTO toGetAppliedDrawListResultDTO(Page<DrawResponseDTO.GetAppliedDrawResultDTO> appliedDrawResultPage) {
+        List<DrawResponseDTO.GetAppliedDrawResultDTO> getAppliedDrawResultDTOList = appliedDrawResultPage.toList();
+        return DrawResponseDTO.GetAppliedDrawListResultDTO.builder()
+                .appliedDrawList(getAppliedDrawResultDTOList)
+                .isFirst(appliedDrawResultPage.isFirst())
+                .isLast(appliedDrawResultPage.isLast())
+                .totalElements(appliedDrawResultPage.getTotalElements())
+                .totalPage(appliedDrawResultPage.getTotalPages())
+                .listSize(appliedDrawResultPage.getSize())
                 .build();
     }
 }

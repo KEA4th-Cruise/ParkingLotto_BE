@@ -3,6 +3,7 @@ package com.cruise.parkinglotto.global.jwt;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,34 +34,42 @@ public class JwtUtils {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    // Jwt토큰을 생성하는 메서드
-    public JwtToken generateToken(Authentication authentication) {
-        // 권한 가져오기
+    public String generateAccessToken(Authentication authentication) {
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
-        log.info("authentication.getName() = {}", authentication.getName());
-
-        // Access Token 생성
         Long now = new Date().getTime();
-        Date accessTokenExpiresIn = new Date(now + 86400000); // 1일
-        String accessToken = Jwts.builder()
+        Date accessTokenExpiresIn = new Date(now + 60 * 60 * 24 * 1000); // 1일
+
+        return Jwts.builder()
                 .setSubject(authentication.getName())
-                .setAudience("domain.com") // 해당 부분은 도메인이 나온 후에 제대로 작성
                 .setIssuedAt(new Date())
-                .setIssuer("parkinglotto")
                 .setExpiration(accessTokenExpiresIn)
                 .claim("auth", authorities)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
+    }
 
-        // Refresh Token 생성
-        Date refreshTokenExpiresIn = new Date(now + 86400000L * 7); // 7일
-        String refreshToken = Jwts.builder()
-                .setExpiration(refreshTokenExpiresIn) // 일주일
+    public String generateRefreshToken(Authentication authentication) {
+        String authorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
+        Long now = new Date().getTime();
+        Date refreshTokenExpiresIn = new Date(now + 60 * 60 * 24 * 1000 * 7); // 7일
+
+        return Jwts.builder()
+                .setSubject(authentication.getName())
+                .setExpiration(refreshTokenExpiresIn)
+                .claim("auth", authorities)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+    public JwtToken generateToken(Authentication authentication) {
+        String accessToken = generateAccessToken(authentication);
+        String refreshToken = generateRefreshToken(authentication);
 
         return JwtToken.builder()
                 .grantType("Bearer")
@@ -70,8 +79,8 @@ public class JwtUtils {
     }
 
     // Jwt 토큰을 복호화하여 토큰에 들어있는 정보를 꺼내는 메서드
-    public Authentication getAuthentication(String accessToken) {
-        Claims claims = parseClaims(accessToken);
+    public Authentication getAuthentication(String token) {
+        Claims claims = parseClaims(token);
         // Jwt 토큰 복호화
 
         if (claims.get("auth") == null) {
@@ -120,8 +129,9 @@ public class JwtUtils {
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {
             return bearerToken.substring(7);
+        } else {
+            return getTokenInCookie(request, "accessToken");
         }
-        return null;
     }
 
     // 토큰에서 claim을 뽑는 메서드
@@ -143,4 +153,17 @@ public class JwtUtils {
         Authentication authentication = getAuthentication(token);
         return authentication.getName();
     }
+
+    public String getTokenInCookie(HttpServletRequest request, String cookieName) {
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if (cookie.getName().equals(cookieName)) {
+                    return cookie.getValue();
+                }
+            }
+        }
+
+        return null;
+    }
+
 }

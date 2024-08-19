@@ -1,4 +1,4 @@
-package com.cruise.parkinglotto.service.WeightDetailService;
+package com.cruise.parkinglotto.service.weightDetailService;
 
 import com.cruise.parkinglotto.domain.Member;
 import com.cruise.parkinglotto.domain.WeightDetails;
@@ -8,7 +8,6 @@ import com.cruise.parkinglotto.global.jwt.JwtUtils;
 import com.cruise.parkinglotto.global.response.code.status.ErrorStatus;
 import com.cruise.parkinglotto.repository.WeightDetailsRepository;
 import com.cruise.parkinglotto.service.memberService.MemberService;
-import com.cruise.parkinglotto.web.dto.drawDTO.DrawResponseDTO;
 import com.cruise.parkinglotto.web.dto.weightDetailDTO.WeightDetailRequestDTO;
 import com.cruise.parkinglotto.web.dto.weightDetailDTO.WeightDetailResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;

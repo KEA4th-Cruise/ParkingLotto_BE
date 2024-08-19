@@ -3,11 +3,14 @@ package com.cruise.parkinglotto.domain;
 import com.cruise.parkinglotto.domain.common.BaseEntity;
 import com.cruise.parkinglotto.domain.enums.ApprovalStatus;
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
 
 @Entity
 @Getter
-@Table(name = "tb_priority_applicants")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "tb_priority_applicants", uniqueConstraints = @UniqueConstraint(columnNames = {"member_id", "draw_id"}))
 public class PriorityApplicant extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,6 +22,9 @@ public class PriorityApplicant extends BaseEntity {
 
     private Long parkingSpaceId;
 
+    @Column(length = 8)
+    private String carNum;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -27,8 +33,22 @@ public class PriorityApplicant extends BaseEntity {
     @JoinColumn(name = "draw_id")
     private Draw draw;
 
-    public void approveParkingSpaceToPriority(Long parkingSpaceId, ApprovalStatus approvalStatus) {
-        this.parkingSpaceId = parkingSpaceId;
+    public void approvePriority(ApprovalStatus approvalStatus) {
         this.approvalStatus = approvalStatus;
+    }
+
+    public void rejectPriorityApply(ApprovalStatus approvalStatus) {
+        this.approvalStatus = approvalStatus;
+        this.parkingSpaceId = -1L;
+    }
+
+    public void assignParkingSpace(Long parkingSpaceId) {
+        this.parkingSpaceId = parkingSpaceId;
+        this.approvalStatus = ApprovalStatus.ASSIGNED;
+    }
+
+    public void cancelPriorityAssign() {
+        this.approvalStatus = ApprovalStatus.CANCELED;
+        this.parkingSpaceId = -1L;
     }
 }

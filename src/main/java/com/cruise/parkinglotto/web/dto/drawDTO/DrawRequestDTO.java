@@ -1,7 +1,6 @@
 package com.cruise.parkinglotto.web.dto.drawDTO;
 
 import com.cruise.parkinglotto.domain.enums.DrawType;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
