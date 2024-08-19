@@ -106,9 +106,9 @@ public class ApplicantServiceImpl implements ApplicantService {
         //bucket에서 문서 삭제
         List<CertificateDocs> deleteCertificateDocs = certificateDocsRepository.findByMemberAndDrawId(member, -1L);
 
-        if (!objectStorageService.doesObjectCertificateFileUrlsExist(deleteCertificateDocs)) {
-            throw new ExceptionHandler(ErrorStatus.FILE_NAME_NOT_FOUND);
-        }
+//        if (!objectStorageService.doesObjectCertificateFileUrlsExist(deleteCertificateDocs)) {
+//            throw new ExceptionHandler(ErrorStatus.FILE_NAME_NOT_FOUND);
+//        }
         certificateDocsService.deleteFileIsNotInProfile(deleteCertificateDocs);
 
         certificateDocsRepository.deleteAllByMemberIdAndDrawId(member.getId(), -1L);
