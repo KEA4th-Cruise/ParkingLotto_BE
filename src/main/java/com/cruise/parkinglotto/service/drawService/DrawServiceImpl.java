@@ -374,6 +374,9 @@ public class DrawServiceImpl implements DrawService {
         if (mapImageMimeType == null || !imageTypeList.contains(mapImageMimeType)) {
             throw new ExceptionHandler(ErrorStatus.FILE_FORMAT_NOT_SUPPORTED);
         }
+        if (createDrawRequestDTO.getDrawStartAt().isBefore(LocalDateTime.now())) {
+            throw new ExceptionHandler(ErrorStatus.INVALID_DRAW_START_DATE);
+        }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String startAt = createDrawRequestDTO.getUsageStartAt().format(formatter);
         String year = startAt.substring(0, 4);
@@ -602,7 +605,7 @@ public class DrawServiceImpl implements DrawService {
     @Override
     @Transactional(readOnly = true)
     public DrawResponseDTO.GetDrawListResultDTO getDrawList(String year, DrawType drawType) {
-        List<Draw> drawList = drawRepository.findByYearAndTypeOrderByUsageStartAtDesc(year, drawType);
+        List<Draw> drawList = drawRepository.findByYearAndTypeAndConfirmedTrueOrderByUsageStartAtDesc(year, drawType);
         List<String> yearList = drawRepository.findYearList();
         return DrawConverter.toGetDrawListResultDTO(yearList, drawList);
     }
