@@ -602,7 +602,7 @@ public class DrawServiceImpl implements DrawService {
     @Override
     @Transactional(readOnly = true)
     public DrawResponseDTO.GetDrawListResultDTO getDrawList(String year, DrawType drawType) {
-        List<Draw> drawList = drawRepository.findByYearAndTypeOrderByUsageStartAtDesc(year, drawType);
+        List<Draw> drawList = drawRepository.findByYearAndTypeAndConfirmedTrueOrderByUsageStartAtDesc(year, drawType);
         List<String> yearList = drawRepository.findYearList();
         return DrawConverter.toGetDrawListResultDTO(yearList, drawList);
     }
