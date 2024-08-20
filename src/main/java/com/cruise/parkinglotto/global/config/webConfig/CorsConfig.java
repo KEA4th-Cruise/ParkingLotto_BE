@@ -17,6 +17,7 @@ public class CorsConfig {
 
         //리소스를 허용할 URL 지정
         ArrayList<String> allowedOriginPatterns = new ArrayList<>();
+        allowedOriginPatterns.add("https://www.parkinglotto.today");
         allowedOriginPatterns.add("https://www.way-blog.today");
         allowedOriginPatterns.add("http://localhost:3000");
         allowedOriginPatterns.add("http://127.0.0.1:3000");
