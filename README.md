@@ -7,7 +7,7 @@
 - 등록
   - 로그인한 사용자는 등록 페이지에서 등록 요청 후 관리자의 승인 하에 서비스를 사용할 수 있습니다. (등록은 최초 1화)
   - 관리자는 등록 요청한 사용자의 목록을 조회할 수 있고, 사용자 정보 확인 후 승인 또는 거절을 할 수 있습니다.
-  - 관리자느 이미 등록된 사용자를 삭제할 수 있습니다.
+  - 관리자는 이미 등록된 사용자를 삭제할 수 있습니다.
 - 내 정보 입력
   - 사용자는 추첨 신청에 필요한 정보를 사전에 입력할 수 있습니다.
   - 추첨 신청시 정보를 변경하면 해당 정보로 내 정보가 업데이트 됩니다.
@@ -229,6 +229,8 @@
 
 ---
 ## 👷🏻‍♂️ 아키텍처
+![arch](https://github.com/user-attachments/assets/787018d5-5ccc-478c-8fc9-c0b48474bd1b)
+
 
 ---
 ## 🚀 시작하기
@@ -238,6 +240,10 @@
 > ORM: JPA  
 > DBMS: MySQL 8.0.38, Redis 7.2.5
 > Build: Gradle
+
+[환경변수 확인하기](https://lock.pub/3X4F1K9TBf) - 비밀번호는 메일을 통해 전달 드리도록 하겠습니다. 
+
+
 
 1. Cloning Repository
    ```bash
@@ -329,11 +335,11 @@
 
 
 ## 👥 팀원 및 역할
-| Profile |         Name & Github          |               Role               |                                             Task                                             |
-| :---: |:---------------------:|:--------------------------------:|:--------------------------------------------------------------------------------------------:|
-| <img src="https://github.com/user-attachments/assets/873b868c-d364-438d-bcad-54940bb1c404"  alt="Member 1" width="150"/> | 이윤서(PL) <br> <a href="https://github.com/yseo14">yseo14</a> |  추첨 생성 및 관리, 조회   | task |
-| <img src="https://github.com/user-attachments/assets/71cb9e15-2b7b-4776-80b5-409966ae6ad2" alt="Member 2" width="150"/> | 김성호 <br> <a href="https://github.com/opp-13">opp-13</a> |  추첨 신청 및 취소  | task |
-| <img src="https://github.com/user-attachments/assets/5ae38b0e-c681-4b4d-a38c-5a315de198f1" alt="Member 3" width="150"/> | 신해철(PM) <br> <a href="https://github.com/haecheol-shin">haecheol-shin</a> | 로그인, 사용자 등록 및 관리   | task |
-| <img src="https://github.com/user-attachments/assets/417aa85a-29de-416d-8ca2-d18b658225c1" alt="Member 4" width="150"/> | 이정균 <br> <a href="https://github.com/LeeJungKyun">LeeJungKyun</a> |  추첨 로직 구현 및 추첨 결과   | task |
-| <img src="https://github.com/user-attachments/assets/433f3a92-d6b5-4dd3-a4d5-2296d1a9d856" alt="Member 5" width="150"/> | 최준범 <br> <a href="https://github.com/Junbum-hub">Junbum-hub</a> |  내 결과 보기 및 사용자 입력 정보 관리   | task |
+| Profile |         Name & Github          |               Role               |
+| :---: |:---------------------:|:--------------------------------:|
+| <img src="https://github.com/user-attachments/assets/873b868c-d364-438d-bcad-54940bb1c404"  alt="Member 1" width="150"/> | 이윤서(PL) <br> <a href="https://github.com/yseo14">yseo14</a> |  추첨 생성 및 관리, 조회   |
+| <img src="https://github.com/user-attachments/assets/71cb9e15-2b7b-4776-80b5-409966ae6ad2" alt="Member 2" width="150"/> | 김성호 <br> <a href="https://github.com/opp-13">opp-13</a> |  추첨 신청 및 취소  |
+| <img src="https://github.com/user-attachments/assets/5ae38b0e-c681-4b4d-a38c-5a315de198f1" alt="Member 3" width="150"/> | 신해철(PM) <br> <a href="https://github.com/haecheol-shin">haecheol-shin</a> | 로그인, 사용자 등록 및 관리   |
+| <img src="https://github.com/user-attachments/assets/417aa85a-29de-416d-8ca2-d18b658225c1" alt="Member 4" width="150"/> | 이정균 <br> <a href="https://github.com/LeeJungKyun">LeeJungKyun</a> |  추첨 로직 구현 및 추첨 결과   |
+| <img src="https://github.com/user-attachments/assets/433f3a92-d6b5-4dd3-a4d5-2296d1a9d856" alt="Member 5" width="150"/> | 최준범 <br> <a href="https://github.com/Junbum-hub">Junbum-hub</a> |  내 결과 보기 및 사용자 입력 정보 관리   |
 ---
