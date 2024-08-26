@@ -41,7 +41,7 @@ public class ObjectStorageService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        String url = objectStorageConfig.getS3Endpoint() + "/v1/" + objectStorageConfig.getProjectId() + "/" + objectStorageConfig.getBucket() + "/" + directory + "/" + objectKey;
+        String url = objectStorageConfig.getS3Endpoint() + "/" + objectStorageConfig.getBucket() + "/" + directory + "/" + objectKey;
         return url;
     }
 
@@ -51,9 +51,9 @@ public class ObjectStorageService {
     public void deleteObject(String fileUrl) {
         try {
             String[] urlParts = fileUrl.split("/");
-            String bucketName = urlParts[5];
-            String directory = urlParts[6];
-            String encodedObjectKey = urlParts[7];
+            String bucketName = urlParts[3];
+            String directory = urlParts[4];
+            String encodedObjectKey = urlParts[5];
             log.info("bucketName: " + bucketName);
             log.info("directory: " + directory);
             log.info("encodedObjectKey: " + encodedObjectKey);
@@ -77,9 +77,9 @@ public class ObjectStorageService {
     public void deleteCertificateFileObject(String fileUrl) {
         try {
             String[] urlParts = fileUrl.split("/");
-            String bucketName = urlParts[5];
-            String directory = urlParts[6];
-            String encodedObjectKey = urlParts[7];
+            String bucketName = urlParts[3];
+            String directory = urlParts[4];
+            String encodedObjectKey = urlParts[5];
             log.info("bucketName: " + bucketName);
             log.info("directory: " + directory);
             log.info("encodedObjectKey: " + encodedObjectKey);
@@ -106,9 +106,9 @@ public class ObjectStorageService {
     public boolean doesObjectCertificateFileUrlExist(String fileUrl) {
         try {
             String[] urlParts = fileUrl.split("/");
-            String bucketName = urlParts[5];
-            String directory = urlParts[6];
-            String objectKey = urlParts[7];
+            String bucketName = urlParts[3];
+            String directory = urlParts[4];
+            String objectKey = urlParts[5];
 
             HeadObjectRequest headObjectRequest = HeadObjectRequest.builder()
                     .bucket(bucketName)

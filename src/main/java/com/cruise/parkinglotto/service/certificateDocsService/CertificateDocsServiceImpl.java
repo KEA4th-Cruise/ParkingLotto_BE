@@ -60,7 +60,7 @@ public class CertificateDocsServiceImpl implements CertificateDocsService {
     public void deleteFileIsNotInProfile(List<CertificateDocs> certificateDocsList) {
         for (CertificateDocs certificateDocs : certificateDocsList) {
             String[] urlParts = certificateDocs.getFileUrl().split("/");
-            String fileName = urlParts[7];
+            String fileName = urlParts[5];
             if (fileName.length() > certificateDocs.getFileName().length() + 4) {
                 objectStorageService.deleteObject(certificateDocs.getFileUrl());
             }
